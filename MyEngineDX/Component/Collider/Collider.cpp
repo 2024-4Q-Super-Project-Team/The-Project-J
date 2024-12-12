@@ -24,6 +24,10 @@ void Collider::PreRender()
 
 void Collider::Render(GraphicsManager* _graphicsManager)
 {
+	if (mDebugMode)
+	{
+		Draw(_graphicsManager);
+	}
 }
 
 void Collider::PostRender()

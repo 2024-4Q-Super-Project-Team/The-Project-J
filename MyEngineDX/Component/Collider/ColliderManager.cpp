@@ -53,6 +53,10 @@ void ColliderManager::CheckCollision()
 
 			if (c1 == nullptr || c2 == nullptr) continue;
 
+			//TODO : 비활성화된 오브젝트의 콜라이더는 검사하지 않음
+
+			if (c1->IsActive() == false || c2->IsActive() == false) continue; //비활성화된 콜라이더는 검사하지 않음 
+
 			if (CheckLayer(c1, c2) == false) continue; //충돌하지 않는 레이어끼리는 검사하지 않음 
 
 			if (TestCollisionByType(c1, c2))//충돌검사 

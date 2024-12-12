@@ -22,10 +22,10 @@ public:
 	virtual void PostRender() override;
 	virtual void Start() {}
 
-	virtual bool Intersects(BoxCollider* box);
-	virtual bool Intersects(SphereCollider* sphere);
-	virtual bool Intersects(CapsuleCollider* capsule);
-
+	virtual bool Intersects(BoxCollider* box) override;
+	virtual bool Intersects(SphereCollider* sphere) override;
+	virtual bool Intersects(CapsuleCollider* capsule) override;
+	virtual void Draw(GraphicsManager* _graphicsManager) override;
 private:
 	Vector3 FindClosestPointOnSegment(Vector3 point, Vector3 start, Vector3 end);
 

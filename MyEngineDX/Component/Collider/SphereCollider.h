@@ -4,7 +4,7 @@
 class SphereCollider : public Collider
 {
 public:
-	SphereCollider(GameObject* _pOwner) : Collider(_pOwner, COLLIDER_TYPE_SPHERE) {}
+	SphereCollider(GameObject* _pOwner);
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;
@@ -14,9 +14,11 @@ public:
 	virtual void PostRender() override;
 	virtual void Start() {}
 
-	virtual bool Intersects(BoxCollider* box);
-	virtual bool Intersects(SphereCollider* sphere);
-	virtual bool Intersects(CapsuleCollider* capsule);
+	virtual bool Intersects(BoxCollider* box) override;
+	virtual bool Intersects(SphereCollider* sphere) override;
+	virtual bool Intersects(CapsuleCollider* capsule) override;
+	virtual void Draw(GraphicsManager* _graphicsManager) override;
+
 private:
 	DirectX::BoundingSphere mSphere;
 

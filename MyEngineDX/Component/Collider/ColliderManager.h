@@ -46,6 +46,6 @@ private:
 private:
 	std::vector<Collider*> mColliders;
 
-	std::array<std::array<int, LAYER_MAX_SIZE>, LAYER_MAX_SIZE> mLayerTable{};
+	std::array<std::array<bool, LAYER_MAX_SIZE>, LAYER_MAX_SIZE> mLayerTable{};
 };
 

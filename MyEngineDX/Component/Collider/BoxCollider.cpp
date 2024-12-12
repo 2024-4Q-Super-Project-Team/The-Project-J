@@ -2,6 +2,14 @@
 #include "BoxCollider.h"
 #include "SphereCollider.h"
 #include "CapsuleCollider.h"
+#include "Object/Object.h"
+
+BoxCollider::BoxCollider(GameObject* _pOwner) : Collider(_pOwner, COLLIDER_TYPE_BOX)
+{
+	Vector3 objPos = _pOwner->transform->GetWorldPosition();
+	mBox.Center = objPos;
+	mBox.Extents.x = mBox.Extents.y = mBox.Extents.z = 3.f;
+}
 
 void BoxCollider::FixedUpdate()
 {
@@ -26,6 +34,7 @@ void BoxCollider::PreRender()
 
 void BoxCollider::Render(GraphicsManager* _graphicsManager)
 {
+	__super::Render(_graphicsManager);
 }
 
 void BoxCollider::PostRender()
@@ -45,6 +54,11 @@ bool BoxCollider::Intersects(SphereCollider* sphere)
 bool BoxCollider::Intersects(CapsuleCollider* capsule)
 {
 	return capsule->Intersects(this);
+}
+
+void BoxCollider::Draw(GraphicsManager* _graphicsManager)
+{
+	
 }
 
 void BoxCollider::GetAxis(Vector3& axisX, Vector3& axisY, Vector3& axisZ)

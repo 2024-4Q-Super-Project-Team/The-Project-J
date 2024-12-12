@@ -71,3 +71,14 @@ bool CapsuleCollider::Intersects(CapsuleCollider* capsule)
 	//TODO : Capsule-Capsule
 	return false;
 }
+
+void CapsuleCollider::Draw(GraphicsManager* _graphicsManager)
+{
+}
+
+Vector3 CapsuleCollider::FindClosestPointOnSegment(Vector3 point, Vector3 start, Vector3 end)
+{
+	
+
+
+}

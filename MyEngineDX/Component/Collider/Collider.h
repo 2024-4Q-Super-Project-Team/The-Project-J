@@ -26,23 +26,22 @@ public:
 	virtual void PostRender() override;
 	virtual void Start() {}
 
-	bool CheckCollisionLayer(Collider* other);
-
 	virtual bool Intersects(BoxCollider* box) abstract;
 	virtual bool Intersects(SphereCollider* sphere) abstract;
 	virtual bool Intersects(CapsuleCollider* capsule) abstract;
+	virtual void Draw(GraphicsManager* _graphicsManager) abstract;
 
 	void SetLayer(int layer) { mLayer = layer; }
 	int GetLayer() { return mLayer; }
 	COLLIDER_TYPE GetType() { return mType; }
 	bool GetIsColliding() { return mIsColliding; }
 	void SetIsColliding(bool isColliding) { mIsColliding = isColliding; }
+	void SetDebugMode(bool mode) { mDebugMode = mode; }
 private:
 	COLLIDER_TYPE mType; 
-	
 	int mLayer = 0;
-	
 	bool mIsColliding = false;
+	bool mDebugMode = false;
 
 	friend class CollisionManager;
 };

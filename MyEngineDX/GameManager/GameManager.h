@@ -2,6 +2,7 @@
 #include "Viewport/ViewportManager.h"
 #include "Graphics/GraphicsManager.h"
 
+class PhysicsManager;
 namespace Engine
 {
 	class Application;
@@ -30,9 +31,11 @@ public:
 	Engine::Application* GetApplication()	  { return mApplication; }
 	ViewportManager*	 GetViewportManager() { return mViewportManager; }
 	IGraphicsManager*	 GetGraphicsManager() { return mGraphicsManager; }
+	PhysicsManager*	 GetPhysicsManager()	  { return mPhysicsManager; }
 private:
 	Engine::Application*	 mApplication;
 	ViewportManager*		 mViewportManager;
 	GraphicsManager*		 mGraphicsManager;
+	PhysicsManager*			 mPhysicsManager;
 	float mFixedUpdateTick;
 };

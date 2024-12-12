@@ -29,6 +29,7 @@ public:
 	GameObject* CreateObject(std::wstring_view _name, std::wstring_view _tag);
 	const std::vector<GameObject*>& GetObjects() { return mObjects; }
 	void SetListSize(UINT _size);
+	DXWorld* GetWorld() { return mOwnerWorld; }
 private:
 	DXWorld* mOwnerWorld;
 	std::vector<GameObject*> mObjects;

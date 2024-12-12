@@ -4,6 +4,7 @@
 #include <filesystem>
 #include <random>
 #include <system_error>
+#include <iostream>
 
 #include <string>
 #include <string_view>
@@ -42,3 +43,8 @@
 
 #include "../Window/IDisplay.h"
 #include "Graphics/Graphics.h"
+
+//Physics
+#include <physx/PxPhysicsAPI.h>
+#include <physx/PxPhysics.h>
+using namespace physx;

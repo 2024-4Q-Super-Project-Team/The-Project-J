@@ -37,6 +37,7 @@ public:
 public:
 	ObjectGroup* CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag);
 	ObjectGroup* GetObjectGroup(std::wstring_view _name);
+	PxScene* GetScene() { return mScene; }
 private:
 	Transform3D* mWorldTransform;
 	std::unordered_map<std::wstring, ObjectGroup*> mObjectGroups;
@@ -47,6 +48,6 @@ private:
 protected:
 	WorldManager* const mWorldManager;
 	ColliderManager* mCollisionManager;
-
+	PxScene* mScene;
 	friend class WorldManager;
 };

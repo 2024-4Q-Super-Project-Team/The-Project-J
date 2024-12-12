@@ -1,7 +1,8 @@
 #pragma once
 
-class GameObject;
 
+class DXWorld;
+class GameObject;
 namespace Component
 {
 	enum class ComponentType
@@ -12,6 +13,7 @@ namespace Component
 		Camera,
 		DirectionLight,
 		Renderer,
+		Collider,
 		SIZE,
 	};
 
@@ -39,5 +41,6 @@ namespace Component
 		ComponentType GetType() { return mType; }
 		void SetActive(bool _active) { isActive = _active; }
 		bool IsActive() { return isActive; }
+		DXWorld* GetWorld() const;
 	};
 }

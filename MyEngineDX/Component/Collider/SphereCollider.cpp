@@ -11,6 +11,35 @@ SphereCollider::SphereCollider(GameObject* _pOwner) : Collider(_pOwner, COLLIDER
 	mSphere.Radius = 3.f;
 }
 
+void SphereCollider::FixedUpdate()
+{
+}
+
+void SphereCollider::PreUpdate()
+{
+}
+
+void SphereCollider::Update()
+{
+}
+
+void SphereCollider::PostUpdate()
+{
+}
+
+void SphereCollider::PreRender()
+{
+}
+
+void SphereCollider::Render(GraphicsManager* _graphicsManager)
+{
+	__super::Render(_graphicsManager);
+}
+
+void SphereCollider::PostRender()
+{
+}
+
 bool SphereCollider::Intersects(BoxCollider* box)
 {
 	return mSphere.Intersects(box->mBox);

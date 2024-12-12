@@ -33,8 +33,3 @@ void Collider::Render(GraphicsManager* _graphicsManager)
 void Collider::PostRender()
 {
 }
-
-bool Collider::CheckCollisionLayer(Collider* other)
-{
-	return false;
-}

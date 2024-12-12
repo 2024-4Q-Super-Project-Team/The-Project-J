@@ -35,15 +35,6 @@ private:
 	void CallOnCollisionExitFuncion(Collider* _c1, Collider* _c2);
 
 private:
-	bool CheckCollisionBoxToBox(BoxCollider* box1, BoxCollider* box2);							//Box-Box
-	bool CheckCollisionBoxToSphere(BoxCollider* box, SphereCollider* sphere);					//Box-Sphere
-	bool CheckCollisionBoxToCapsule(BoxCollider* box, CapsuleCollider* capsule);				//Box-Capsule
-	bool CheckCollisionSphereToSphere(SphereCollider* sphere1, SphereCollider* sphere2);		//Sphere-Sphere
-	bool CheckCollisionSphereToCapsule(SphereCollider* sphere, CapsuleCollider* capsule);		//Sphere-Capsule
-	bool CheckCollisionCapsuleToCapsule(CapsuleCollider* capsule1, CapsuleCollider* capsule2);	//Capsule-Capsule
-
-
-private:
 	std::vector<Collider*> mColliders;
 
 	std::array<std::array<bool, LAYER_MAX_SIZE>, LAYER_MAX_SIZE> mLayerTable{};

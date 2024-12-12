@@ -4,7 +4,7 @@
 class BoxCollider : public Collider
 {
 public:
-	BoxCollider(GameObject* _pOwner) : Collider(_pOwner, COLLIDER_TYPE_BOX) {}
+	BoxCollider(GameObject* _pOwner);
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;

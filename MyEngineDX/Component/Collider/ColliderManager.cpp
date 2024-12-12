@@ -85,19 +85,19 @@ bool ColliderManager::TestCollisionByType(Collider* _c1, Collider* _c2)
 		if (type2 == COLLIDER_TYPE_BOX)
 		{
 			BoxCollider* box2 = dynamic_cast<BoxCollider*>(_c2);
-			isColliding = CheckCollisionBoxToBox(box1, box2);
+			isColliding = box1->Intersects(box2);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_SPHERE)
 		{
 			SphereCollider* sphere = dynamic_cast<SphereCollider*>(_c2);
-			isColliding = CheckCollisionBoxToSphere(box1, sphere);
+			isColliding = box1->Intersects(sphere);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_CAPSULE)
 		{
 			CapsuleCollider* capsule = dynamic_cast<CapsuleCollider*>(_c2);
-			isColliding = CheckCollisionBoxToCapsule(box1, capsule);
+			isColliding = box1->Intersects(capsule);
 			break;
 		}
 	COLLIDER_TYPE_SPHERE:
@@ -105,19 +105,19 @@ bool ColliderManager::TestCollisionByType(Collider* _c1, Collider* _c2)
 		if (type2 == COLLIDER_TYPE_BOX)
 		{
 			BoxCollider* box = dynamic_cast<BoxCollider*>(_c2);
-			isColliding = CheckCollisionBoxToSphere(box, sphere1);
+			isColliding = sphere1->Intersects(box);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_SPHERE)
 		{
 			SphereCollider* sphere2 = dynamic_cast<SphereCollider*>(_c2);
-			isColliding = CheckCollisionSphereToSphere(sphere1, sphere2);
+			isColliding = sphere1->Intersects(sphere2);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_CAPSULE)
 		{
 			CapsuleCollider* capsule = dynamic_cast<CapsuleCollider*>(_c2);
-			isColliding = CheckCollisionSphereToCapsule(sphere1, capsule);
+			isColliding = sphere1->Intersects(capsule);
 			break;
 		}
 	COLLIDER_TYPE_CAPSULE:
@@ -125,19 +125,19 @@ bool ColliderManager::TestCollisionByType(Collider* _c1, Collider* _c2)
 		if (type2 == COLLIDER_TYPE_BOX)
 		{
 			BoxCollider* box = dynamic_cast<BoxCollider*>(_c2);
-			isColliding = CheckCollisionBoxToCapsule(box, capsule1);
+			isColliding = capsule1->Intersects(box);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_SPHERE)
 		{
 			SphereCollider* sphere = dynamic_cast<SphereCollider*>(_c2);
-			isColliding = CheckCollisionSphereToCapsule(sphere, capsule1);
+			isColliding = capsule1->Intersects(sphere);
 			break;
 		}
 		else if (type2 == COLLIDER_TYPE_CAPSULE)
 		{
 			CapsuleCollider* capsule2 = dynamic_cast<CapsuleCollider*>(_c2);
-			isColliding = CheckCollisionCapsuleToCapsule(capsule1, capsule2);
+			isColliding = capsule1->Intersects(capsule2);
 			break;
 		}
 	}

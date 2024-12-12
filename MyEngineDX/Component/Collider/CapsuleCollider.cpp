@@ -18,6 +18,35 @@ CapsuleCollider::CapsuleCollider(GameObject* _pOwner)
 	mSpheres[0].Radius = mSpheres[1].Radius = mCylinder.radius;
 }
 
+void CapsuleCollider::FixedUpdate()
+{
+}
+
+void CapsuleCollider::PreUpdate()
+{
+}
+
+void CapsuleCollider::Update()
+{
+}
+
+void CapsuleCollider::PostUpdate()
+{
+}
+
+void CapsuleCollider::PreRender()
+{
+}
+
+void CapsuleCollider::Render(GraphicsManager* _graphicsManager)
+{
+	__super::Render(_graphicsManager);
+}
+
+void CapsuleCollider::PostRender()
+{
+}
+
 bool CapsuleCollider::Intersects(BoxCollider* box)
 {
 	// 
@@ -56,20 +85,50 @@ bool CapsuleCollider::Intersects(BoxCollider* box)
 
 bool CapsuleCollider::Intersects(SphereCollider* sphere)
 {
-	//TODO : Sphere-Capsule
+	Vector3 closestPoint = FindClosestPointOnSegment(sphere->mSphere.Center, mCylinder.startPoint, mCylinder.endPoint);
+	Vector3 closestVector = closestPoint - sphere->mSphere.Center;
+	float distanceSq = closestVector.LengthSquared();
 
-	
-	DirectX::BoundingSphere sphere1;
-	
-
-
-	return false;
+	float combinedRadius = mCylinder.radius + sphere->mSphere.Radius;
+	return distanceSq <= combinedRadius * combinedRadius;
 }
 
 bool CapsuleCollider::Intersects(CapsuleCollider* capsule)
 {
-	//TODO : Capsule-Capsule
-	return false;
+	Vector3 A1 = mCylinder.startPoint;
+	Vector3 B1 = mCylinder.endPoint;
+	float r1 = mCylinder.radius;
+
+	Vector3 A2 = capsule->mCylinder.startPoint;
+	Vector3 B2 = capsule->mCylinder.endPoint;
+	float r2 = capsule->mCylinder.radius;
+
+	Vector3 d1 = B1 - A1; // 선분 1의 방향 벡터
+	Vector3 d2 = B2 - A2; // 선분 2의 방향 벡터
+	Vector3 r = A1 - A2;
+
+	float a = d1.Dot(d1);
+	float b = d1.Dot(d2);
+	float c = d2.Dot(d2);
+	float d = d1.Dot(r);
+	float e = d2.Dot(r);
+
+	float denom = a * c - b * b;
+
+	float s = (b * e - c * d) / denom;
+	float t = (a * e - b * d) / denom;
+
+	s = std::clamp(s, 0.0f, 1.0f);
+	t = std::clamp(t, 0.0f, 1.0f);
+
+	Vector3 closestPoint1 = A1 + s * d1;
+	Vector3 closestPoint2 = A2 + t * d2;
+
+	Vector3 diff = closestPoint1 - closestPoint2;
+	float distSquared = diff.Dot(diff);
+	float radiusSum = r1 + r2;
+
+	return distSquared <= radiusSum * radiusSum;
 }
 
 void CapsuleCollider::Draw(GraphicsManager* _graphicsManager)
@@ -78,7 +137,16 @@ void CapsuleCollider::Draw(GraphicsManager* _graphicsManager)
 
 Vector3 CapsuleCollider::FindClosestPointOnSegment(Vector3 point, Vector3 start, Vector3 end)
 {
-	
+	Vector3 segmentVector = end - start;
+	float segmentLengthSq = segmentVector.LengthSquared();
 
+	if (segmentLengthSq == 0.f) //선분의 시작점, 끝점 같을 때
+		return start;
+
+	Vector3 pointVector = point - start;
+	float t = pointVector.Dot(segmentVector) / segmentLengthSq;
+	t = max(0.f, min(1.f, t));
+	 
+	return start + t * segmentVector;
 
 }

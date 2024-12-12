@@ -19,7 +19,6 @@ void TestScript::Start()
 	a = testArr[0];
 	b = testArr[1];
 	c = testArr[2];
-
 }
 
 void TestScript::Update()

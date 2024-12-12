@@ -37,8 +37,10 @@ BOOL TestApp::OnPostInitialize()
 		WorldManager* wrdMng = pViewport->GetWorldManager();
 		if (nullptr == wrdMng) return FALSE;
 
-		wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
+		DXWorld* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
 		wrdMng->SetActiveWorld(L"TestWorld");
+
+		wolrd->CreateObjectGroup(L"", L"");
 	}
 	{
 		IGraphicsManager* grpMng = gmMng->GetGraphicsManager();

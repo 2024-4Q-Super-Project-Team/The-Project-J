@@ -31,6 +31,8 @@ void _CALLBACK TestWorld::OnLoad()
 	//testGroup = GetObjectGroup(L"Test");
 	testObject = testGroup->CreateObject(L"TestObject_01", L"Default");
 	testObject->AddComponent<TestScript>();
+
+	testObject->GetOwnerGroup()->GetTag();
 	return void _CALLBACK();
 }
 

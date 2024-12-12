@@ -14,7 +14,14 @@ public:
 	virtual void PostRender() override;
 	virtual void Start() {}
 
+	virtual bool Intersects(BoxCollider* box);
+	virtual bool Intersects(SphereCollider* sphere);
+	virtual bool Intersects(CapsuleCollider* capsule);
+
 private:
-	DirectX::BoundingOrientedBox obb;
+	DirectX::BoundingOrientedBox mBox;
+
+	friend class SphereCollider;
+	friend class CapsuleCollider;
 };
 

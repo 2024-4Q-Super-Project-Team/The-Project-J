@@ -8,6 +8,11 @@ enum COLLIDER_TYPE
 	COLLIDER_TYPE_CAPSULE
 };
 
+class BoxCollider;
+class SphereCollider;
+class CapsuleCollider;
+class GraphicsManager;
+
 class Collider : public Component::ComponentBase
 {
 public:
@@ -23,6 +28,12 @@ public:
 
 	bool CheckCollisionLayer(Collider* other);
 
+	virtual bool Intersects(BoxCollider* box) abstract;
+	virtual bool Intersects(SphereCollider* sphere) abstract;
+	virtual bool Intersects(CapsuleCollider* capsule) abstract;
+
+	void SetLayer(int layer) { mLayer = layer; }
+	int GetLayer() { return mLayer; }
 	COLLIDER_TYPE GetType() { return mType; }
 	bool GetIsColliding() { return mIsColliding; }
 	void SetIsColliding(bool isColliding) { mIsColliding = isColliding; }
@@ -30,7 +41,6 @@ private:
 	COLLIDER_TYPE mType; 
 	
 	int mLayer = 0;
-	unsigned int mlayerMask = 0;
 	
 	bool mIsColliding = false;
 

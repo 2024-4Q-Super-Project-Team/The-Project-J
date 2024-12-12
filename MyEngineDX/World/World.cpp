@@ -1,11 +1,13 @@
 #include "pch.h"
 #include "World.h"
+#include "Component/Collider/ColliderManager.h"
 
 std::unordered_map<std::wstring, ObjectGroup*> DXWorld::mPersistanceObjectGroups {};
 
 DXWorld::DXWorld(WorldManager* _wrdMng, std::wstring_view _name, std::wstring_view _tag)
 	: Entity(_name, _tag), mWorldTransform(new Transform3D()), mWorldManager(_wrdMng)
 {
+	mCollisionManager = new ColliderManager;
 }
 
 DXWorld::~DXWorld()
@@ -26,6 +28,7 @@ void DXWorld::FixedUpdate()
 void DXWorld::PreUpdate()
 {
 	FOR_LOOP_ENTITY(mObjectGroups, PreUpdate());
+	mCollisionManager->PreUpdate();
 }
 
 void DXWorld::Update()
@@ -35,11 +38,13 @@ void DXWorld::Update()
 	{
 		a.second->Update();
 	}
+	mCollisionManager->Update();
 }
 
 void DXWorld::PostUpdate()
 {
 	FOR_LOOP_ENTITY(mObjectGroups, PostUpdate());
+	mCollisionManager->PostUpdate();
 }
 
 void DXWorld::PreRender()

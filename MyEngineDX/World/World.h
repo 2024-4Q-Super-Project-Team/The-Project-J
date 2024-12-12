@@ -2,6 +2,7 @@
 #include "ObjectGroup/ObjectGroup.h"
 
 class WorldManager;
+class ColliderManager;
 
 class DXWorld 
 	: public Engine::IEngineCycle
@@ -45,6 +46,7 @@ private:
 	std::queue<ObjectGroup*> mDestroyQueue;
 protected:
 	WorldManager* const mWorldManager;
+	ColliderManager* mCollisionManager;
 
 	friend class WorldManager;
 };

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ColliderManager.h"
 #include "Component\Collider\Collider.h"
+#include "Component\Component.h"
 #include "Component\Collider\BoxCollider.h"
 #include "Component\Collider\SphereCollider.h"
 #include "Component\Collider\CapsuleCollider.h"
@@ -10,6 +11,36 @@
 void ColliderManager::Update()
 {
 	CheckCollision();
+}
+
+void ColliderManager::PostUpdate()
+{
+}
+
+void ColliderManager::SetLayerTable(int _layer1, int _layer2, bool _bCollide)
+{
+	if (_layer1 < 0 || _layer1 >= LAYER_MAX_SIZE) return;
+	if (_layer2 < 0 || _layer2 >= LAYER_MAX_SIZE) return;
+
+	mLayerTable[_layer1][_layer2] = _bCollide;
+	mLayerTable[_layer2][_layer1] = _bCollide;
+}
+
+void ColliderManager::RemoveColliders(GameObject* _object)
+{
+	std::vector<Collider*> colliders = _object->GetComponents<Collider>();
+
+	for (Collider* collider : colliders)
+	{
+		for (auto it = mColliders.begin(); it != mColliders.end();)
+		{
+			if (*it != collider) 
+				++it;
+
+			it = mColliders.erase(it);
+		}
+	}
+
 }
 
 void ColliderManager::CheckCollision()
@@ -22,6 +53,8 @@ void ColliderManager::CheckCollision()
 
 			Collider* c1 = mColliders[i];
 			Collider* c2 = mColliders[j];
+
+			if (c1 == nullptr || c2 == nullptr) continue;
 
 			if (CheckLayer(c1, c2) == false) continue; //충돌하지 않는 레이어끼리는 검사하지 않음 
 
@@ -112,7 +145,10 @@ bool ColliderManager::TestCollisionByType(Collider* _c1, Collider* _c2)
 
 bool ColliderManager::CheckLayer(Collider* _c1, Collider* _c2)
 {
-	return _c1->CheckCollisionLayer(_c2);
+	int layer1 = _c1->GetLayer();
+	int layer2 = _c1->GetLayer();
+
+	return mLayerTable[layer1][layer2];
 }
 
 void ColliderManager::CallWhenCollisionFuncions(Collider* _c1, Collider* _c2)

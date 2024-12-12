@@ -46,3 +46,16 @@ bool BoxCollider::Intersects(CapsuleCollider* capsule)
 {
 	return capsule->Intersects(this);
 }
+
+void BoxCollider::GetAxis(Vector3& axisX, Vector3& axisY, Vector3& axisZ)
+{
+	Vector3 localX = Vector3(1.f, 0.f, 0.f);
+	Vector3 localY = Vector3(0.f, 1.f, 0.f);
+	Vector3 localZ = Vector3(0.f, 0.f, 1.f);
+
+	Quaternion orientation = mBox.Orientation;
+
+	axisX = Vector3::Transform(localX, orientation);
+	axisY = Vector3::Transform(localY, orientation);
+	axisZ = Vector3::Transform(localZ, orientation);
+}

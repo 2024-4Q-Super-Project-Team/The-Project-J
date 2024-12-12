@@ -19,6 +19,8 @@ public:
 	virtual bool Intersects(CapsuleCollider* capsule);
 
 private:
+	void GetAxis(Vector3& axisX, Vector3& axisY, Vector3& axisZ);
+
 	DirectX::BoundingOrientedBox mBox;
 
 	friend class SphereCollider;

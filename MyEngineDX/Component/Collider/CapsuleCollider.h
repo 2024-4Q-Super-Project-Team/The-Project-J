@@ -1,9 +1,18 @@
 #pragma once
 #include "Collider.h"
+
+struct Cylinder
+{
+	Vector3 startPoint;
+	Vector3 endPoint;
+	float radius;
+};
+
+
 class CapsuleCollider : public Collider
 {
 public:
-	CapsuleCollider(GameObject* _pOwner) : Collider(_pOwner, COLLIDER_TYPE_CAPSULE) {}
+	CapsuleCollider(GameObject* _pOwner);
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;
@@ -16,6 +25,12 @@ public:
 	virtual bool Intersects(BoxCollider* box);
 	virtual bool Intersects(SphereCollider* sphere);
 	virtual bool Intersects(CapsuleCollider* capsule);
+
 private:
+	Vector3 FindClosestPointOnSegment(Vector3 point, Vector3 start, Vector3 end);
+
+private:
+	Cylinder mCylinder;
+	DirectX::BoundingSphere mSpheres[2];
 };
 

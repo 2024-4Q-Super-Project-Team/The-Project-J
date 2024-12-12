@@ -13,9 +13,6 @@ void ColliderManager::Update()
 	CheckCollision();
 }
 
-void ColliderManager::PostUpdate()
-{
-}
 
 void ColliderManager::SetLayerTable(int _layer1, int _layer2, bool _bCollide)
 {

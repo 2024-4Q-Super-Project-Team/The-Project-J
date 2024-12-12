@@ -13,7 +13,7 @@ public:
 	virtual void FixedUpdate() {};
 	virtual void PreUpdate() {};
 	virtual void Update();
-	virtual void PostUpdate();
+	virtual void PostUpdate() {};
 	virtual void PreRender() {};
 	virtual void Render(GraphicsManager* _graphicsManager) {};
 	virtual void PostRender() {};
@@ -21,10 +21,10 @@ public:
 public:
 	void SetLayerTable(int _layer1, int _layer2, bool _bCollide);
 
-	//콜라이더를 추가합니다. (콜라이더 생성 시 실행)
+	//콜라이더를 추가합니다.(콜라이더 생성 시 실행)
 	void AddCollider(Collider* _collider) { mColliders.push_back(_collider); }
 
-	//오브젝트의 콜라이더를 모두 추가합니다. ( 오브젝트 삭제 시 실행)
+	//오브젝트의 콜라이더를 모두 삭제합니다.(오브젝트 삭제 시 실행)
 	void RemoveColliders(GameObject* _object);
 
 private:

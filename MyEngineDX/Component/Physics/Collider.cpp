@@ -9,18 +9,22 @@ Component::Collider::Collider(GameObject* _owner)
 	:ComponentBase(_owner)
 {
 	mPhysics = GameManager::GetPhysicsManager()->GetPhysics();
-}
 
-void Component::Collider::Start()
-{
 	Rigidbody* rb = ownerObject->GetComponent<Rigidbody>();
 	if (rb == nullptr)
 	{
 		ownerObject->AddComponent<Rigidbody>();
 	}
 
-	mRed = mPhysics->createMaterial(1.f, 0.f, 0.f);
-	mGreen = mPhysics->createMaterial(0.f, 1.f, 0.f);
+	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
+
+#ifdef _DEBUG
+	mPrimitiveBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(/*DeviceContext*/);
+#endif
+}
+
+void Component::Collider::Start()
+{
 
 }
 
@@ -53,18 +57,41 @@ void Component::Collider::PostRender()
 {
 }
 
-void Component::Collider::SetLocalPosition(Vector3 pos)
+void Component::Collider::SetLocalPosition(Vector3 _pos)
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	mShape->setLocalPose(PxTransform(PxVec3(pos.x, pos.y, pos.z), currentTransform.q));
+	mShape->setLocalPose(PxTransform(PxVec3(_pos.x, _pos.y, _pos.z), currentTransform.q));
+
+#ifdef _DEBUG
+	mPosition = { _pos.x, _pos.y, _pos.z };
+#endif
 }
 
-void Component::Collider::SetRotation(Vector3 rotation)
+void Component::Collider::SetRotation(Vector3 _rotation)
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	Quaternion rotQut = Quaternion::CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
+	Quaternion rotQut = Quaternion::CreateFromYawPitchRoll(_rotation.y, _rotation.x, _rotation.z);
 	PxQuat pxRot = PxQuat(rotQut.x, rotQut.y, rotQut.z, rotQut.w);
 	PxTransform newLocalTransform(currentTransform.p, pxRot);
 	mShape->setLocalPose(newLocalTransform);
+
+#ifdef _DEBUG
+	mRotation = { pxRot.x, pxRot.y, pxRot.z, pxRot.w };
+#endif
+}
+
+void Component::Collider::SetIsTrigger(bool _isTrigger)
+{
+	if (_isTrigger == true)
+	{
+		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); //충돌 반응 비활성화 
+		mShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // 트리거 설정
+	}
+	else
+	{
+		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true); //충돌 반응 활성화 
+		mShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false); // 트리거 설정
+	}
+	mIsTrigger = _isTrigger;
 }
 

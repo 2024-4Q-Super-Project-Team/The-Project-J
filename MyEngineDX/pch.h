@@ -20,6 +20,10 @@
 #include <d3dcompiler.h>
 #include <dxgi1_4.h>
 #include <Directxtk/DDSTextureLoader.h>
+#include <Directxtk/PrimitiveBatch.h>
+#include <Directxtk/VertexTypes.h>
+#include <Directxtk/DebugDraw.h>
+
 #include <DirectXTex.h>
 #include <Psapi.h>
 #pragma comment (lib, "d3d11.lib")

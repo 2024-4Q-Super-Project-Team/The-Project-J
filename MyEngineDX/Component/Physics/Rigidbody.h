@@ -18,7 +18,9 @@ namespace Component
 		virtual void PostRender() override;
 		virtual void Start() {}
 
+		PxRigidActor* GetRigidActor() { return mRigidActor; }
 
+	protected:
 		PxRigidActor* mRigidActor;
 	};
 }

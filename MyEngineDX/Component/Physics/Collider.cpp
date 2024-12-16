@@ -18,7 +18,7 @@ Component::Collider::Collider(GameObject* _owner)
 
 	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
-	//mBatch = GameManager::GetGraphicsManager()->GetRenderer()->GetPrimitiveBatch();
+	mBatch = GameManager::GetGraphicsManager()->GetRenderer()->GetPrimitiveBatch();
 }
 
 void Component::Collider::Start()

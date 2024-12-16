@@ -47,7 +47,6 @@ private:
 	std::queue<ObjectGroup*> mDestroyQueue;
 protected:
 	WorldManager* const mWorldManager;
-	ColliderManager* mCollisionManager;
 	PxScene* mScene;
 	friend class WorldManager;
 };

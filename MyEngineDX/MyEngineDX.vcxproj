@@ -148,6 +148,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Application\Application.h" />
+    <ClInclude Include="Component\Physics\BoxCollider.h" />
+    <ClInclude Include="Component\Physics\Collider.h" />
     <ClInclude Include="Component\Component.h" />
     <ClInclude Include="Component\MonoBehaviour.h" />
     <ClInclude Include="Component\Script\Script.h" />
@@ -173,6 +175,7 @@
     <ClInclude Include="Graphics\Wrapper\SamplerState.h" />
     <ClInclude Include="Graphics\Wrapper\GraphicsTextrue.h" />
     <ClInclude Include="Physics\PhysicsManager.h" />
+    <ClInclude Include="Component\Physics\Rigidbody.h" />
     <ClInclude Include="TimeManager\Time.h" />
     <ClInclude Include="Viewport\ViewportManager.h" />
     <ClInclude Include="Viewport\Viewport.h" />
@@ -181,6 +184,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp" />
+    <ClCompile Include="Component\Physics\BoxCollider.cpp" />
+    <ClCompile Include="Component\Physics\Collider.cpp" />
     <ClCompile Include="Component\Component.cpp" />
     <ClCompile Include="Component\MonoBehaviour.cpp" />
     <ClCompile Include="Component\Script\Script.cpp" />
@@ -209,6 +214,7 @@
     <ClCompile Include="Graphics\Wrapper\SamplerState.cpp" />
     <ClCompile Include="Graphics\Wrapper\GraphicsTextrue.cpp" />
     <ClCompile Include="Physics\PhysicsManager.cpp" />
+    <ClCompile Include="Component\Physics\Rigidbody.cpp" />
     <ClCompile Include="TimeManager\Time.cpp" />
     <ClCompile Include="Viewport\ViewportManager.cpp" />
     <ClCompile Include="Viewport\Viewport.cpp" />

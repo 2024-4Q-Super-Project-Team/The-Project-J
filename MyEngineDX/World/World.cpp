@@ -1,11 +1,20 @@
 #include "pch.h"
 #include "World.h"
+#include "GameManager/GameManager.h"
+#include "Physics/PhysicsManager.h"
 
 std::unordered_map<std::wstring, ObjectGroup*> DXWorld::mPersistanceObjectGroups {};
 
 DXWorld::DXWorld(WorldManager* _wrdMng, std::wstring_view _name, std::wstring_view _tag)
 	: Entity(_name, _tag), mWorldTransform(new Transform3D()), mWorldManager(_wrdMng)
 {
+	PxPhysics* physics = GameManager::GetPhysicsManager()->GetPhysics();
+	PxSceneDesc sceneDesc(physics->getTolerancesScale());
+
+	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
+	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
+	sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
+	mScene = physics->createScene(sceneDesc);
 }
 
 DXWorld::~DXWorld()
@@ -21,6 +30,8 @@ DXWorld::~DXWorld()
 void DXWorld::FixedUpdate()
 {
 	FOR_LOOP_ENTITY(mObjectGroups, FixedUpdate());
+	mScene->simulate(GameManager::GetFixedUpdateTick());
+	mScene->fetchResults(true);
 }
 
 void DXWorld::PreUpdate()

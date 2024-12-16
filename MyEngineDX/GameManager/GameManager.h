@@ -28,14 +28,15 @@ public:
 	virtual void PostRender() override;
 public:
 public:
+	static float GetFixedUpdateTick() { return mFixedUpdateTick; }
 	Engine::Application* GetApplication()	  { return mApplication; }
 	ViewportManager*	 GetViewportManager() { return mViewportManager; }
 	IGraphicsManager*	 GetGraphicsManager() { return mGraphicsManager; }
-	PhysicsManager*	 GetPhysicsManager()	  { return mPhysicsManager; }
+	static PhysicsManager*	 GetPhysicsManager()	  { return mPhysicsManager; }
 private:
 	Engine::Application*	 mApplication;
 	ViewportManager*		 mViewportManager;
 	GraphicsManager*		 mGraphicsManager;
-	PhysicsManager*			 mPhysicsManager;
-	float mFixedUpdateTick;
+	static PhysicsManager*			 mPhysicsManager;
+	static float mFixedUpdateTick;
 };

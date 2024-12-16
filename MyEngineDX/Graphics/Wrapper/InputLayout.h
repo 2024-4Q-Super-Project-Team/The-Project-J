@@ -6,11 +6,11 @@ namespace Graphics
 	class VertexShader;
 	class InputLayout;
 	struct InputLayoutDesc;
-	
-	class InputLayout
+
+	class InputLayout : public IGraphicsResource
 	{
 	public:
-		InputLayout(GraphicsDevice* _pDevice, const InputLayoutDesc* _pIADesc, UINT _arrSize, VertexShader* _pVertexShader, HRESULT** _ppHr = nullptr);
+		InputLayout(std::wstring_view _name, GraphicsDevice* _pDevice, const InputLayoutDesc* _pIADesc, UINT _arrSize, VertexShader* _pVertexShader, HRESULT** _ppHr = nullptr);
 		~InputLayout();
 	public:
 
@@ -151,8 +151,8 @@ namespace Graphics
 		};
 		enum InputClass
 		{
-			PER_VERTEX_DATA		 = 0,
-			PER_INSTANCE_DATA	 = 1
+			PER_VERTEX_DATA = 0,
+			PER_INSTANCE_DATA = 1
 		};
 	};
 	struct InputLayoutDesc

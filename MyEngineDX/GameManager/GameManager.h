@@ -1,6 +1,8 @@
 #pragma once
 #include "Viewport/ViewportManager.h"
 #include "Graphics/GraphicsManager.h"
+#include "Resource/ResourceManager.h"
+#include "Physics/PhysicsManager.h"
 
 class PhysicsManager;
 namespace Engine
@@ -29,14 +31,16 @@ public:
 public:
 public:
 	static float GetFixedUpdateTick() { return mFixedUpdateTick; }
-	Engine::Application*	 GetApplication()	  { return mApplication; }
-	static ViewportManager*	 GetViewportManager() { return mViewportManager; }
+	static Engine::Application* GetApplication() { return mApplication; }
+	static ViewportManager* GetViewportManager() { return mViewportManager; }
 	static IGraphicsManager* GetGraphicsManager() { return mGraphicsManager; }
-	static PhysicsManager*	 GetPhysicsManager()	  { return mPhysicsManager; }
+	static PhysicsManager* GetPhysicsManager() { return mPhysicsManager; }
+	static ResourceManager* GetResourceManager() { return mResourceManager; }
 private:
-	Engine::Application*		 mApplication;
-	static ViewportManager*		 mViewportManager;
-	static GraphicsManager*		 mGraphicsManager;
-	static PhysicsManager*		 mPhysicsManager;
+	static Engine::Application* mApplication;
+	static ViewportManager* mViewportManager;
+	static GraphicsManager* mGraphicsManager;
+	static PhysicsManager* mPhysicsManager;
+	static ResourceManager* mResourceManager;
 	static float mFixedUpdateTick;
 };

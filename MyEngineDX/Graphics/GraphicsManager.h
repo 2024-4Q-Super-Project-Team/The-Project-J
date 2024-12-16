@@ -5,6 +5,12 @@ namespace Display
 	class IWindow;
 }
 
+namespace Graphics
+{
+	class Buffer;
+	enum class eCBufferType;
+}
+
 class IGraphicsManager
 {
 public:
@@ -14,7 +20,7 @@ public:
 	virtual	Graphics::Renderer* GetRenderer() = 0;
 };
 
-class GraphicsManager 
+class GraphicsManager
 	: public IGraphicsManager
 {
 public:
@@ -27,8 +33,9 @@ public:
 	virtual BOOL SetUpDisplay(Display::IWindow** _ppWindow) override;
 private:
 	Graphics::GraphicsDevice* mGraphicsDevice;
-	Graphics::Renderer*		  mRenderer;
+	Graphics::Renderer* mRenderer;
 
+	std::array<Graphics::Buffer*, static_cast<UINT>(Graphics::eCBufferType::SIZE)> mConstantBuffArr;
 	std::unordered_map<HWND, Graphics::RenderTarget*> mRenderTargetTable;
 public:
 	inline virtual Graphics::GraphicsDevice* GetDevice() override { return mGraphicsDevice; }

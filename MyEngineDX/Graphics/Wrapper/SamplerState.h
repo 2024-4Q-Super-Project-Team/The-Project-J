@@ -2,19 +2,19 @@
 
 namespace Graphics
 {
-	class GraphicsDevice;
+    class GraphicsDevice;
     struct SamplerDesc;
 
-	class SamplerState
-	{
-	public:
-		SamplerState(GraphicsDevice* _pDevice, SamplerDesc* _pDesc);
-		~SamplerState();
-	private:
-		ID3D11SamplerState* mSaplerState;
+    class SamplerState : public IGraphicsResource
+    {
+    public:
+        SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, SamplerDesc* _pDesc);
+        ~SamplerState();
+    private:
+        ID3D11SamplerState* mSaplerState;
     public:
         operator ID3D11SamplerState* () { return mSaplerState; }
-	};
+    };
     struct SamplerDesc
     {
         D3D11_FILTER Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

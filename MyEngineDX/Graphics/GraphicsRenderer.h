@@ -10,8 +10,10 @@ namespace Graphics
 	class InputLayout;
 	class Buffer;
 	class SamplerState;
+
+	class Texture;
+
 	enum class eShaderStage;
-	enum class eCBufferType;
 
 	class Renderer
 	{
@@ -30,22 +32,21 @@ namespace Graphics
 		BOOL BeginRender();
 		BOOL EndRender();
 		BOOL DrawCall(UINT _numIndex, UINT _startIndex, INT _baseVertex);
-		
-		
+
 		/*BOOL SetVertexShader(VertexShader* _pVertexShader);
 		BOOL SetPixelShader(PixelShader* _pPixelShader);*/
 		BOOL BindInputLayout(InputLayout* _pInputLayout);
 		BOOL BindShader(eShaderStage _stage, Shader* _pShader);
-		BOOL BindConstantBuffer(eShaderStage _stage, eCBufferType _startSlot, Buffer* _constanceBuffer);
+		BOOL BindConstantBuffer(eShaderStage _stage, UINT _startSlot, Buffer* _constanceBuffer);
 		BOOL BindSampler(eShaderStage _stage, UINT _startSlot, SamplerState* _sampler);
-		
+		BOOL BindTextrue(eShaderStage _stage, UINT _startSlot, Graphics::Texture* _pTexture);
+
+
 	private:
 		ID3D11DeviceContext* mContext;
 		RenderTarget* mCurRenderTarget;
 		GraphicsDevice* mGraphicsDevice;
-		std::unique_ptr <DirectX::PrimitiveBatch<DirectX::VertexPositionColor >> mPrimitiveBatch; //도형 그리기용
 	public:
 		RenderTarget* GetRenderTarget() { return mCurRenderTarget; }
-		DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* GetPrimitiveBatch() { return mPrimitiveBatch.get(); }
 	};
 }

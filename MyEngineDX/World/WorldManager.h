@@ -45,5 +45,5 @@ inline DXWorld* WorldManager::CreateWorld(std::wstring_view _name, std::wstring_
 		mCurrActiveWorld = instance;
 		mCurrActiveWorld->OnLoad();
 	}
-	return nullptr;
+	return instance;
 }

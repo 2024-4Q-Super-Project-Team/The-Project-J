@@ -4,7 +4,8 @@
 
 namespace Graphics
 {
-	Shader::Shader(GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
+	Shader::Shader(std::wstring_view _name, GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
+		: IGraphicsResource(_name)
 	{
 		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
@@ -28,8 +29,8 @@ namespace Graphics
 	}
 
 
-	VertexShader::VertexShader(GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
-		: Shader(_pDevice, _path, _entryPoint, _shaderModel)
+	VertexShader::VertexShader(std::wstring_view _name, GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
+		: Shader(_name, _pDevice, _path, _entryPoint, _shaderModel)
 	{
 		HRESULT hr = _pDevice->GetDevice()->CreateVertexShader(
 			mBlob->GetBufferPointer(),
@@ -46,8 +47,8 @@ namespace Graphics
 	}
 
 
-	PixelShader::PixelShader(GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
-		: Shader(_pDevice, _path, _entryPoint, _shaderModel)
+	PixelShader::PixelShader(std::wstring_view _name, GraphicsDevice* _pDevice, const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel)
+		: Shader(_name, _pDevice, _path, _entryPoint, _shaderModel)
 	{
 		HRESULT hr = _pDevice->GetDevice()->CreatePixelShader(
 			mBlob->GetBufferPointer(),

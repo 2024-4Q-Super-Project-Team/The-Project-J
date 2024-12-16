@@ -6,16 +6,20 @@ namespace Graphics
 	struct BufferDesc;
 	struct SubBufferDesc;
 
-	class Buffer
+	class Buffer : public IGraphicsResource
 	{
 	public:
-		Buffer(GraphicsDevice* _pDevice, BufferDesc* _pBufferDesc, SubBufferDesc* _pBufferSubDesc = nullptr);
+		Buffer(std::wstring_view _name
+			, GraphicsDevice* _pDevice
+			, const D3D11_BUFFER_DESC* _pBufferDesc
+			, const D3D11_SUBRESOURCE_DATA* _pBufferSubDesc = nullptr);
 		~Buffer();
 	private:
 		ID3D11Buffer* mBuffer;
 	public:
 		operator ID3D11Buffer* () { return mBuffer; }
 	};
+
 	struct BufferDesc
 	{
 		UINT ByteWidth;

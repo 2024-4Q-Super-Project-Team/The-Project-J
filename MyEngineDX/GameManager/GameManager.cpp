@@ -3,14 +3,16 @@
 #include "Application/Application.h"
 #include "Physics/PhysicsManager.h"
 
-ViewportManager* GameManager::mViewportManager;
-GraphicsManager* GameManager::mGraphicsManager;
-PhysicsManager* GameManager::mPhysicsManager;
-float GameManager::mFixedUpdateTick;
+float					GameManager::mFixedUpdateTick = 0.02f;
+Engine::Application* GameManager::mApplication = nullptr;
+ViewportManager* GameManager::mViewportManager = nullptr;
+GraphicsManager* GameManager::mGraphicsManager = nullptr;
+PhysicsManager* GameManager::mPhysicsManager = nullptr;
+ResourceManager* GameManager::mResourceManager = nullptr;
 
 GameManager::GameManager(Engine::Application* _pApp)
-	: mApplication(_pApp)
 {
+	mApplication = _pApp;
 	mGraphicsManager = new GraphicsManager();
 	mViewportManager = new ViewportManager(this);
 	mPhysicsManager = new PhysicsManager();

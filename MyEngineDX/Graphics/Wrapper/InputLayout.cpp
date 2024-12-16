@@ -5,7 +5,8 @@
 
 namespace Graphics
 {
-	InputLayout::InputLayout(GraphicsDevice* _pDevice, const InputLayoutDesc* _pIADesc, UINT _arrSize, VertexShader* _pVertexShader, HRESULT** _ppHr)
+	InputLayout::InputLayout(std::wstring_view _name, GraphicsDevice* _pDevice, const InputLayoutDesc* _pIADesc, UINT _arrSize, VertexShader* _pVertexShader, HRESULT** _ppHr)
+		: IGraphicsResource(_name)
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> layouts;
 		for (UINT i = 0; i < _arrSize; ++i)
@@ -32,11 +33,11 @@ namespace Graphics
 				*(*_ppHr) = hr;
 			}
 		}
-		
+
 	}
 	InputLayout::~InputLayout()
 	{
-		if(mInputLayout)
-		mInputLayout->Release();
+		if (mInputLayout)
+			mInputLayout->Release();
 	}
 }

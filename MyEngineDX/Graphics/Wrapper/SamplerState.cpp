@@ -4,7 +4,8 @@
 
 namespace Graphics
 {
-	SamplerState::SamplerState(GraphicsDevice* _pDevice, SamplerDesc* _pDesc)
+	SamplerState::SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, SamplerDesc* _pDesc)
+		: IGraphicsResource(_name)
 	{
 		D3D11_SAMPLER_DESC sampDesc = {};
 		if (_pDesc)

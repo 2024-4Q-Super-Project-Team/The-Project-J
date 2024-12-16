@@ -33,10 +33,15 @@
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+//Assimp
+#include <assimp\Importer.hpp>
+#include <assimp\scene.h>
+#include <assimp\postprocess.h>
 
 #include "../Common/Common.h"
 #include "Helper/CommonEnum.h"
 #include "Helper/CommonDef.h"
+#include "Helper/CommonFunc.h"
 
 #include "TimeManager/Time.h"
 #include "Helper/Transform/Transform3D.h"
@@ -46,7 +51,17 @@
 #include "Helper/Factory/Factory.h"
 
 #include "../Window/IDisplay.h"
+#include "Graphics/GraphicsInterface.h"
 #include "Graphics/Graphics.h"
+
+#include "Component/Render/Data/GraphicsEnum.h"
+#include "Component/Render/Data/Cbuffer.h"
+
+#include "Component/Render/Data/Model.h"
+#include "Component/Render/Data/Mesh.h"
+#include "Component/Render/Data/Material.h"
+#include "Component/Render/Data/Bone.h"
+#include "Component/Render/Data/Animation.h"
 
 //Physics
 #include <physx/PxPhysicsAPI.h>

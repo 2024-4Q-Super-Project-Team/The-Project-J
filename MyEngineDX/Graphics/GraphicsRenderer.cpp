@@ -13,7 +13,6 @@ namespace Graphics
 		, mContext(_pContext)
 		, mCurRenderTarget(nullptr)
 	{
-		mPrimitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(mContext);
 	}
 	Renderer::~Renderer()
 	{
@@ -62,7 +61,7 @@ namespace Graphics
 				return TRUE;
 			ID3D11RenderTargetView* rtv = _pRenderTarget->GetRenderTargetView();
 			ID3D11DepthStencilView* dsv = _pRenderTarget->GetDepthStencilView();
-			const D3D11_VIEWPORT&	vp  = _pRenderTarget->GetViewport();
+			const D3D11_VIEWPORT& vp = _pRenderTarget->GetViewport();
 			if (rtv && dsv)
 			{
 				mContext->OMSetRenderTargets(1, &rtv, dsv);
@@ -84,13 +83,13 @@ namespace Graphics
 				ID3D11VertexShader* pVertexShader = (*dynamic_cast<VertexShader*>(_pShader));
 				mContext->VSSetShader(pVertexShader, nullptr, 0);
 			}
-				break;
+			break;
 			case eShaderStage::PS:
 			{
 				ID3D11PixelShader* pPixelShader = (*dynamic_cast<PixelShader*>(_pShader));
 				mContext->PSSetShader(pPixelShader, nullptr, 0);
 			}
-				break;
+			break;
 			default:
 				break;
 			}
@@ -128,7 +127,7 @@ namespace Graphics
 		}
 		return FALSE;
 	}
-	BOOL Renderer::BindConstantBuffer(eShaderStage _stage, eCBufferType _startSlot, Buffer* _constanceBuffer)
+	BOOL Renderer::BindConstantBuffer(eShaderStage _stage, UINT _startSlot, Buffer* _constanceBuffer)
 	{
 		ID3D11Buffer* pBuff = (*_constanceBuffer);
 		if (pBuff)
@@ -136,9 +135,9 @@ namespace Graphics
 			switch (_stage)
 			{
 			case eShaderStage::VS:
-				mContext->VSSetConstantBuffers(static_cast<UINT>(_startSlot), 1, &pBuff); break;
+				mContext->VSSetConstantBuffers(_startSlot, 1, &pBuff); break;
 			case eShaderStage::PS:
-				mContext->PSSetConstantBuffers(static_cast<UINT>(_startSlot), 1, &pBuff); break;
+				mContext->PSSetConstantBuffers(_startSlot, 1, &pBuff); break;
 			default:
 				break;
 			}
@@ -163,5 +162,19 @@ namespace Graphics
 			return TRUE;
 		}
 		return FALSE;
+	}
+	BOOL Renderer::BindTextrue(eShaderStage _stage, UINT _startSlot, Graphics::Texture* _pTexture)
+	{
+		ID3D11ShaderResourceView* pSRV = (*_pTexture);
+		switch (_stage)
+		{
+		case eShaderStage::VS:
+			mContext->VSSetShaderResources(static_cast<UINT>(_startSlot), 1, &pSRV); break;
+		case eShaderStage::PS:
+			mContext->PSSetShaderResources(static_cast<UINT>(_startSlot), 1, &pSRV); break;
+		default:
+			break;
+		}
+		return TRUE;
 	}
 }

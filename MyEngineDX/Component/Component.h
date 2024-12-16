@@ -14,6 +14,7 @@ namespace Component
 		DirectionLight,
 		Renderer,
 		Collider,
+		SkinningMeshRenderer,
 		SIZE,
 	};
 

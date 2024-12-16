@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Viewport.h"
-
+#include "Graphics/GraphicsManager.h"
 
 ViewportScene::ViewportScene(Display::IWindow* _pWindow, Graphics::RenderTarget* _pRenderTarget)
     : mWorldManager(new WorldManager())

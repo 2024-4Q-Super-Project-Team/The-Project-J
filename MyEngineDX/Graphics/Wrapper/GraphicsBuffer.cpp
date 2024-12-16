@@ -3,27 +3,28 @@
 
 namespace Graphics
 {
-	Buffer::Buffer(GraphicsDevice* _pDevice, BufferDesc* _pBufferDesc, SubBufferDesc* _pBufferSubDesc)
+	Buffer::Buffer(std::wstring_view _name
+		, GraphicsDevice* _pDevice
+		, const D3D11_BUFFER_DESC* _pBufferDesc
+		, const D3D11_SUBRESOURCE_DATA* _pBufferSubDesc)
+		: IGraphicsResource(_name)
 	{
 		if (_pBufferDesc)
 		{
-			D3D11_BUFFER_DESC bDesc = {};
-			memcpy(&bDesc, _pBufferDesc, sizeof(D3D11_BUFFER_DESC));
 			if (_pBufferSubDesc)
 			{
-				D3D11_SUBRESOURCE_DATA sDesc = {};
-				memcpy(&sDesc, _pBufferSubDesc, sizeof(D3D11_SUBRESOURCE_DATA));
-				_pDevice->GetDevice()->CreateBuffer(&bDesc, &sDesc, &mBuffer);
+				_pDevice->GetDevice()->CreateBuffer(_pBufferDesc, _pBufferSubDesc, &mBuffer);
 			}
 			else
 			{
-				_pDevice->GetDevice()->CreateBuffer(&bDesc, nullptr, &mBuffer);
+				_pDevice->GetDevice()->CreateBuffer(_pBufferDesc, nullptr, &mBuffer);
 			}
 		}
 	}
 
 	Buffer::~Buffer()
 	{
+		SAFE_RELEASE(mBuffer)
 	}
 }
 

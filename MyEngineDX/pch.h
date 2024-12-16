@@ -22,7 +22,7 @@
 #include <Directxtk/DDSTextureLoader.h>
 #include <Directxtk/PrimitiveBatch.h>
 #include <Directxtk/VertexTypes.h>
-#include <Directxtk/DebugDraw.h>
+
 
 #include <DirectXTex.h>
 #include <Psapi.h>

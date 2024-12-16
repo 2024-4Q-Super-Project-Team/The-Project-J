@@ -43,7 +43,9 @@ namespace Graphics
 		ID3D11DeviceContext* mContext;
 		RenderTarget* mCurRenderTarget;
 		GraphicsDevice* mGraphicsDevice;
+		std::unique_ptr <DirectX::PrimitiveBatch<DirectX::VertexPositionColor >> mPrimitiveBatch; //도형 그리기용
 	public:
 		RenderTarget* GetRenderTarget() { return mCurRenderTarget; }
+		DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* GetPrimitiveBatch() { return mPrimitiveBatch.get(); }
 	};
 }

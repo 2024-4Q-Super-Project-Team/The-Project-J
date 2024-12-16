@@ -13,6 +13,7 @@ namespace Graphics
 		, mContext(_pContext)
 		, mCurRenderTarget(nullptr)
 	{
+		mPrimitiveBatch = std::make_unique<DirectX::PrimitiveBatch<DirectX::VertexPositionColor>>(mContext);
 	}
 	Renderer::~Renderer()
 	{

@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "BoxCollider.h"
 #include "GameManager/GameManager.h"
-#include "Physics/PhysicsManager.h"
 #include "Component/Physics/Rigidbody.h"
 #include "Debug/DebugDraw.h"
 
@@ -50,7 +49,8 @@ void Component::BoxCollider::PreRender()
 void Component::BoxCollider::Render(GraphicsManager* _graphicsManager)
 {
 #ifdef _DEBUG
-	DX::Draw(mPrimitiveBatch.get(), mDebugBox, Colors::Green);
+
+	DX::Draw(mBatch, mDebugBox, Colors::Green);
 
 	//TODO: 충돌시 빨간색 표시
 #endif

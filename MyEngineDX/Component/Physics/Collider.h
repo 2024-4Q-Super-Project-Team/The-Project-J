@@ -1,8 +1,6 @@
 #pragma once
 #include "Component/Component.h"
 
-using namespace DirectX;
-
 namespace Component
 {
 	class Rigidbody;
@@ -47,7 +45,7 @@ namespace Component
 		bool mDebugDraw = false;
 		Vector3 mPosition;
 		Vector4 mRotation;
-		std::unique_ptr<PrimitiveBatch<VertexPositionColor>> mPrimitiveBatch; //도형 그리기용
+		DirectX::PrimitiveBatch<DirectX::VertexPositionColor>* mBatch;
 #endif
 	};
 }

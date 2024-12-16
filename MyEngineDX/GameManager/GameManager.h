@@ -29,14 +29,14 @@ public:
 public:
 public:
 	static float GetFixedUpdateTick() { return mFixedUpdateTick; }
-	Engine::Application* GetApplication()	  { return mApplication; }
-	ViewportManager*	 GetViewportManager() { return mViewportManager; }
-	IGraphicsManager*	 GetGraphicsManager() { return mGraphicsManager; }
+	Engine::Application*	 GetApplication()	  { return mApplication; }
+	static ViewportManager*	 GetViewportManager() { return mViewportManager; }
+	static IGraphicsManager* GetGraphicsManager() { return mGraphicsManager; }
 	static PhysicsManager*	 GetPhysicsManager()	  { return mPhysicsManager; }
 private:
-	Engine::Application*	 mApplication;
-	ViewportManager*		 mViewportManager;
-	GraphicsManager*		 mGraphicsManager;
-	static PhysicsManager*			 mPhysicsManager;
+	Engine::Application*		 mApplication;
+	static ViewportManager*		 mViewportManager;
+	static GraphicsManager*		 mGraphicsManager;
+	static PhysicsManager*		 mPhysicsManager;
 	static float mFixedUpdateTick;
 };

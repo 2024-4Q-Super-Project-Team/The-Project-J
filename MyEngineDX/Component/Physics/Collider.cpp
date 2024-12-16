@@ -13,14 +13,12 @@ Component::Collider::Collider(GameObject* _owner)
 	Rigidbody* rb = ownerObject->GetComponent<Rigidbody>();
 	if (rb == nullptr)
 	{
-		ownerObject->AddComponent<Rigidbody>();
+		ownerObject->AddComponent<Rigidbody>(true);
 	}
 
 	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
 
-#ifdef _DEBUG
-	mPrimitiveBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(/*DeviceContext*/);
-#endif
+	mBatch = GameManager::GetGraphicsManager()->GetRenderer()->GetPrimitiveBatch();
 }
 
 void Component::Collider::Start()

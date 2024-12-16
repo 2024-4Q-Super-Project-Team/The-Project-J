@@ -10,7 +10,7 @@ DXWorld::DXWorld(WorldManager* _wrdMng, std::wstring_view _name, std::wstring_vi
 {
 	PxPhysics* physics = GameManager::GetPhysicsManager()->GetPhysics();
 	PxSceneDesc sceneDesc(physics->getTolerancesScale());
-
+	
 	sceneDesc.gravity = physx::PxVec3(0.0f, -9.81f, 0.0f);
 	sceneDesc.cpuDispatcher = physx::PxDefaultCpuDispatcherCreate(2);
 	sceneDesc.filterShader = physx::PxDefaultSimulationFilterShader;
@@ -30,8 +30,11 @@ DXWorld::~DXWorld()
 void DXWorld::FixedUpdate()
 {
 	FOR_LOOP_ENTITY(mObjectGroups, FixedUpdate());
-	mScene->simulate(GameManager::GetFixedUpdateTick());
-	mScene->fetchResults(true);
+	if (mScene)
+	{
+		mScene->simulate(GameManager::GetFixedUpdateTick());
+		mScene->fetchResults(true);
+	}
 }
 
 void DXWorld::PreUpdate()

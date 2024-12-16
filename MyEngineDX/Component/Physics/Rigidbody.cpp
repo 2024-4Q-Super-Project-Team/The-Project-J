@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "Rigidbody.h"
 #include "GameManager/GameManager.h"
-#include "physics/PhysicsManager.h"
+#include "Physics/PhysicsManager.h"
 
 Component::Rigidbody::Rigidbody(GameObject* _owner, bool _isDynamic) 
 	:ComponentBase(_owner)

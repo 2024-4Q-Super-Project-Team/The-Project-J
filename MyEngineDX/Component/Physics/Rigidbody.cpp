@@ -20,3 +20,7 @@ Component::Rigidbody::Rigidbody(GameObject* _owner, bool _isDynamic)
 		mRigidActor = physics->createRigidStatic(transform);
 	}
 }
+
+void Component::Rigidbody::Tick()
+{
+}

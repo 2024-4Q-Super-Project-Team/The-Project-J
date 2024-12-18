@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Transform.h"
 
-Transform::Transform()
-	: mRootParent(nullptr)
+Transform::Transform(void* _owner)
+	: mOwnerAddr(reinterpret_cast<ULONG64>(_owner))
+	, mRootParent(nullptr)
 	, mParent(nullptr)
 	, mChildren()
 	, mLocalMatrix(Matrix::Identity)

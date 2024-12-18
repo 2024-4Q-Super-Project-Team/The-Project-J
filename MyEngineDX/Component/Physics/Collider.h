@@ -12,13 +12,14 @@ namespace Component
 		virtual ~Collider() {}
 	public:
 		virtual void Start();
-		virtual void FixedUpdate() override;
-		virtual void PreUpdate() override;
-		virtual void Update() override;
-		virtual void PostUpdate() override;
-		virtual void PreRender() override;
-		virtual void Render(GraphicsManager* _graphicsManager) override;
-		virtual void PostRender() override;
+		virtual void Tick() override = 0;
+		virtual void FixedUpdate() override = 0;
+		virtual void PreUpdate() override = 0;
+		virtual void Update() override = 0;
+		virtual void PostUpdate() override = 0;
+		virtual void PreRender() override = 0;
+		virtual void Render(GraphicsManager* _graphicsManager) override = 0;
+		virtual void PostRender() override = 0;
 		
 		//콜라이더의 로컬 포지션을 변경합니다. 
 		virtual void SetLocalPosition(Vector3 _pos);

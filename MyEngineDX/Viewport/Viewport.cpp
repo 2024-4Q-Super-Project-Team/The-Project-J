@@ -14,6 +14,14 @@ ViewportScene::~ViewportScene()
     SAFE_DELETE(mWorldManager)
 }
 
+void ViewportScene::Tick()
+{
+	if (mWorldManager)
+	{
+		mWorldManager->Tick();
+	}
+}
+
 void ViewportScene::FixedUpdate()
 {
 	if (mWorldManager)

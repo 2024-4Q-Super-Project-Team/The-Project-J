@@ -14,13 +14,14 @@ namespace Component
 		explicit SkinningMeshRenderer(GameObject* _owner);
 		virtual ~SkinningMeshRenderer();
 	public:
-		virtual void FixedUpdate() override {}
-		virtual void PreUpdate() override {}
-		virtual void Update() override {}
-		virtual void PostUpdate() override {}
-		virtual void PreRender() override {}
+		virtual void Tick() override;
+		virtual void FixedUpdate() override;
+		virtual void PreUpdate() override;
+		virtual void Update() override;
+		virtual void PostUpdate() override;
+		virtual void PreRender() override;
 		virtual void Render(GraphicsManager* _graphicsManager) override;
-		virtual void PostRender() override {}
+		virtual void PostRender() override;
 	public:
 		bool SetModel(std::shared_ptr<Graphics::ModelResource> _spModel);
 		bool SetAnimation(const std::wstring& _key);
@@ -38,8 +39,6 @@ namespace Component
 		Graphics::BoneState*		 mBoneState;
 
 		Node* CreateNodeFromModelNode(Node* _parent, Graphics::ModelNodeResource* _modelNode);
-		void CalculateAnimation();
-		void CalculateNodeTransform(Node* _parent);
 
 		friend class Node;
 	};

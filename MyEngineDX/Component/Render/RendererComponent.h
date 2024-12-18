@@ -19,6 +19,7 @@ namespace Component
 		explicit RendererBase(GameObject* _owner);
 		virtual ~RendererBase();
 	public:
+		virtual void Tick() override {}
 		virtual void FixedUpdate() override {}
 		virtual void PreUpdate() override {}
 		virtual void Update() override {}

@@ -10,22 +10,28 @@ namespace Engine
 			: mName(_name), mTag(_tag), mState(EntityState::Create) {
 		}
 	protected:
+		// 콜백은 호출받는 타이밍을 알아야한다.
+		// SetActive(true)를 호출하자마자 호출
 		virtual void _CALLBACK OnEnable() {};
+		// SetActive(false)를 호출하자마자 호출
 		virtual void _CALLBACK OnDisable() {};
+		// 객체가 생성되자 마자 호출
 		virtual void _CALLBACK OnCreate() {};
+		// Destroy상태로 바꾸자 마자 호출
 		virtual void _CALLBACK OnDestroy() {};
 	protected:
 		std::wstring mName;
 		std::wstring mTag;
 		EntityState	 mState;
 	public:
-		void SetName(std::wstring_view _name) { mName = _name; }
-		void SetTag(std::wstring_view _tag) { mTag = _tag; }
 		void SetActive(bool _isActive);
 		void SetDestroy();
+		void SetCreate();
 
-		const std::wstring& GetName()	 { return mName; }
-		const std::wstring& GetTag()	 { return mTag; }
-		const EntityState&  GetState()	 { return mState; }
+		inline void SetName(std::wstring_view _name) { mName = _name; }
+		inline void SetTag(std::wstring_view _tag) { mTag = _tag; }
+		inline const std::wstring& GetName()  const	{ return mName; }
+		inline const std::wstring& GetTag()	  const		{ return mTag; }
+		inline const EntityState&  GetState() const		{ return mState; }
 	};
 }

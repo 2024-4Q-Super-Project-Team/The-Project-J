@@ -39,6 +39,7 @@ void GameManager::Run()
 	{
 		Time::Update();
 		//Input::Update();
+		Tick();
 		FixedUpdate();
 		PreUpdate();
 		Update();
@@ -53,6 +54,14 @@ void GameManager::Run()
 void GameManager::Finalization()
 {
 	SAFE_DELETE(mGraphicsManager)
+}
+
+void GameManager::Tick()
+{
+	if (mApplication)
+		mApplication->OnTick();
+	if (mViewportManager)
+		mViewportManager->Tick();
 }
 
 void GameManager::FixedUpdate()

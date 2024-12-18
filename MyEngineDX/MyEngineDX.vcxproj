@@ -181,6 +181,7 @@
     <ClInclude Include="Helper\Factory\Factory.h" />
     <ClInclude Include="Graphics\Wrapper\InputLayout.h" />
     <ClInclude Include="Interface\IEngineCycle.h" />
+    <ClInclude Include="Resource\Data\IResource.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="ObjectGroup\ObjectGroup.h" />
     <ClInclude Include="pch.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Graphics\Wrapper\SamplerState.h" />
     <ClInclude Include="Physics\PhysicsManager.h" />
     <ClInclude Include="Component\Physics\Rigidbody.h" />
+    <ClInclude Include="Resource\Data\Prefab.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="TimeManager\Time.h" />
     <ClInclude Include="Viewport\ViewportManager.h" />
@@ -231,6 +233,7 @@
     <ClCompile Include="Helper\Factory\Factory.cpp" />
     <ClCompile Include="Graphics\Wrapper\InputLayout.cpp" />
     <ClCompile Include="Interface\IEngineCycle.cpp" />
+    <ClCompile Include="Resource\Data\IResource.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="ObjectGroup\ObjectGroup.cpp" />
     <ClCompile Include="pch.cpp">
@@ -242,6 +245,7 @@
     <ClCompile Include="Graphics\Wrapper\SamplerState.cpp" />
     <ClCompile Include="Physics\PhysicsManager.cpp" />
     <ClCompile Include="Component\Physics\Rigidbody.cpp" />
+    <ClCompile Include="Resource\Data\Prefab.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="TimeManager\Time.cpp" />
     <ClCompile Include="Viewport\ViewportManager.cpp" />
@@ -252,6 +256,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.vcxproj">
       <Project>{0dcc9950-4e01-4eab-ab13-826d9483de57}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\LogDispatcher\LogDispatcher.vcxproj">
+      <Project>{fc9afce0-def5-4d48-be20-6c3836425c41}</Project>
     </ProjectReference>
     <ProjectReference Include="..\Window\Window.vcxproj">
       <Project>{4278c38a-354d-47a3-992f-beb90e4a84e3}</Project>

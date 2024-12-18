@@ -16,6 +16,7 @@ public:
 	ViewportManager(ViewportManager&&) noexcept = default;
 	ViewportManager& operator=(ViewportManager&&) noexcept = default;
 public:
+	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;
@@ -25,7 +26,9 @@ public:
 	virtual void PostRender() override;
 public:
 	ViewportScene* CreateViewport(Display::IWindow* _pWindow);
+	ViewportScene* GetActiveViewport() { return  mActiveViewport; }
 private:
+	ViewportScene* mActiveViewport;
 	std::vector<ViewportScene*> mViewports;
 	GameManager* const mGameManager;
 };

@@ -9,6 +9,7 @@ namespace Component
 		Rigidbody(GameObject* _owner, bool _isDynamic);
 		virtual ~Rigidbody() {}
 	public:
+		virtual void Tick() override;
 		virtual void FixedUpdate() override;
 		virtual void PreUpdate() override;
 		virtual void Update() override;

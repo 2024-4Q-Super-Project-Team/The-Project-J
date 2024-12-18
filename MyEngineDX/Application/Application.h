@@ -24,6 +24,7 @@ namespace Engine
 		virtual void OnPreFinalization() {};
 		virtual void OnPostFinalization() {};
 
+		virtual void OnTick() {};
 		virtual void OnFixedUpdate() {};
 		virtual void OnPreUpdate() {};
 		virtual void OnUpdate() {};

@@ -16,6 +16,7 @@ public:
 	GameObject& operator=(const GameObject& _other) = default;
 	GameObject& operator=(GameObject&& _other) noexcept = default;
 public:
+	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;

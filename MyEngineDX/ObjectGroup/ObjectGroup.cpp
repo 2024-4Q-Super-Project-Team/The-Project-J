@@ -1,9 +1,10 @@
 #include "pch.h"
 #include "ObjectGroup.h"
-
+#include "World/World.h"
 
 ObjectGroup::ObjectGroup() 
 	: mOwnerWorld(nullptr)
+	, mGroupOrder(0)
 {
 }
 
@@ -16,58 +17,39 @@ ObjectGroup::~ObjectGroup()
 {
 }
 
+void ObjectGroup::Tick()
+{
+	FOR_LOOP_ARRAY_ENTITY(mObjects, Tick())
+}
+
 void ObjectGroup::FixedUpdate()
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->FixedUpdate();
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, FixedUpdate())
 }
 
 void ObjectGroup::PreUpdate()
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->PreUpdate();
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, PreUpdate())
 }
 
 void ObjectGroup::Update()
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->Update();
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, Update())
 }
 
 void ObjectGroup::PostUpdate()
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->PostUpdate();
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, PostUpdate())
 }
 
 void ObjectGroup::PreRender()
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->PreRender();
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, PreRender())
 }
 
 void ObjectGroup::Render(GraphicsManager* _graphicsManager)
 {
-	for (GameObject*& obj : mObjects)
-	{
-		if (obj->GetState() == EntityState::Active)
-			obj->Render(_graphicsManager);
-	}
+	FOR_LOOP_ARRAY_ENTITY(mObjects, Render(_graphicsManager))
 }
 
 void ObjectGroup::PostRender()
@@ -116,9 +98,21 @@ GameObject* ObjectGroup::CreateObject(std::wstring_view _name, std::wstring_view
 	return instance;
 }
 
+void ObjectGroup::UpdateObject()
+{
+}
+
 void ObjectGroup::SetListSize(UINT _size)
 {
 	if (mObjects.size() > _size)
 		return;
 	mObjects.resize(_size);
 }
+
+inline void ObjectGroup::SetWorld(DXWorld* _world)
+{
+	if (mOwnerWorld == _world)
+		return;
+	_world->CreateObjectGroup(this);
+}
+

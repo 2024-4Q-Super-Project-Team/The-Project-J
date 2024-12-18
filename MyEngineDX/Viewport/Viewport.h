@@ -11,6 +11,7 @@ public:
 	explicit ViewportScene(Display::IWindow* _pWindow, Graphics::RenderTarget* _pRenderTarget);
 	virtual ~ViewportScene();
 public:
+	virtual void Tick() override final;
 	virtual void FixedUpdate() override final;
 	virtual void PreUpdate() override final;
 	virtual void Update() override final;

@@ -21,6 +21,7 @@ public:
 	void Run();
 	void Finalization();
 public:
+	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;
@@ -28,7 +29,6 @@ public:
 	virtual void PreRender() override;
 	virtual void Render(GraphicsManager* _graphicsManager) override;
 	virtual void PostRender() override;
-public:
 public:
 	static float GetFixedUpdateTick() { return mFixedUpdateTick; }
 	static Engine::Application* GetApplication() { return mApplication; }

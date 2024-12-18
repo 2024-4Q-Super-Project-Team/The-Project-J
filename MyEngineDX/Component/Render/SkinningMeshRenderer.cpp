@@ -10,8 +10,25 @@ namespace Component
 	{
 		mType = ComponentType::SkinningMeshRenderer;
 	}
-
 	SkinningMeshRenderer::~SkinningMeshRenderer()
+	{
+	}
+	void SkinningMeshRenderer::Tick()
+	{
+	}
+	void SkinningMeshRenderer::FixedUpdate()
+	{
+	}
+	void SkinningMeshRenderer::PreUpdate()
+	{
+	}
+	void SkinningMeshRenderer::Update()
+	{
+	}
+	void SkinningMeshRenderer::PostUpdate()
+	{
+	}
+	void SkinningMeshRenderer::PreRender()
 	{
 	}
 	void SkinningMeshRenderer::Render(GraphicsManager* _graphicsManager)
@@ -23,6 +40,9 @@ namespace Component
 			mRootNode->mLocalMatrix = ownerObject->transform->GetWorldMatrix();
 		}
 
+	}
+	void SkinningMeshRenderer::PostRender()
+	{
 	}
 	bool SkinningMeshRenderer::SetModel(std::shared_ptr<Graphics::ModelResource> _spModel)
 	{
@@ -62,13 +82,6 @@ namespace Component
 				CreateNodeFromModelNode(Node, node));
 		}
 		return Node;
-	}
-	void SkinningMeshRenderer::CalculateAnimation()
-	{
-
-	}
-	void SkinningMeshRenderer::CalculateNodeTransform(Node* _node)
-	{
 	}
 	bool SkinningMeshRenderer::SetAnimation(const std::wstring& _key)
 	{

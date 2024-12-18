@@ -14,6 +14,7 @@ namespace Component
 		Script(GameObject* _owner);
 		virtual ~Script() = default;
 	public:
+		virtual void Tick() override {}
 		virtual void FixedUpdate() override {}
 		virtual void PreUpdate() override {}
 		virtual void Update() override {}

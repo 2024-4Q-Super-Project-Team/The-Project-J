@@ -26,35 +26,6 @@ void Component::Collider::Start()
 
 }
 
-void Component::Collider::FixedUpdate()
-{
-	
-}
-
-void Component::Collider::PreUpdate()
-{
-}
-
-void Component::Collider::Update()
-{
-}
-
-void Component::Collider::PostUpdate()
-{
-}
-
-void Component::Collider::PreRender()
-{
-}
-
-void Component::Collider::Render(GraphicsManager* _graphicsManager)
-{
-}
-
-void Component::Collider::PostRender()
-{
-}
-
 void Component::Collider::SetLocalPosition(Vector3 _pos)
 {
 	PxTransform currentTransform = mShape->getLocalPose();

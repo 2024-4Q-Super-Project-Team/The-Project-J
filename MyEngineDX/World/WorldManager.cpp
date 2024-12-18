@@ -8,16 +8,15 @@ WorldManager::WorldManager()
 
 WorldManager::~WorldManager()
 {
-	for (auto& [first, second] : mWorlds)
-	{
-		SAFE_DELETE(second)
+	SAFE_DELETE_MAP(mWorlds)
+}
+
+void WorldManager::Tick()
+{
+	if (mCurrActiveWorld) {
+		mCurrActiveWorld->OnTick();
+		UPDATE_ENTITY(mCurrActiveWorld, Tick())
 	}
-	for (auto& [first, second] : DXWorld::mPersistanceObjectGroups)
-	{
-		SAFE_DELETE(second)
-	}
-	mWorlds.clear();
-	DXWorld::mPersistanceObjectGroups.clear();
 }
 
 void WorldManager::FixedUpdate()
@@ -115,6 +114,11 @@ void WorldManager::PostRender()
 			mNextActiveWorld = nullptr;
 		}
 	}
+}
+
+DXWorld* WorldManager::GetActiveWorld()
+{
+	return mCurrActiveWorld;
 }
 
 BOOL WorldManager::SetActiveWorld(std::wstring_view _name)

@@ -11,6 +11,7 @@ namespace Component
 		virtual ~BoxCollider() {}
 	public:
 		virtual void Start() override;
+		virtual void Tick() override;
 		virtual void FixedUpdate() override;
 		virtual void PreUpdate() override;
 		virtual void Update() override;

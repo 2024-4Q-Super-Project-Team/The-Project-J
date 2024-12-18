@@ -3,7 +3,7 @@
 #include "ObjectGroup/ObjectGroup.h"
 
 GameObject::GameObject(ObjectGroup* _owner, std::wstring_view _name, std::wstring_view _tag)
-	: transform(new Transform)
+	: transform(new Transform(this))
 	, mOwnerGroup(_owner)
 	, mParent(nullptr)
 	, mRootParent(nullptr)
@@ -18,6 +18,18 @@ GameObject::~GameObject()
 	}
 	SAFE_DELETE_VECTOR(mChildren)
 	delete transform;
+}
+
+void GameObject::Tick()
+{
+	for (auto& compArr : mComponentArray)
+	{
+		for (auto& comp : compArr)
+		{
+			if (comp->IsActive())
+				comp->Tick();
+		}
+	}
 }
 
 void GameObject::FixedUpdate()
@@ -131,6 +143,11 @@ void _CALLBACK GameObject::OnDisable()
 
 void _CALLBACK GameObject::OnDestroy()
 {
+	const std::vector<Transform*> children = transform->GetChildren();
+	for (auto child : children)
+	{
+		child->GetOwner<GameObject>()->SetDestroy();
+	}
 	return void _CALLBACK();
 }
 

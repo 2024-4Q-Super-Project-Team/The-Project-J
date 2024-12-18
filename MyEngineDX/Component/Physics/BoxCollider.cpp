@@ -25,6 +25,10 @@ void Component::BoxCollider::Start()
 #endif
 }
 
+void Component::BoxCollider::Tick()
+{
+}
+
 void Component::BoxCollider::FixedUpdate()
 {
 }

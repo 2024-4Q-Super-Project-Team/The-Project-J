@@ -9,9 +9,10 @@ class DXWorld
 	, public Engine::Entity
 {
 public:
-	DXWorld(WorldManager* _wrdMng, std::wstring_view _name, std::wstring_view _tag);
+	DXWorld(std::wstring_view _name, std::wstring_view _tag);
 	virtual ~DXWorld();
 public:
+	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
 	virtual void Update() override;
@@ -27,6 +28,7 @@ public:
 	virtual void _CALLBACK OnLoad() {};
 	virtual void _CALLBACK OnUnLoad() {};
 
+	virtual void _CALLBACK OnTick() {};
 	virtual void _CALLBACK OnFixedUpdate() {};
 	virtual void _CALLBACK OnPreUpdate() {};
 	virtual void _CALLBACK OnUpdate() {};
@@ -35,19 +37,20 @@ public:
 	virtual void _CALLBACK OnRender() {};
 	virtual void _CALLBACK OnPostRender() {};
 public:
-	ObjectGroup* CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag);
+	// 오브젝트 그룹을 만듭니다.
+	ObjectGroup* CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
+	// 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
+	void		 CreateObjectGroup(ObjectGroup* _recvGroup);
+	// 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환
 	ObjectGroup* GetObjectGroup(std::wstring_view _name);
-	PxScene* GetScene() { return mScene; }
+	inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
+private:
+	void UpdateGroup();
+public:
+	PxScene*		GetScene() { return mScene; }
 private:
 	Transform* mWorldTransform;
-
-	std::unordered_map<std::wstring, ObjectGroup*> mObjectGroups;
-	static std::unordered_map<std::wstring, ObjectGroup*> mPersistanceObjectGroups;
-private:
-	std::queue<ObjectGroup*> mCreateQueue;
-	std::queue<ObjectGroup*> mDestroyQueue;
+	std::vector<ObjectGroup*> mObjectGroups;
 protected:
-	WorldManager* const mWorldManager;
 	PxScene* mScene;
-	friend class WorldManager;
 };

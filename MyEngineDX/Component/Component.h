@@ -25,6 +25,7 @@ namespace Component
 		ComponentBase(GameObject* _owner);
 		virtual ~ComponentBase() {}
 	public:
+		virtual void Tick() override = 0;
 		virtual void FixedUpdate() override = 0;
 		virtual void PreUpdate() override = 0;
 		virtual void Update() override = 0;

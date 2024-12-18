@@ -63,6 +63,8 @@
 #include "Component/Render/Data/Bone.h"
 #include "Component/Render/Data/Animation.h"
 
+#include "Resource/Data/Prefab.h"
+
 //Physics
 #include <physx/PxPhysicsAPI.h>
 #include <physx/PxPhysics.h>

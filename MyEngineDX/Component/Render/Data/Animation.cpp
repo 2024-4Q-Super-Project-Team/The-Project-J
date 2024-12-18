@@ -3,14 +3,14 @@
 
 namespace Graphics
 {
-	AnimationInfo::AnimationInfo(std::wstring_view _name)
+	AnimationResource::AnimationResource(std::wstring_view _name)
 		: IGraphicsResource(_name)
 	{
 	}
-	AnimationInfo::~AnimationInfo()
+	AnimationResource::~AnimationResource()
 	{
 	}
-	ChannelInfo* AnimationInfo::GetChannel(std::wstring_view _key)
+	ChannelResource* AnimationResource::GetChannel(std::wstring_view _key)
 	{
 		auto itr = mChannels.find(_key.data());
 		if (itr != mChannels.end())
@@ -19,11 +19,11 @@ namespace Graphics
 		}
 		return nullptr;
 	}
-	ChannelInfo::ChannelInfo(std::weak_ptr<AnimationInfo> _wpAnimInfo, std::wstring_view _name)
-		: IGraphicsResource(_name), mOwner(_wpAnimInfo)
+	ChannelResource::ChannelResource(std::weak_ptr<AnimationResource> _wpAnimResource, std::wstring_view _name)
+		: IGraphicsResource(_name), mOwner(_wpAnimResource)
 	{
 	}
-	ChannelInfo::~ChannelInfo()
+	ChannelResource::~ChannelResource()
 	{
 	}
 	AnimationState::AnimationState()
@@ -36,9 +36,9 @@ namespace Graphics
 	{
 		mTimer += Time::GetScaledDeltaTime();
 	}
-	inline void AnimationState::SetAnimation(AnimationInfo* _pAnim)
+	inline void AnimationState::SetAnimation(AnimationResource* _pAnim)
 	{
-		mCurrAnimationInfo = _pAnim;
+		mCurrAnimationResource = _pAnim;
 	}
 	inline void AnimationState::SetTimer(float _time)
 	{

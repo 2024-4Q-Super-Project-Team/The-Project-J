@@ -88,13 +88,20 @@ namespace Display
 		return res;
 	}
 
+	BOOL Window::Show(BOOL _bShow)
+	{
+		if (mHwnd)
+			return ShowWindow(mHwnd, _bShow ? SW_SHOW : SW_HIDE);
+		else return FALSE;
+	}
+
 	inline void Window::SetFocus()
 	{
 		::SetFocus(mHwnd);
 	}
 
-	bool Window::IsFocusing()
+	BOOL Window::IsFocusing()
 	{
-		return false;
+		return (BOOL)(GetFocus() == mHwnd);
 	}
 }

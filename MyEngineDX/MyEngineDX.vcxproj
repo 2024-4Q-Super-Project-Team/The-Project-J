@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Component\Render\Animator.h" />
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Component\Physics\BoxCollider.h" />
     <ClInclude Include="Component\Physics\Collider.h" />
@@ -156,7 +157,6 @@
     <ClInclude Include="Component\Render\Data\Bone.h" />
     <ClInclude Include="Component\Render\Data\Cbuffer.h" />
     <ClInclude Include="Component\Render\Data\GraphicsEnum.h" />
-    <ClInclude Include="Component\Render\Data\GraphicsEnum1.h" />
     <ClInclude Include="Component\Render\Data\Material.h" />
     <ClInclude Include="Component\Render\Data\Mesh.h" />
     <ClInclude Include="Component\Render\Data\Model.h" />
@@ -164,6 +164,7 @@
     <ClInclude Include="Component\Render\SkinningMeshRenderer.h" />
     <ClInclude Include="Component\Script\Script.h" />
     <ClInclude Include="Component\Physics\DebugDraw\DebugDraw.h" />
+    <ClInclude Include="Editor\Editor.h" />
     <ClInclude Include="Graphics\GraphicsInterface.h" />
     <ClInclude Include="Graphics\Wrapper\GraphicsTexture.h" />
     <ClInclude Include="Graphics\Wrapper\GraphicsBuffer.h" />
@@ -183,7 +184,7 @@
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="ObjectGroup\ObjectGroup.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Helper\Transform\Transform3D.h" />
+    <ClInclude Include="Helper\Transform\Transform.h" />
     <ClInclude Include="Graphics\Wrapper\Shader.h" />
     <ClInclude Include="Graphics\Wrapper\SamplerState.h" />
     <ClInclude Include="Physics\PhysicsManager.h" />
@@ -196,6 +197,7 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Component\Render\Animator.cpp" />
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Component\Physics\BoxCollider.cpp" />
     <ClCompile Include="Component\Physics\Collider.cpp" />
@@ -205,7 +207,6 @@
     <ClCompile Include="Component\Render\Data\Bone.cpp" />
     <ClCompile Include="Component\Render\Data\Cbuffer.cpp" />
     <ClCompile Include="Component\Render\Data\GraphicsEnum.cpp" />
-    <ClCompile Include="Component\Render\Data\GraphicsEnum1.cpp" />
     <ClCompile Include="Component\Render\Data\Material.cpp" />
     <ClCompile Include="Component\Render\Data\Mesh.cpp" />
     <ClCompile Include="Component\Render\Data\Model.cpp" />
@@ -213,6 +214,7 @@
     <ClCompile Include="Component\Render\SkinningMeshRenderer.cpp" />
     <ClCompile Include="Component\Script\Script.cpp" />
     <ClCompile Include="Component\Physics\DebugDraw\DebugDraw.cpp" />
+    <ClCompile Include="Editor\Editor.cpp" />
     <ClCompile Include="Graphics\GraphicsInterface.cpp" />
     <ClCompile Include="Graphics\Wrapper\GraphicsTexture.cpp" />
     <ClCompile Include="Graphics\Wrapper\GraphicsBuffer.cpp" />
@@ -235,7 +237,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Helper\Transform\Transform3D.cpp" />
+    <ClCompile Include="Helper\Transform\Transform.cpp" />
     <ClCompile Include="Graphics\Wrapper\Shader.cpp" />
     <ClCompile Include="Graphics\Wrapper\SamplerState.cpp" />
     <ClCompile Include="Physics\PhysicsManager.cpp" />

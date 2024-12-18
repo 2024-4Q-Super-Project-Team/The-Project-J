@@ -3,15 +3,15 @@
 
 namespace Graphics
 {
-	BoneInfo::BoneInfo(std::wstring_view _name, UINT _id, Matrix& _offsetMatrix)
+	BoneResource::BoneResource(std::wstring_view _name, UINT _id, Matrix& _offsetMatrix)
 		: IGraphicsResource(_name), mPaletteID(_id), mOffsetMatrix(_offsetMatrix)
 	{
 	}
-	BoneInfo::~BoneInfo()
+	BoneResource::~BoneResource()
 	{
 	}
-	void BoneState::SetBoneMatrix(BoneInfo* _pBoneInfo, const Matrix& _worldMatrix)
+	void BoneState::SetBoneMatrix(BoneResource* _pBoneResource, const Matrix& _worldMatrix)
 	{
-		mBoneMatrixBuffer[_pBoneInfo->GetPaletteID()] = XMMatrixTranspose(_pBoneInfo->GetBoneMatrix() * _worldMatrix);
+		mBoneMatrixBuffer[_pBoneResource->GetPaletteID()] = XMMatrixTranspose(_pBoneResource->GetBoneMatrix() * _worldMatrix);
 	}
 }

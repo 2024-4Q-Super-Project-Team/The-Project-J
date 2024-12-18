@@ -1,15 +1,12 @@
 #include "pch.h"
 #include "Object.h"
-
-GameObject::GameObject(ObjectGroup* _owner)
-	: transform(new Transform3D())
-	, mOwnerGroup(_owner)
-{
-}
+#include "ObjectGroup/ObjectGroup.h"
 
 GameObject::GameObject(ObjectGroup* _owner, std::wstring_view _name, std::wstring_view _tag)
-	: transform(new Transform3D())
+	: transform(new Transform)
 	, mOwnerGroup(_owner)
+	, mParent(nullptr)
+	, mRootParent(nullptr)
 {
 }
 
@@ -17,11 +14,9 @@ GameObject::~GameObject()
 {
 	for (auto& compArr : mComponentArray)
 	{
-		for (auto& comp : compArr)
-		{
-			SAFE_DELETE(comp)
-		}
+		SAFE_DELETE_VECTOR(compArr)
 	}
+	SAFE_DELETE_VECTOR(mChildren)
 	delete transform;
 }
 
@@ -87,10 +82,10 @@ void GameObject::PreRender()
 
 void GameObject::Render(GraphicsManager* _graphicsManager)
 {
-	if (transform)
-	{
-		transform->CalculateMatrix();
-	}
+	//if (transform)
+	//{
+	//	transform->CalculateMatrix();
+	//}
 	for (auto& compArr : mComponentArray)
 	{
 		for (auto& comp : compArr)
@@ -137,4 +132,14 @@ void _CALLBACK GameObject::OnDisable()
 void _CALLBACK GameObject::OnDestroy()
 {
 	return void _CALLBACK();
+}
+
+GameObject* GameObject::CreateChild(std::wstring_view _name)
+{
+	GameObject* instance = new GameObject(mOwnerGroup, _name, mTag);
+	mChildren.push_back(instance);
+	instance->mState = EntityState::Active;
+	instance->mParent = this;
+	instance->mRootParent = mRootParent;
+	return nullptr;
 }

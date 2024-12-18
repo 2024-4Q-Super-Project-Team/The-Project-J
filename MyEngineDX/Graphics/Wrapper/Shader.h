@@ -6,6 +6,7 @@ namespace Graphics
 	{
 		VS,		// Vertex Shader
 		PS,		// Pixel Shader
+		ALL,    // All Type
 	};
 
 	class GraphicsDevice;

@@ -9,12 +9,12 @@ namespace Component
 	{
 		Script,
 		FiniteStateMachine,
-		Transform,
 		Camera,
 		DirectionLight,
 		Renderer,
 		Collider,
 		SkinningMeshRenderer,
+		Animator,
 		SIZE,
 	};
 

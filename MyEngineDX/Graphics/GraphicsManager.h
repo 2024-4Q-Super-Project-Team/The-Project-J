@@ -27,16 +27,17 @@ public:
 	GraphicsManager();
 	~GraphicsManager();
 public:
-	void BeginRender();
-	void EndRender();
+	BOOL Initialize();
 public:
 	virtual BOOL SetUpDisplay(Display::IWindow** _ppWindow) override;
 private:
 	Graphics::GraphicsDevice* mGraphicsDevice;
 	Graphics::Renderer* mRenderer;
 
-	std::array<Graphics::Buffer*, static_cast<UINT>(Graphics::eCBufferType::SIZE)> mConstantBuffArr;
+	std::array<Graphics::ConstantBuffer*, static_cast<UINT>(Graphics::eCBufferType::SIZE)> mConstantBuffArr;
 	std::unordered_map<HWND, Graphics::RenderTarget*> mRenderTargetTable;
+	// 메쉬를 모아서 한번에 렌더링..?
+
 public:
 	inline virtual Graphics::GraphicsDevice* GetDevice() override { return mGraphicsDevice; }
 	inline virtual Graphics::Renderer* GetRenderer() override { return mRenderer; }

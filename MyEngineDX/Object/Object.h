@@ -1,5 +1,5 @@
 #pragma once
-#include "Component\Script\Script.h"
+#include "Component/Script/Script.h"
 
 class ObjectGroup;
 
@@ -9,7 +9,6 @@ class GameObject
 {
 	using ComponentArray = std::array<std::vector<Component::ComponentBase*>, static_cast<int>(Component::ComponentType::SIZE)>;
 public:
-	GameObject(ObjectGroup* _owner);
 	GameObject(ObjectGroup* _owner, std::wstring_view _name, std::wstring_view _tag);
 	virtual ~GameObject();
 	GameObject(const GameObject& _other) = default;
@@ -35,14 +34,22 @@ public:
 	T* GetComponent();
 	template <class T>
     std::vector<T*>& GetComponents();
+	GameObject* CreateChild(std::wstring_view _name);
+
+	inline GameObject* GetParent() { return mParent; }
+	inline GameObject* GetRootParent() { return mRootParent; }
+
+	std::vector<GameObject*>& GetChildren();
 public:
-	Transform3D* const transform;
+	Transform* const transform;
 private:
-	ComponentArray	mComponentArray;
-	ObjectGroup*	mOwnerGroup;
+	GameObject*					mRootParent;
+	GameObject*					mParent;
+	std::vector<GameObject*>	mChildren;
+	ComponentArray				mComponentArray;
+	ObjectGroup*				mOwnerGroup;
 public:
 	ObjectGroup* GetOwnerGroup() { return mOwnerGroup; }
-
 };
 
 

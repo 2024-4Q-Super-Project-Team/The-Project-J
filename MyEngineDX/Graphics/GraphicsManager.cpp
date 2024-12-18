@@ -15,29 +15,36 @@ GraphicsManager::GraphicsManager()
     {
         bufDesc.ByteWidth = sizeof(CTransformBuffer);
         mConstantBuffArr[static_cast<UINT>(eCBufferType::Transform)]
-            = new Buffer(L"CTransformBuffer", mGraphicsDevice, &bufDesc);
+            = new ConstantBuffer(L"CTransformBuffer", mGraphicsDevice, &bufDesc);
     }
     {
         bufDesc.ByteWidth = sizeof(CMaterialBuffer);
         mConstantBuffArr[static_cast<UINT>(eCBufferType::Material)]
-            = new Buffer(L"CMaterialBuffer", mGraphicsDevice, &bufDesc);
+            = new ConstantBuffer(L"CMaterialBuffer", mGraphicsDevice, &bufDesc);
     }
     {
         bufDesc.ByteWidth = sizeof(CCameraBuffer);
         mConstantBuffArr[static_cast<UINT>(eCBufferType::Camera)]
-            = new Buffer(L"CCameraBuffer", mGraphicsDevice, &bufDesc);
+            = new ConstantBuffer(L"CCameraBuffer", mGraphicsDevice, &bufDesc);
     }
     {
         bufDesc.ByteWidth = sizeof(CBonePaletteBuffer);
         mConstantBuffArr[static_cast<UINT>(eCBufferType::BonePalette)]
-            = new Buffer(L"CBonePaletteBuffer", mGraphicsDevice, &bufDesc);
+            = new ConstantBuffer(L"CBonePaletteBuffer", mGraphicsDevice, &bufDesc);
     }
 }
 
 GraphicsManager::~GraphicsManager()
 {
+    SAFE_DELETE_ARRAY(mConstantBuffArr)
+    SAFE_DELETE_MAP(mRenderTargetTable)
     SAFE_RELEASE(mRenderer)
-        SAFE_RELEASE(mGraphicsDevice)
+    SAFE_RELEASE(mGraphicsDevice)
+}
+
+BOOL GraphicsManager::Initialize()
+{
+    return 0;
 }
 
 BOOL GraphicsManager::SetUpDisplay(Display::IWindow** _ppWindow)

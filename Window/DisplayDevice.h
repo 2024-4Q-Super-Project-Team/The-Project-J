@@ -1,6 +1,7 @@
 #pragma once
 #include "IDisplay.h"
 #include "Window.h"
+#include "Console.h"
 
 namespace Display
 {
@@ -17,7 +18,7 @@ namespace Display
 		virtual	void Release() override;
 	public:
 		virtual HRESULT CreateWindowDisplay(WindowDesc* _pWindDesc, IWindow** _ppIWindow) override;
-		virtual HRESULT CreateConsoleDisplay(ConsoleDesc* _pConsoleDesc, IConsole** _ppIConsole) override { return E_FAIL; };
+		virtual HRESULT CreateConsoleDisplay(ConsoleDesc* _pConsoleDesc, IConsole** _ppIConsole) override;
 		virtual HRESULT DestroyDisplay(IDisplay** _ppDisplay) override;
 		virtual HRESULT DestroyDisplay(HWND _hwnd) override;
 	private:

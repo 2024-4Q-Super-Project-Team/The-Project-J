@@ -22,7 +22,7 @@ namespace Graphics
 		if (mContext)
 			mContext->Release();
 	}
-	BOOL Renderer::BeginRender()
+	BOOL Renderer::Clear()
 	{
 		if (mCurRenderTarget)
 		{
@@ -37,6 +37,14 @@ namespace Graphics
 			{
 				mContext->ClearDepthStencilView(depthStencilView, D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 			}
+			return TRUE;
+		}
+		return FALSE;
+	}
+	BOOL Renderer::BeginRender()
+	{
+		if (mCurRenderTarget)
+		{
 			return TRUE;
 		}
 		return FALSE;
@@ -62,13 +70,10 @@ namespace Graphics
 			ID3D11RenderTargetView* rtv = _pRenderTarget->GetRenderTargetView();
 			ID3D11DepthStencilView* dsv = _pRenderTarget->GetDepthStencilView();
 			const D3D11_VIEWPORT& vp = _pRenderTarget->GetViewport();
-			if (rtv && dsv)
-			{
-				mContext->OMSetRenderTargets(1, &rtv, dsv);
-				mContext->RSSetViewports(1, &vp);
-				mCurRenderTarget = _pRenderTarget;
-				return TRUE;
-			}
+			mContext->OMSetRenderTargets(1, &rtv, dsv);
+			mContext->RSSetViewports(1, &vp);
+			mCurRenderTarget = _pRenderTarget;
+			return TRUE;
 		}
 		return TRUE;
 	}
@@ -134,6 +139,10 @@ namespace Graphics
 		{
 			switch (_stage)
 			{
+			case eShaderStage::ALL:
+				mContext->VSSetConstantBuffers(_startSlot, 1, &pBuff); 
+				mContext->PSSetConstantBuffers(_startSlot, 1, &pBuff); 
+				break;
 			case eShaderStage::VS:
 				mContext->VSSetConstantBuffers(_startSlot, 1, &pBuff); break;
 			case eShaderStage::PS:
@@ -145,6 +154,30 @@ namespace Graphics
 		}
 		return FALSE;
 	}
+	BOOL Renderer::BindVertexBuffer(UINT _startSlot, UINT _numBuffers, VertexBuffer* _pVertexBuffers)
+	{
+		ID3D11Buffer* pBuff = *_pVertexBuffers;
+		UINT Strid = _pVertexBuffers->GetStride();
+		UINT Offset = _pVertexBuffers->GetOffset();
+		if (pBuff)
+		{
+			mContext->IASetVertexBuffers(_startSlot, _numBuffers, &pBuff, &Strid, &Offset);
+			return TRUE;
+		}
+		return FALSE;
+	}
+	BOOL Renderer::BindIndexBuffer(IndexBuffer* _pIndexBuffer)
+	{
+		ID3D11Buffer* pBuff = *_pIndexBuffer;
+		DXGI_FORMAT Format = static_cast<DXGI_FORMAT>(_pIndexBuffer->GetFormat());
+		UINT Offset = _pIndexBuffer->GetOffset();
+		if (pBuff)
+		{
+			mContext->IASetIndexBuffer(pBuff, Format, Offset);
+			return TRUE;
+		}
+		return FALSE;
+	}
 	BOOL Renderer::BindSampler(eShaderStage _stage, UINT _startSlot, SamplerState* _sampler)
 	{
 		ID3D11SamplerState* pSampler = (*_sampler);
@@ -152,6 +185,10 @@ namespace Graphics
 		{
 			switch (_stage)
 			{
+			case eShaderStage::ALL:
+				mContext->VSSetSamplers(_startSlot, 1, &pSampler);
+				mContext->PSSetSamplers(_startSlot, 1, &pSampler);
+				break;
 			case eShaderStage::VS:
 				mContext->VSSetSamplers(_startSlot, 1, &pSampler); break;
 			case eShaderStage::PS:
@@ -168,10 +205,14 @@ namespace Graphics
 		ID3D11ShaderResourceView* pSRV = (*_pTexture);
 		switch (_stage)
 		{
+		case eShaderStage::ALL:
+			mContext->VSSetShaderResources(_startSlot, 1, &pSRV);
+			mContext->PSSetShaderResources(_startSlot, 1, &pSRV); 
+			break;
 		case eShaderStage::VS:
-			mContext->VSSetShaderResources(static_cast<UINT>(_startSlot), 1, &pSRV); break;
+			mContext->VSSetShaderResources(_startSlot, 1, &pSRV); break;
 		case eShaderStage::PS:
-			mContext->PSSetShaderResources(static_cast<UINT>(_startSlot), 1, &pSRV); break;
+			mContext->PSSetShaderResources(_startSlot, 1, &pSRV); break;
 		default:
 			break;
 		}

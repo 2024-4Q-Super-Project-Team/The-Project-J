@@ -4,12 +4,18 @@ namespace Graphics
 {
 	class GraphicsDevice;
 	class RenderTarget;
+
+	class InputLayout;
+	class SamplerState;
+
 	class Shader;
 	class VertexShader;
 	class PixelShader;
-	class InputLayout;
+
 	class Buffer;
-	class SamplerState;
+	class ConstantBuffer;
+	class VertexBuffer;
+	class IndexBuffer;
 
 	class Texture;
 
@@ -29,6 +35,7 @@ namespace Graphics
 	public:
 		BOOL SetRenderTarget(RenderTarget* _pRenderTarget);
 	public:
+		BOOL Clear();
 		BOOL BeginRender();
 		BOOL EndRender();
 		BOOL DrawCall(UINT _numIndex, UINT _startIndex, INT _baseVertex);
@@ -37,11 +44,12 @@ namespace Graphics
 		BOOL SetPixelShader(PixelShader* _pPixelShader);*/
 		BOOL BindInputLayout(InputLayout* _pInputLayout);
 		BOOL BindShader(eShaderStage _stage, Shader* _pShader);
-		BOOL BindConstantBuffer(eShaderStage _stage, UINT _startSlot, Buffer* _constanceBuffer);
 		BOOL BindSampler(eShaderStage _stage, UINT _startSlot, SamplerState* _sampler);
 		BOOL BindTextrue(eShaderStage _stage, UINT _startSlot, Graphics::Texture* _pTexture);
 
-
+		BOOL BindConstantBuffer(eShaderStage _stage, UINT _startSlot, Buffer* _constanceBuffer);
+		BOOL BindVertexBuffer(UINT _startSlot, UINT _numBuffers, VertexBuffer* _pVertexBuffers);
+		BOOL BindIndexBuffer(IndexBuffer* _pIndexBuffer);
 	private:
 		ID3D11DeviceContext* mContext;
 		RenderTarget* mCurRenderTarget;

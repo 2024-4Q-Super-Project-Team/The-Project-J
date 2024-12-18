@@ -5,23 +5,23 @@ namespace Graphics
 	class Texture;
 
 	// FBX를 로드할 때 가져오는 정보. 
-	class MaterialInfo : public IGraphicsResource
+	class MaterialResource : public IGraphicsResource
 	{
 		using MaterialMapArray = std::array<std::shared_ptr<Texture>, static_cast<UINT>(eMaterialMapType::SIZE)>;
 	public:
-		explicit MaterialInfo(std::wstring_view _name);
-		virtual ~MaterialInfo();
+		explicit MaterialResource(std::wstring_view _name);
+		virtual ~MaterialResource();
 	public:
 		inline void SetMaterialMap(eMaterialMapType _mapType, std::shared_ptr<Texture> _pTexture);
 		inline std::shared_ptr<Texture> GetMaterialMap(eMaterialMapType _mapType);
 	private:
 		MaterialMapArray mMaterialMaps;
 	};
-	// 렌더러에서 사용할 MaterialInfo의 정보를 받아오는
+	// 렌더러에서 사용할 MaterialResource의 정보를 받아오는
 	class MaterialState
 	{
 	public:
-		explicit MaterialState(MaterialInfo* _spMaterialInfo);
+		explicit MaterialState(MaterialResource* _spMaterialResource);
 		virtual ~MaterialState();
 	public:
 
@@ -38,7 +38,7 @@ namespace Graphics
 		inline BOOL		UseMaterialMapType(eMaterialMapType _type);
 		inline std::shared_ptr<Texture> GetMapTexture(eMaterialMapType _type);
 	private:
-		MaterialInfo* mMaterialInfo;
+		MaterialResource* mMaterialResource;
 		CMaterialBuffer mCBuffer;
 	};
 }

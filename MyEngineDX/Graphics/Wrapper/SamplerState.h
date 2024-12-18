@@ -8,7 +8,7 @@ namespace Graphics
     class SamplerState : public IGraphicsResource
     {
     public:
-        SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, SamplerDesc* _pDesc);
+        SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, D3D11_SAMPLER_DESC* _pDesc);
         ~SamplerState();
     private:
         ID3D11SamplerState* mSaplerState;

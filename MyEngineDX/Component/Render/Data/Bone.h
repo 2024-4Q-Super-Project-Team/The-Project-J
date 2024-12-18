@@ -5,11 +5,11 @@ namespace Graphics
 {
 	class BoneState;
 
-	class BoneInfo : public IGraphicsResource
+	class BoneResource : public IGraphicsResource
 	{
 	public:
-		explicit BoneInfo(std::wstring_view _name, UINT _id, Matrix& _offsetMatrix);
-		virtual ~BoneInfo();
+		explicit BoneResource(std::wstring_view _name, UINT _id, Matrix& _offsetMatrix);
+		virtual ~BoneResource();
 	private:
 		UINT mPaletteID = 0;		// 모델 본 팔레트에서 자신이 속한 인덱스
 		Matrix mOffsetMatrix;   // 해당 본으로 부터의 메쉬 옵셋
@@ -25,7 +25,7 @@ namespace Graphics
 		explicit BoneState();
 		virtual ~BoneState();
 	public:
-		void SetBoneMatrix(BoneInfo* _pBoneInfo, const Matrix& _worldMatrix);
+		void SetBoneMatrix(BoneResource* _pBoneResource, const Matrix& _worldMatrix);
 	private:
 		Matrix mBoneMatrixBuffer[MAX_BONE_COUNT];
 	};

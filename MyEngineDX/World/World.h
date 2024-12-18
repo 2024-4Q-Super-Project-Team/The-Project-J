@@ -39,10 +39,11 @@ public:
 	ObjectGroup* GetObjectGroup(std::wstring_view _name);
 	PxScene* GetScene() { return mScene; }
 private:
-	Transform3D* mWorldTransform;
+	Transform* mWorldTransform;
+
 	std::unordered_map<std::wstring, ObjectGroup*> mObjectGroups;
 	static std::unordered_map<std::wstring, ObjectGroup*> mPersistanceObjectGroups;
-
+private:
 	std::queue<ObjectGroup*> mCreateQueue;
 	std::queue<ObjectGroup*> mDestroyQueue;
 protected:

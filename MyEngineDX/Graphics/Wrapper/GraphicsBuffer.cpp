@@ -21,7 +21,6 @@ namespace Graphics
 			}
 		}
 	}
-
 	Buffer::~Buffer()
 	{
 		SAFE_RELEASE(mBuffer)

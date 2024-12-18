@@ -1,6 +1,6 @@
 #pragma once
 #include "DisplayDesc.h"
-
+#include "Console.h"
 namespace Display
 {
 	class IDisplay;
@@ -42,6 +42,8 @@ namespace Display
 
 		virtual BOOL			SetPosition(POINT _xy) = 0;
 		virtual BOOL			SetSize(POINT _wh) = 0;
+
+		virtual BOOL			Show(BOOL _bShow) = 0;
 	};
 
 	class IWindow : public IDisplay
@@ -56,19 +58,8 @@ namespace Display
 	public:
 		virtual HWND GetParentHandle() = 0;
 		virtual void SetFocus() = 0;
-		virtual bool IsFocusing() = 0;
-	};
-
-	class IConsole : public IDisplay
-	{
-	public:
-		IConsole(const IConsole& _other) = default;
-		IConsole(IConsole&& _other) noexcept = default;
-		IConsole& operator=(const IConsole& _other) = default;
-		IConsole& operator=(IConsole&& _other) noexcept = default;
-	public:
-		//template<typename... Args>
-		//void Log(Args&&... args) = 0;
+		virtual BOOL IsFocusing() = 0;
+		virtual BOOL Show(BOOL _bShow) = 0;
 	};
 }
 

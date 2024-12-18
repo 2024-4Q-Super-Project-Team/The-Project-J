@@ -12,6 +12,7 @@ BOOL TestApp::OnPreInitialize()
 
 BOOL TestApp::OnPostInitialize()
 {
+	//Display::Console::OpenConsole(L"Debug", { 0,0 }, { 300,200 });
 	GameManager* gmMng = GetGameManager();
 	if (nullptr == gmMng) return FALSE;
 	ViewportManager* vptMng = gmMng->GetViewportManager();

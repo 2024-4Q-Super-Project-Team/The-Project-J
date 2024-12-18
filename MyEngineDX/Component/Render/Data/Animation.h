@@ -7,49 +7,49 @@ namespace Component
 
 namespace Graphics
 {
-	class ChannelInfo;
+	class ChannelResource;
 
 	// 하나의 모션을 가지는 애니메이션 구조체
-	class AnimationInfo : public IGraphicsResource
+	class AnimationResource : public IGraphicsResource
 	{
 	public:
-		explicit AnimationInfo(std::wstring_view _name);
-		virtual ~AnimationInfo();
+		explicit AnimationResource(std::wstring_view _name);
+		virtual ~AnimationResource();
 	public:
 		inline void  SetFramePerSecond(float _fps) { mFramePerSecond = _fps; }
 		inline float GetTotalFrame() { return mTotalFrame; }
 		inline float GetFramePerSecond() { return mFramePerSecond; }	
 		inline float GetAnimationTotalTime() { return mTotalFrame / mFramePerSecond; }
-		ChannelInfo* GetChannel(std::wstring_view _key);
+		ChannelResource* GetChannel(std::wstring_view _key);
 	private:
 		float mTotalFrame;
 		float mFramePerSecond;
-		std::unordered_map<std::wstring, ChannelInfo> mChannels;
+		std::unordered_map<std::wstring, ChannelResource> mChannels;
 		friend class ResourceManager;
 	};
 	// 애니메이션을 구성하는 각 노드의 정보들
-	class ChannelInfo : public IGraphicsResource
+	class ChannelResource : public IGraphicsResource
 	{
 	public:
 		template <typename TYPE>
-		class KeyInfo
+		class KeyResource
 		{
 		public:
-			KeyInfo(TYPE _val, float _time)
+			KeyResource(TYPE _val, float _time)
 				: Value(_val), Time(_time) {}
-			~KeyInfo() = default;
+			~KeyResource() = default;
 			TYPE		Value;
 			float		Time;
 		};
 	public:
-		explicit ChannelInfo(std::weak_ptr<AnimationInfo> _wpAnimInfo, std::wstring_view _name);
-		virtual ~ChannelInfo();
+		explicit ChannelResource(std::weak_ptr<AnimationResource> _wpAnimResource, std::wstring_view _name);
+		virtual ~ChannelResource();
 	public:
-		std::vector<KeyInfo<Vector3>>		mPositionKeys;
-		std::vector<KeyInfo<Quaternion>>	mRotationKeys;
-		std::vector<KeyInfo<Vector3>>		mScalingKeys;
+		std::vector<KeyResource<Vector3>>		mPositionKeys;
+		std::vector<KeyResource<Quaternion>>	mRotationKeys;
+		std::vector<KeyResource<Vector3>>		mScalingKeys;
 	private:	
-		std::weak_ptr<AnimationInfo> mOwner;		// 속한 애니메이션 정보
+		std::weak_ptr<AnimationResource> mOwner;		// 속한 애니메이션 정보
 		friend class ResourceManager;
 	};
 
@@ -62,14 +62,14 @@ namespace Graphics
 	public:
 		void UpdateState();
 	public:
-		inline void SetAnimation(AnimationInfo* _pAnim);
+		inline void SetAnimation(AnimationResource* _pAnim);
 		inline void SetTimer(float _time);
 	private:
-		AnimationInfo*	mCurrAnimationInfo;
+		AnimationResource*	mCurrAnimationResource;
 		float			mTimer = 0.0f;
 	public:
 		inline float			GetNormalizedTime();
-		inline AnimationInfo*	GetCurrentAnimationInfo() { return mCurrAnimationInfo; }
+		inline AnimationResource*	GetCurrentAnimationResource() { return mCurrAnimationResource; }
 		inline const Matrix&	GetAnimationMatrix();
 		inline int				GetCurrentAnimationFrame();
 		inline float			GetTimer();

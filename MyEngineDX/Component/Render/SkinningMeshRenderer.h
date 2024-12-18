@@ -22,14 +22,14 @@ namespace Component
 		virtual void Render(GraphicsManager* _graphicsManager) override;
 		virtual void PostRender() override {}
 	public:
-		bool SetModel(std::shared_ptr<Graphics::ModelInfo> _spModel);
+		bool SetModel(std::shared_ptr<Graphics::ModelResource> _spModel);
 		bool SetAnimation(const std::wstring& _key);
 		inline Graphics::AnimationState* GetAnimationState() { return mAnimationState; }
 		inline Graphics::BoneState* GetBoneState() { return mBoneState; }
 	private:
 		Node* mRootNode;
 		// 렌더러가 렌더링 중인 대상 모델
-		std::shared_ptr<Graphics::ModelInfo>						mModel;
+		std::shared_ptr<Graphics::ModelResource>					mModel;
 		// 렌더러가 모델 렌더링에 사용하는 머티리얼, 메쉬
 		std::unordered_map<std::wstring, Graphics::MaterialState*>	mMaterials;
 		std::unordered_map<std::wstring, Graphics::MeshState*>		mMeshs;
@@ -37,7 +37,7 @@ namespace Component
 		Graphics::AnimationState*	 mAnimationState;
 		Graphics::BoneState*		 mBoneState;
 
-		Node* CreateNodeFromModelNode(Node* _parent, Graphics::ModelNodeInfo* _modelNode);
+		Node* CreateNodeFromModelNode(Node* _parent, Graphics::ModelNodeResource* _modelNode);
 		void CalculateAnimation();
 		void CalculateNodeTransform(Node* _parent);
 
@@ -66,7 +66,7 @@ namespace Component
 	private:
 		template <typename T>
 		void CalculateAnimationKey(float _time
-			, std::vector<::Graphics::ChannelInfo::KeyInfo<T>>& _keys
+			, std::vector<::Graphics::ChannelResource::KeyResource<T>>& _keys
 			, T& _value)
 		{
 			UINT CurrIndex = 0;

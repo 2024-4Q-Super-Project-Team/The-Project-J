@@ -23,10 +23,12 @@ namespace Display
 
 		virtual BOOL			SetPosition(POINT) override;
 		virtual BOOL			SetSize(POINT) override;
+
+		virtual BOOL			Show(BOOL _bShow) override;
 	public:
 		virtual HWND			GetParentHandle() override;
 		virtual void			SetFocus() override;
-		virtual bool			IsFocusing() override;
+		virtual BOOL			IsFocusing() override;
 	private:
 		HWND  mHwnd;
 		HWND  mHParent;

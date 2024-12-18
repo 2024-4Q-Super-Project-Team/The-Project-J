@@ -4,7 +4,6 @@
 #include "Component/Physics/Rigidbody.h"
 #include "DebugDraw/DebugDraw.h"
 
-
 Component::BoxCollider::BoxCollider(GameObject* _owner)
 	:Collider(_owner)
 {

@@ -6,7 +6,9 @@
 std::unordered_map<std::wstring, ObjectGroup*> DXWorld::mPersistanceObjectGroups {};
 
 DXWorld::DXWorld(WorldManager* _wrdMng, std::wstring_view _name, std::wstring_view _tag)
-	: Entity(_name, _tag), mWorldTransform(new Transform3D()), mWorldManager(_wrdMng)
+	: Entity(_name, _tag)
+	, mWorldTransform(new Transform())
+	, mWorldManager(_wrdMng)
 {
 	PxPhysics* physics = GameManager::GetPhysicsManager()->GetPhysics();
 	PxSceneDesc sceneDesc(physics->getTolerancesScale());
@@ -65,7 +67,7 @@ void DXWorld::Render(GraphicsManager* _graphicsManager)
 {
 	if (mWorldTransform)
 	{
-		mWorldTransform->CalculateMatrix();
+		mWorldTransform->UpdateMatrix();
 	}
 	FOR_LOOP_ENTITY(mObjectGroups, Render(_graphicsManager));
 }

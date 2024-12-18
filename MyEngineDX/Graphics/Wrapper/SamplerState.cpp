@@ -4,18 +4,13 @@
 
 namespace Graphics
 {
-	SamplerState::SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, SamplerDesc* _pDesc)
+	SamplerState::SamplerState(std::wstring_view _name, GraphicsDevice* _pDevice, D3D11_SAMPLER_DESC* _pDesc)
 		: IGraphicsResource(_name)
 	{
-		D3D11_SAMPLER_DESC sampDesc = {};
-		if (_pDesc)
-		{
-			memcpy(&sampDesc, _pDesc, sizeof(D3D11_SAMPLER_DESC));
-		}
 		ID3D11Device* pDevice = _pDevice->GetDevice();
 		if (pDevice)
 		{
-			pDevice->CreateSamplerState(&sampDesc, &mSaplerState);
+			pDevice->CreateSamplerState(_pDesc, &mSaplerState);
 		}
 	}
 

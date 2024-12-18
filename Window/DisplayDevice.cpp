@@ -58,11 +58,14 @@ namespace Display
         {
             return E_INVALIDARG;
         }
-
         ShowWindow(hwnd, SW_SHOWNORMAL);
         UpdateWindow(hwnd);
 
         return S_OK;
+    }
+    HRESULT DisplayDevice::CreateConsoleDisplay(ConsoleDesc* _pConsoleDesc, IConsole** _ppIConsole)
+    {
+        return E_NOTIMPL;
     }
     HRESULT DisplayDevice::DestroyDisplay(IDisplay** _ppDisplay)
     {

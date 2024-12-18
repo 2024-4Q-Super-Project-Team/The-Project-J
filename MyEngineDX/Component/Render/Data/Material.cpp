@@ -3,23 +3,23 @@
 
 namespace Graphics
 {
-	MaterialInfo::MaterialInfo(std::wstring_view _name)
+	MaterialResource::MaterialResource(std::wstring_view _name)
 		: IGraphicsResource(_name)
 	{
 	}
-	MaterialInfo::~MaterialInfo()
+	MaterialResource::~MaterialResource()
 	{
 	}
-	void MaterialInfo::SetMaterialMap(eMaterialMapType _mapType, std::shared_ptr<Texture> _pTexture)
+	void MaterialResource::SetMaterialMap(eMaterialMapType _mapType, std::shared_ptr<Texture> _pTexture)
 	{
 		mMaterialMaps[static_cast<UINT>(_mapType)] =  _pTexture;
 	}
-	inline std::shared_ptr<Texture> MaterialInfo::GetMaterialMap(eMaterialMapType _mapType)
+	inline std::shared_ptr<Texture> MaterialResource::GetMaterialMap(eMaterialMapType _mapType)
 	{
 		return mMaterialMaps[static_cast<UINT>(_mapType)];
 	}
-	MaterialState::MaterialState(MaterialInfo* _pMaterialInfo)
-		: mMaterialInfo(_pMaterialInfo)
+	MaterialState::MaterialState(MaterialResource* _pMaterialResource)
+		: mMaterialResource(_pMaterialResource)
 	{
 		for (int mapType = 0; mapType < static_cast<UINT>(eMaterialMapType::SIZE); ++mapType)
 		{
@@ -31,7 +31,7 @@ namespace Graphics
 	}
 	inline const std::wstring& MaterialState::GetName()
 	{
-		return mMaterialInfo->GetName();
+		return mMaterialResource->GetName();
 	}
 	inline void MaterialState::DiffuseColor(RGBA _rgba)
 	{
@@ -75,6 +75,6 @@ namespace Graphics
 	}
 	inline std::shared_ptr<Texture> MaterialState::GetMapTexture(eMaterialMapType _type)
 	{
-		return mMaterialInfo->GetMaterialMap(_type);
+		return mMaterialResource->GetMaterialMap(_type);
 	}
 }

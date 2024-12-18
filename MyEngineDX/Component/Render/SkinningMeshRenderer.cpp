@@ -24,7 +24,7 @@ namespace Component
 		}
 
 	}
-	bool SkinningMeshRenderer::SetModel(std::shared_ptr<Graphics::ModelInfo> _spModel)
+	bool SkinningMeshRenderer::SetModel(std::shared_ptr<Graphics::ModelResource> _spModel)
 	{
 		if (_spModel.get())
 		{
@@ -39,17 +39,17 @@ namespace Component
 		}
 		return false;
 	}
-	SkinningMeshRenderer::Node* SkinningMeshRenderer::CreateNodeFromModelNode(Node* _parent, Graphics::ModelNodeInfo* _modelNode)
+	SkinningMeshRenderer::Node* SkinningMeshRenderer::CreateNodeFromModelNode(Node* _parent, Graphics::ModelNodeResource* _modelNode)
 	{
 		if (nullptr == _modelNode)
 			return nullptr;
 		SkinningMeshRenderer::Node* Node = new SkinningMeshRenderer::Node(_modelNode->mNodeName, _parent, this);
-		for (int i = 0; i < _modelNode->mMeshInfos.size(); ++i)
+		for (int i = 0; i < _modelNode->mMeshResources.size(); ++i)
 		{
 			Graphics::MaterialState* pMaterialState 
 				= new Graphics::MaterialState(_modelNode->mMaterials[i]);
 			Graphics::MeshState* pMeshState
-				= new Graphics::MeshState(_modelNode->mMeshInfos[i], pMaterialState);
+				= new Graphics::MeshState(_modelNode->mMeshResources[i], pMaterialState);
 			// 렌더러에도 저장
 			mMaterials[pMaterialState->GetName()] = pMaterialState;
 			mMeshs[pMeshState->GetName()] = pMeshState;
@@ -72,7 +72,7 @@ namespace Component
 	}
 	bool SkinningMeshRenderer::SetAnimation(const std::wstring& _key)
 	{
-		Graphics::AnimationInfo* wpAnim = mModel.get()->GetAnimation(_key);
+		Graphics::AnimationResource* wpAnim = mModel.get()->GetAnimation(_key);
 		if (wpAnim)
 		{
 			mAnimationState->SetAnimation(wpAnim);
@@ -122,15 +122,15 @@ namespace Component
 	{
 		if (mParent)
 		{
-			Graphics::ModelInfo* pModel = mOwner->mModel.get();
+			Graphics::ModelResource* pModel = mOwner->mModel.get();
 			// 현재 애니메이션이 있으면 ?
-			if (mOwner->mAnimationState->GetCurrentAnimationInfo())
+			if (mOwner->mAnimationState->GetCurrentAnimationResource())
 			{
 				mWorldMatrix = mLocalMatrix * mParent->mWorldMatrix;
 			}
 			else
 			{ // 없으면 노드의 행렬을 사용한다.
-				const Matrix& nodeMatrix = pModel->GetModelNodeInfo(mName)->mTransformation;
+				const Matrix& nodeMatrix = pModel->GetModelNodeResource(mName)->mTransformation;
 				mWorldMatrix = nodeMatrix * mParent->mWorldMatrix;
 			}
 		}
@@ -141,7 +141,7 @@ namespace Component
 		}
 
 		// 본 매트릭스 세팅
-		Graphics::BoneInfo* bone = mOwner->mModel.get()->GetBoneInfo(mName);
+		Graphics::BoneResource* bone = mOwner->mModel.get()->GetBoneResource(mName);
 		if (bone)
 		{
 			mOwner->mBoneState->SetBoneMatrix(bone, mWorldMatrix);
@@ -152,10 +152,10 @@ namespace Component
 	void SkinningMeshRenderer::Node::CalculateNodeAnimation()
 	{
 		Graphics::AnimationState* pAnimState = mOwner->mAnimationState;
-		Graphics::AnimationInfo* pCurrAnim = pAnimState->GetCurrentAnimationInfo();
+		Graphics::AnimationResource* pCurrAnim = pAnimState->GetCurrentAnimationResource();
 		if (pCurrAnim)
 		{
-			Graphics::ChannelInfo* pCurrChannel = pCurrAnim->GetChannel(mName);
+			Graphics::ChannelResource* pCurrChannel = pCurrAnim->GetChannel(mName);
 			// 채널이 있으면 연산을 하고 아니면 패스
 			if (pCurrChannel)
 			{

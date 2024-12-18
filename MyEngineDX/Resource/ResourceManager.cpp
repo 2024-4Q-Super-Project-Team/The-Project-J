@@ -41,9 +41,9 @@ std::shared_ptr<Graphics::Texture> ResourceManager::GetTextureData(std::wstring_
 	return pResource;
 }
 
-std::shared_ptr<Graphics::ModelInfo> ResourceManager::GetModelData(std::wstring_view _path)
+std::shared_ptr<Graphics::ModelResource> ResourceManager::GetModelData(std::wstring_view _path)
 {
-	std::shared_ptr<Graphics::ModelInfo> pResource;
+	std::shared_ptr<Graphics::ModelResource> pResource;
 	auto find = mModels.find(_path.data());
 	if (find != mModels.end())
 	{
@@ -56,7 +56,7 @@ std::shared_ptr<Graphics::ModelInfo> ResourceManager::GetModelData(std::wstring_
 	}
 	{
 		// 지우고 새로 만들어서 리턴한다.
-		pResource = std::make_shared<Graphics::ModelInfo>(_path);
+		pResource = std::make_shared<Graphics::ModelResource>(_path);
 		AIGetModelData(_path, pResource);
 		mModels[_path.data()] = pResource;
 	}
@@ -64,7 +64,7 @@ std::shared_ptr<Graphics::ModelInfo> ResourceManager::GetModelData(std::wstring_
 	return pResource;
 }
 
-void ResourceManager::AIGetModelData(std::wstring_view _path, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetModelData(std::wstring_view _path, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
 	std::string path;
 	path.assign(_path.begin(), _path.end());
@@ -78,9 +78,9 @@ void ResourceManager::AIGetModelData(std::wstring_view _path, std::weak_ptr<Grap
 	}
 }
 
-void ResourceManager::AIGetMeshData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetMeshData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
-	Graphics::ModelInfo* pModel = _wpModel.lock().get();
+	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	pModel->GetMeshs().reserve(_pAiScene->mNumMeshes);
 	Graphics::GraphicsDevice* pDevice = mGameManager->GetGraphicsManager()->GetDevice();
 	for (UINT meshIndex = 0; meshIndex < _pAiScene->mNumMeshes; ++meshIndex)
@@ -110,24 +110,24 @@ void ResourceManager::AIGetMeshData(const aiScene* _pAiScene, std::weak_ptr<Grap
 			}
 		}
 		AIGetBoneData(pAiMesh, vertexs, _wpModel);
-		std::shared_ptr<Graphics::MeshInfo> pMesh 
-			= std::make_shared<Graphics::MeshInfo>(pDevice, meshName, vertexs, indices);
+		std::shared_ptr<Graphics::MeshResource> pMesh 
+			= std::make_shared<Graphics::MeshResource>(pDevice, meshName, vertexs, indices);
 		pModel->GetMeshs().push_back(std::make_pair(pAiMesh->mMaterialIndex, std::move(pMesh)));
 	}
 }
 
-void ResourceManager::AIGetMaterialData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetMaterialData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
-	Graphics::ModelInfo* pModel = _wpModel.lock().get();
+	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	pModel->GetMaterials().reserve(_pAiScene->mNumMaterials);
 	for (UINT materialIndex = 0; materialIndex < _pAiScene->mNumMaterials; ++materialIndex)
 	{
 		aiMaterial* pAiMaterial = _pAiScene->mMaterials[materialIndex];
 		std::wstring materialName;
 		AIToWString(pAiMaterial->GetName(), materialName);
-		std::shared_ptr<Graphics::MaterialInfo> pMaterial
-			= std::make_shared<Graphics::MaterialInfo>(materialName);
-		Graphics::MaterialInfo* pMat = pMaterial.get();
+		std::shared_ptr<Graphics::MaterialResource> pMaterial
+			= std::make_shared<Graphics::MaterialResource>(materialName);
+		Graphics::MaterialResource* pMat = pMaterial.get();
 		aiString		aiPath;
 		std::wstring	path;
 		/*if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiPath)) {
@@ -174,15 +174,15 @@ void ResourceManager::AIGetMaterialData(const aiScene* _pAiScene, std::weak_ptr<
 	}
 }
 
-void ResourceManager::AIGetBoneData(const aiMesh* _pAiMesh, std::vector<Graphics::Vertex> _vertex, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetBoneData(const aiMesh* _pAiMesh, std::vector<Graphics::Vertex> _vertex, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
-	Graphics::ModelInfo* pModel = _wpModel.lock().get();
+	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	for (UINT boneIndex = 0; boneIndex < _pAiMesh->mNumBones; ++boneIndex)
 	{
 		aiBone* pAibone = _pAiMesh->mBones[boneIndex];
 		std::wstring boneName;
 		AIToWString(pAibone->mName, boneName);
-		std::shared_ptr<Graphics::BoneInfo> pBone;
+		std::shared_ptr<Graphics::BoneResource> pBone;
 		auto itr = pModel->GetBones().find(boneName);
 		if (itr != pModel->GetBones().end())
 		{
@@ -192,7 +192,7 @@ void ResourceManager::AIGetBoneData(const aiMesh* _pAiMesh, std::vector<Graphics
 		{
 			UINT bondID = pModel->GetBones().size();
 			Matrix boneMatrix = XMMatrixTranspose(Matrix(&pAibone->mOffsetMatrix.a1));
-			pBone = std::make_shared<Graphics::BoneInfo>(boneName, bondID, boneMatrix);
+			pBone = std::make_shared<Graphics::BoneResource>(boneName, bondID, boneMatrix);
 			pModel->GetBones()[boneName] = std::move(pBone);
 		}
 		for (int i = 0; i < pAibone->mNumWeights; i++)
@@ -200,44 +200,44 @@ void ResourceManager::AIGetBoneData(const aiMesh* _pAiMesh, std::vector<Graphics
 			Graphics::Vertex& vertex = _vertex[pAibone->mWeights[i].mVertexId];
 			for (int j = 0; j < 4; ++j)
 			{
-				if (vertex.BoneID[j] == -1)
+				if (vertex.BoneIndices[j] == -1)
 				{
-					vertex.BoneID[j] = pModel->GetBones()[boneName].get()->GetPaletteID();
-					vertex.BoneWeight[j] = pAibone->mWeights[i].mWeight;
+					vertex.BoneIndices[j] = pModel->GetBones()[boneName].get()->GetPaletteID();
+					vertex.BoneWeights[j] = pAibone->mWeights[i].mWeight;
 				}
 			}
 		}
 	}
 }
 
-void ResourceManager::AIGetAnimationData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetAnimationData(const aiScene* _pAiScene, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
-	Graphics::ModelInfo* pModel = _wpModel.lock().get();
+	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	for (UINT animIndex = 0; animIndex < _pAiScene->mNumAnimations; ++animIndex)
 	{
-		std::shared_ptr<Graphics::AnimationInfo> pAnimInfo;
+		std::shared_ptr<Graphics::AnimationResource> pAnimResource;
 		aiAnimation* pAiAnim = _pAiScene->mAnimations[animIndex];
 		std::wstring AnimName;
 		AIToWString(pAiAnim->mName, AnimName);
-		pAnimInfo = std::make_shared<Graphics::AnimationInfo>(AnimName);
-		AIGetAnimFrameData(pAiAnim, pAnimInfo);
-		pModel->GetAnimations()[AnimName] = pAnimInfo;
+		pAnimResource = std::make_shared<Graphics::AnimationResource>(AnimName);
+		AIGetAnimFrameData(pAiAnim, pAnimResource);
+		pModel->GetAnimations()[AnimName] = pAnimResource;
 	}
 }
 
-void ResourceManager::AIGetAnimFrameData(const aiAnimation* _pAiAnim, std::weak_ptr<Graphics::AnimationInfo> _wpAnimInfo)
+void ResourceManager::AIGetAnimFrameData(const aiAnimation* _pAiAnim, std::weak_ptr<Graphics::AnimationResource> _wpAnimResource)
 {
 	for (UINT channelIndex = 0; channelIndex < _pAiAnim->mNumChannels; channelIndex++)
 	{
 		aiNodeAnim* animNode = _pAiAnim->mChannels[channelIndex];
 		std::wstring ChannelName;
 		AIToWString(_pAiAnim->mName, ChannelName);
-		Graphics::ChannelInfo channelInfo(_wpAnimInfo, ChannelName);
-		AIGetKeyFrameData(animNode, channelInfo);
+		Graphics::ChannelResource channelResource(_wpAnimResource, ChannelName);
+		AIGetKeyFrameData(animNode, channelResource);
 	}
 }
 
-void ResourceManager::AIGetKeyFrameData(const aiNodeAnim* _pAiNodeAnim, Graphics::ChannelInfo& _channelInfo)
+void ResourceManager::AIGetKeyFrameData(const aiNodeAnim* _pAiNodeAnim, Graphics::ChannelResource& _channelResource)
 {
 	for (UINT keyIndex = 0; keyIndex < _pAiNodeAnim->mNumPositionKeys; keyIndex++)
 	{
@@ -248,25 +248,25 @@ void ResourceManager::AIGetKeyFrameData(const aiNodeAnim* _pAiNodeAnim, Graphics
 			_pAiNodeAnim->mRotationKeys[keyIndex].mValue.y,
 			_pAiNodeAnim->mRotationKeys[keyIndex].mValue.z,
 			_pAiNodeAnim->mRotationKeys[keyIndex].mValue.w);
-		_channelInfo.mPositionKeys.emplace_back(Position, _pAiNodeAnim->mPositionKeys[keyIndex].mTime);
-		_channelInfo.mScalingKeys.emplace_back(Scale, _pAiNodeAnim->mScalingKeys[keyIndex].mTime);
-		_channelInfo.mRotationKeys.emplace_back(Rotation, _pAiNodeAnim->mRotationKeys[keyIndex].mTime);
+		_channelResource.mPositionKeys.emplace_back(Position, _pAiNodeAnim->mPositionKeys[keyIndex].mTime);
+		_channelResource.mScalingKeys.emplace_back(Scale, _pAiNodeAnim->mScalingKeys[keyIndex].mTime);
+		_channelResource.mRotationKeys.emplace_back(Rotation, _pAiNodeAnim->mRotationKeys[keyIndex].mTime);
 	}
 }
 
-void ResourceManager::AIGetNodeData(const aiNode* _pAiNode, Graphics::ModelNodeInfo* _pParentNode, std::weak_ptr<Graphics::ModelInfo> _wpModel)
+void ResourceManager::AIGetNodeData(const aiNode* _pAiNode, Graphics::ModelNodeResource* _pParentNode, std::weak_ptr<Graphics::ModelResource> _wpModel)
 {
-	Graphics::ModelInfo* pModel = _wpModel.lock().get();
+	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	std::wstring nodeName;
 	AIToWString(_pAiNode->mName, nodeName);
-	Graphics::ModelNodeInfo* pNode = new Graphics::ModelNodeInfo(nodeName, _pParentNode);
+	Graphics::ModelNodeResource* pNode = new Graphics::ModelNodeResource(nodeName, _pParentNode);
 	if (!pModel->mRootNode)
 	{
 		pModel->mRootNode = pNode;
 	}
 	for (int i = 0; i < _pAiNode->mNumMeshes; ++i)
 	{
-		pNode->mMeshInfos.push_back(pModel->GetMeshs()[_pAiNode->mMeshes[i]].second.get());
+		pNode->mMeshResources.push_back(pModel->GetMeshs()[_pAiNode->mMeshes[i]].second.get());
 		int MappingIndex = pModel->GetMeshs()[_pAiNode->mMeshes[i]].first;
 		pNode->mMaterials.push_back(pModel->GetMaterials()[MappingIndex].get());
 	}

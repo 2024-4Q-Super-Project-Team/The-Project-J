@@ -140,6 +140,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Console.h" />
     <ClInclude Include="DisplayDesc.h" />
     <ClInclude Include="IDisplay.h" />
     <ClInclude Include="Window.h" />
@@ -147,6 +148,7 @@
     <ClInclude Include="DisplayDevice.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="DisplayDesc.cpp" />
     <ClCompile Include="IDisplay.cpp" />
     <ClCompile Include="Window.cpp" />

@@ -21,6 +21,7 @@ namespace Display
 
 	struct ConsoleDesc : public DisplayDesc
 	{
+		const WCHAR* Title;
 	};
 }
 

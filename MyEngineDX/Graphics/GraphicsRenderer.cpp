@@ -13,6 +13,7 @@ namespace Graphics
 		, mContext(_pContext)
 		, mCurRenderTarget(nullptr)
 	{
+		mPrimitiveBatch = new Batch(mContext);
 	}
 	Renderer::~Renderer()
 	{

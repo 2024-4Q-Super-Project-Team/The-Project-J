@@ -21,6 +21,8 @@ namespace Graphics
 
 	enum class eShaderStage;
 
+	using Batch = DirectX::PrimitiveBatch<DirectX::VertexPositionColor>;
+
 	class Renderer
 	{
 	public:
@@ -54,7 +56,10 @@ namespace Graphics
 		ID3D11DeviceContext* mContext;
 		RenderTarget* mCurRenderTarget;
 		GraphicsDevice* mGraphicsDevice;
+		Batch* mPrimitiveBatch;
+
 	public:
 		RenderTarget* GetRenderTarget() { return mCurRenderTarget; }
+		Batch* GetPrimitiveBatch() { return mPrimitiveBatch; }
 	};
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Object.h"
+#include "Component/Script/Script.h"
 #include "ObjectGroup/ObjectGroup.h"
 
 GameObject::GameObject(ObjectGroup* _owner, std::wstring_view _name, std::wstring_view _tag)

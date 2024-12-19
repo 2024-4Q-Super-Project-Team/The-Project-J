@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Rigidbody.h"
+#include "Object/Object.h"
 #include "GameManager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 

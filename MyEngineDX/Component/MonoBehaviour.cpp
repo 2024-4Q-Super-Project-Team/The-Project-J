@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "MonoBehaviour.h"
 #include "GameManager/GameManager.h"
+#include "Viewport/ViewportManager.h"
+#include "World/WorldManager.h"
+#include "ObjectGroup/ObjectGroup.h"
+#include "Object/Object.h"
 
 namespace Engine
 {

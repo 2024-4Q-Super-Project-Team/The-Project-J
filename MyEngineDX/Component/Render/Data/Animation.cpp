@@ -36,19 +36,19 @@ namespace Graphics
 	{
 		mTimer += Time::GetScaledDeltaTime();
 	}
-	inline void AnimationState::SetAnimation(AnimationResource* _pAnim)
+	void AnimationState::SetAnimation(AnimationResource* _pAnim)
 	{
 		mCurrAnimationResource = _pAnim;
 	}
-	inline void AnimationState::SetTimer(float _time)
+	void AnimationState::SetTimer(float _time)
 	{
 		mTimer = _time;
 	}
-	inline float AnimationState::GetNormalizedTime()
+	float AnimationState::GetNormalizedTime()
 	{
 		return 0.0f;
 	}
-	inline float AnimationState::GetTimer()
+	float AnimationState::GetTimer()
 	{
 		return mTimer;
 	}

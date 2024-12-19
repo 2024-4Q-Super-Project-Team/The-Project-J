@@ -1,11 +1,7 @@
 #pragma once
-namespace Graphics
-{
-	class GraphicsDevice;
-	class Renderer;
-	class RenderTarget;
-}
+
 class GraphicsManager;
+
 namespace Engine
 {
 	class IEngineCycle

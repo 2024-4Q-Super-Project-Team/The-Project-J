@@ -1,5 +1,5 @@
 #include "pch.h"
-#include "Graphics.h"
+#include "GraphicsFramework.h"
 
 namespace Graphics
 {

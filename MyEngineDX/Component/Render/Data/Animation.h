@@ -16,10 +16,10 @@ namespace Graphics
 		explicit AnimationResource(std::wstring_view _name);
 		virtual ~AnimationResource();
 	public:
-		inline void  SetFramePerSecond(float _fps) { mFramePerSecond = _fps; }
-		inline float GetTotalFrame() { return mTotalFrame; }
-		inline float GetFramePerSecond() { return mFramePerSecond; }	
-		inline float GetAnimationTotalTime() { return mTotalFrame / mFramePerSecond; }
+		void  SetFramePerSecond(float _fps) { mFramePerSecond = _fps; }
+		float GetTotalFrame() { return mTotalFrame; }
+		float GetFramePerSecond() { return mFramePerSecond; }	
+		float GetAnimationTotalTime() { return mTotalFrame / mFramePerSecond; }
 		ChannelResource* GetChannel(std::wstring_view _key);
 	private:
 		float mTotalFrame;
@@ -62,17 +62,17 @@ namespace Graphics
 	public:
 		void UpdateState();
 	public:
-		inline void SetAnimation(AnimationResource* _pAnim);
-		inline void SetTimer(float _time);
+		void SetAnimation(AnimationResource* _pAnim);
+		void SetTimer(float _time);
 	private:
 		AnimationResource*	mCurrAnimationResource;
 		float			mTimer = 0.0f;
 	public:
-		inline float			GetNormalizedTime();
-		inline AnimationResource*	GetCurrentAnimationResource() { return mCurrAnimationResource; }
-		inline const Matrix&	GetAnimationMatrix();
-		inline int				GetCurrentAnimationFrame();
-		inline float			GetTimer();
+		float			GetNormalizedTime();
+		AnimationResource*	GetCurrentAnimationResource() { return mCurrAnimationResource; }
+		const Matrix&	GetAnimationMatrix();
+		int				GetCurrentAnimationFrame();
+		float			GetTimer();
 	};
 }
 

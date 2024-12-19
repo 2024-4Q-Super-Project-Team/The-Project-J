@@ -4,6 +4,14 @@
 class GameObject;
 class GraphicsManager;
 
+namespace Graphics
+{
+	class MeshState;
+	class MaterialState;
+	class AnimationState;
+	class BoneState;
+}
+
 namespace Component
 {
 	class SkinningMeshRenderer
@@ -25,8 +33,8 @@ namespace Component
 	public:
 		bool SetModel(std::shared_ptr<Graphics::ModelResource> _spModel);
 		bool SetAnimation(const std::wstring& _key);
-		inline Graphics::AnimationState* GetAnimationState() { return mAnimationState; }
-		inline Graphics::BoneState* GetBoneState() { return mBoneState; }
+		Graphics::AnimationState* GetAnimationState() { return mAnimationState; }
+		Graphics::BoneState* GetBoneState() { return mBoneState; }
 	private:
 		Node* mRootNode;
 		// ·»´õ·¯°¡ ·»´õ¸µ ÁßÀÎ ´ë»ó ¸ðµ¨

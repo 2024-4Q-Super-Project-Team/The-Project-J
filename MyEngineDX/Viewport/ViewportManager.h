@@ -1,15 +1,18 @@
 #pragma once
-#include "Viewport/Viewport.h"
+#include "Viewport.h"
 
 namespace Display
 {
 	class IWindow;
 }
+class ViewportScene;
+class GameManager;
+class GraphicsManager;
 
 class ViewportManager : public Engine::IEngineCycle
 {
 public:
-	explicit ViewportManager(GameManager* _pGameManager);
+	explicit ViewportManager();
 	virtual ~ViewportManager();
 	ViewportManager(ViewportManager&) = delete;
 	ViewportManager& operator=(const ViewportManager&) = delete;
@@ -28,7 +31,6 @@ public:
 	ViewportScene* CreateViewport(Display::IWindow* _pWindow);
 	ViewportScene* GetActiveViewport() { return  mActiveViewport; }
 private:
-	ViewportScene* mActiveViewport;
+	ViewportScene*				mActiveViewport;
 	std::vector<ViewportScene*> mViewports;
-	GameManager* const mGameManager;
 };

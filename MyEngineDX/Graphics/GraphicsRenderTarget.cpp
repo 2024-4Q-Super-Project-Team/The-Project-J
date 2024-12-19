@@ -94,4 +94,11 @@ namespace Graphics
 		mSwapChain->Release();
 		delete this;
 	}
+	void RenderTarget::SetClearColor(FLOAT* _rgba)
+	{
+		mClearColor[0] = _rgba[0];
+		mClearColor[1] = _rgba[1];
+		mClearColor[2] = _rgba[2];
+		mClearColor[3] = _rgba[3];
+	}
 }

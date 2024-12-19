@@ -136,15 +136,11 @@
   <ItemGroup>
     <ClCompile Include="EditorApp.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="Script\Test.cpp" />
-    <ClCompile Include="Script\TestScript.cpp" />
     <ClCompile Include="TestApp.cpp" />
     <ClCompile Include="World\TestWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditorApp.h" />
-    <ClInclude Include="Script\Test.h" />
-    <ClInclude Include="Script\TestScript.h" />
     <ClInclude Include="TestApp.h" />
     <ClInclude Include="World\TestWorld.h" />
   </ItemGroup>

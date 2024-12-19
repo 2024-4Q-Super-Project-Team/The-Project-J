@@ -53,12 +53,12 @@ namespace Display
         return TRUE;
     }
 
-    inline HWND Console::GetHandle()
+    HWND Console::GetHandle()
     {
         return mHwnd;
     }
 
-    inline POINT Console::GetPosition()
+    POINT Console::GetPosition()
     {
         if (mHwnd) {
             RECT rect;
@@ -69,7 +69,7 @@ namespace Display
         return { 0, 0 };
     }
 
-    inline POINT Console::GetSize()
+    POINT Console::GetSize()
     {
         if (mHwnd) {
             RECT rect;
@@ -80,7 +80,7 @@ namespace Display
         return { 0, 0 };
     }
 
-    inline BOOL Console::SetPosition(POINT _xy)
+    BOOL Console::SetPosition(POINT _xy)
     {
         if (mHwnd) {
             return SetWindowPos(mHwnd, NULL, _xy.x, _xy.y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
@@ -88,7 +88,7 @@ namespace Display
         return FALSE;
     }
 
-    inline BOOL Console::SetSize(POINT _wh)
+    BOOL Console::SetSize(POINT _wh)
     {
         if (mHwnd) {
             return SetWindowPos(mHwnd, NULL, 0, 0, _wh.x, _wh.y, SWP_NOMOVE | SWP_NOZORDER | SWP_FRAMECHANGED);

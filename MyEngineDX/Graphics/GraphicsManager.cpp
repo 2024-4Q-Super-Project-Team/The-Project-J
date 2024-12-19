@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GraphicsManager.h"
 #include "../Window/IDisplay.h"
+#include "Graphics/GraphicsFramework.h"
 
 using namespace Graphics;
 

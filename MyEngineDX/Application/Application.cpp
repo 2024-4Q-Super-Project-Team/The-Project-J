@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Application.h"
+#include "GameManager/GameManager.h"
 #include "../Window/IDisplay.h"
 
 namespace Engine

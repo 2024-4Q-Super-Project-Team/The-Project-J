@@ -147,6 +147,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Component\Render\Data\Material.h" />
     <ClInclude Include="Component\Render\Animator.h" />
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Component\Physics\BoxCollider.h" />
@@ -157,7 +158,6 @@
     <ClInclude Include="Component\Render\Data\Bone.h" />
     <ClInclude Include="Component\Render\Data\Cbuffer.h" />
     <ClInclude Include="Component\Render\Data\GraphicsEnum.h" />
-    <ClInclude Include="Component\Render\Data\Material.h" />
     <ClInclude Include="Component\Render\Data\Mesh.h" />
     <ClInclude Include="Component\Render\Data\Model.h" />
     <ClInclude Include="Component\Render\RendererComponent.h" />
@@ -165,11 +165,12 @@
     <ClInclude Include="Component\Script\Script.h" />
     <ClInclude Include="Component\Physics\DebugDraw\DebugDraw.h" />
     <ClInclude Include="Editor\Editor.h" />
+    <ClInclude Include="FrameWork.h" />
     <ClInclude Include="Graphics\GraphicsInterface.h" />
     <ClInclude Include="Graphics\Wrapper\GraphicsTexture.h" />
     <ClInclude Include="Graphics\Wrapper\GraphicsBuffer.h" />
     <ClInclude Include="Graphics\GraphicsManager.h" />
-    <ClInclude Include="Graphics\Graphics.h" />
+    <ClInclude Include="Graphics\GraphicsFramework.h" />
     <ClInclude Include="Graphics\GraphicsRenderTarget.h" />
     <ClInclude Include="Graphics\GraphicsRenderer.h" />
     <ClInclude Include="Graphics\GraphicsDevice.h" />
@@ -181,6 +182,7 @@
     <ClInclude Include="Helper\Factory\Factory.h" />
     <ClInclude Include="Graphics\Wrapper\InputLayout.h" />
     <ClInclude Include="Interface\IEngineCycle.h" />
+    <ClInclude Include="ObjectFramework.h" />
     <ClInclude Include="Resource\Data\IResource.h" />
     <ClInclude Include="Object\Object.h" />
     <ClInclude Include="ObjectGroup\ObjectGroup.h" />
@@ -199,6 +201,7 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Component\Render\Data\Material.cpp" />
     <ClCompile Include="Component\Render\Animator.cpp" />
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Component\Physics\BoxCollider.cpp" />
@@ -209,7 +212,6 @@
     <ClCompile Include="Component\Render\Data\Bone.cpp" />
     <ClCompile Include="Component\Render\Data\Cbuffer.cpp" />
     <ClCompile Include="Component\Render\Data\GraphicsEnum.cpp" />
-    <ClCompile Include="Component\Render\Data\Material.cpp" />
     <ClCompile Include="Component\Render\Data\Mesh.cpp" />
     <ClCompile Include="Component\Render\Data\Model.cpp" />
     <ClCompile Include="Component\Render\RendererComponent.cpp" />
@@ -217,11 +219,12 @@
     <ClCompile Include="Component\Script\Script.cpp" />
     <ClCompile Include="Component\Physics\DebugDraw\DebugDraw.cpp" />
     <ClCompile Include="Editor\Editor.cpp" />
+    <ClCompile Include="FrameWork.cpp" />
     <ClCompile Include="Graphics\GraphicsInterface.cpp" />
     <ClCompile Include="Graphics\Wrapper\GraphicsTexture.cpp" />
     <ClCompile Include="Graphics\Wrapper\GraphicsBuffer.cpp" />
     <ClCompile Include="Graphics\GraphicsManager.cpp" />
-    <ClCompile Include="Graphics\Graphics.cpp" />
+    <ClCompile Include="Graphics\GraphicsFramework.cpp" />
     <ClCompile Include="Graphics\GraphicsRenderTarget.cpp" />
     <ClCompile Include="Graphics\GraphicsRenderer.cpp" />
     <ClCompile Include="Graphics\GraphicsDevice.cpp" />
@@ -233,6 +236,7 @@
     <ClCompile Include="Helper\Factory\Factory.cpp" />
     <ClCompile Include="Graphics\Wrapper\InputLayout.cpp" />
     <ClCompile Include="Interface\IEngineCycle.cpp" />
+    <ClCompile Include="ObjectFramework.cpp" />
     <ClCompile Include="Resource\Data\IResource.cpp" />
     <ClCompile Include="Object\Object.cpp" />
     <ClCompile Include="ObjectGroup\ObjectGroup.cpp" />

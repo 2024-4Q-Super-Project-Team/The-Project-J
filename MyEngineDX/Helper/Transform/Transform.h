@@ -35,21 +35,21 @@ private:
 	bool isDirty; // 더티플래그 (true면 재계산이 필요하다는 뜻)
 public:
 	template <typename Type>
-	inline Type*			GetOwner() const { return reinterpret_cast<Type*>(mOwnerAddr); }
+	Type*			GetOwner() const { return reinterpret_cast<Type*>(mOwnerAddr); }
 
-	inline bool				GetDirty		();
+	bool				GetDirty		();
 
-	inline Transform*		GetParent		() { return mParent; }
-	inline Transform*		GetChild		(UINT _index = 0) { return mChildren[0]; }
-	inline const auto&		GetChildren		() { return mChildren; }
+	Transform*		GetParent		() { return mParent; }
+	Transform*		GetChild		(UINT _index = 0) { return mChildren[0]; }
+	const auto&		GetChildren		() { return mChildren; }
 
-	inline const Vector3	GetWorldPosition();
-	inline const Matrix&	GetlocalMatrix	();
-	inline const Matrix&	GetWorldMatrix	();
-	inline const Vector3&	Forward			() { return GetWorldMatrix().Forward(); }
-	inline const Vector3&	Up				() { return GetWorldMatrix().Up(); }
-	inline const Vector3&	Right			() { return GetWorldMatrix().Right(); }
-	inline const Vector3&	Backward		() { return GetWorldMatrix().Backward(); }
+	const Vector3	GetWorldPosition();
+	const Matrix&	GetlocalMatrix	();
+	const Matrix&	GetWorldMatrix	();
+	const Vector3&	Forward			() { return GetWorldMatrix().Forward(); }
+	const Vector3&	Up				() { return GetWorldMatrix().Up(); }
+	const Vector3&	Right			() { return GetWorldMatrix().Right(); }
+	const Vector3&	Backward		() { return GetWorldMatrix().Backward(); }
 public:
 	// lvalue 버전 (수정 가능, 더티 플래그 설정)
 	Vector3& operator[](eTransformType _type)

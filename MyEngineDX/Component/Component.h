@@ -1,8 +1,8 @@
 #pragma once
 
-
 class DXWorld;
 class GameObject;
+
 namespace Component
 {
 	enum class ComponentType

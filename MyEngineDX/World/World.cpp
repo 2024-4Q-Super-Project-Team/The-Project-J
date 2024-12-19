@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "World.h"
+#include "ObjectGroup/ObjectGroup.h"
 #include "GameManager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 

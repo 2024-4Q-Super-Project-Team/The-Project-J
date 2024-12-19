@@ -142,6 +142,7 @@
   <ItemGroup>
     <ClInclude Include="Console.h" />
     <ClInclude Include="DisplayDesc.h" />
+    <ClInclude Include="Framework.h" />
     <ClInclude Include="IDisplay.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="pch.h" />

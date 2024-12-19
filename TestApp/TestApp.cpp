@@ -1,4 +1,7 @@
 #include "TestApp.h"
+#include "../MyEngineDX/pch.h"
+#include "../MyEngineDX/FrameWork.h"
+#include "../MyEngineDX/Graphics/GraphicsFramework.h"
 #include "World/TestWorld.h"
 
 TestApp* TestApp::Instance = nullptr;
@@ -12,12 +15,13 @@ BOOL TestApp::OnPreInitialize()
 
 BOOL TestApp::OnPostInitialize()
 {
-	//Display::Console::OpenConsole(L"Debug", { 0,0 }, { 300,200 });
+	Display::Console::OpenConsole(L"Debug", { 0,0 }, { 300,200 });
 	GameManager* gmMng = GetGameManager();
 	if (nullptr == gmMng) return FALSE;
 	ViewportManager* vptMng = gmMng->GetViewportManager();
 	{
-		IGraphicsManager* grpMng = gmMng->GetGraphicsManager();
+		GraphicsManager* grpMng = gmMng->GetGraphicsManager();
+		//grpMng->GetDevice()
 		{
 			Display::WindowDesc winDecs;
 			winDecs.Size = { 1024, 768 };
@@ -44,7 +48,7 @@ BOOL TestApp::OnPostInitialize()
 		wolrd->CreateObjectGroup(L"", L"");
 	}
 	{
-		IGraphicsManager* grpMng = gmMng->GetGraphicsManager();
+		GraphicsManager* grpMng = gmMng->GetGraphicsManager();
 		{
 			Display::IWindow* subWindow;
 			Display::WindowDesc winDecs;

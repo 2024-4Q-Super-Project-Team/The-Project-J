@@ -7,21 +7,17 @@ namespace Display
 
 namespace Graphics
 {
+	class GraphicsDevice;
+	class RenderTarget;
+	class Renderer;
 	class Buffer;
+	class ConstantBuffer;
+	class VertexBuffer;
+	class IndexBuffer;
 	enum class eCBufferType;
 }
 
-class IGraphicsManager
-{
-public:
-	virtual BOOL SetUpDisplay(Display::IWindow** _ppWindow) = 0;
-public:
-	virtual Graphics::GraphicsDevice* GetDevice() = 0;
-	virtual	Graphics::Renderer* GetRenderer() = 0;
-};
-
 class GraphicsManager
-	: public IGraphicsManager
 {
 public:
 	GraphicsManager();
@@ -29,7 +25,7 @@ public:
 public:
 	BOOL Initialize();
 public:
-	virtual BOOL SetUpDisplay(Display::IWindow** _ppWindow) override;
+	BOOL SetUpDisplay(Display::IWindow** _ppWindow);
 private:
 	Graphics::GraphicsDevice* mGraphicsDevice;
 	Graphics::Renderer* mRenderer;
@@ -39,7 +35,7 @@ private:
 	// 메쉬를 모아서 한번에 렌더링..?
 
 public:
-	inline virtual Graphics::GraphicsDevice* GetDevice() override { return mGraphicsDevice; }
-	inline virtual Graphics::Renderer* GetRenderer() override { return mRenderer; }
+	Graphics::GraphicsDevice* GetDevice() { return mGraphicsDevice; }
+	Graphics::Renderer* GetRenderer() { return mRenderer; }
 };
 

@@ -1,5 +1,6 @@
 #pragma once
-#include "../TestApp.h"
+#include <vector>
+#include "../MyEngineDX/Component/Script/Script.h"
 
 class Test 
 	: public Component::Script

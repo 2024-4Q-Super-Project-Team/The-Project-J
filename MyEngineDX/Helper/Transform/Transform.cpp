@@ -44,22 +44,22 @@ void Transform::UpdateMatrix()
 		isDirty = false;
 	}
 }
-inline bool Transform::GetDirty()
+bool Transform::GetDirty()
 {
 	// 자기 자신이 더티이거나 부모 중 하나라도 더티이면 true
 	return isDirty || (mParent && mParent->GetDirty());
 }
-inline const Vector3 Transform::GetWorldPosition()
+const Vector3 Transform::GetWorldPosition()
 {
 	UpdateMatrix();
 	return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43);
 }
-inline const Matrix& Transform::GetlocalMatrix()
+const Matrix& Transform::GetlocalMatrix()
 {
 	UpdateMatrix();
 	return mLocalMatrix;
 }
-inline const Matrix& Transform::GetWorldMatrix()
+const Matrix& Transform::GetWorldMatrix()
 {
 	UpdateMatrix();
 	return mWorldMatrix;

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WorldManager.h"
+#include "World/World.h"
 
 WorldManager::WorldManager()
 	: mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr)

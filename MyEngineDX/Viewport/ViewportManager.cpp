@@ -1,10 +1,12 @@
 #include "pch.h"
 #include "ViewportManager.h"
+#include "Viewport/Viewport.h"
 #include "GameManager/GameManager.h"
+#include "Graphics/GraphicsManager.h"
+#include "Graphics/GraphicsFramework.h"
 
-ViewportManager::ViewportManager(GameManager* _pGameManager)
-    : mGameManager(_pGameManager)
-    , mActiveViewport(nullptr)
+ViewportManager::ViewportManager()
+    : mActiveViewport(nullptr)
 {
 }
 
@@ -89,12 +91,14 @@ ViewportScene* ViewportManager::CreateViewport(Display::IWindow* _pWindow)
     if (_pWindow)
     {
         Graphics::RenderTarget* pRenderTarget;
-        Graphics::GraphicsDevice* pDevice = mGameManager->GetGraphicsManager()->GetDevice();
+        Graphics::GraphicsDevice* pDevice = GameManager::GetGraphicsManager()->GetDevice();
         if (pDevice)
         {
             pDevice->CreateRenderTarget(_pWindow->GetHandle(), &pRenderTarget);
             ViewportScene* instance = new ViewportScene(_pWindow, pRenderTarget);
             mViewports.push_back(instance);
+            FLOAT clearColor[4] = { 0.5f, 0.5f, 0.5f, 1.0f };
+            pRenderTarget->SetClearColor(clearColor);
             return instance;
         }
     }

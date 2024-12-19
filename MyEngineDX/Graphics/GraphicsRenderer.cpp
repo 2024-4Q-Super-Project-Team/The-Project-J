@@ -1,10 +1,5 @@
 #include "pch.h"
-#include "GraphicsRenderer.h"
-#include "GraphicsRenderTarget.h"
-#include "Wrapper/Shader.h"
-#include "Wrapper/GraphicsBuffer.h"
-#include "Wrapper/InputLayout.h"
-#include "Wrapper/SamplerState.h"
+#include "Graphics/GraphicsFramework.h"
 
 namespace Graphics
 {

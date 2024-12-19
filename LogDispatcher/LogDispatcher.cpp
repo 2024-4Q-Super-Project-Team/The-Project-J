@@ -5,7 +5,7 @@
 
 namespace Log
 {
-	inline void PushDateTime(std::ostringstream& _oss, const SystemClock& _clock)
+	void PushDateTime(std::ostringstream& _oss, const SystemClock& _clock)
 	{
 		std::tm tm{};
 		time_t clock = std::chrono::system_clock::to_time_t(_clock);
@@ -17,7 +17,7 @@ namespace Log
 		_oss << std::put_time(&tm, "%y%m%d_%H%M%S");
 	}
 
-	inline void PushElapsedTime(std::ostringstream& _oss, const SystemClock& _start, const SystemClock& _now)
+	void PushElapsedTime(std::ostringstream& _oss, const SystemClock& _start, const SystemClock& _now)
 	{
 		auto elapsed = _now - _start;
 		auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(elapsed).count();

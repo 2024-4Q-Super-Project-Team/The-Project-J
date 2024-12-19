@@ -14,7 +14,7 @@ using namespace DirectX;
 
 namespace
 {
-    inline void XM_CALLCONV DrawCube(PrimitiveBatch<VertexPositionColor>* batch,
+    void XM_CALLCONV DrawCube(PrimitiveBatch<VertexPositionColor>* batch,
         CXMMATRIX matWorld,
         FXMVECTOR color)
     {

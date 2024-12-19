@@ -1,8 +1,8 @@
 #pragma once
-#include "ObjectGroup/ObjectGroup.h"
 
+class GameManager;
 class WorldManager;
-class ColliderManager;
+class ObjectGroup;
 
 class DXWorld 
 	: public Engine::IEngineCycle
@@ -43,7 +43,7 @@ public:
 	void		 CreateObjectGroup(ObjectGroup* _recvGroup);
 	// 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환
 	ObjectGroup* GetObjectGroup(std::wstring_view _name);
-	inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
+	const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
 private:
 	void UpdateGroup();
 public:

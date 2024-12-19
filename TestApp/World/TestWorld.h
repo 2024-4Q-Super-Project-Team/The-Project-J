@@ -1,5 +1,6 @@
 #pragma once
-#include "../TestApp.h"
+#include "../MyEngineDX/FrameWork.h"
+#include "../MyEngineDX/World/World.h"
 
 class TestWorld
 	: public DXWorld

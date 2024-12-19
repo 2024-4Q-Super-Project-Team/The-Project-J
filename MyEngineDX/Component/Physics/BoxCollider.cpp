@@ -3,6 +3,7 @@
 #include "GameManager/GameManager.h"
 #include "Component/Physics/Rigidbody.h"
 #include "DebugDraw/DebugDraw.h"
+#include "Object/Object.h"
 
 Component::BoxCollider::BoxCollider(GameObject* _owner)
 	:Collider(_owner)

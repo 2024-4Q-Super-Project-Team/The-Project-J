@@ -4,6 +4,8 @@ namespace Graphics
 {
 	class GraphicsDevice;
 	class Buffer;
+	class VertexBuffer;
+	class IndexBuffer;
 	struct Vertex;
 
 	class MeshResource : public IGraphicsResource
@@ -28,7 +30,7 @@ namespace Graphics
 	public:
 		BOOL Bind(GraphicsManager* _graphicsManager);
 	public:
-		inline auto GetName() { return mMeshResource->GetName(); }
+		auto GetName() { return mMeshResource->GetName(); }
 	public:
 		MeshResource*				 mMeshResource;
 		MaterialState*			 mMaterialState;

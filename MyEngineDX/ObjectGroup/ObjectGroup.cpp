@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "ObjectGroup.h"
+#include "Object/Object.h"
 #include "World/World.h"
 
 ObjectGroup::ObjectGroup() 
@@ -109,7 +110,7 @@ void ObjectGroup::SetListSize(UINT _size)
 	mObjects.resize(_size);
 }
 
-inline void ObjectGroup::SetWorld(DXWorld* _world)
+void ObjectGroup::SetWorld(DXWorld* _world)
 {
 	if (mOwnerWorld == _world)
 		return;

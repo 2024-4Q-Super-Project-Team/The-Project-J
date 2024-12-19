@@ -1,9 +1,16 @@
 #include "pch.h"
 #include "Resource/ResourceManager.h"
 #include "GameManager/GameManager.h"
+#include "Graphics/GraphicsManager.h"
+#include "Graphics/GraphicsFrameWork.h"
+//#include "Component/Render/Data/GraphicsEnum.h"
+//#include "Component/Render/Data/Model.h"
+//#include "Component/Render/Data/Mesh.h"
+//#include "Component/Render/Data/Material.h"
+//#include "Component/Render/Data/Bone.h"
+//#include "Component/Render/Data/Animation.h"
 
-ResourceManager::ResourceManager(GameManager* _pGameMng)
-    :mGameManager(_pGameMng)
+ResourceManager::ResourceManager()
 {
 	mAssimpImporter.SetPropertyBool(AI_CONFIG_IMPORT_FBX_PRESERVE_PIVOTS, 0);
 	mImpoterFlag =
@@ -34,7 +41,7 @@ std::shared_ptr<Graphics::Texture> ResourceManager::GetTextureData(std::wstring_
 	}
 	{
 		// 지우고 새로 만들어서 리턴한다.
-		Graphics::GraphicsDevice* pDevice = mGameManager->GetGraphicsManager()->GetDevice();
+		Graphics::GraphicsDevice* pDevice = GameManager::GetGraphicsManager()->GetDevice();
 		pResource = std::make_shared<Graphics::Texture>(pDevice, _path.data());
 		mTextures[_path.data()] = pResource;
 	}
@@ -82,7 +89,7 @@ void ResourceManager::AIGetMeshData(const aiScene* _pAiScene, std::weak_ptr<Grap
 {
 	Graphics::ModelResource* pModel = _wpModel.lock().get();
 	pModel->GetMeshs().reserve(_pAiScene->mNumMeshes);
-	Graphics::GraphicsDevice* pDevice = mGameManager->GetGraphicsManager()->GetDevice();
+	Graphics::GraphicsDevice* pDevice = GameManager::GetGraphicsManager()->GetDevice();
 	for (UINT meshIndex = 0; meshIndex < _pAiScene->mNumMeshes; ++meshIndex)
 	{
 		aiMesh* pAiMesh = _pAiScene->mMeshes[meshIndex];
@@ -127,49 +134,48 @@ void ResourceManager::AIGetMaterialData(const aiScene* _pAiScene, std::weak_ptr<
 		AIToWString(pAiMaterial->GetName(), materialName);
 		std::shared_ptr<Graphics::MaterialResource> pMaterial
 			= std::make_shared<Graphics::MaterialResource>(materialName);
-		Graphics::MaterialResource* pMat = pMaterial.get();
 		aiString		aiPath;
 		std::wstring	path;
-		/*if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiPath)) {
+
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiPath)) {
 			AIToWString(aiPath, path);
-			pMat->SetMaterialMap(Graphics::eMaterialMapType::DIFFUSE,
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::DIFFUSE, GetTextureData(L"Resource/texture/" + path));
+		}
+		/*if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::SPECULAR,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::AMBIENT,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::EMISSIVE,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::NORMAL,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::SHININESS,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_OPACITY, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::OPACITY,
+				GetTextureData(L"Resource/texture/" + path));
+		}
+		if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiPath)) {
+			AIToWString(aiPath, path);
+			pMaterial->SetMaterialMap(Graphics::eMaterialMapType::METALNESS,
 				GetTextureData(L"Resource/texture/" + path));
 		}*/
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::SPECULAR,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::AMBIENT,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::EMISSIVE,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::NORMAL,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::SHININESS,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_OPACITY, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::OPACITY,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
-		//if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiPath)) {
-		//	AIToWString(aiPath, path);
-		//	pMaterial->SetMaterialMap(Graphics::eMaterialMapType::METALNESS,
-		//		GetTextureData(L"Resource/texture/" + path));
-		//}
 		pModel->GetMaterials().push_back(pMaterial);
 	}
 }
@@ -278,7 +284,7 @@ void ResourceManager::AIGetNodeData(const aiNode* _pAiNode, Graphics::ModelNodeR
 	}
 }
 
-inline void ResourceManager::AIToWString(const aiString& _orig, std::wstring& _dest)
+void ResourceManager::AIToWString(const aiString& _orig, std::wstring& _dest)
 {
 	_dest.assign(_orig.C_Str(), _orig.C_Str() + _orig.length);
 }

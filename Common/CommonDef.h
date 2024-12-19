@@ -25,12 +25,12 @@ if ((*itr)->GetState() == EntityState::Active)				\
 
 #define FOR_LOOP_ARRAY(mem, func)							\
 for (auto itr = mem.begin(); itr != mem.end(); ++itr) {		\
-(*itr)->func												\
+(*itr)->func;												\
 }								
 
 #define FOR_LOOP_MAP(mem, func)								\
 for (auto itr = mem.begin(); itr != mem.end(); ++itr) {		\
-itr->second->func											\
+itr->second->func;											\
 }	
 
 // 컨테이너와 람다조건식으로 이터레이터 반환

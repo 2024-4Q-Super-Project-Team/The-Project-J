@@ -28,10 +28,10 @@ namespace Engine
 		void SetDestroy();
 		void SetCreate();
 
-		inline void SetName(std::wstring_view _name) { mName = _name; }
-		inline void SetTag(std::wstring_view _tag) { mTag = _tag; }
-		inline const std::wstring& GetName()  const	{ return mName; }
-		inline const std::wstring& GetTag()	  const		{ return mTag; }
-		inline const EntityState&  GetState() const		{ return mState; }
+		void SetName(std::wstring_view _name) { mName = _name; }
+		void SetTag(std::wstring_view _tag) { mTag = _tag; }
+		const std::wstring& GetName()  const	{ return mName; }
+		const std::wstring& GetTag()	  const		{ return mTag; }
+		const EntityState&  GetState() const		{ return mState; }
 	};
 }

@@ -1,6 +1,5 @@
 #include "TestScript.h"
-
-
+#include "Test.h"
 void TestScript::Start()
 {
 	//ownerObject->GetComponent<TestScript>()[1];

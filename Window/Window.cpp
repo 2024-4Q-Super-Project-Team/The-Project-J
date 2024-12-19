@@ -26,37 +26,37 @@ namespace Display
 		}
 	}
 
-	inline HWND Window::GetHandle()
+	HWND Window::GetHandle()
 	{
 		return mHwnd;
 	}
 
-	inline const WCHAR* Window::GetTitle()
+	const WCHAR* Window::GetTitle()
 	{
 		return mTitle;
 	}
 
-	inline RECT Window::GetRect()
+	RECT Window::GetRect()
 	{
 		return RECT();
 	}
 
-	inline POINT Window::GetPosition()
+	POINT Window::GetPosition()
 	{
 		return mPosition;
 	}
 
-	inline POINT Window::GetSize()
+	POINT Window::GetSize()
 	{
 		return mSize;
 	}
 
-	inline HWND Window::GetParentHandle()
+	HWND Window::GetParentHandle()
 	{
 		return mHParent;
 	}
 
-	inline BOOL Window::SetPosition(POINT _xy)
+	BOOL Window::SetPosition(POINT _xy)
 	{
 		BOOL res;
 		res = MoveWindow(mHwnd
@@ -72,7 +72,7 @@ namespace Display
 		return res;
 	}
 
-	inline BOOL Window::SetSize(POINT _wh)
+	BOOL Window::SetSize(POINT _wh)
 	{
 		BOOL res;
 		res = SetWindowPos(mHwnd
@@ -95,7 +95,7 @@ namespace Display
 		else return FALSE;
 	}
 
-	inline void Window::SetFocus()
+	void Window::SetFocus()
 	{
 		::SetFocus(mHwnd);
 	}

@@ -4,6 +4,8 @@
 #include "Object/Object.h"
 #include "GameManager/GameManager.h"
 #include "Physics/PhysicsManager.h"
+#include "Graphics/GraphicsManager.h"
+#include "Graphics/GraphicsFramework.h"
 
 Component::Collider::Collider(GameObject* _owner)
 	:ComponentBase(_owner)
@@ -17,8 +19,9 @@ Component::Collider::Collider(GameObject* _owner)
 	}
 
 	mMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.6f);
-
+#ifdef _DEBUG
 	mBatch = GameManager::GetGraphicsManager()->GetRenderer()->GetPrimitiveBatch();
+#endif
 }
 
 void Component::Collider::Start()

@@ -1,14 +1,14 @@
 #pragma once
-#include "Viewport/ViewportManager.h"
-#include "Graphics/GraphicsManager.h"
-#include "Resource/ResourceManager.h"
-#include "Physics/PhysicsManager.h"
 
-class PhysicsManager;
 namespace Engine
 {
 	class Application;
 }
+class ViewportManager;
+class GraphicsManager;
+class PhysicsManager;
+class ResourceManager;
+class GraphicsManager;
 
 class GameManager
 	: public Engine::IEngineCycle
@@ -30,17 +30,18 @@ public:
 	virtual void Render(GraphicsManager* _graphicsManager) override;
 	virtual void PostRender() override;
 public:
-	static float GetFixedUpdateTick() { return mFixedUpdateTick; }
-	static Engine::Application* GetApplication() { return mApplication; }
-	static ViewportManager* GetViewportManager() { return mViewportManager; }
-	static IGraphicsManager* GetGraphicsManager() { return mGraphicsManager; }
-	static PhysicsManager* GetPhysicsManager() { return mPhysicsManager; }
-	static ResourceManager* GetResourceManager() { return mResourceManager; }
+	static float				GetFixedUpdateTick() { return mFixedUpdateTick; }
+	static Engine::Application* GetApplication()	 { return mApplication; }
+	static ViewportManager*		GetViewportManager() { return mViewportManager; }
+	static GraphicsManager*		GetGraphicsManager() { return mGraphicsManager; }
+	static PhysicsManager*		GetPhysicsManager()  { return mPhysicsManager; }
+	static ResourceManager*		GetResourceManager() { return mResourceManager; }
 private:
 	static Engine::Application* mApplication;
-	static ViewportManager* mViewportManager;
-	static GraphicsManager* mGraphicsManager;
-	static PhysicsManager* mPhysicsManager;
-	static ResourceManager* mResourceManager;
-	static float mFixedUpdateTick;
+	static ViewportManager*		mViewportManager;
+	static GraphicsManager*		mGraphicsManager;
+	static PhysicsManager*		mPhysicsManager;
+	static ResourceManager*		mResourceManager;
+	// FixedUpdate аж╠Б
+	static float				mFixedUpdateTick;
 };

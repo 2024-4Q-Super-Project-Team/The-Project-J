@@ -22,15 +22,15 @@ namespace Graphics
 		std::unordered_map<std::wstring, ModelNodeResource*> mNodes;
 	public:
 		ModelNodeResource* mRootNode;	
-		inline ModelNodeResource*		GetModelNodeResource(const std::wstring& _nodeName);
-		inline BoneResource*			GetBoneResource(const std::wstring& _nodeName);
-		inline AnimationResource*		GetAnimation(const std::wstring& _nodeName);
+		ModelNodeResource*		GetModelNodeResource(const std::wstring& _nodeName);
+		BoneResource*			GetBoneResource(const std::wstring& _nodeName);
+		AnimationResource*		GetAnimation(const std::wstring& _nodeName);
 	public:
-		inline std::vector<std::pair<UINT, std::shared_ptr<MeshResource>>>& GetMeshs() { return mMeshs; }
-		inline std::vector<std::shared_ptr<MaterialResource>>& GetMaterials() { return mMaterials; }
-		inline std::unordered_map<std::wstring, std::shared_ptr<BoneResource>>& GetBones() { return mBones; }
-		inline std::unordered_map<std::wstring, std::shared_ptr<AnimationResource>>& GetAnimations() { return mAnimations; }
-		inline std::unordered_map<std::wstring, ModelNodeResource*>& GetNodes() { return mNodes; }
+		std::vector<std::pair<UINT, std::shared_ptr<MeshResource>>>& GetMeshs() { return mMeshs; }
+		std::vector<std::shared_ptr<MaterialResource>>& GetMaterials() { return mMaterials; }
+		std::unordered_map<std::wstring, std::shared_ptr<BoneResource>>& GetBones() { return mBones; }
+		std::unordered_map<std::wstring, std::shared_ptr<AnimationResource>>& GetAnimations() { return mAnimations; }
+		std::unordered_map<std::wstring, ModelNodeResource*>& GetNodes() { return mNodes; }
 	};
 
 	class ModelNodeResource

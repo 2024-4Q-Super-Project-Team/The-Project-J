@@ -1,10 +1,5 @@
 #pragma once
 #include "Component/Component.h"
-#include "Data/Mesh.h"
-#include "Data/Material.h"
-#include "Data/Bone.h"
-#include "Data/Animation.h"
-#include "Data/Model.h"
 
 class GameObject;
 class GraphicsManager;

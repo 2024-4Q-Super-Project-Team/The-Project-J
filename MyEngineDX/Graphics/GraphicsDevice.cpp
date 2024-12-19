@@ -48,7 +48,7 @@ namespace Graphics
 		}
 		return S_OK;
 	}
-//	inline HRESULT GraphicsDevice::CreateShaderFromFile(const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel, ID3D10Blob** _ppblobOut)
+//	HRESULT GraphicsDevice::CreateShaderFromFile(const WCHAR* _path, LPCSTR _entryPoint, LPCSTR _shaderModel, ID3D10Blob** _ppblobOut)
 //	{
 //		DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 //#ifdef _DEBUG
@@ -70,27 +70,27 @@ namespace Graphics
 //		if (pErrorBlob) pErrorBlob->Release();
 //		return S_OK;
 //	}
-//	inline HRESULT GraphicsDevice::CreateVertexShader(const void* _shaderBytecode, SIZE_T _bytecodeLength, ID3D11ClassLinkage* _classLinkage, ID3D11VertexShader** _vertexShader)
+//	HRESULT GraphicsDevice::CreateVertexShader(const void* _shaderBytecode, SIZE_T _bytecodeLength, ID3D11ClassLinkage* _classLinkage, ID3D11VertexShader** _vertexShader)
 //	{
 //		return mDevice->CreateVertexShader(_shaderBytecode, _bytecodeLength, _classLinkage, _vertexShader);
 //	}
-//	inline HRESULT GraphicsDevice::CreatePixelShader(const void* _shaderBytecode, SIZE_T _bytecodeLength, ID3D11ClassLinkage* _classLinkage, ID3D11PixelShader** _pixelShader)
+//	HRESULT GraphicsDevice::CreatePixelShader(const void* _shaderBytecode, SIZE_T _bytecodeLength, ID3D11ClassLinkage* _classLinkage, ID3D11PixelShader** _pixelShader)
 //	{
 //		return mDevice->CreatePixelShader(_shaderBytecode, _bytecodeLength, _classLinkage, _pixelShader);
 //	}
-//	inline HRESULT GraphicsDevice::CreateSwapChain(DXGI_SWAP_CHAIN_DESC* _pSwapChainDesc, IDXGISwapChain** _ppSwapChain)
+//	HRESULT GraphicsDevice::CreateSwapChain(DXGI_SWAP_CHAIN_DESC* _pSwapChainDesc, IDXGISwapChain** _ppSwapChain)
 //	{
 //		return mFactory->CreateSwapChain(mDevice, _pSwapChainDesc, _ppSwapChain);
 //	}
-//	inline HRESULT GraphicsDevice::CreateRenderTargetView(ID3D11Resource* _pBuffer, const D3D11_RENDER_TARGET_VIEW_DESC* _pRtvDesc, ID3D11RenderTargetView** _ppRenderTargetView)
+//	HRESULT GraphicsDevice::CreateRenderTargetView(ID3D11Resource* _pBuffer, const D3D11_RENDER_TARGET_VIEW_DESC* _pRtvDesc, ID3D11RenderTargetView** _ppRenderTargetView)
 //	{
 //		return mDevice->CreateRenderTargetView(_pBuffer, _pRtvDesc, _ppRenderTargetView);
 //	}
-//	inline HRESULT GraphicsDevice::CreateDepthStencilView(ID3D11Resource* _pBuffer, const D3D11_DEPTH_STENCIL_VIEW_DESC* _pDsvDesc, ID3D11DepthStencilView** _ppDepthStencilView)
+//	HRESULT GraphicsDevice::CreateDepthStencilView(ID3D11Resource* _pBuffer, const D3D11_DEPTH_STENCIL_VIEW_DESC* _pDsvDesc, ID3D11DepthStencilView** _ppDepthStencilView)
 //	{
 //		return mDevice->CreateDepthStencilView(_pBuffer, _pDsvDesc, _ppDepthStencilView);
 //	}
-//	inline HRESULT GraphicsDevice::CreateTexture2D(D3D11_TEXTURE2D_DESC* _pTexDesc, const D3D11_SUBRESOURCE_DATA* _pInitialData, ID3D11Texture2D** _ppTexture2D)
+//	HRESULT GraphicsDevice::CreateTexture2D(D3D11_TEXTURE2D_DESC* _pTexDesc, const D3D11_SUBRESOURCE_DATA* _pInitialData, ID3D11Texture2D** _ppTexture2D)
 //	{
 //		return mDevice->CreateTexture2D(_pTexDesc, _pInitialData, _ppTexture2D);
 //	}

@@ -1,7 +1,13 @@
 #include "pch.h"
 #include "SkinningMeshRenderer.h"
-#include "Object/Object.h"
-#include "Graphics/GraphicsManager.h"
+#include "FrameWork.h"
+#include "Graphics/GraphicsFramework.h"
+
+#include "Data/Mesh.h"
+#include "Data/Material.h"
+#include "Data/Bone.h"
+#include "Data/Animation.h"
+#include "Data/Model.h"
 
 namespace Component
 {
@@ -39,7 +45,6 @@ namespace Component
 			// 루트노드는 오브젝트의 월드매트릭스를 가져와서 쓴다.
 			mRootNode->mLocalMatrix = ownerObject->transform->GetWorldMatrix();
 		}
-
 	}
 	void SkinningMeshRenderer::PostRender()
 	{
@@ -142,7 +147,8 @@ namespace Component
 				mWorldMatrix = mLocalMatrix * mParent->mWorldMatrix;
 			}
 			else
-			{ // 없으면 노드의 행렬을 사용한다.
+			{ 
+				// 없으면 노드의 행렬을 사용한다.
 				const Matrix& nodeMatrix = pModel->GetModelNodeResource(mName)->mTransformation;
 				mWorldMatrix = nodeMatrix * mParent->mWorldMatrix;
 			}

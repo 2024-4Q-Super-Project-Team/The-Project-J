@@ -1,6 +1,7 @@
 #pragma once
+#include <Windows.h>
 #include "DisplayDesc.h"
-#include "Console.h"
+
 namespace Display
 {
 	class IDisplay;

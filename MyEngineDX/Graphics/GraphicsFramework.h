@@ -11,11 +11,5 @@
 
 namespace Graphics
 {
-	class GraphicsDevice;
-	class Renderer;
-	class RenderTarget;
-
 	HRESULT CreateGraphicsDeviceAndRenderer(GraphicsDevice** _ppGraphicsDevice, Renderer** _ppRenderer);
-
-
 }

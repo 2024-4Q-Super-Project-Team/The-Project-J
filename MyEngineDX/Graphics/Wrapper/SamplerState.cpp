@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SamplerState.h"
-#include "Graphics/GraphicsDevice.h"
+#include "../GraphicsDevice.h"
 
 namespace Graphics
 {

@@ -1,5 +1,8 @@
 #pragma once
 #include "Component/Script/Script.h"
+#include "Component/Render/SkinningMeshRenderer.h"
+#include "Component/Physics/Rigidbody.h"
+#include "Component/Physics/BoxCollider.h"
 
 class ObjectGroup;
 
@@ -37,8 +40,8 @@ public:
     std::vector<T*>& GetComponents();
 	GameObject* CreateChild(std::wstring_view _name);
 
-	inline GameObject* GetParent() { return mParent; }
-	inline GameObject* GetRootParent() { return mRootParent; }
+	GameObject* GetParent() { return mParent; }
+	GameObject* GetRootParent() { return mRootParent; }
 
 	std::vector<GameObject*>& GetChildren();
 public:

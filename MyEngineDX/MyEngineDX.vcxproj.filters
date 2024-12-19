@@ -75,7 +75,7 @@
     <ClInclude Include="Graphics\GraphicsRenderTarget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Graphics.h">
+    <ClInclude Include="Graphics\GraphicsFramework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsManager.h">
@@ -132,9 +132,6 @@
     <ClInclude Include="Component\Render\Data\GraphicsEnum.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Render\Data\Material.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Render\Data\Mesh.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -163,6 +160,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource\Data\IResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectFramework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="FrameWork.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Render\Data\Material.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -227,7 +233,7 @@
     <ClCompile Include="Graphics\GraphicsRenderTarget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Graphics.cpp">
+    <ClCompile Include="Graphics\GraphicsFramework.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsManager.cpp">
@@ -284,9 +290,6 @@
     <ClCompile Include="Component\Render\Data\GraphicsEnum.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Render\Data\Material.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Render\Data\Mesh.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -315,6 +318,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Data\IResource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectFramework.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="FrameWork.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Render\Data\Material.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Material.h"
+#include "Graphics/GraphicsFramework.h"
 
 namespace Graphics
 {
@@ -9,14 +10,6 @@ namespace Graphics
 	}
 	MaterialResource::~MaterialResource()
 	{
-	}
-	void MaterialResource::SetMaterialMap(eMaterialMapType _mapType, std::shared_ptr<Texture> _pTexture)
-	{
-		mMaterialMaps[static_cast<UINT>(_mapType)] =  _pTexture;
-	}
-	inline std::shared_ptr<Texture> MaterialResource::GetMaterialMap(eMaterialMapType _mapType)
-	{
-		return mMaterialMaps[static_cast<UINT>(_mapType)];
 	}
 	MaterialState::MaterialState(MaterialResource* _pMaterialResource)
 		: mMaterialResource(_pMaterialResource)
@@ -29,51 +22,51 @@ namespace Graphics
 	MaterialState::~MaterialState()
 	{
 	}
-	inline const std::wstring& MaterialState::GetName()
+	const std::wstring& MaterialState::GetName()
 	{
 		return mMaterialResource->GetName();
 	}
-	inline void MaterialState::DiffuseColor(RGBA _rgba)
+	void MaterialState::DiffuseColor(RGBA _rgba)
 	{
 		mCBuffer.DiffuseRGB = _rgba;
 	}
-	inline RGBA& MaterialState::DiffuseColor()
+	RGBA& MaterialState::DiffuseColor()
 	{
 		return mCBuffer.DiffuseRGB;
 	}
-	inline void MaterialState::AmbientColor(RGBA _rgba)
+	void MaterialState::AmbientColor(RGBA _rgba)
 	{
 		mCBuffer.AmbientRGB = _rgba;
 	}
-	inline RGBA& MaterialState::AmbientColor()
+	RGBA& MaterialState::AmbientColor()
 	{
 		return mCBuffer.AmbientRGB;
 	}
-	inline void MaterialState::SpecularColor(RGBA _rgba)
+	void MaterialState::SpecularColor(RGBA _rgba)
 	{
 		mCBuffer.SpecularRGB = _rgba;
 	}
-	inline RGBA& MaterialState::SpecularColor()
+	RGBA& MaterialState::SpecularColor()
 	{
 		return mCBuffer.SpecularRGB;
 	}
-	inline void MaterialState::SpecularPower(FLOAT _power)
+	void MaterialState::SpecularPower(FLOAT _power)
 	{
 		mCBuffer.SpecularPower = _power;
 	}
-	inline FLOAT& MaterialState::SpecularPower()
+	FLOAT& MaterialState::SpecularPower()
 	{
 		return mCBuffer.SpecularPower;
 	}
-	inline void MaterialState::UseMaterialMapType(eMaterialMapType _type, BOOL _bUse)
+	void MaterialState::UseMaterialMapType(eMaterialMapType _type, BOOL _bUse)
 	{
 		mCBuffer.UseMap[static_cast<UINT>(_type)] = _bUse;
 	}
-	inline BOOL MaterialState::UseMaterialMapType(eMaterialMapType _type)
+	BOOL MaterialState::UseMaterialMapType(eMaterialMapType _type)
 	{
 		return mCBuffer.UseMap[static_cast<UINT>(_type)];
 	}
-	inline std::shared_ptr<Texture> MaterialState::GetMapTexture(eMaterialMapType _type)
+	std::shared_ptr<Texture> MaterialState::GetMapTexture(eMaterialMapType _type)
 	{
 		return mMaterialResource->GetMaterialMap(_type);
 	}

@@ -8,10 +8,11 @@ namespace Graphics
 	class VertexShader;
 	class PixelShader;
 	class Texture;
-	class MeshResource;
-	class MaterialResource;
+
 	class ModelResource;
 	class ModelNodeResource;
+	class MeshResource;
+	class MaterialResource;
 	class AnimationResource;
 	class ChannelResource;
 
@@ -23,7 +24,7 @@ class GameManager;
 class ResourceManager
 {
 public:
-	ResourceManager(GameManager* _pGameMng);
+	ResourceManager();
 	~ResourceManager();
 public:
 	std::shared_ptr<Graphics::Texture> GetTextureData(std::wstring_view _path);
@@ -37,7 +38,6 @@ private:
 
 	Assimp::Importer	 mAssimpImporter;
 	UINT				 mImpoterFlag;
-	GameManager* const	 mGameManager;
 private: // Assimp
 	void AIGetModelData(std::wstring_view _path, std::weak_ptr<Graphics::ModelResource> _wpModel);
 	
@@ -53,6 +53,6 @@ private: // Assimp
 	
 	void AIGetNodeData(const aiNode* _pAiNode, Graphics::ModelNodeResource* _pParentNode, std::weak_ptr<Graphics::ModelResource> _wpModel);
 	
-	inline void AIToWString(const aiString& _orig, std::wstring& _dest);
+	void AIToWString(const aiString& _orig, std::wstring& _dest);
 };
 

@@ -1,12 +1,6 @@
 #pragma once
-#include "Object/Object.h"
 
-namespace Graphics
-{
-	class GraphicsDevice;
-	class Renderer;
-	class RenderTarget;
-}
+class GameObject;
 class DXWorld;
 
 class ObjectGroup
@@ -33,22 +27,20 @@ private:
 	// 매 틱마다 오브젝트 생성, 삭제 처리하는 함수
 	void UpdateObject();
 private:
-	DXWorld* mOwnerWorld;
-	std::list<GameObject*> mObjects;
+	DXWorld*				mOwnerWorld;	// 객체가 속한 월드
+	std::list<GameObject*>	mObjects;		// 오브젝트 리스트
 
-	INT mGroupOrder;
+	INT						mGroupOrder;	// 레이어가 정렬되는 기준이 될 값.
 
 	std::queue<GameObject*> mCreateQueue;
 	std::queue<GameObject*> mDestroyQueue;
 public:
 	// 재할당 부담을 줄이려고 만든 오브젝트 벡터 Resize함수, 기존 사이즈보다 작으면 그냥 리턴
-	inline void		SetListSize(UINT _size);
+	void		SetListSize(UINT _size);
 
 	// 그룹을 해당 월드로 이동. 해당 월드에 이미 같은 이름의 그룹이 있다면 합칠건지, 새로 
-	inline void		SetWorld(DXWorld* _world);
-	inline DXWorld* GetWorld() const { return mOwnerWorld; }
+	void		SetWorld(DXWorld* _world);
+	DXWorld* GetWorld() const { return mOwnerWorld; }
 
-	// 레이어가 정렬되는 기준이 될 값.
-	inline INT		GetOrder() const { return mGroupOrder; }
+	INT		GetOrder() const { return mGroupOrder; }
 };
-

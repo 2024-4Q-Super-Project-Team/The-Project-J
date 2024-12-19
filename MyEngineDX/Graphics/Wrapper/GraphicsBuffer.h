@@ -38,10 +38,10 @@ namespace Graphics
 		using Buffer::Buffer;
 		virtual ~VertexBuffer() = default;
 	public:
-		inline void SetStride(UINT _stride) { mStride = _stride; }
-		inline UINT GetStride() { return mStride; }
-		inline void SetOffset(UINT _offset) { mOffset = _offset; }
-		inline UINT GetOffset() { return mOffset; }
+		void SetStride(UINT _stride) { mStride = _stride; }
+		UINT GetStride() { return mStride; }
+		void SetOffset(UINT _offset) { mOffset = _offset; }
+		UINT GetOffset() { return mOffset; }
 	private:
 		// 버텍스버퍼 크기 및 옵셋
 		UINT mStride = 0;
@@ -54,10 +54,10 @@ namespace Graphics
 		using Buffer::Buffer;
 		virtual ~IndexBuffer() = default;
 	public:
-		inline void SetFormat(UINT _format) { mFormat = _format; }
-		inline UINT GetFormat() { return mFormat; }
-		inline void SetOffset(UINT _offset) { mOffset = _offset; }
-		inline UINT GetOffset() { return mOffset; }
+		void SetFormat(UINT _format) { mFormat = _format; }
+		UINT GetFormat() { return mFormat; }
+		void SetOffset(UINT _offset) { mOffset = _offset; }
+		UINT GetOffset() { return mOffset; }
 	public:
 		UINT mFormat;
 		UINT mOffset;

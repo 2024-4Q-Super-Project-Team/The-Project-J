@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "GraphicsTexture.h"
+#include "../GraphicsDevice.h"
 
 namespace Graphics
 {

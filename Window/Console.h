@@ -11,11 +11,11 @@ namespace Display
 		static BOOL			OpenConsole(const WCHAR* _title, POINT _xy, POINT _wh, LONG _style = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU);
 		static BOOL			CloseConsole();
 	public:
-		static inline HWND	GetHandle();
-		static inline POINT	GetPosition();
-		static inline POINT	GetSize();
-		static inline BOOL	SetPosition(POINT _xy);
-		static inline BOOL	SetSize(POINT _wh);
+		static HWND	GetHandle();
+		static POINT	GetPosition();
+		static POINT	GetSize();
+		static BOOL	SetPosition(POINT _xy);
+		static BOOL	SetSize(POINT _wh);
 	public:
 		template<typename... Args>
 		static void Log(Args&&... args);

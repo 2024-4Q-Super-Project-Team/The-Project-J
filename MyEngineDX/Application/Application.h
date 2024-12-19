@@ -1,6 +1,14 @@
 #pragma once
-#include "pch.h"
-#include "GameManager/GameManager.h"
+#include <Windows.h>
+
+namespace Display
+{
+	class IDisplayDevice;
+	class IDisplay;
+	class IWindow;
+	struct WindowDesc;
+}
+class GameManager;
 
 namespace Engine
 {
@@ -33,7 +41,7 @@ namespace Engine
 		virtual void OnRender() {};
 		virtual void OnPostRender() {};
 	public:
-		void  ShutDown() { IsShutdown = true; }
+		void	ShutDown() { IsShutdown = true; }
 		HRESULT CreateWindowDisplay(Display::WindowDesc* _pWinDesc, Display::IWindow** _ppWindow);
 		HRESULT DestroyDisplay(HWND _hWnd);
 		HRESULT DestroyDisplay(Display::IDisplay** _ppDisplay);
@@ -43,7 +51,7 @@ namespace Engine
 		GameManager* const mGameManager;
 		Display::IDisplayDevice* mDisplayDevice;
 	public:
-		inline auto* GetGameManager() const { return mGameManager; }
+		auto* GetGameManager() const { return mGameManager; }
 	private:
 		friend class GameManager;
 	};

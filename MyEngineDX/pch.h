@@ -22,8 +22,6 @@
 #include <Directxtk/DDSTextureLoader.h>
 #include <Directxtk/PrimitiveBatch.h>
 #include <Directxtk/VertexTypes.h>
-
-
 #include <DirectXTex.h>
 #include <Psapi.h>
 #pragma comment (lib, "d3d11.lib")
@@ -39,6 +37,8 @@
 #include <assimp\postprocess.h>
 
 #include "../Common/Common.h"
+#include "../Window/IDisplay.h"
+
 #include "Helper/CommonEnum.h"
 #include "Helper/CommonDef.h"
 #include "Helper/CommonFunc.h"
@@ -50,13 +50,10 @@
 #include "Helper/Entity/Entity.h"
 #include "Helper/Factory/Factory.h"
 
-#include "../Window/IDisplay.h"
 #include "Graphics/GraphicsInterface.h"
-#include "Graphics/Graphics.h"
 
 #include "Component/Render/Data/GraphicsEnum.h"
 #include "Component/Render/Data/Cbuffer.h"
-
 #include "Component/Render/Data/Model.h"
 #include "Component/Render/Data/Mesh.h"
 #include "Component/Render/Data/Material.h"

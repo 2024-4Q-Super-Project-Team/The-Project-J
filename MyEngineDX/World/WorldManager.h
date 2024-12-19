@@ -1,6 +1,7 @@
 #pragma once
 #include "World/World.h"
 
+class DXWorld;
 class GameManager;
 
 class WorldManager
@@ -33,7 +34,7 @@ private:
 };
 
 template<class T>
-inline DXWorld* WorldManager::CreateWorld(std::wstring_view _name, std::wstring_view _tag)
+DXWorld* WorldManager::CreateWorld(std::wstring_view _name, std::wstring_view _tag)
 {
 	auto itr = mWorlds.find(_name.data());
 	if (itr != mWorlds.end())

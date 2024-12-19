@@ -1,8 +1,14 @@
 #pragma once
-#include "World/WorldManager.h"
 
+class WorldManager;
 class ViewportScene;
 
+namespace Graphics
+{
+	class GraphicsDevice;
+	class Renderer;
+	class RenderTarget;
+}
 
 class ViewportScene
 	: public Engine::IEngineCycle
@@ -20,11 +26,11 @@ public:
 	virtual void Render(GraphicsManager* _graphicsManager) override final;
 	virtual void PostRender() override final;
 protected:
-	WorldManager*			mWorldManager;
-	Display::IWindow*		mWindow;
-	Graphics::RenderTarget* mRenderTarget;
+	WorldManager*				mWorldManager;
+	Display::IWindow*			mWindow;
+	Graphics::RenderTarget*		mRenderTarget;
 public:
-	inline Display::IWindow* GetIWindow() { return mWindow; }
-	inline WorldManager* GetWorldManager() { return mWorldManager; }
+	Display::IWindow*	GetIWindow() { return mWindow; }
+	WorldManager*		GetWorldManager() { return mWorldManager; }
 };
 

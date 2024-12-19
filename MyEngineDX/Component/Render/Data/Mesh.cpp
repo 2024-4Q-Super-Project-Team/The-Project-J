@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Graphics/GraphicsManager.h"
+#include "Graphics/GraphicsFramework.h"
 
 namespace Graphics
 {

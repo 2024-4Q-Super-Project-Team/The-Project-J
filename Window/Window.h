@@ -18,10 +18,12 @@ namespace Display
 		virtual HWND			GetHandle() override;
 		virtual const WCHAR*	GetTitle() override;
 		virtual RECT			GetRect() override;
+        virtual POINT			GetOffset() override;
 		virtual POINT			GetPosition() override;
 		virtual POINT			GetSize() override;
 
 		virtual BOOL			SetPosition(POINT) override;
+		virtual BOOL			SetPositionCenter() override;
 		virtual BOOL			SetSize(POINT) override;
 
 		virtual BOOL			Show(BOOL _bShow) override;
@@ -33,8 +35,7 @@ namespace Display
 		HWND  mHwnd;
 		HWND  mHParent;
 		const WCHAR* mTitle;
-		POINT mPosition;
-		POINT mSize;
+        DWORD mStyle;
 
 		HINSTANCE	   mHInstance;
 		DisplayDevice* mDevice;

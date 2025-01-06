@@ -1,0 +1,49 @@
+#pragma once
+#include "Interface/ICycleHandler.h"
+#include "Helper/Entity/Entity.h"
+
+namespace Display
+{
+    class IWindow;
+}
+class WorldManager;
+class GraphicsManager;
+class IGraphicsDevice;
+class IGraphicsRenderer;
+class IGraphicsRenderTarget;
+
+// 게임 윈도우 하나에 대한 클래스
+// 윈도우, 렌더타겟, 월드매니저의 객체를 포함하고 있다.
+class ViewportScene
+	: public Engine::Entity
+    , public Engine::ICycleHandler
+{
+public:
+	explicit ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, IGraphicsRenderTarget* _pRenderTarget);
+	virtual ~ViewportScene();
+	ViewportScene(ViewportScene&) = delete;
+	ViewportScene& operator=(const ViewportScene&) = delete;
+	ViewportScene(ViewportScene&&) noexcept = default;
+	ViewportScene& operator=(ViewportScene&&) noexcept = default;
+public:
+	virtual void Tick()			override;
+	virtual void FixedUpdate()	override;
+	virtual void PreUpdate()	override;
+	virtual void Update()		override;
+	virtual void PostUpdate()	override;
+	virtual void PreRender()	override;
+	virtual void Render() override;
+	virtual void PostRender()	override;
+public:
+    void SetClearColor(FLOAT* _rgba);
+    void SetClearColor(ColorF _rgba);
+protected:
+	WorldManager*			mWorldManager;
+	Display::IWindow*		mWindow;
+	IGraphicsRenderTarget*	mRenderTarget;
+public:
+	inline auto* GetIWindow() { return mWindow; }
+	inline auto* GetWorldManager() { return mWorldManager; }
+	inline auto* GetRenderTarget() { return mRenderTarget; }
+};
+

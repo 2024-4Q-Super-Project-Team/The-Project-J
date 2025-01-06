@@ -17,10 +17,11 @@ namespace Display
 	public:
 		virtual	void Release() override;
 	public:
-		virtual HRESULT CreateWindowDisplay(WindowDesc* _pWindDesc, IWindow** _ppIWindow) override;
-		virtual HRESULT CreateConsoleDisplay(ConsoleDesc* _pConsoleDesc, IConsole** _ppIConsole) override;
-		virtual HRESULT DestroyDisplay(IDisplay** _ppDisplay) override;
-		virtual HRESULT DestroyDisplay(HWND _hwnd) override;
+		virtual HRESULT     CreateWindowDisplay(WindowDesc* _pWindDesc, IWindow** _ppIWindow) override;
+		virtual HRESULT     CreateConsoleDisplay(ConsoleDesc* _pConsoleDesc, IConsole** _ppIConsole) override;
+		virtual HRESULT     DestroyDisplay(IDisplay** _ppDisplay) override;
+		virtual HRESULT     DestroyDisplay(HWND _hwnd) override;
+        virtual IDisplay*   GetDevice(HWND _hWnd) override;
 	private:
 		HINSTANCE mHInstance;
 		std::unordered_map<HWND, IDisplay*> mDisplays;

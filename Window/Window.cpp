@@ -8,8 +8,7 @@ namespace Display
 		: mHwnd(_Hwnd)
 		, mTitle((*_pWndDesc).WndClass.lpszClassName)
 		, mHParent(((*_pWndDesc).WndParent == nullptr) ? nullptr : (*_pWndDesc).WndParent->GetHandle())
-		, mPosition((*_pWndDesc).Position)
-		, mSize((*_pWndDesc).Size)
+        , mStyle((*_pWndDesc).WndStyle)
 		, mDevice(_pDevice)
 		, mHInstance(nullptr)
 	{
@@ -38,17 +37,39 @@ namespace Display
 
 	RECT Window::GetRect()
 	{
-		return RECT();
+        RECT rect;
+        if (GetWindowRect(mHwnd, &rect)) {
+            return rect;
+        }
+        return RECT{ 0, 0, 0, 0 }; // 실패 시 기본값 반환
 	}
+
+    POINT Window::GetOffset()
+    {
+        RECT rect = { 0, 0, 0, 0 };
+        AdjustWindowRect(&rect, GetWindowLong(mHwnd, GWL_STYLE), FALSE);
+        POINT offset;
+        offset.x = -rect.left;
+        offset.y = -rect.top;
+        return offset;
+    }
 
 	POINT Window::GetPosition()
 	{
-		return mPosition;
+        RECT rect = GetRect();
+        POINT position;
+        position.x = rect.left;
+        position.y = rect.top;
+        return position;
 	}
 
 	POINT Window::GetSize()
 	{
-		return mSize;
+        RECT rect = GetRect();
+        POINT size;
+        size.x = rect.right - rect.left;
+        size.y = rect.bottom - rect.top;
+        return size;
 	}
 
 	HWND Window::GetParentHandle()
@@ -56,37 +77,50 @@ namespace Display
 		return mHParent;
 	}
 
-	BOOL Window::SetPosition(POINT _xy)
-	{
-		BOOL res;
-		res = MoveWindow(mHwnd
-			, static_cast<int>(_xy.x)
-			, static_cast<int>(_xy.y)
-			, static_cast<int>(mSize.x)
-			, static_cast<int>(mSize.y)
-			, TRUE);
-		if (res)
-		{
-			mPosition = _xy;
-		}
-		return res;
-	}
+    BOOL Window::SetPosition(POINT _xy)
+    {
+        const POINT size = GetSize();
+        const POINT offset = GetOffset();
+        BOOL res = SetWindowPos(mHwnd
+            , NULL
+            , static_cast<int>(_xy.x - offset.x)
+            , static_cast<int>(_xy.y - offset.y)
+            , 0
+            , 0
+            , SWP_NOZORDER | SWP_NOSIZE
+        );
+        return res;
+    }
 
-	BOOL Window::SetSize(POINT _wh)
-	{
-		BOOL res;
-		res = SetWindowPos(mHwnd
-			, HWND_TOP
-			, 0, 0 
-			, static_cast<int>(_wh.x)
-			, static_cast<int>(_wh.y)
-			, SWP_NOMOVE);
-		if (res)
-		{
-			mSize = _wh;
-		}
-		return res;
-	}
+    BOOL Window::SetPositionCenter()
+    {
+        int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+        int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+        POINT size = GetSize();
+        POINT rePos = {};
+        rePos.x = (screenWidth - size.x) / 2;
+        rePos.y = (screenHeight - size.y) / 2;
+        SetPosition(rePos);
+        return 0;
+    }
+
+    BOOL Window::SetSize(POINT _wh)
+    {
+        const POINT offset = GetOffset();
+        const int Width = static_cast<int>(_wh.x + offset.x * 2);
+        const int Height = static_cast<int>(_wh.y + offset.y * 2);
+
+        BOOL res = SetWindowPos(mHwnd
+            , NULL
+            , 0
+            , 0
+            , Width
+            , Height
+            , SWP_NOZORDER | SWP_NOMOVE
+        );
+        return res;
+    }
+
 
 	BOOL Window::Show(BOOL _bShow)
 	{

@@ -1,0 +1,22 @@
+#pragma once
+#include "Component/EditorUI/Contents/EditorWidget.h"
+#include "Component/EditorUI/Contents/EditorUID.h"
+
+class Object;
+
+namespace Editor
+{
+    class Inspector : public Widget, public EUID
+    {
+    public:
+        explicit Inspector();
+        virtual ~Inspector() = default;
+    public:
+        virtual void Render() override;
+    public:
+        void SetFocusObject(Object* _object);
+        Object* GetFocusObject();
+    private:
+        Object* mFocusObject;
+    };
+}

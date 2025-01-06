@@ -14,9 +14,9 @@ namespace Display
 	struct WindowDesc : public DisplayDesc
 	{
 		WindowDesc();
-		WNDCLASS WndClass = {};
-		DWORD	 WndStyle = WS_OVERLAPPEDWINDOW;
-		IWindow* WndParent = nullptr;
+		WNDCLASS WndClass   = {};
+		DWORD	 WndStyle   = WS_OVERLAPPEDWINDOW;
+		IWindow* WndParent  = nullptr;
 	};
 
 	struct ConsoleDesc : public DisplayDesc

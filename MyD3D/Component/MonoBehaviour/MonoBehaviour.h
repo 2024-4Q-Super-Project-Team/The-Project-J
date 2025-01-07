@@ -112,7 +112,7 @@ struct SerializeData : public Serialize
 	SerializeData<Type> Name##Data = SerializeData<Type>(#Name, this);\
 	Type Name
 #else
-	#define SerializeField(Type, Name)\
+	#define SerializeFiled(Type, Name)\
 	Type Name
 #endif
 

@@ -20,7 +20,6 @@ public:
 
     SerializeField(Vector3, vec);
 
-
 public:
     enum AxisType
     {

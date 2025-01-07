@@ -2,7 +2,6 @@
 #include "Mesh.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
-#include "Graphics/Vertex/Vertex.h"
 #include "Resource/Graphics/Material/Material.h"
 
 // 리소스매니저에서 생성
@@ -13,8 +12,8 @@ std::shared_ptr<MeshResource> MeshResource::PlainMesh;
 MeshResource::MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
     : Resource(_name)
 {
-    mVertices   = std::move(_vertices);
-    mIndices    = std::move(_indices);
+    mVertices = std::move(_vertices);
+    mIndices = std::move(_indices);
 }
 
 MeshResource::~MeshResource()
@@ -25,55 +24,39 @@ MeshResource::~MeshResource()
 
 HRESULT MeshResource::Create()
 {
-    IGraphicsDevice* pDevice = GraphicsManager::GetDevice();
-    if (!pDevice)
-    {
-        throw std::runtime_error("Null Pointer Exception to MeshResource::MeshResource...GraphicsManager::GetDevice()");
-    }
-    BufferDesc bufDesc = {};
+    D3D11_BUFFER_DESC bufDesc = {};
     {   // 버텍스 버퍼
-        bufDesc.BufferStride = sizeof(Vertex);
-        bufDesc.BufferOffset = 0;
         bufDesc.ByteWidth = (UINT)(sizeof(Vertex) * mVertices.size());
         bufDesc.Usage = D3D11_USAGE_DEFAULT;
         bufDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufDesc.CPUAccessFlags = 0;
-        SubResourceData vbData = {};
-        vbData.pSysMem = mVertices.data();
-        std::wstring bufferName = mName + L"_VertexBuffer";
-        HRESULT hr = pDevice->CreateBuffer(bufferName.data(), &bufDesc, &vbData,
-            (void**)&mVertexBuffer);
-        if (FAILED(hr))
-        {
-            throw std::runtime_error("Hresult Failed to MeshResource::Create...CreateBuffer()");
-        }
+        D3D11_SUBRESOURCE_DATA subData = {};
+        subData.pSysMem = mVertices.data();
+        mVertexBuffer = new D3DGraphicsVertexBuffer(&bufDesc, &subData);
+        mVertexBuffer->SetStride(sizeof(Vertex));
+        mVertexBuffer->SetOffset(0);
     }
     {   // 인덱스 버퍼
-        bufDesc.BufferFormat = DXGI_FORMAT_R32_UINT;
-        bufDesc.BufferOffset = 0;
         bufDesc.ByteWidth = (UINT)(sizeof(UINT) * mIndices.size());
         bufDesc.Usage = D3D11_USAGE_DEFAULT;
         bufDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         bufDesc.CPUAccessFlags = 0;
-        SubResourceData ibData = {};
-        ibData.pSysMem = mIndices.data();
-        std::wstring bufferName = mName + L"_IndexBuffer";
-        HRESULT hr = pDevice->CreateBuffer(bufferName.data(), &bufDesc, &ibData,
-            (void**)&mIndexBuffer);
-        if (FAILED(hr))
-        {
-            throw std::runtime_error("Hresult Failed to MeshResource::Create...CreateBuffer()");
-        }
+        D3D11_SUBRESOURCE_DATA subData = {};
+        subData.pSysMem = mIndices.data();
+        mIndexBuffer = new D3DGraphicsIndexBuffer(&bufDesc, &subData);
+        mIndexBuffer->SetFormat(DXGI_FORMAT_R32_UINT);
+        mIndexBuffer->SetOffset(0);
     }
     return S_OK;
 }
 
 void MeshResource::Bind()
 {
-    auto pRenderer = GraphicsManager::GetRenderer();
-    if (!pRenderer) return;
-    mVertexBuffer->Bind(pRenderer);
-    mIndexBuffer->Bind(pRenderer);
+    if (mVertexBuffer && mIndexBuffer)
+    {
+        mVertexBuffer->Bind();
+        mIndexBuffer->Bind();
+    }
 }
 
 void MeshResource::InitSkyCubeMesh()
@@ -84,27 +67,27 @@ void MeshResource::InitSkyCubeMesh()
         Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
         Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, 1, 1 }),
         Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
-        
+
         Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        
+
         Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        
+
         Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
         Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        
+
         Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { 1, -1, 1 }),
         Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
         Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { 1, -1, 1 }),
         Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
-        
+
         Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, -1 }),
         Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }),
         Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, -1, -1 }),

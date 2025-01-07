@@ -6,9 +6,6 @@
 
 #include "ViewportScene/ViewportScene.h"
 
-#include "../Graphics/GraphicsDevice.h"
-#include "../Graphics/GraphicsRenderer.h"
-
 UINT EditorUI::numEditor = 0;
 UINT EditorUI::cnt = 0;
 
@@ -160,12 +157,8 @@ void EditorUI::UpdateIO()
 
 BOOL EditorUI::SetUp()
 {
-    GraphicsDevice* pGraphicsDevice;
-    GraphicsRenderer* pGraphicsRenderer;
-    GraphicsManager::GetDevice()->QueryInterface(_UTID_GRAPHICS_DEVICE, (void**)&pGraphicsDevice);
-    GraphicsManager::GetRenderer()->QueryInterface(_UTID_GRAPHICS_RENDERER, (void**)&pGraphicsRenderer);
-    ID3D11Device* pDevice = pGraphicsDevice->mDevice;
-    ID3D11DeviceContext* pDeviceContext = pGraphicsRenderer->mDeviceContext;
+    ID3D11Device* pDevice = D3DGraphicsDevice::GetDevice();
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
 
     if (pDevice && pDeviceContext)
     {

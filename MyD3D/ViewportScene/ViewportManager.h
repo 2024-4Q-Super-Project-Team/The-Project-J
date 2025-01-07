@@ -5,7 +5,7 @@ namespace Display
 {
 	class IDisplayDevice;
 	class IWindow;
-    struct WindowDesc;
+	struct WindowDesc;
 }
 class ViewportScene;
 class GraphicsManager;
@@ -21,8 +21,8 @@ public:
 	ViewportManager(ViewportManager&&) noexcept = default;
 	ViewportManager& operator=(ViewportManager&&) noexcept = default;
 public:
-    BOOL Initialize();
-    void Finalization();
+	BOOL Initialize();
+	void Finalization();
 public:
 	virtual void Tick()			override;
 	virtual void FixedUpdate()	override;
@@ -38,7 +38,7 @@ public:
 	ViewportScene* GetViewportSceneFromHwnd(HWND _hWnd);
 	ViewportScene* GetActiveViewport() { return  mActiveViewport; }
 private:
-    Display::IDisplayDevice*    mDisplayDevice;
-	ViewportScene*              mActiveViewport;
+	Display::IDisplayDevice* mDisplayDevice;
+	ViewportScene* mActiveViewport;
 	std::vector<ViewportScene*> mViewportScenes;
 };

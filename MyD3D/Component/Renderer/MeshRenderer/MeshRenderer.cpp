@@ -8,8 +8,6 @@
 #include "Resource/Graphics/Material/Material.h"
 #include "Resource/Graphics/Texture/Texture.h"
 
-#include "../Graphics/GraphicsTexture.h"
-
 MeshRenderer::MeshRenderer(Object* _owner)
     : RendererComponent(_owner)
     , mMesh(nullptr)
@@ -63,24 +61,11 @@ void MeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh)
     {
-        // 머티리얼 바인딩
-        if (mMateiral)
-        {
-            mMateiral->Bind();
-        }
-        // 메쉬 바인딩
-        if (mMesh)
-        {
-            mMesh->Bind();
-        }
+        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+        mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
+        mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
 
-        mTransformMatrices.World        =   XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-        mTransformMatrices.View         =   XMMatrixTranspose(_camera->GetView());
-        mTransformMatrices.Projection   =   XMMatrixTranspose(_camera->GetProjection());
-
-        GraphicsManager::UpdateConstantBuffer(eCBufferType::Transform,  &mTransformMatrices);
-
-        GraphicsManager::GetRenderer()->DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+        _camera->PushDrawList(this);
     }
 }
 
@@ -93,16 +78,39 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
     clone->SetMaterial(this->mMateiral->mMaterialResource);
 }
 
+void MeshRenderer::DrawCall()
+{
+    // 머티리얼 바인딩
+    if (mMateiral)
+    {
+        mMateiral->Bind();
+    }
+    // 메쉬 바인딩
+    if (mMesh)
+    {
+        mMesh->Bind();
+    }
+    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+}
+
 void MeshRenderer::SetMesh(std::shared_ptr<MeshResource> _mesh)
 {
     mMesh = _mesh;
 }
-
-
 void MeshRenderer::SetMaterial(std::shared_ptr<MaterialResource> _material)
 {
     mMateiral->SetMaterial(_material);
 }
+std::shared_ptr<MeshResource> MeshRenderer::GetMesh()
+{
+    return mMesh;
+}
+Material* MeshRenderer::GetMaterial()
+{
+    return mMateiral;
+}
+
 
 #define SetMaterialEditor(typeEnum, label)                                                      \
     if (mMateiral->mMaterialMaps[(UINT)typeEnum])                                               \

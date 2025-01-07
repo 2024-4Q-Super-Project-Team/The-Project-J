@@ -96,9 +96,6 @@
     <ClInclude Include="Resource\Graphics\Mesh\Mesh.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\Vertex\Vertex.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Resource\Graphics\Material\Material.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -189,31 +186,16 @@
     <ClInclude Include="Component\Animator\Animator.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="RenderState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Camera\Camera.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource\FBXImporter\FBXImporter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Graphics\Shader\Shader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource\Graphics\InputLayout\InputLayout.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Resource\Graphics\Texture\Texture.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Graphics\SamplerState\SamplerState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Component\Light\Light.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Light\LightSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GraphicsManager.h">
@@ -238,6 +220,48 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\EditorUI\Contents\GameEditor\GameEditor.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsBuffer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsSamplerState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsShader.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsTexture.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsViewport.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Core\D3DGraphicsDevice.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Core\D3DGraphicsRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Core\D3DGraphicsRenderTarget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Core\D3DGraphicsSwapChain.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Interface\IGraphics.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\GraphicsFramework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\RenderState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Light\LightSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\Graphics\Mesh\Vertex.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -318,9 +342,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Graphics\Mesh\Mesh.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Vertex\Vertex.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Graphics\Material\Material.cpp">
@@ -407,31 +428,16 @@
     <ClCompile Include="Component\Animator\Animator.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="RenderState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Camera\Camera.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\FBXImporter\FBXImporter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Graphics\Shader\Shader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\Graphics\InputLayout\InputLayout.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Resource\Graphics\Texture\Texture.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Graphics\SamplerState\SamplerState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Component\Light\Light.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Graphics\Light\LightSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GraphicsManager.cpp">
@@ -456,6 +462,45 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\EditorUI\Contents\GameEditor\GameEditor.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsBuffer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsSamplerState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsShader.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsTexture.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsViewport.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Core\D3DGraphicsDevice.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Core\D3DGraphicsRenderer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Core\D3DGraphicsRenderTarget.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Core\D3DGraphicsSwapChain.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Interface\IGraphics.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\RenderState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Light\LightSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

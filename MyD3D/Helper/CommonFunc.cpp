@@ -3,6 +3,13 @@
 
 namespace Helper
 {
+    void HRT(HRESULT _hr, const char* _errorMsg)
+    {
+        if (FAILED(_hr))
+        {
+            throw std::runtime_error(_errorMsg);
+        }
+    }
     std::wstring ToWString(const std::string& _str)
     {
         std::wstring wstr;
@@ -84,32 +91,32 @@ namespace Helper
 
 
 
-   HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size)
-   {
-       std::wstring path = filePath;
-       std::ifstream file(path.c_str(), std::ios::ate | std::ios::binary);
+    HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size)
+    {
+        std::wstring path = filePath;
+        std::ifstream file(path.c_str(), std::ios::ate | std::ios::binary);
 
-       if (!file.is_open())
-       {
-           return E_INVALIDARG;
-       }
+        if (!file.is_open())
+        {
+            return E_INVALIDARG;
+        }
 
-       std::size_t filesize = static_cast<std::size_t>(file.tellg());
-       // Return file size.
-       *size = filesize;
+        std::size_t filesize = static_cast<std::size_t>(file.tellg());
+        // Return file size.
+        *size = filesize;
 
-       if (data == nullptr)
-           return S_OK;
+        if (data == nullptr)
+            return S_OK;
 
-       // Return Data.
-       std::vector<uint8_t> buffer(filesize);
+        // Return Data.
+        std::vector<uint8_t> buffer(filesize);
 
-       file.seekg(0);
-       file.read((char*)buffer.data(), filesize);
-       file.close();
+        file.seekg(0);
+        file.read((char*)buffer.data(), filesize);
+        file.close();
 
-       *data = std::move(buffer);
+        *data = std::move(buffer);
 
-       return S_OK;
-   }
+        return S_OK;
+    }
 }

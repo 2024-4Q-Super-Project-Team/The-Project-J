@@ -1,7 +1,5 @@
 #pragma once
 
-#define SHADER_STAGE_SIZE static_cast<UINT>(eShaderStage::ALL)
-
 enum class eCBufferType
 {
     Transform,
@@ -11,7 +9,7 @@ enum class eCBufferType
     Light,
     SIZE
 };
-#define CBUFFER_SIZE static_cast<UINT>(eCBufferType::SIZE)
+#define CBUFFER_TYPE_COUNT static_cast<UINT>(eCBufferType::SIZE)
 
 enum class eMaterialMapType
 {
@@ -34,3 +32,31 @@ enum class eSamplerStateType
     LINEAR_CLAMP,
     SIZE,
 };
+#define SAMPLER_STATE_TYPE_COUNT static_cast<UINT>(eSamplerStateType::SIZE)
+
+enum class eVertexShaderType
+{
+    STANDARD,
+    SKYBOX,
+    SIZE,
+};
+#define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
+
+enum class ePixelShaderType
+{
+    BLINN_PHONG,
+    PBR,
+    SKYBOX,
+    SIZE,
+};
+#define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)
+
+enum class eBlendingMode
+{
+    OPAQUE_BLEND,
+    CUTOUT_BLEND,
+    TRANSPARENT_BLEND,
+    POSTPROCESS_BLEND,
+    SIZE,
+};
+#define RENDERING_MODE_COUNT static_cast<UINT>(eBlendingMode::SIZE)

@@ -1,7 +1,4 @@
 #pragma once
-#include "Resource/Graphics/SamplerState/SamplerState.h"
-#include "Resource/Graphics/InputLayout/InputLayout.h"
-#include "Resource/Graphics/Shader/Shader.h"
 #include "Resource/Graphics/Texture/Texture.h"
 #include "Resource/Graphics/FBXModel/FBXModel.h"
 #include "Resource/Graphics/Mesh/Mesh.h"
@@ -39,7 +36,7 @@ public:
     template <typename TYPE>
     static BOOL                  PushResource(std::shared_ptr<TYPE> _pResource);
 private:
-    static ResourceTable         mResourceTables [static_cast<UINT>(eResourceType::SIZE)];
+    static ResourceTable         mResourceTables[static_cast<UINT>(eResourceType::SIZE)];
 };
 
 template<typename TYPE>

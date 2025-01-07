@@ -3,7 +3,6 @@
 #include "Manager/GameManager.h"
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
-#include "Resource/Graphics/Shader/Shader.h"
 #include "Resource/Graphics/Texture/Texture.h"
 
 std::shared_ptr<MaterialResource> MaterialResource::DefaultMaterial = std::make_shared<MaterialResource>(L"Default_Material");
@@ -30,6 +29,11 @@ void MaterialResource::SetMaterialProperty(MaterialProperty* _pProp)
     }
 }
 
+void MaterialResource::SetBlendingMode(eBlendingMode _type)
+{
+    mBlendMode = _type;
+}
+
 const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapType)
 {
     return  mMaterialMapPath[static_cast<UINT>(_mapType)];
@@ -37,30 +41,30 @@ const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapTy
 
 Material::Material()
 {
-    SetVertexShader(ResourceManager::GetResource<VertexShader>(L"resource/shader/Standard_VS.cso"));
-    SetPixelShader(ResourceManager::GetResource<PixelShader>(L"resource/shader/PBR_PS.cso"));
+    SetVertexShader(GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD));
+    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::PBR));
 }
 
 Material::Material(std::shared_ptr<MaterialResource> _pMatResource)
     : mMaterialResource(_pMatResource)
 {
     SetMaterial(_pMatResource);
-    SetVertexShader(ResourceManager::GetResource<VertexShader>(L"resource/shader/Standard_VS.cso"));
-    SetPixelShader(ResourceManager::GetResource<PixelShader>(L"resource/shader/PBR_PS.cso"));
+    SetVertexShader(GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD));
+    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::PBR));
 }
 
 Material::~Material()
 {
 }
 
-void Material::SetVertexShader(std::shared_ptr<VertexShader> _spVertexShader)
+void Material::SetVertexShader(D3DGraphicsVertexShader* _pVertexShader)
 {
-    mVertexShader = _spVertexShader;
+    mVertexShader = _pVertexShader;
 }
 
-void Material::SetPixelShader(std::shared_ptr<PixelShader> _spVPixelShader)
+void Material::SetPixelShader(D3DGraphicsPixelShader* _pVPixelShader)
 {
-    mPixelShader = _spVPixelShader;
+    mPixelShader = _pVPixelShader;
 }
 
 void Material::SetMaterial(std::shared_ptr<MaterialResource> _pMaterial)
@@ -74,9 +78,8 @@ void Material::SetMaterial(std::shared_ptr<MaterialResource> _pMaterial)
             mMaterialMaps[i] = ResourceManager::AddResource<Texture2D>(mMaterialResource->mMaterialMapPath[i]);
             if (mMaterialMaps[i])
             {
-                mMaterialMaps[i]->GetTexture2D()->
-                    SetShaderStage(eShaderStage::PS).
-                    SetSlot(i);
+                mMaterialMaps[i]->Texture->SetBindStage(eShaderStage::PS);
+                mMaterialMaps[i]->Texture->SetBindSlot(i);
                 mMatCBuffer.SetUsingMap((eMaterialMapType)i, TRUE);
                 if (i == (int)eMaterialMapType::ROUGHNESS) mMatCBuffer.MatProp.RoughnessScale = 1.0f;
                 if (i == (int)eMaterialMapType::METALNESS) mMatCBuffer.MatProp.MetallicScale = 1.0f;
@@ -98,7 +101,7 @@ std::shared_ptr<Texture2D> Material::GetMapTexture(eMaterialMapType _type)
 
 void Material::Bind()
 {
-    GraphicsManager::UpdateConstantBuffer(eCBufferType::Material, &mMatCBuffer);
+    GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
 
     mVertexShader->Bind();
     mPixelShader->Bind();
@@ -107,10 +110,10 @@ void Material::Bind()
     {
         if (mMaterialMaps[i])
         {
-            if(mMatCBuffer.GetUsingMap((eMaterialMapType)i) == TRUE)
-                mMaterialMaps[i]->Bind();
-            if(mMatCBuffer.GetUsingMap((eMaterialMapType)i) == FALSE)
-                mMaterialMaps[i]->Reset();
+            if (mMatCBuffer.GetUsingMap((eMaterialMapType)i) == TRUE)
+                mMaterialMaps[i]->Texture->Bind();
+            if (mMatCBuffer.GetUsingMap((eMaterialMapType)i) == FALSE)
+                mMaterialMaps[i]->Texture->Reset();
         }
     }
 }

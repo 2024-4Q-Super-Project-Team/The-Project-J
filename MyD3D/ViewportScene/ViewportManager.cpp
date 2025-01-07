@@ -122,21 +122,13 @@ void ViewportManager::PostRender()
 
 ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDesc)
 {
-    Display::IWindow*       pWindow             = nullptr;
-    IGraphicsRenderTarget*  pRenderTarget       = nullptr;
+    Display::IWindow* pWindow = nullptr;
+    D3DGraphicsRenderTarget* pRenderTarget = nullptr;
     if (FAILED(mDisplayDevice->CreateWindowDisplay(_pWinDesc, &pWindow)))
     {
         throw std::runtime_error("Hresult Failed to ViewportScene::CreateViewport...CreateWindowDisplay()");
     }
-    IGraphicsDevice* pDevice = GraphicsManager::GetDevice();
-    if (!pDevice)
-    {
-        throw std::runtime_error("Null Pointer Exception to ViewportScene::CreateViewport...pGraphicsManager->GetDevice()");
-    }
-    if (FAILED(pDevice->CreateRenderTarget(pWindow->GetHandle(), &pRenderTarget)))
-    {
-        throw std::runtime_error("Hresult Failed to ViewportScene::CreateViewport...CreateRenderTarget()");
-    }
+    pRenderTarget = new D3DGraphicsRenderTarget(pWindow->GetHandle());
     if (pWindow && pRenderTarget)
     {
         const WCHAR* winName = _pWinDesc->WndClass.lpszClassName;
@@ -144,7 +136,7 @@ ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDe
         mViewportScenes.push_back(pViewport);
         return pViewport;
     }
-    return nullptr; 
+    return nullptr;
 }
 
 ViewportScene* ViewportManager::GetViewportSceneFromWindowName(std::wstring _winName)

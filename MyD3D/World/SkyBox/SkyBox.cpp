@@ -7,8 +7,8 @@
 SkyBox::SkyBox(World* _pOwnerWorld)
     : mOwnerWorld(_pOwnerWorld)
 {
-    mSkyBoxVS = ResourceManager::AddResource<VertexShader>(L"resource/shader/SkyBox_VS.cso");
-    mSkyBoxPS = ResourceManager::AddResource<PixelShader>(L"resource/shader/SkyBox_PS.cso");
+    mSkyBoxVS = GraphicsManager::GetVertexShader(eVertexShaderType::SKYBOX);
+    mSkyBoxPS = GraphicsManager::GetPixelShader(ePixelShaderType::SKYBOX);
 }
 
 void SkyBox::Draw(Camera* _camera)
@@ -21,19 +21,21 @@ void SkyBox::Draw(Camera* _camera)
         {
             mSkyBoxVS->Bind();
             mSkyBoxPS->Bind();
-            TransformCBuffer cb;
+
             // 속한 월드의 매트릭스가 있으면 나중에 그걸 가져오자
+            TransformCBuffer cb;
             float ScaleValue = _camera->GetProjectionFar() / 2.0f;
             cb.World = Matrix::CreateScale(Vector3(ScaleValue, ScaleValue, ScaleValue));
             cb.View = XMMatrixTranspose(_camera->GetView());
             cb.Projection = XMMatrixTranspose(_camera->GetProjection());
-            GraphicsManager::UpdateConstantBuffer(eCBufferType::Transform, &cb);
+
+            GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&cb);
 
             auto pMesh = MeshResource::SkyCubeMesh.get();
             if (pMesh)
             {
                 pMesh->Bind();
-                GraphicsManager::GetRenderer()->DrawCall(static_cast<UINT>(pMesh->mIndices.size()), 0, 0);
+                D3DGraphicsRenderer::DrawCall(static_cast<UINT>(pMesh->mIndices.size()), 0, 0);
             }
         }
     }
@@ -45,48 +47,45 @@ void SkyBox::Bind()
     mSkyBoxVS->Bind();
     mSkyBoxPS->Bind();
     // 텍스쳐 바인딩
-    if(mIBLDiffuseTex)
-        mIBLDiffuseTex->Bind();
     if (mIBLDiffuseTex)
-        mIBLDiffuseTex->Bind();
+        mIBLDiffuseTex->Texture->Bind();
+    if (mIBLDiffuseTex)
+        mIBLDiffuseTex->Texture->Bind();
     if (mIBLSpecularTex)
-        mIBLSpecularTex->Bind();
+        mIBLSpecularTex->Texture->Bind();
     if (mBLDFLookUpTableTex)
-        mBLDFLookUpTableTex->Bind();
+        mBLDFLookUpTableTex->Texture->Bind();
 }
 
 void SkyBox::SetEnvironmentTexture(std::shared_ptr<Texture2D> _tex)
 {
     mIBLEnvironmentTex = _tex;
-    mIBLEnvironmentTex->
-        SetShaderStage(eShaderStage::PS).
-        SetSlot(20);
-    mIBLEnvironmentTex->Bind();
+    mIBLEnvironmentTex->Texture->SetBindStage(eShaderStage::PS);
+    mIBLEnvironmentTex->Texture->SetBindSlot(20);
+    mIBLEnvironmentTex->Texture->Bind();
 }
 
 void SkyBox::SetDiffuseTexture(std::shared_ptr<Texture2D> _tex)
 {
     mIBLDiffuseTex = _tex;
-    mIBLDiffuseTex->
-        SetShaderStage(eShaderStage::PS).
-        SetSlot(21);
-    mIBLDiffuseTex->Bind();
+    mIBLDiffuseTex->Texture->SetBindStage(eShaderStage::PS);
+    mIBLDiffuseTex->Texture->SetBindSlot(21);
+    mIBLDiffuseTex->Texture->Bind();
 }
 
 void SkyBox::SetSpecularture(std::shared_ptr<Texture2D> _tex)
 {
     mIBLSpecularTex = _tex;
-    mIBLSpecularTex->
-        SetShaderStage(eShaderStage::PS).
-        SetSlot(22);
-    mIBLSpecularTex->Bind();
+    mIBLSpecularTex->Texture->SetBindStage(eShaderStage::PS);
+    mIBLSpecularTex->Texture->SetBindSlot(22);
+    mIBLSpecularTex->Texture->Bind();
 }
 
 void SkyBox::SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex)
 {
     mBLDFLookUpTableTex = _tex;
-    mBLDFLookUpTableTex->
-        SetShaderStage(eShaderStage::PS).
-        SetSlot(23);
-    mBLDFLookUpTableTex->Bind();
+    mBLDFLookUpTableTex->Texture->SetBindStage(eShaderStage::PS);
+    mBLDFLookUpTableTex->Texture->SetBindSlot(23);
+    mBLDFLookUpTableTex->Texture->Bind();
 }
+

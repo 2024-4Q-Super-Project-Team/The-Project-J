@@ -1,5 +1,4 @@
 #pragma once
-#include "Graphics/Vertex/Vertex.h"
 
 class FBXModelResource;
 class MeshResource;

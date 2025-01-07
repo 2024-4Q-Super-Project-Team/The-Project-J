@@ -1,6 +1,12 @@
 #pragma once
 #include "Component/Component.h"
 
+class D3DGraphicsRenderTarget;
+class D3DGraphicsViewport;
+
+class RendererComponent;
+
+using DrawQueue = std::queue<RendererComponent*>;
 
 class Camera
     : public Component
@@ -21,27 +27,30 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
+    void PushDrawList(RendererComponent* _renderComponent);
+    void ExcuteDrawList();
+private:
+    void UpdateCamera();
+public:
     inline void SetProjectionType(ProjectionType _type) { mProjectionType = _type; }
     inline void SetFovAngle(Degree _angle) { mFovAngle = _angle; }
     inline void SetProjectionNear(float _near) { mProjectionNear = _near; }
     inline void SetProjectionFar(float _far) { mProjectionFar = _far; }
-    inline void SetViewportSize(Vector2 _size) { mViewport.Width = _size.x; mViewport.Height = _size.y; }
 
-    inline const Matrix& GetView()          { return mViewMatrix; }
-    inline const Matrix& GetProjection()    { return mProjectionMatrix; }
-    inline const float GetProjectionNear()  { return mProjectionNear; }
-    inline const float GetProjectionFar()   { return mProjectionFar; }
-    inline const Vector2 GetViewportSize()  { return Vector2(mViewport.Width, mViewport.Height); }
-    
+    inline const Matrix& GetView() { return mViewMatrix; }
+    inline const Matrix& GetProjection() { return mProjectionMatrix; }
+    inline const float GetProjectionNear() { return mProjectionNear; }
+    inline const float GetProjectionFar() { return mProjectionFar; }
+    inline const auto* GetViewport() { return mViewport; }
 private:
-    void    UpdateCamera();
-public:
+    DrawQueue mDrawQueue[RENDERING_MODE_COUNT];
+
     Degree  mFovAngle;
     float   mProjectionNear;
     float   mProjectionFar;
-private:
-    ViewportDesc mViewport;
-    ProjectionType mProjectionType;
+    D3DGraphicsViewport* mViewport;
+    CameraCBuffer        mCameraCBuffer;
+    ProjectionType       mProjectionType;
 
     Matrix mViewMatrix;
     Matrix mProjectionMatrix;
@@ -49,6 +58,7 @@ private:
     // 직교투영전용 변수
     float   mOrthoWidth;
     float   mOrthoHeight;
+private:
 public:
     enum class ProjectionType
     {

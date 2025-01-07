@@ -10,7 +10,6 @@
 #include "Resource/Graphics/Bone/Bone.h"
 #include "Resource/Graphics/Texture/Texture.h"
 #include "Object/Object.h"
-#include "../Graphics/GraphicsTexture.h"
 
 SkinnedMeshRenderer::SkinnedMeshRenderer(Object* _owner)
     : RendererComponent(_owner)
@@ -73,26 +72,11 @@ void SkinnedMeshRenderer::Draw(Camera* _camera)
         }
         // 본 트랜스폼 계산
         CalculateBoneTransform();
+        mTransformMatrices.World = XMMatrixTranspose(mRootBone->GetWorldMatrix());
+        mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
+        mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
 
-        // 머티리얼 바인딩
-        if (mMateiral)
-        {
-            mMateiral->Bind();
-        }
-        // 메쉬 바인딩
-        if (mMesh)
-        {
-            mMesh->Bind();
-        }
-
-        mTransformMatrices.World        =   XMMatrixTranspose(mRootBone->GetWorldMatrix());
-        mTransformMatrices.View         =   XMMatrixTranspose(_camera->GetView());
-        mTransformMatrices.Projection   =   XMMatrixTranspose(_camera->GetProjection());
-
-        GraphicsManager::UpdateConstantBuffer(eCBufferType::BoneMatrix, &mFinalBoneMatrices);
-        GraphicsManager::UpdateConstantBuffer(eCBufferType::Transform,  &mTransformMatrices);
-
-        GraphicsManager::GetRenderer()->DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+        _camera->PushDrawList(this);
     }
 }
 
@@ -110,6 +94,33 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     }
     // 머티리얼 생성
     clone->SetMaterial(this->mMateiral->mMaterialResource);
+}
+
+void SkinnedMeshRenderer::DrawCall()
+{
+    // 머티리얼 바인딩
+    if (mMateiral)
+    {
+        mMateiral->Bind();
+    }
+    // 메쉬 바인딩
+    if (mMesh)
+    {
+        mMesh->Bind();
+    }
+    GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
+    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+}
+
+std::shared_ptr<MeshResource> SkinnedMeshRenderer::GetMesh()
+{
+    return mMesh;
+}
+
+Material* SkinnedMeshRenderer::GetMaterial()
+{
+    return mMateiral;
 }
 
 void SkinnedMeshRenderer::SetMesh(std::shared_ptr<MeshResource> _mesh)

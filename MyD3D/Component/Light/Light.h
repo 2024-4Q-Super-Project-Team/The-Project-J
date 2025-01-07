@@ -28,13 +28,15 @@ public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
 public:
     inline void SetLightDirection(Vector4 _xyz) { mLightProp.Direction = _xyz; }
-    inline void SetLightType(eLightType _type)  { mLightProp.LightType = static_cast<INT>(_type); }
-    inline void SetAmbientStrength(FLOAT _val)  { mLightProp.AmbientStrength = Clamp(_val, 0.0f, 1.0f); }
-    inline void SetAmbientColor(ColorF _color)  { mLightProp.AmbientRGB = _color; }
-    inline void SetDiffuseColor(ColorF _color)  { mLightProp.DiffuseRGB = _color; }
+    inline void SetLightType(eLightType _type) { mLightProp.LightType = static_cast<INT>(_type); }
+    inline void SetAmbientColor(ColorF _color) { mLightProp.AmbientRGB = _color; }
+    inline void SetDiffuseColor(ColorF _color) { mLightProp.DiffuseRGB = _color; }
     inline void SetSpecularColor(ColorF _color) { mLightProp.SpecularRGB = _color; }
 private:
-    LightProperty mLightProp;
+    LightProperty   mLightProp;
+    D3DGraphicsDSV* mShadowDSV;
+    D3DGraphicsSRV* mShadowSRV;
+    D3DGraphicsViewport* mShadowViewport;
 public:
     virtual void EditorRendering() override;
 };

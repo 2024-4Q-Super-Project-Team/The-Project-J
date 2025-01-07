@@ -1,17 +1,17 @@
 #pragma once
 
-class IGraphicsDevice;
-class IGraphicsRenderer;
-class IGraphicsRenderTarget;
+class D3DGraphicsDevice;
+class D3DGraphicsRenderer;
+class D3DGraphicsRenderTarget;
 
-class IBuffer;
-class IVertexBuffer;
-class IIndexBuffer;
-class IConstantBuffer;
+class D3DGraphicsBuffer;
+class D3DGraphicsVertexBuffer;
+class D3DGraphicsIndexBuffer;
+class D3DGraphicsConstantBuffer;
 
-class SamplerState;
-class VertexShader;
-class PixelShader;
+class D3DGraphicsSamplerState;
+class D3DGraphicsVertexShader;
+class D3DGraphicsPixelShader;
 
 class GraphicsManager
 {
@@ -21,33 +21,14 @@ public:
 public:
     static BOOL Initialize();
     static void Finalization();
-public: // Bind 및 Update 리소스
-    static HRESULT BindViewport(ViewportDesc* _pViewportDesc);
-    template <typename CBUFFER_TYPE>
-    static HRESULT UpdateConstantBuffer(eCBufferType _cBufferType, const CBUFFER_TYPE* _srcBuffer);
-private:
-    static IConstantBuffer* mCBufferArray[CBUFFER_SIZE];
-    static std::vector<std::shared_ptr<SamplerState>> mSamplerState;
-    static std::vector<std::shared_ptr<VertexShader>> mVertexShader;
-    static std::vector<std::shared_ptr<PixelShader>>  mPixelShader;
-private:
-	static IGraphicsDevice*	    mDevice;
-	static IGraphicsRenderer*	mRenderer;
-public:
-	static IGraphicsDevice*     GetDevice() { return mDevice; }
-	static IGraphicsRenderer*   GetRenderer() { return mRenderer; }
-};
 
-template<typename CBUFFER_TYPE>
-inline HRESULT GraphicsManager::UpdateConstantBuffer(eCBufferType _cBufferType, const CBUFFER_TYPE* _srcBuffer)
-{
-    CBUFFER_TYPE cb;
-    size_t bufferSize = sizeof(CBUFFER_TYPE);
-    memcpy(&cb, _srcBuffer, bufferSize);
-    return mRenderer->UpdateSubResource(
-        mCBufferArray[static_cast<UINT>(_cBufferType)],
-        0, nullptr,
-        &cb,
-        0, 0
-    );
-}
+    static inline auto GetConstantBuffer(eCBufferType _type) { return mCBufferArray[(UINT)_type]; }
+    static inline auto GetSamplerState(eSamplerStateType _type) { return mSamplerStates[(UINT)_type]; }
+    static inline auto GetVertexShader(eVertexShaderType _type) { return mVertexShaders[(UINT)_type]; }
+    static inline auto GetPixelShader(ePixelShaderType _type) { return mPixelShaders[(UINT)_type]; }
+private:
+    static D3DGraphicsConstantBuffer*   mCBufferArray[CBUFFER_TYPE_COUNT];
+    static D3DGraphicsSamplerState*     mSamplerStates[SAMPLER_STATE_TYPE_COUNT];
+    static D3DGraphicsVertexShader*     mVertexShaders[VS_TYPE_COUNT];
+    static D3DGraphicsPixelShader*      mPixelShaders[PS_TYPE_COUNT];
+};

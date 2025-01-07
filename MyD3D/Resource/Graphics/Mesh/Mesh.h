@@ -1,9 +1,9 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "Graphics/Vertex/Vertex.h"
+#include "Vertex.h"
 
-class IVertexBuffer;
-class IIndexBuffer;
+class D3DGraphicsVertexBuffer;
+class D3DGraphicsIndexBuffer;
 class MaterialResource;
 class Material;
 class Bone;
@@ -18,10 +18,10 @@ public:
     HRESULT Create();
     void    Bind();
 public:
-    IVertexBuffer*      mVertexBuffer;
-    IIndexBuffer*       mIndexBuffer;
-    std::vector<Vertex> mVertices;
-    std::vector<UINT>	mIndices;
+    D3DGraphicsVertexBuffer* mVertexBuffer;
+    D3DGraphicsIndexBuffer* mIndexBuffer;
+    std::vector<Vertex>      mVertices;
+    std::vector<UINT>	     mIndices;
 
     // 각 정점(Vertex)에게 인덱싱을 통해 본 정보를 참조시키기 위한 테이블
     std::vector<Bone*>  mBoneArray;

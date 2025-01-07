@@ -4,8 +4,6 @@
 class Object;
 class Transform;
 class MeshResource;
-class MaterialResource;
-class Material;
 
 class MeshRenderer
     : public RendererComponent
@@ -27,11 +25,15 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    void SetMesh(std::shared_ptr<MeshResource> _mesh);
-    void SetMaterial(std::shared_ptr<MaterialResource> _material);
+    virtual void DrawCall() override;
+public:
+    virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) override;
+    virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) override;
+    virtual std::shared_ptr<MeshResource> GetMesh() override;
+    virtual Material* GetMaterial() override;
 private:
     std::shared_ptr<MeshResource>   mMesh;          // 스킨드 메쉬
-    Material*                       mMateiral;      // 사용할 머티리얼
+    Material* mMateiral;      // 사용할 머티리얼
     TransformCBuffer                mTransformMatrices;
 public:
     virtual void EditorRendering() override;

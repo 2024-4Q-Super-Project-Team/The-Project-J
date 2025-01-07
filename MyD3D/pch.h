@@ -17,8 +17,21 @@
 #include <unordered_map>
 #include <unordered_set>
 
-#include "../Graphics/framework.h"
-#include "../Window/framework.h"
+//Direct3D
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <dxgi1_4.h>
+#include <Directxtk/DDSTextureLoader.h>
+#include <Directxtk/WICTextureLoader.h>
+#include <Directxtk/PrimitiveBatch.h>
+#include <Directxtk/VertexTypes.h>
+#include <DirectXTex.h>
+#include <Psapi.h>
+using namespace DirectX;
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "d3dcompiler.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
 
 // SimpleMath
 #include <directxtk/SimpleMath.h>
@@ -35,6 +48,7 @@ using namespace DirectX::SimpleMath;
 #include <physx/PxPhysicsAPI.h>
 #include <physx/PxPhysics.h>
 using namespace physx;
+#include "../Window/framework.h"
 // Helper
 #include "Helper/Data/ColorF.h"
 #include "Helper/Data/Angles.h"
@@ -46,4 +60,6 @@ using namespace physx;
 #include "Helper/Math/Math.h"
 #include "Helper/Math/Random.h"
 
+#include "Graphics/Graphics.h"
 #include "Graphics/ConstantBuffer.h"
+#include "Graphics/GraphicsFramework.h"

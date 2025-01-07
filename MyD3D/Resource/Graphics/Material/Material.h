@@ -3,8 +3,8 @@
 #include "Graphics/ConstantBuffer.h"
 
 class Texture2D;
-class VertexShader;
-class PixelShader;
+class D3DGraphicsVertexShader;
+class D3DGraphicsPixelShader;
 struct MaterialCBuffer;
 
 // 여러 머티리얼 객체들이 공유할 수 있는 참조용 리소스
@@ -12,21 +12,21 @@ class MaterialResource : public Resource
 {
 public: _READ_ONLY
     RESOURCE_TYPE(eResourceType::Material);
-    explicit MaterialResource(std::wstring_view _name);
-    virtual ~MaterialResource();
+      explicit MaterialResource(std::wstring_view _name);
+      virtual ~MaterialResource();
 public:
     void SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath);
     void SetMaterialProperty(MaterialProperty* _pProp);
+    void SetBlendingMode(eBlendingMode _type);
     const std::wstring& GetMaterialMapPath(eMaterialMapType _mapType);
-    std::shared_ptr<VertexShader> GetVertexShader();
-    std::shared_ptr<PixelShader> GetPixelShader();
 public:
     // 머티리얼이 사용할 각 맵 텍스쳐 경로
     std::wstring mMaterialMapPath[MATERIAL_MAP_SIZE];
     // 머티리얼 고유 속성
     MaterialProperty mMaterialProperty;
-    // TODO : 차후 렌더패스 타입도 넣어줘야한다.
-
+    // 블렌드 타입
+    eBlendingMode mBlendMode = eBlendingMode::OPAQUE_BLEND;
+    // 기본 머티리얼
     static std::shared_ptr<MaterialResource> DefaultMaterial;
 };
 
@@ -39,8 +39,8 @@ public:
     explicit Material(std::shared_ptr<MaterialResource> _pMatResource);
     virtual ~Material();
 public:
-    void SetVertexShader(std::shared_ptr<VertexShader> _spVertexShader);
-    void SetPixelShader(std::shared_ptr<PixelShader> _spVPixelShader);
+    void SetVertexShader(D3DGraphicsVertexShader* _pVertexShader);
+    void SetPixelShader(D3DGraphicsPixelShader* _pVPixelShader);
     void SetMaterial(std::shared_ptr<MaterialResource> _pMaterial);
     void UseMaterialMapType(eMaterialMapType _type, BOOL _bUse);
     std::shared_ptr<Texture2D> GetMapTexture(eMaterialMapType _type);
@@ -54,7 +54,7 @@ public:
     // 텍스쳐는 머티리얼 리소스의 경로를 참조해 만듬.
     std::shared_ptr<Texture2D> mMaterialMaps[MATERIAL_MAP_SIZE];
     // 머티리얼이 사용할 버텍스 셰이더
-    std::shared_ptr<VertexShader> mVertexShader;
+    D3DGraphicsVertexShader* mVertexShader;
     // 머티리얼이 사용할 픽셀 셰이더
-    std::shared_ptr<PixelShader> mPixelShader;
+    D3DGraphicsPixelShader* mPixelShader;
 };

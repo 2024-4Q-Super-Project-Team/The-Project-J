@@ -1,22 +1,19 @@
 #pragma once
 
-class GraphicsResource;
-
-using Microsoft::WRL::ComPtr;
-
-class Graphics
+struct BackBufferVertex
 {
-public:
-    static BOOL Initialize() {}
-    static void Finalize() {}
-public:
-    void UpdateGraphicsResource(GraphicsResource* _pResource);
-private:
-    ID3D11Device*        mDevice;
-    IDXGIFactory*        mFactory;
-    IDXGIAdapter3*       mAdapter;
-    ID3D11DeviceContext* mContext;
-private:
-
+    float Position[4]; // NDC ÁÂÇ¥
+    float TexCoord[2]; // ÅØ½ºÃ³ ÁÂÇ¥
 };
 
+enum class eShaderStage
+{
+    PASS,   // PASS
+    VS,		// Vertex Shader
+    PS,		// Pixel Shader
+    GS,		// Geometry Shader
+    HS,		// Hull Shader
+    DS,		// Domain Shader
+    CS,		// Compute Shader
+    ALL,
+};

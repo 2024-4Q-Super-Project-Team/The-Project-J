@@ -9,7 +9,7 @@
 
 Assimp::Importer    FBXImporter::mImporter;
 UINT			    FBXImporter::mFlag;
-FBXResource*		FBXImporter::mFBXResource;
+FBXResource* FBXImporter::mFBXResource;
 
 BOOL FBXImporter::Initialize()
 {
@@ -76,42 +76,42 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::SPECULAR, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::AMBIENT, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::EMISSIVE, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::NORMAL, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::ROUGHNESS, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_OPACITY, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::OPACITY, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::METALNESS, newPath.wstring());
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
-               std::filesystem::path newPath = FBXPath / newTag.filename();
+                std::filesystem::path newPath = FBXPath / newTag.filename();
                 pMaterial->SetMaterialMap(eMaterialMapType::AMBIENT_OCCLUSION, newPath.wstring());
             }
         }
@@ -119,8 +119,8 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
         {
             //aiMaterialProperty* pAiProperty;
             MaterialProperty MatProp;
-            aiColor4D   colorVal; 
-            //float       floatVal;
+            aiColor4D   colorVal;
+            float       floatVal;
             // Diffuse Color
             if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_COLOR_DIFFUSE, colorVal)) {
                 MatProp.DiffuseRGB = ColorF(&colorVal.r);
@@ -136,11 +136,33 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 MatProp.SpecularRGB = ColorF(&colorVal.r);
             }
 
-            //// Shininess (Specular Power)
-            //if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_SHININESS, floatVal)) {
-            //    MatProp.Roughness = floatVal;
-            //}
+            if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_ROUGHNESS_FACTOR, floatVal)) {
+                MatProp.RoughnessScale = Clamp(floatVal, 0.0f, 1.0f);
+            }
+
+            if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_METALLIC_FACTOR, floatVal)) {
+                MatProp.MetallicScale = Clamp(floatVal, 0.0f, 1.0f);
+            }
             pMaterial->SetMaterialProperty(&MatProp);
+        }
+        // Blending Mode
+        {
+            // Opacity Check
+            float floatVal = 1.0f;
+            if (AI_SUCCESS == pAiMaterial->Get(AI_MATKEY_OPACITY, floatVal))
+            {
+                // Alpha값이 1.0 미만이면
+                if (floatVal < 1.0f)
+                {
+                    // Transparent 처리
+                    pMaterial->SetBlendingMode(eBlendingMode::TRANSPARENT_BLEND);
+                }
+                else
+                {
+                    // Opaque 처리
+                    pMaterial->SetBlendingMode(eBlendingMode::OPAQUE_BLEND);
+                }
+            }
         }
         mFBXResource->MaterialArray.push_back(pMaterial);
         mFBXResource->MaterialTable[Name] = pMaterial;
@@ -229,8 +251,8 @@ void FBXImporter::ProcessBone(const aiMesh* _pAiMesh)
         // 현재 본이 영향을 주는 정점들에 본 인덱싱을 매핑해준다.
         for (UINT i = 0; i < pAibone->mNumWeights; i++)
         {
-            UINT vertexID       = pAibone->mWeights[i].mVertexId;
-            float vertexWeight  = pAibone->mWeights[i].mWeight;
+            UINT vertexID = pAibone->mWeights[i].mVertexId;
+            float vertexWeight = pAibone->mWeights[i].mWeight;
             pMesh->mVertices[vertexID].AddBoneData(bIdx, vertexWeight);
         }
     }
@@ -261,7 +283,7 @@ void FBXImporter::ProcessFrame(const aiAnimation* _pAiAnim)
         AnimationNode* pChannel = new AnimationNode(Name, pAnim);
         ProcessKey(animNode, pChannel);
         pAnim->AddChannel(pChannel);
-    }   
+    }
 }
 
 void FBXImporter::ProcessKey(const aiNodeAnim* _pAiNodeAnim, AnimationNode* _pChannel)

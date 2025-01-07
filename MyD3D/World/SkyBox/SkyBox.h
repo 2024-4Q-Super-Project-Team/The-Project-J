@@ -22,11 +22,12 @@ public:
     void SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex);
 private:
     World* mOwnerWorld;
-    std::shared_ptr<VertexShader>       mSkyBoxVS;
-    std::shared_ptr<PixelShader>        mSkyBoxPS;
-    std::shared_ptr<Texture2D>          mIBLEnvironmentTex;
-    std::shared_ptr<Texture2D>          mIBLDiffuseTex;
-    std::shared_ptr<Texture2D>          mIBLSpecularTex;
-    std::shared_ptr<Texture2D>          mBLDFLookUpTableTex;
+    D3DGraphicsVertexShader* mSkyBoxVS;
+    D3DGraphicsPixelShader* mSkyBoxPS;
+    std::shared_ptr<Texture2D>  mIBLEnvironmentTex;
+    std::shared_ptr<Texture2D>  mIBLDiffuseTex;
+    std::shared_ptr<Texture2D>  mIBLSpecularTex;
+    std::shared_ptr<Texture2D>  mBLDFLookUpTableTex;
+
 };
 

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "World.h"
 #include "World/SkyBox/SkyBox.h"
-#include "Graphics/Light/LightSystem.h"
+#include "World/Light/LightSystem.h"
 #include "Manager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"

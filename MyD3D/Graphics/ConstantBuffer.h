@@ -8,9 +8,11 @@ struct MaterialProperty
     ColorF	AmbientRGB  = { 1.0f,1.0f,1.0f,1.0f };
     // 정반사 빛
     ColorF	SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
-
-    FLOAT	RoughnessScale = 0.0f;
+    // 거칠기 기본 값 0.5
+    FLOAT	RoughnessScale = 0.5f;
+    // 금속성 기본 값 0.0
     FLOAT   MetallicScale = 0.0f;
+    // AO강도
     FLOAT   AmbienOcclusionScale = 0.0f;
     FLOAT   Padding;
 };
@@ -24,8 +26,7 @@ struct LightProperty
     ColorF  AmbientRGB  = { 1.0f,1.0f,1.0f,1.0f };
     ColorF  SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
-    FLOAT   AmbientStrength = 1.0f;
-    Vector2 Padding;
+    Vector3 Padding;
 };
 
 struct TransformCBuffer
@@ -61,7 +62,10 @@ struct BoneMatrixCBuffer
 struct LightCBuffer
 {
     LightProperty LightProp[MAX_LIGHT_COUNT];
+    // 조명 수
     INT           NumLight = 0;
-    Vector3       Padding;
+    // 환경광 강도
+    FLOAT         AmbientIntensity = 1.0f;
+    Vector2       Padding;
 };
 

@@ -2,12 +2,14 @@
 #include "Camera.h"
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportManager.h"
+#include "ViewportScene/ViewportScene.h"
 #include "Graphics/GraphicsManager.h"
 #include "World/WorldManager.h"
-#include "ViewportScene/ViewportScene.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
+
+#include "Resource/Graphics/Material/Material.h"
 
 Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
@@ -17,14 +19,10 @@ Camera::Camera(Object* _owner, Vector2 _size)
     , mProjectionFar(1000.0f)
     , mOrthoWidth(10.0f)
     , mOrthoHeight(10.0f)
+    , mViewport(nullptr)
 {
     mType = eComponentType::CAMERA;
-    mViewport.TopLeftX = 0;
-    mViewport.TopLeftY = 0;
-    mViewport.Width = _size.x;
-    mViewport.Height = _size.y;
-    mViewport.MinDepth = 0.0f;
-    mViewport.MaxDepth = 1.0f;
+    mViewport = new D3DGraphicsViewport(0.0f, 0.0f, _size.x, _size.y);
 }
 
 Camera::~Camera()
@@ -62,19 +60,23 @@ void Camera::PreRender()
 void Camera::Render()
 {
     UpdateCamera();
-    GraphicsManager::BindViewport(&mViewport);
     auto* world = GameManager::GetCurrentWorld();
     if (world)
     {
-        CameraCBuffer ca;
-        ca.Position.x = gameObject->transform->position.x;
-        ca.Position.y = gameObject->transform->position.y;
-        ca.Position.z = gameObject->transform->position.z;
-        ca.Position.w = 1.0f;
-        GraphicsManager::UpdateConstantBuffer(eCBufferType::Camera, &ca);
+        mCameraCBuffer.Position.x = gameObject->transform->position.x;
+        mCameraCBuffer.Position.y = gameObject->transform->position.y;
+        mCameraCBuffer.Position.z = gameObject->transform->position.z;
+        mCameraCBuffer.Position.w = 1.0f;
+        // 카메라 상수버퍼 바인딩
+        GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
+        // 뷰포트 바인딩
+        mViewport->Bind();
+        // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
-    
+
+    // 렌더 큐를 처리한다.
+    ExcuteDrawList();
 }
 
 void Camera::Draw(Camera* _camera)
@@ -94,8 +96,8 @@ void Camera::UpdateCamera()
     mViewMatrix = XMMatrixLookAtLH(pos, at, up);
 
     // 가로 세로 비율?
-    ViewportManager* vptMng =  GameManager::GetViewportManager();
-    float aspectRatio = mViewport.Width / mViewport.Height;
+    ViewportManager* vptMng = GameManager::GetViewportManager();
+    float aspectRatio = mViewport->GetWidth() / mViewport->GetHeight();
 
     switch (mProjectionType)
     {
@@ -115,6 +117,30 @@ void Camera::UpdateCamera()
         break;
     default:
         break;
+    }
+}
+
+void Camera::PushDrawList(RendererComponent* _renderComponent)
+{
+    auto pMaterial = _renderComponent->GetMaterial();
+    eBlendingMode blendMode = eBlendingMode::OPAQUE_BLEND;
+    if (pMaterial)
+    {
+        blendMode = pMaterial->mMaterialResource->mBlendMode;
+    }
+
+    mDrawQueue[static_cast<UINT>(blendMode)].push(_renderComponent);
+}
+
+void Camera::ExcuteDrawList()
+{
+    for (auto& drawQueue : mDrawQueue)
+    {
+        while (!drawQueue.empty())
+        {
+            drawQueue.front()->DrawCall();
+            drawQueue.pop();
+        }
     }
 }
 

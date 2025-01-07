@@ -1,6 +1,10 @@
 #pragma once
 #include "Component/Component.h"
 
+class MeshResource;
+class MaterialResource;
+class Material;
+
 class RendererComponent
     : public Component
 {
@@ -18,7 +22,12 @@ public:
     virtual void Render() = 0;
     virtual void Draw(Camera* _camera) = 0;
     virtual void PostRender() = 0;
-private:
-
+public:
+    virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) = 0;
+    virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) = 0;
+    virtual std::shared_ptr<MeshResource> GetMesh() = 0;
+    virtual Material* GetMaterial() = 0;
+public:
+    virtual void DrawCall() = 0;
 };
 

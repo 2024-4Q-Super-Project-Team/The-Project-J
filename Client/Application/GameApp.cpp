@@ -28,7 +28,6 @@ BOOL GameApp::OnPostInitialize()
             winDecs.WndClass.lpfnWndProc = WinProc;
             mMainScene = GameManager::GetViewportManager()->CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
-            mMainScene->SetClearColor(ColorF::LightSlateBlue());
         }
         WorldManager* wrdMng = mMainScene->GetWorldManager();
         if (nullptr == wrdMng) return FALSE;
@@ -54,7 +53,6 @@ BOOL GameApp::OnPostInitialize()
 
             World* wolrd = wrdMng->CreateWorld<EditorWorld>(L"EditorWorld", L"");
             wrdMng->SetActiveWorld(L"EditorWorld");
-            mEditorScene->SetClearColor(ColorF::Black());
         }
         GameApp::EditorRePosition();
     }

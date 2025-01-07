@@ -10,10 +10,10 @@ namespace Helper
     std::wstring ToWString(const std::string& _str);
     std::string ToString(const std::wstring& _wstr);
     // 키와 맵을 받아 find값을 포인터로 반환합니다.
-	template <typename KEY, typename TYPE>
-	TYPE* FindMap(const KEY& _key, std::unordered_map<KEY, TYPE>& _map)
-	{
-		auto itr = _map.find(_key);
+    template <typename KEY, typename TYPE>
+    TYPE* FindMap(const KEY& _key, std::unordered_map<KEY, TYPE>& _map)
+    {
+        auto itr = _map.find(_key);
         TYPE* result;
         if (itr != _map.end()) {
             result = &itr->second;
@@ -21,7 +21,7 @@ namespace Helper
         else result = nullptr;
         //TYPE* result = (itr != _map.end()) ? &itr->second : nullptr;
         return result;
-	}
+    }
     // 리스트를 복사하면서 병합 : O(n)의 시간복잡도
     template <typename T>
     std::list<T> MergeLists(const std::list<T>& _target1, const std::list<T>& _target2)
@@ -45,6 +45,7 @@ namespace Helper
 
         return tempArr;
     }
+    void HRT(HRESULT _hr, const char* _errorMsg = "");
     void DecomposeMatrix(const Matrix& mat, Vector3& position, Quaternion& rotation, Vector3& scale);
     HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size);
 }

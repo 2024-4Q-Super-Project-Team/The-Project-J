@@ -8,6 +8,7 @@
 #include "Component/EditorUI/Contents/TestTab/TestEditorTab.h"
 #include "Component/EditorUI/Contents/Inspector/Inspector.h"
 #include "Component/EditorUI/Contents/Hierarchy/Hierarchy.h"
+#include "Component/EditorUI/Contents/GameEditor/GameEditor.h"
 
 #include "Component/EditorUI/Contents/Widget/EditorCheckBox.h"
 #include "Component/EditorUI/Contents/Widget/EditorInputVector.h"

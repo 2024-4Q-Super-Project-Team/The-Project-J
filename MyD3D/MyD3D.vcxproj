@@ -162,6 +162,7 @@
     <ClInclude Include="Component\EditorUI\Contents\EditorOptional.h" />
     <ClInclude Include="Component\EditorUI\Contents\EditorUID.h" />
     <ClInclude Include="Component\Light\Light.h" />
+    <ClInclude Include="Component\EditorUI\Contents\GameEditor\GameEditor.h" />
     <ClInclude Include="Graphics\Graphics.h" />
     <ClInclude Include="Graphics\GraphicsManager.h" />
     <ClInclude Include="Graphics\Light\LightSystem.h" />
@@ -238,6 +239,7 @@
     <ClCompile Include="Component\EditorUI\Contents\EditorOptional.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\EditorUID.cpp" />
     <ClCompile Include="Component\Light\Light.cpp" />
+    <ClCompile Include="Component\EditorUI\Contents\GameEditor\GameEditor.cpp" />
     <ClCompile Include="Graphics\Graphics.cpp" />
     <ClCompile Include="Graphics\GraphicsManager.cpp" />
     <ClCompile Include="Graphics\Light\LightSystem.cpp" />

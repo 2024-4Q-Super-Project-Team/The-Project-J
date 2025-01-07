@@ -4,6 +4,7 @@
 Editor::TestEditorTab*  EditorManager::mDebugEditor = nullptr;
 Editor::Inspector*      EditorManager::mInspector = nullptr;
 Editor::Hierarchy*      EditorManager::mHierarchy = nullptr;
+Editor::GameEditor*      EditorManager::mGameEditor = nullptr;
 
 EditorManager::~EditorManager()
 {
@@ -95,6 +96,7 @@ void EditorManager::CreateMainWindowContainer()
             Editor::TabBar* pTAbBar = new Editor::TabBar("TabBar_01");
             CreateTestTab(pTAbBar);
             CreateHierarchy(pTAbBar);
+            CreateGameEditor(pTAbBar);
             pWindowRect->AddWidget(pTAbBar);
         }
     }
@@ -112,9 +114,12 @@ void EditorManager::CreateMainWindowContainer()
     }
 
     mHierarchy->SetFocusWorldManager(mGameViewport->GetWorldManager());
+    mGameEditor->SetFocusWorldManager(mGameViewport->GetWorldManager());
     mHierarchy->SetFocusInspector(mInspector);
 
     mDebugEditor->SetFocusInspector(mInspector);
+
+    mGameEditor->SetFocusInspector(mInspector);
 }
 void EditorManager::CreateTestTab(Editor::TabBar* _pSrcTabBar)
 {
@@ -142,6 +147,16 @@ void EditorManager::CreateHierarchy(Editor::TabBar* _pSrcTabBar)
         mHierarchy = new Editor::Hierarchy();
         Editor::Tab* pInspectorBar = new Editor::Tab("Hierarchy");
         pInspectorBar->AddWidget(mHierarchy);
+        _pSrcTabBar->AddTab(pInspectorBar);
+    }
+}
+
+void EditorManager::CreateGameEditor(Editor::TabBar* _pSrcTabBar)
+{
+    {   // 게임 에디터 탭
+        mGameEditor = new Editor::GameEditor();
+        Editor::Tab* pInspectorBar = new Editor::Tab("GameEditor");
+        pInspectorBar->AddWidget(mGameEditor);
         _pSrcTabBar->AddTab(pInspectorBar);
     }
 }

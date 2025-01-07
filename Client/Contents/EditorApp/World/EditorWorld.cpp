@@ -20,3 +20,17 @@ void _CALLBACK EditorWorld::OnTick()
     //mOwnerScene->GetIWindow()->SetPosition();
     return void _CALLBACK();
 }
+
+void _CALLBACK EditorWorld::OnUpdate()
+{
+
+
+    return void _CALLBACK();
+}
+
+void _CALLBACK EditorWorld::OnRender()
+{
+
+
+    return void _CALLBACK();
+}

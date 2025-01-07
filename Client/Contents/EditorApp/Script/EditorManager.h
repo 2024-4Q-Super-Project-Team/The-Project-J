@@ -1,5 +1,6 @@
 #pragma once
 
+
 class EditorManager : public MonoBehaviour
 {
 public:
@@ -22,6 +23,7 @@ private:
     void /* */CreateTestTab(Editor::TabBar* _pSrcTabBar);
     void /* */CreateInspector(Editor::TabBar* _pSrcTabBar);
     void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
+    void /* */CreateGameEditor(Editor::TabBar* _pSrcTabBar);
 private:
     EditorUI* mEditor;
     ViewportScene* mEditorViewport;
@@ -30,6 +32,7 @@ public:
     static Editor::TestEditorTab*   mDebugEditor;
     static Editor::Inspector*       mInspector;
     static Editor::Hierarchy*       mHierarchy;
+    static Editor::GameEditor*       mGameEditor;
 public:
     static inline auto GetInspector() { return mInspector; }
 };

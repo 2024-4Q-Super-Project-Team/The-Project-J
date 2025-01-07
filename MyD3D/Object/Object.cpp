@@ -201,3 +201,18 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
         }
     }
 }
+
+nlohmann::json Object::Serialize()
+{
+    nlohmann::json ret;
+    ret += nlohmann::json{ "parent", transform->GetParent()->gameObject->GetName() };
+    ret += nlohmann::json{ "position.x", transform->GetParent()->position.x };
+    ret += nlohmann::json{ "position.y", transform->GetParent()->position.y };
+    ret += nlohmann::json{ "position.z", transform->GetParent()->position.z };
+    ret += nlohmann::json{ "rotation.x", transform->GetParent()->rotation.x };
+    ret += nlohmann::json{ "rotation.y", transform->GetParent()->rotation.y };
+    ret += nlohmann::json{ "rotation.z", transform->GetParent()->rotation.z };
+    ret += nlohmann::json{ "rotation.w", transform->GetParent()->rotation.w };
+
+    return ret;
+}

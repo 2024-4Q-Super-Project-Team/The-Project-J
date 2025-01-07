@@ -13,7 +13,7 @@ void CameraController::Start()
 
 	mTr->position = Vector3(0, 17, -25);
     
-    CurrentAngles[Yaw] = Degree(180);
+    //CurrentAngles[Yaw] = Degree(180);
     CurrentAngles[Pitch] = 0;
     CurrentAngles[Roll] = 0;
     //CurrentAngles[Roll] = Degree(180);

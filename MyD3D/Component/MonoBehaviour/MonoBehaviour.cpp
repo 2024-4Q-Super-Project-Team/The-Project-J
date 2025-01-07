@@ -145,4 +145,10 @@ void MonoBehaviour::Destroy(Object* _object)
 	_object->SetDestroy();
 }
 
-
+void MonoBehaviour::EditorRendering()
+{
+	for (auto field : vec)
+	{
+		field->widget->Render();
+	}
+}

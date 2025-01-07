@@ -30,6 +30,7 @@ void ModelSpawner::Start()
         Instance->transform->position = Vector3(0, 0, 0);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Cerberus00_Fixed")->GetComponent<MeshRenderer>();
+        if(EditorManager::mDebugEditor)
         EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Sphere
@@ -44,6 +45,7 @@ void ModelSpawner::Start()
         Instance->transform->position = Vector3(25, 0, 0);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
+        if (EditorManager::mDebugEditor)
         EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Mixamo
@@ -77,12 +79,13 @@ void ModelSpawner::Start()
     pDirLight3->SetLightDirection(Vector4(1, 0, 0, 0));
 
     mMainCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
-
-    EditorManager::mDebugEditor->SetCamera(mMainCamera);
-    EditorManager::mDebugEditor->AddLight(pDirLight1);
-    EditorManager::mDebugEditor->AddLight(pDirLight2);
-    EditorManager::mDebugEditor->AddLight(pDirLight3);
-
+    if (EditorManager::mDebugEditor)
+    {
+        EditorManager::mDebugEditor->SetCamera(mMainCamera);
+        EditorManager::mDebugEditor->AddLight(pDirLight1);
+        EditorManager::mDebugEditor->AddLight(pDirLight2);
+        EditorManager::mDebugEditor->AddLight(pDirLight3);
+    }
     //EditorManager::mDebugEditor->AddRenderModel(;
 }
 

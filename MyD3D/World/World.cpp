@@ -135,6 +135,16 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
     return (FIND_SUCCESS(itr, mObjectGroups)) ? (*itr) : nullptr;
 }
 
+//json World::Serialize()
+//{
+//    json ret;
+//    for (auto& objGroup : mObjectGroups)
+//    {
+//        ret += objGroup->Serialize();
+//    }
+//    return ret;
+//}
+
 void World::UpdateGroup()
 {
     // 昏力 棺 积己 贸府

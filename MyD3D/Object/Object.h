@@ -10,6 +10,9 @@
 #include "Component/Animator/Animator.h"
 #include "Component/EditorUI/EditorUI.h"
 
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 class Component;
 class ObjectGroup;
 
@@ -51,6 +54,10 @@ public:
     // 해당 컴포넌트의 속성 값을 복사하여 추가합니다. 해당 컴포넌트의 복사 생성자가 정의되어 있어야 함.
     template <class T>
     T* CloneComponent(T* _pSrc);
+
+public:
+    //직렬화
+    json Serialize();
 public:
     Transform* const transform;
 public:

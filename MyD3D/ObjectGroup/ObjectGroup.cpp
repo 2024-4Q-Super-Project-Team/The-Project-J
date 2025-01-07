@@ -102,3 +102,15 @@ void ObjectGroup::SetWorld(World* _world)
 		return;
     _world->ReceiveObjectGroup(this);
 }
+
+//json ObjectGroup::Serialize()
+//{
+//    json ret;
+//    ret += {"order", mGroupOrder};
+//    
+//    for (auto& obj : mObjects)
+//    {
+//        //ret += obj->Serialize();
+//    }
+//    return ret;
+//}

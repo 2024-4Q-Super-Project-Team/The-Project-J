@@ -1,9 +1,19 @@
 #pragma once
 #include "Component/Component.h"
-
+#include "Component\EditorUI\EditorUI.h"
 class Prefab;
 class Collider;
 class Object;
+class MonoBehaviour;
+
+namespace Editor
+{
+	class Widget;
+}
+
+struct Serialize;
+template <typename T>
+struct SerializeData;
 
 class MonoBehaviour
 	: public Component
@@ -63,4 +73,46 @@ public:
 	virtual void _CALLBACK OnAnimationEnd() {};
 protected:
 
+private:
+	//std::vector< asd > vec
+	std::vector<Serialize*> vec;
+public:
+	virtual void EditorRendering() override;
+
+	void AddField(Serialize* _serialize)
+	{
+		vec.push_back(_serialize);
+	}
 };
+
+struct Serialize {
+	Serialize(std::string_view _key)
+		: key(_key) {
+	}
+	std::string key;
+	Editor::Widget* widget = nullptr;
+};
+
+template <typename T>
+struct SerializeData : public Serialize
+{
+	T val;
+
+	SerializeData(std::string_view _name, MonoBehaviour* mono)
+		: Serialize(_name)
+	{
+		mono->AddField(this);
+		if (std::is_same<T, Vector3>::value)
+			widget = new Editor::InputVector3(_name.data(), &val);
+	}
+};
+
+#ifdef _DEBUG
+	#define SerializeField(Type, Name)\
+	SerializeData<Type> Name##Data = SerializeData<Type>(#Name, this);\
+	Type Name
+#else
+	#define SerializeField(Type, Name)\
+	Type Name
+#endif
+

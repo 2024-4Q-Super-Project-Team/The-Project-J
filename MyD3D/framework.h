@@ -80,3 +80,6 @@ using namespace physx;
 #include "Manager/GameManager.h"
 #include "Application/Application.h"
 
+//json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;

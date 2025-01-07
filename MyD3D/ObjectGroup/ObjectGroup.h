@@ -2,6 +2,9 @@
 #include "Interface/ICycleHandler.h"
 #include "Helper/Entity/Entity.h"
 
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 class World;
 class Object;
 class Camera;
@@ -37,6 +40,9 @@ public:
     inline auto&    GetObjects() const { return mObjects; }
 	inline World*	GetWorld() const { return mOwnerWorld; }
 	inline INT		GetOrder() const { return mGroupOrder; }
+
+	//Á÷·ÄÈ­
+	//json Serialize();
 private:
 	World* mOwnerWorld;
 	std::list<Object*> mObjects;

@@ -3,6 +3,9 @@
 #include "Interface/ICycleEventHandler.h"
 #include "Helper/Entity/Entity.h"
 
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 class LightSystem;
 class ViewportScene;
 class ObjectGroup;
@@ -51,6 +54,8 @@ public:
     ObjectGroup*    GetObjectGroup(std::wstring_view _name);
     // 오브젝트 그룹 컨테이너를 반환
     inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
+	//직렬화
+	//json Serialize();
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }

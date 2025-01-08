@@ -32,7 +32,6 @@ using namespace DirectX;
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
-
 // SimpleMath
 #include <directxtk/SimpleMath.h>
 using namespace DirectX::SimpleMath;
@@ -48,6 +47,10 @@ using namespace DirectX::SimpleMath;
 #include <physx/PxPhysicsAPI.h>
 #include <physx/PxPhysics.h>
 using namespace physx;
+//json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 #include "../Window/framework.h"
 // Helper
 #include "Helper/Data/ColorF.h"
@@ -65,7 +68,3 @@ using namespace physx;
 #include "Graphics/GraphicsFramework.h"
 
 #include "Component/ComponentFactory/ComponentFactory.h"
-
-//json
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;

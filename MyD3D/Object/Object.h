@@ -9,10 +9,6 @@
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Animator/Animator.h"
 #include "Component/EditorUI/EditorUI.h"
-
-#include <nlohmann/json.hpp>
-using namespace nlohmann;
-
 class Component;
 class ObjectGroup;
 

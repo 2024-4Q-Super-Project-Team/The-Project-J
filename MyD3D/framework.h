@@ -46,6 +46,10 @@ using namespace DirectX::SimpleMath;
 #include <physx/PxPhysics.h>
 using namespace physx;
 
+//json
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 // Helper
 #include "Helper/Data/ColorF.h"
 #include "Helper/Data/Angles.h"
@@ -79,7 +83,3 @@ using namespace physx;
 #include "Graphics/GraphicsManager.h"
 #include "Manager/GameManager.h"
 #include "Application/Application.h"
-
-//json
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;

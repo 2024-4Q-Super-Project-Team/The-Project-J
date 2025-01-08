@@ -8,6 +8,17 @@ class World;
 class Object;
 class Camera;
 
+namespace Editor
+{
+	class Widget;
+	class InputVector3;
+}
+
+struct Serial;
+template <typename T>
+struct SerialData;
+
+
 enum class eComponentType
 {
 	Transform,
@@ -54,13 +65,21 @@ public:
 	inline bool				IsActive()				{ return isActive; }
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) {};
+
+	void AddField(Serial* _serial)
+	{
+		mSerials.push_back(_serial);
+	}
 public:
 	Object* const	gameObject;
 protected:
 	eComponentType	mType;
 	bool			isActive;
+private:
+	//std::vector< asd > vec
+	std::vector<Serial*> mSerials;
 public:
-    virtual void EditorRendering() {};
+    virtual void EditorRendering();
 };
 
 class DynamicComponent
@@ -68,3 +87,34 @@ class DynamicComponent
 {
 
 };
+
+struct Serial {
+	Serial(std::string_view _key)
+		: key(_key) {
+	}
+	std::string key;
+	Editor::Widget* widget = nullptr;
+};
+
+template <typename T>
+struct SerialData : public Serial
+{
+	T val;
+
+	SerialData(std::string_view _name, Component* mono)
+		: Serial(_name)
+	{
+		mono->AddField(this);
+		if (std::is_same<T, Vector3>::value)
+			widget = new Editor::InputVector3(_name.data(), &val);
+	}
+};
+
+#ifdef _DEBUG
+#define SerializeField(Type, Name)\
+	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
+	Type Name
+#else
+#define SerializeField(Type, Name)\
+	Type Name
+#endif

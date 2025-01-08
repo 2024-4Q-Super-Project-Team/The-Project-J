@@ -1,14 +1,14 @@
 #pragma once
 
 class Component;
-class Object;
 
+#include "Object/Object.h"
 
 class ICreator
 {
 public:
 	virtual ~ICreator() = default;
-	virtual void* Create(void* args = nullptr) const = 0;
+	virtual void* Create(Object* owner, void* args = nullptr) const = 0;
 };
 
 template <typename T, typename... Args>
@@ -17,18 +17,18 @@ public:
     void* Create(Object* owner, void* args = nullptr) const override {
         // args를 적절히 캐스팅하여 생성자에 전달
         if constexpr (sizeof...(Args) == 0) {
-            return new T(); // 인자가 없는 경우
+            return owner->AddComponent<T>(); // 인자가 없는 경우
         }
         else {
-            return CallConstructor(static_cast<std::tuple<Args...>*>(args));
+            return CallConstructor(owner, static_cast<std::tuple<Args...>*>(args));
         }
     }
 
 private:
     template<typename Tuple>
-    T* CallConstructor(Tuple* args) const
+    T* CallConstructor(Object* owner, Tuple* args) const
     {
-        return std::apply([](Args... unpackedArgs) { return new T(unpackedArgs...); }, *args);
+        return std::apply([owner](Args... unpackedArgs) { return owner->AddComponent<T>(unpackedArgs...); }, *args);
     }
 };
 
@@ -44,7 +44,7 @@ public:
     {
         auto it = mFactoryMap.find(name);
         if (it != mFactoryMap.end())
-            return it->second->Create(args);
+            return it->second->Create(owner, args);
         return nullptr;
     }
 
@@ -53,8 +53,8 @@ private:
 };
 
 
-#define REGISTER_COMPONENT(Type, OwnerPtr, ...)\
-ComponentFactory::Register(#Type, new Creator<Type, OwnerPtr, __VA_ARGS__>())
+#define REGISTER_COMPONENT(Type, ...)\
+ComponentFactory::Register(#Type, new Creator<Type, __VA_ARGS__>())
 
 #define CREATE_COMPONENT(TypeName, ...)\
 ComponentFactory::Create(TypeName, __VA_ARGS__)

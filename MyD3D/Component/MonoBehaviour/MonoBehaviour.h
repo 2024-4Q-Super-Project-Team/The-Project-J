@@ -32,6 +32,9 @@ public:
     virtual void Render() override {};
     virtual void Draw(Camera* _camera) override {};
     virtual void PostRender() override {};
+
+	virtual json Serialize() override;
+	virtual json Deserialize() override;
 protected: // MonoBehaviour메소드==================
 	// ===========================================
 	// 오브젝트 검색===============================
@@ -75,18 +78,18 @@ protected:
 
 private:
 	//std::vector< asd > vec
-	std::vector<Serialize*> vec;
+	std::vector<Serial*> vec;
 public:
 	virtual void EditorRendering() override;
 
-	void AddField(Serialize* _serialize)
+	void AddField(Serial* _serialize)
 	{
 		vec.push_back(_serialize);
 	}
 };
 
-struct Serialize {
-	Serialize(std::string_view _key)
+struct Serial {
+	Serial(std::string_view _key)
 		: key(_key) {
 	}
 	std::string key;
@@ -94,11 +97,11 @@ struct Serialize {
 };
 
 template <typename T>
-struct SerializeData : public Serialize
+struct SerialData : public Serial
 {
 	T val;
 
-	SerializeData(std::string_view _name, MonoBehaviour* mono)
+	SerialData(std::string_view _name, MonoBehaviour* mono)
 		: Serialize(_name)
 	{
 		mono->AddField(this);
@@ -107,12 +110,13 @@ struct SerializeData : public Serialize
 	}
 };
 
+
 #ifdef _DEBUG
 	#define SerializeField(Type, Name)\
-	SerializeData<Type> Name##Data = SerializeData<Type>(#Name, this);\
+	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
 	Type Name
 #else
-	#define SerializeFiled(Type, Name)\
+	#define SerialData(Type, Name)\
 	Type Name
 #endif
 

@@ -42,6 +42,9 @@ public:
     // Draw할 메쉬들을 커맨드로 모으는 과정
     virtual void Draw(Camera* _camera) = 0;
 	virtual void PostRender() = 0;
+	//직렬화 및 역직렬화 
+	virtual json Serialize() = 0;
+	virtual json Deserialize() = 0;
 public:
 	inline eComponentType	GetType()				{ return mType; }
 	inline void				SetActive(bool _active) { isActive = _active; }

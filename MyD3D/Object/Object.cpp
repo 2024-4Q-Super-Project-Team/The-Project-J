@@ -206,13 +206,25 @@ nlohmann::json Object::Serialize()
 {
     nlohmann::json ret;
     ret += nlohmann::json{ "parent", transform->GetParent()->gameObject->GetName() };
-    ret += nlohmann::json{ "position.x", transform->GetParent()->position.x };
-    ret += nlohmann::json{ "position.y", transform->GetParent()->position.y };
-    ret += nlohmann::json{ "position.z", transform->GetParent()->position.z };
-    ret += nlohmann::json{ "rotation.x", transform->GetParent()->rotation.x };
-    ret += nlohmann::json{ "rotation.y", transform->GetParent()->rotation.y };
-    ret += nlohmann::json{ "rotation.z", transform->GetParent()->rotation.z };
-    ret += nlohmann::json{ "rotation.w", transform->GetParent()->rotation.w };
+    ret += nlohmann::json{ "pos.x", transform->GetParent()->position.x };
+    ret += nlohmann::json{ "pos.y", transform->GetParent()->position.y };
+    ret += nlohmann::json{ "pos.z", transform->GetParent()->position.z };
+    ret += nlohmann::json{ "rot.x", transform->GetParent()->rotation.x };
+    ret += nlohmann::json{ "rot.y", transform->GetParent()->rotation.y };
+    ret += nlohmann::json{ "rot.z", transform->GetParent()->rotation.z };
+    ret += nlohmann::json{ "rot.w", transform->GetParent()->rotation.w };
+    ret += nlohmann::json{ "scale.x", transform->GetParent()->scale.x };
+    ret += nlohmann::json{ "scale.y", transform->GetParent()->scale.y };
+    ret += nlohmann::json{ "scale.z", transform->GetParent()->scale.z };
+
+    for (size_t i = 0; i < ComponentSize; i++)
+    {
+        size_t size = mComponentArray[i].size();
+        for (size_t j = 0; j < size; j++)
+        {
+            ret += mComponentArray[i][j]->Serialize();
+        }
+    }
 
     return ret;
 }

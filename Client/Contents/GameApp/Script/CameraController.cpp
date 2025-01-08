@@ -17,6 +17,8 @@ void CameraController::Start()
     CurrentAngles[Pitch] = 0;
     CurrentAngles[Roll] = 0;
     //CurrentAngles[Roll] = Degree(180);
+
+	//Serialize(Vector3, vec);
 }
 
 void CameraController::Update()

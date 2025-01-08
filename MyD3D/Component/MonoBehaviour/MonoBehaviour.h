@@ -11,9 +11,9 @@ namespace Editor
 	class Widget;
 }
 
-struct Serialize;
+struct Serial;
 template <typename T>
-struct SerializeData;
+struct SerialData;
 
 class MonoBehaviour
 	: public Component
@@ -102,7 +102,7 @@ struct SerialData : public Serial
 	T val;
 
 	SerialData(std::string_view _name, MonoBehaviour* mono)
-		: Serialize(_name)
+		: Serial(_name)
 	{
 		mono->AddField(this);
 		if (std::is_same<T, Vector3>::value)
@@ -116,7 +116,7 @@ struct SerialData : public Serial
 	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
 	Type Name
 #else
-	#define SerialData(Type, Name)\
+	#define SerializeField(Type, Name)\
 	Type Name
 #endif
 

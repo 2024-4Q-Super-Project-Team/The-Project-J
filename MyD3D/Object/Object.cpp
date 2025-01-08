@@ -225,6 +225,5 @@ nlohmann::json Object::Serialize()
             ret += mComponentArray[i][j]->Serialize();
         }
     }
-
     return ret;
 }

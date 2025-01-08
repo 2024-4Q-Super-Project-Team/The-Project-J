@@ -13,6 +13,7 @@ MonoBehaviour::MonoBehaviour(Object* _owner)
     : Component(_owner)
 {
     mType = eComponentType::SCRIPT;
+
 }
 
 json MonoBehaviour::Serialize()

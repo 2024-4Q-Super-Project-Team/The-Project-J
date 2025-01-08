@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Component\ComponentFactory\ComponentFactory.h" />
     <ClInclude Include="Component\Camera\Camera.h" />
     <ClInclude Include="Component\Animator\Animator.h" />
     <ClInclude Include="Component\EditorUI\Contents\Hierarchy\Hierarchy.h" />
@@ -228,6 +229,7 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Component\ComponentFactory\ComponentFactory.cpp" />
     <ClCompile Include="Component\Camera\Camera.cpp" />
     <ClCompile Include="Component\Animator\Animator.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\Hierarchy\Hierarchy.cpp" />

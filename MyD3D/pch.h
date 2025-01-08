@@ -64,6 +64,8 @@ using namespace physx;
 #include "Graphics/ConstantBuffer.h"
 #include "Graphics/GraphicsFramework.h"
 
+#include "Component/ComponentFactory/ComponentFactory.h"
+
 //json
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;

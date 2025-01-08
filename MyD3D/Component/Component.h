@@ -1,6 +1,9 @@
 #pragma once
 #include "Interface/ICycleHandler.h"
 
+#include <nlohmann/json.hpp>
+using namespace nlohmann;
+
 class World;
 class Object;
 class Camera;
@@ -43,8 +46,8 @@ public:
     virtual void Draw(Camera* _camera) = 0;
 	virtual void PostRender() = 0;
 	//직렬화 및 역직렬화 
-	virtual json Serialize() = 0;
-	virtual json Deserialize() = 0;
+	virtual json Serialize() { return json(); }
+	virtual json Deserialize() { return json(); }
 public:
 	inline eComponentType	GetType()				{ return mType; }
 	inline void				SetActive(bool _active) { isActive = _active; }

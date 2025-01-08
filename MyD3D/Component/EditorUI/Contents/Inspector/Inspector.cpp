@@ -20,6 +20,15 @@ namespace Editor
         {
             mFocusObject->EditorRendering();
             ImGui::Separator();
+            //컴포넌트 추가 버튼
+            //ImGui::SameLine();
+            std::string objBtnName = "AddComponent##" + std::to_string(reinterpret_cast<uintptr_t>(mFocusObject));
+            bool buttonClicked = ImGui::Button(objBtnName.c_str());
+
+            if (buttonClicked)
+            {
+                AddComponent("MeshRenderer", mFocusObject);
+            }
             for (auto compArr : mFocusObject->mComponentArray)
             {
                 for (auto comp : compArr)
@@ -37,5 +46,10 @@ namespace Editor
     Object* Inspector::GetFocusObject()
     {
         return mFocusObject;
+    }
+
+    void Inspector::AddComponent(const std::string _name, Object* _object)
+    {
+        CREATE_COMPONENT(_name, _object);
     }
 }

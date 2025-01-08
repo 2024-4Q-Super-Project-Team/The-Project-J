@@ -170,6 +170,7 @@ namespace Editor
     {
         _group->CreateObject(_name, L"");
     }
+ 
     void GameEditor::SetFocusInspector(Inspector* _pInspector)
     {
         mRefInspector = _pInspector;

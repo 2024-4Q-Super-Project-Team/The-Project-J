@@ -16,6 +16,7 @@ namespace Editor
     public:
         void SetFocusObject(Object* _object);
         Object* GetFocusObject();
+        void AddComponent(const std::string _name, Object* _object);
     private:
         Object* mFocusObject;
     };

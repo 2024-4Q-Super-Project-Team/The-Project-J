@@ -7,6 +7,7 @@ class PhysicsManager;
 class ViewportManager;
 class GraphicsManager;
 class ResourceManager;
+class ComponentManager;
 class ViewportScene;
 class World;
 
@@ -45,6 +46,7 @@ private:
 	static Application*		mApplication;
 	static ViewportManager* mViewportManager;
 	static PhysicsManager*	mPhysicsManager;
+	static ComponentManager* mComponentManager;
 	static float			mFixedUpdateTick;
 };
 

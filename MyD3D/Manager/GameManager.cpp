@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Application/Application.h"
 #include "GameManager.h"
+#include "ComponentManager.h"
 #include "World/WorldManager.h"
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
@@ -12,12 +13,14 @@ float				GameManager::mFixedUpdateTick = 0.02f;
 Application*		GameManager::mApplication = nullptr;
 ViewportManager*	GameManager::mViewportManager = nullptr;
 PhysicsManager*		GameManager::mPhysicsManager = nullptr;
+ComponentManager*	GameManager::mComponentManager = nullptr;
 
 GameManager::GameManager(Application* _pApplication)
 {
 	mApplication		= _pApplication;
 	mViewportManager	= new ViewportManager();
 	mPhysicsManager		= new PhysicsManager();
+	mComponentManager	= new ComponentManager();
 }
 
 GameManager::~GameManager()
@@ -31,6 +34,7 @@ BOOL GameManager::Initialize()
     GraphicsManager::Initialize();
     ResourceManager::Initialize();
     mViewportManager->Initialize();
+	mComponentManager->Initialize();
 	return TRUE;
 }
 
@@ -63,6 +67,7 @@ void GameManager::Finalization()
     GraphicsManager::Finalization();
     ResourceManager::Finalization();
     mViewportManager->Finalization();
+	mComponentManager->Finalization();
     SAFE_DELETE(mViewportManager);
     SAFE_DELETE(mPhysicsManager);
 }

@@ -30,6 +30,9 @@ private:
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
+public:
+    virtual json Serialize() override;
+    virtual json Deserialize() override;
 private:
     std::shared_ptr<AnimationResource> mActiveAnimation;
 

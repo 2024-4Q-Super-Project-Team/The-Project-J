@@ -111,6 +111,19 @@ Material* MeshRenderer::GetMaterial()
     return mMateiral;
 }
 
+json MeshRenderer::Serialize()
+{
+    json ret;
+    ret += {"mesh", mMesh->GetName()};
+    ret += {"material", mMateiral->mMaterialResource->GetName()};
+    return json();
+}
+
+json MeshRenderer::Deserialize()
+{
+    return json();
+}
+
 
 #define SetMaterialEditor(typeEnum, label)                                                      \
     if (mMateiral->mMaterialMaps[(UINT)typeEnum])                                               \

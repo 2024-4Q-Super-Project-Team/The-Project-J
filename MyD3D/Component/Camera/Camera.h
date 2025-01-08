@@ -42,6 +42,9 @@ public:
     inline const float GetProjectionNear() { return mProjectionNear; }
     inline const float GetProjectionFar() { return mProjectionFar; }
     inline const auto* GetViewport() { return mViewport; }
+public:
+    virtual json Serialize() override;
+    virtual json Deserialize() override;
 private:
     DrawQueue mDrawQueue[RENDERING_MODE_COUNT];
 

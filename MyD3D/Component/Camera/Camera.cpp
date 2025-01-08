@@ -120,6 +120,22 @@ void Camera::UpdateCamera()
     }
 }
 
+json Camera::Serialize()
+{
+    json ret;
+    ret += {"angle", mFovAngle.GetAngle()};
+    ret += {"near", mProjectionNear};
+    ret += {"far", mProjectionFar};
+    ret += {"type", mProjectionType};
+
+    return ret;
+}
+
+json Camera::Deserialize()
+{
+    return json();
+}
+
 void Camera::PushDrawList(RendererComponent* _renderComponent)
 {
     auto pMaterial = _renderComponent->GetMaterial();

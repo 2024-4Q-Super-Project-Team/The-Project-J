@@ -15,6 +15,8 @@ public:
     operator Radian() const;
     operator float() const;
     operator float*();
+
+    float GetAngle() { return angle; }
 public:
     static Radian ToRadian(Degree _degree);
 

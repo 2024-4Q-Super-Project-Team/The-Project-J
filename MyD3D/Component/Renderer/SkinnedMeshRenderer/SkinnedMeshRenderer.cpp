@@ -183,6 +183,19 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     }
 }
 
+json SkinnedMeshRenderer::Serialize()
+{
+    json ret;
+    ret += {"mesh", mMesh->GetName()};
+    ret += {"material", mMateiral->mMaterialResource->GetName()};
+    return json();
+}
+
+json SkinnedMeshRenderer::Deserialize()
+{
+    return json();
+}
+
 #define SetMaterialEditor(typeEnum, label)                                                      \
     if (mMateiral->mMaterialMaps[(UINT)typeEnum])                                               \
     {                                                                                           \

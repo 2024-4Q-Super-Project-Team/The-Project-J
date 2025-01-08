@@ -24,6 +24,10 @@ private:
     void /* */CreateInspector(Editor::TabBar* _pSrcTabBar);
     void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     void /* */CreateGameEditor(Editor::TabBar* _pSrcTabBar);
+
+public:
+    virtual json Serialize() override { return json(); }
+    virtual json Deserialize() override { return json(); }
 private:
     EditorUI* mEditor;
     ViewportScene* mEditorViewport;

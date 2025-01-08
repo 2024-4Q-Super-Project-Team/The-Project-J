@@ -148,3 +148,17 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
 
     return Scaling;
 }
+
+json Animator::Serialize()
+{
+    json ret;
+    ret += {"anim", mActiveAnimation->GetName()};
+    ret += {"isPlay", isPlay};
+    ret += {"duration", mDuration};
+    return ret;
+}
+
+json Animator::Deserialize()
+{
+    return json();
+}

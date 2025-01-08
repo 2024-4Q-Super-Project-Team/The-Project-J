@@ -16,19 +16,6 @@ MonoBehaviour::MonoBehaviour(Object* _owner)
 
 }
 
-json MonoBehaviour::Serialize()
-{
-	json ret;
-	ret += {"class_type", mType};
-
-	return json();
-}
-
-json MonoBehaviour::Deserialize()
-{
-	return json();
-}
-
 Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _tag)
 {
     World* curWorld = GameManager::GetCurrentWorld();

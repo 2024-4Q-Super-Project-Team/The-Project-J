@@ -32,6 +32,9 @@ public:
     inline void SetAmbientColor(ColorF _color) { mLightProp.AmbientRGB = _color; }
     inline void SetDiffuseColor(ColorF _color) { mLightProp.DiffuseRGB = _color; }
     inline void SetSpecularColor(ColorF _color) { mLightProp.SpecularRGB = _color; }
+public:
+    virtual json Serialize() override;
+    virtual json Deserialize() override;
 private:
     LightProperty   mLightProp;
     D3DGraphicsDSV* mShadowDSV;

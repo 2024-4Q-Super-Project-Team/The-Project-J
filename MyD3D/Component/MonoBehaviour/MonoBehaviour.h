@@ -33,8 +33,8 @@ public:
     virtual void Draw(Camera* _camera) override {};
     virtual void PostRender() override {};
 
-	virtual json Serialize() override;
-	virtual json Deserialize() override;
+	virtual json Serialize() = 0;
+	virtual json Deserialize() = 0;
 protected: // MonoBehaviour메소드==================
 	// ===========================================
 	// 오브젝트 검색===============================

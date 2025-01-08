@@ -28,6 +28,9 @@ public:
     virtual std::shared_ptr<MeshResource> GetMesh() = 0;
     virtual Material* GetMaterial() = 0;
 public:
+    virtual json Serialize() = 0;
+    virtual json Deserialize() = 0;
+public:
     virtual void DrawCall() = 0;
 };
 

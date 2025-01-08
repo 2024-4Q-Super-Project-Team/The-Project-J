@@ -9,6 +9,10 @@ public:
 	~CameraController();
 	void Start();
 	void Update();
+public:
+    virtual json Serialize() override { return json(); }
+    virtual json Deserialize() override { return json(); }
+
 
 	float mMoveSpeed;
 	Transform* mTr;

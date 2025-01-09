@@ -41,8 +41,10 @@ public:
 	inline World*	GetWorld() const { return mOwnerWorld; }
 	inline INT		GetOrder() const { return mGroupOrder; }
 
+public:
 	//Á÷·ÄÈ­
-	//json Serialize();
+	json Serialize();
+	json Deserialize() { return json(); }
 private:
 	World* mOwnerWorld;
 	std::list<Object*> mObjects;

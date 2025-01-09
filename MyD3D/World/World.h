@@ -57,6 +57,11 @@ public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }
     inline auto GetSkyBox() const { return mSkyBox; }
+
+public:
+	//Á÷·ÄÈ­
+	json Serialize();
+	json Deserialize() { return json(); }
 protected:
     ViewportScene* const mOwnerScene;
 private:

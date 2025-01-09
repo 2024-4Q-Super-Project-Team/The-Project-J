@@ -27,6 +27,8 @@ namespace Editor
 
         void AddObjectGroup(const std::wstring _name);
         void AddObject(const std::wstring _name, ObjectGroup* _group);
+
+        void SaveWorld();
     private:
         // 참조하는 인스펙터 창.
         // 활성화 오브젝트를 변경해주기 위함.

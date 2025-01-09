@@ -4,7 +4,7 @@
 bool ComponentManager::Initialize()
 {
 	REGISTER_COMPONENT(Animator);
-	REGISTER_COMPONENT(Camera, Vector2);
+	REGISTER_COMPONENT(Camera);
 	REGISTER_COMPONENT(Light);
 	REGISTER_COMPONENT(MeshRenderer);
 	REGISTER_COMPONENT(SkinnedMeshRenderer);

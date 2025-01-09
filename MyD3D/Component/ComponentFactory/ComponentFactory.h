@@ -59,8 +59,8 @@ private:
 };
 
 
-#define REGISTER_COMPONENT(Type, ...)\
-ComponentFactory::Register(#Type, new Creator<Type, __VA_ARGS__>())
+#define REGISTER_COMPONENT(Type)\
+ComponentFactory::Register(#Type, new Creator<Type>())
 
 #define CREATE_COMPONENT(TypeName, ...)\
 ComponentFactory::Create(TypeName, __VA_ARGS__)

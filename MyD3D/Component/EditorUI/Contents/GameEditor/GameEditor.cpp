@@ -5,6 +5,8 @@
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 
+#include <fstream>
+
 namespace Editor
 {
 	GameEditor::GameEditor()
@@ -19,6 +21,14 @@ namespace Editor
             World* pCurWorld = mRefWorldManager->GetActiveWorld();
             if (pCurWorld)
             {
+                ImGui::SameLine();
+                bool saveClicked = ImGui::Button("Save");
+
+                if (saveClicked)
+                {
+                    SaveWorld();
+                }
+
                 {   // 월드 이름 출력
                     std::string worldName;
                     worldName.assign(pCurWorld->GetName().begin(), pCurWorld->GetName().end());
@@ -169,6 +179,18 @@ namespace Editor
     void GameEditor::AddObject(const std::wstring _name, ObjectGroup* _group)
     {
         _group->CreateObject(_name, L"");
+    }
+
+    void GameEditor::SaveWorld()
+    {
+        World* pCurWorld = mRefWorldManager->GetActiveWorld();
+        json data = pCurWorld->Serialize();
+
+        std::ofstream file("./save.json");
+        if(file.is_open())
+            file << data.dump(4);
+
+        file.close();
     }
  
     void GameEditor::SetFocusInspector(Inspector* _pInspector)

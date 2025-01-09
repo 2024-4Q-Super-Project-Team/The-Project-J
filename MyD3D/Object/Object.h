@@ -54,6 +54,7 @@ public:
 public:
     //Á÷·ÄÈ­
     json Serialize();
+    json Deserialize() { return json(); }
 public:
     Transform* const transform;
 public:

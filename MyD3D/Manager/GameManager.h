@@ -43,10 +43,9 @@ public:
 	static ViewportManager* GetViewportManager() { return mViewportManager; }
 	static PhysicsManager*	GetPhysicsManager()  { return mPhysicsManager; }
 private:
-	static Application*		mApplication;
-	static ViewportManager* mViewportManager;
-	static PhysicsManager*	mPhysicsManager;
+	static Application*		 mApplication;
+	static ViewportManager*  mViewportManager;
+	static PhysicsManager*	 mPhysicsManager;
 	static ComponentManager* mComponentManager;
-	static float			mFixedUpdateTick;
+	static float			 mFixedUpdateTick;
 };
-

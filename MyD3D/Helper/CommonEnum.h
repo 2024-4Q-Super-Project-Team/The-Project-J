@@ -1,5 +1,6 @@
 #pragma once
 
+
 enum class eCBufferType
 {
     Transform,
@@ -30,6 +31,7 @@ enum class eSamplerStateType
 {
     LINEAR_WRAP,
     LINEAR_CLAMP,
+    LINEAR_COMPARISON,
     SIZE,
 };
 #define SAMPLER_STATE_TYPE_COUNT static_cast<UINT>(eSamplerStateType::SIZE)
@@ -38,6 +40,8 @@ enum class eVertexShaderType
 {
     STANDARD,
     SKYBOX,
+    SPRITE,
+    SHADOW,
     SIZE,
 };
 #define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
@@ -47,6 +51,7 @@ enum class ePixelShaderType
     BLINN_PHONG,
     PBR,
     SKYBOX,
+    SPRITE,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)

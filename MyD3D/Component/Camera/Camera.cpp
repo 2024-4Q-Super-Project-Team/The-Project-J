@@ -15,8 +15,8 @@ Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
     , mProjectionType(ProjectionType::Perspective)
     , mFovAngle(XM_PIDIV2)
-    , mProjectionNear(0.01f)
-    , mProjectionFar(1000.0f)
+    , mProjectionNear(1.0f)
+    , mProjectionFar(30000.0f)
     , mOrthoWidth(10.0f)
     , mOrthoHeight(10.0f)
     , mViewport(nullptr)
@@ -27,6 +27,7 @@ Camera::Camera(Object* _owner, Vector2 _size)
 
 Camera::~Camera()
 {
+    SAFE_RELEASE(mViewport)
 }
 
 void Camera::Start()
@@ -138,35 +139,82 @@ json Camera::Deserialize()
 
 void Camera::PushDrawList(RendererComponent* _renderComponent)
 {
+    if (_renderComponent == nullptr) return;
     auto pMaterial = _renderComponent->GetMaterial();
     eBlendingMode blendMode = eBlendingMode::OPAQUE_BLEND;
     if (pMaterial)
     {
         blendMode = pMaterial->mMaterialResource->mBlendMode;
     }
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
+}
 
-    mDrawQueue[static_cast<UINT>(blendMode)].push(_renderComponent);
+void Camera::PushLight(Light* _pLight)
+{
+    if (_pLight == nullptr) return;
+    mSceneLights.push_back(_pLight);
 }
 
 void Camera::ExcuteDrawList()
 {
-    for (auto& drawQueue : mDrawQueue)
+    // 0. 이전 렌더타겟을 저장해놓는다.
+    auto RTV = D3DGraphicsRenderer::GetCurrentRTV();
+    auto DSV = D3DGraphicsRenderer::GetCurrentDSV();
+    // 1. 그림자용 셰이더 바인딩
+    GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::PBR)->Reset();
+    for (int i = 0; i < mSceneLights.size(); i++)
     {
-        while (!drawQueue.empty())
+        // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
+        mSceneLights[i]->GetShadowDSV()->Reset();
+        mSceneLights[i]->GetShadowViewport()->Bind();
+        // 뎁스 뷰 SetRenderTarget
+        D3DGraphicsRenderer::SetRenderTarget(nullptr, mSceneLights[i]->GetShadowDSV());
+        // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
+        for (auto& drawQueue : mDrawQueue)
         {
-            drawQueue.front()->DrawCall();
-            drawQueue.pop();
+            for (auto& drawInfo : drawQueue)
+            {
+                drawInfo->DrawShadow(mSceneLights[i]);
+            }
         }
     }
+
+    // 원래 렌더타겟으로 복구해준다.
+    mViewport->Bind();
+    D3DGraphicsRenderer::SetRenderTarget(RTV, DSV);
+    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::PBR)->Bind();
+
+    // SRV를 공유하는 텍스쳐가 렌더타겟으로 설정되어있으면 바인딩이 되지 않으므로 여기서 한번에 바인딩 해준다.
+    for (int i = 0; i < mSceneLights.size(); i++)
+    {
+        mSceneLights[i]->GetShadowSRV()->SetBindSlot(24 + i);
+        mSceneLights[i]->GetShadowSRV()->Bind();
+    }
+
+    // 그리고 실제 Draw 작업을 수행해준다.
+    for (auto& drawQueue : mDrawQueue)
+    {
+        for (auto& drawInfo : drawQueue)
+        {
+            drawInfo->DrawMesh(this);
+        }
+        // 그리기 큐를 초기화한다.
+        drawQueue.clear();
+    }
+    // 조명 리스트를 초기화한다.
+    mSceneLights.clear();
 }
 
 void Camera::EditorRendering()
 {
-    if (ImGui::CollapsingHeader("Camera", ImGuiTreeNodeFlags_DefaultOpen))
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    if (ImGui::CollapsingHeader(("Camera" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
         ImGui::Text("Projection");
-        ImGui::SliderFloat("fovAngle##1234", mFovAngle, 1.0f, Degree::MaxDegree);
-        ImGui::SliderFloat("Near##1234", &mProjectionNear, 0.1f, 10.0f);
-        ImGui::SliderFloat("Far##1234", &mProjectionFar, 1.0f, 100.0f);
+        ImGui::SliderFloat(("fovAngle" + uid).c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
+        ImGui::SliderFloat(("Near" + uid).c_str(), &mProjectionNear, 0.1f, 1000.0f);
+        ImGui::SliderFloat(("Far" + uid).c_str(), &mProjectionFar, 1.0f, 100000.0f);
     }
 }

@@ -22,8 +22,8 @@ public:
     void SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex);
 private:
     World* mOwnerWorld;
-    D3DGraphicsVertexShader* mSkyBoxVS;
-    D3DGraphicsPixelShader* mSkyBoxPS;
+    D3DGraphicsVertexShader*    mSkyBoxVS;
+    D3DGraphicsPixelShader*     mSkyBoxPS;
     std::shared_ptr<Texture2D>  mIBLEnvironmentTex;
     std::shared_ptr<Texture2D>  mIBLDiffuseTex;
     std::shared_ptr<Texture2D>  mIBLSpecularTex;

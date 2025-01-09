@@ -10,12 +10,16 @@ void ModelSpawner::Start()
 {
     {   // Plain
         auto Instance = CreateObject(L"Plain", L"Default");
-        Instance->transform->position = Vector3(0, -10, 0);
-        Instance->transform->scale = Vector3(200, 200, 1);
+        Instance->transform->position = Vector3(0, 0, 0);
+        Instance->transform->scale = Vector3(1000, 1000, 1);
         Instance->transform->SetEulerAnglesFromDegree(Vector3(90, 0, 0));
+
         MeshRenderer* pRenderer = Instance->AddComponent<MeshRenderer>();
         pRenderer->SetMesh(MeshResource::PlainMesh);
         pRenderer->SetMaterial(MaterialResource::DefaultMaterial);
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 0.5f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 0.1f;
     }
 
     {   // Gun
@@ -26,8 +30,8 @@ void ModelSpawner::Start()
         mModelPrefabs.push_back(ModelPrefab);
         
         auto Instance = Instantiate(ModelPrefab.get());
-        Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
-        Instance->transform->position = Vector3(0, 0, 0);
+        //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
+        Instance->transform->position = Vector3(0, 45, 0);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Cerberus00_Fixed")->GetComponent<MeshRenderer>();
         if(EditorManager::mDebugEditor)
@@ -41,11 +45,13 @@ void ModelSpawner::Start()
         mModelPrefabs.push_back(ModelPrefab);
 
         auto Instance = Instantiate(ModelPrefab.get());
-        Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
-        Instance->transform->position = Vector3(25, 0, 0);
+        //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
+        Instance->transform->position = Vector3(100, 50, 50);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
-        if (EditorManager::mDebugEditor)
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
         EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Mixamo
@@ -56,27 +62,24 @@ void ModelSpawner::Start()
         mModelPrefabs.push_back(ModelPrefab);
 
         auto Instance = Instantiate(ModelPrefab.get());
-        Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
-        Instance->transform->position = Vector3(-25, 0, 0);
+        //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
+        Instance->transform->position = Vector3(-100, 0, 50);
 
         Animator* pAnimator = Instance->AddComponent<Animator>();
         pAnimator->SetAnimation(ResourceManager::GetResource<AnimationResource>(L"mixamo.com"));
     }
    
     
-    ObjectGroup* pGroup =  GameManager::GetCurrentWorld()->GetObjectGroup(L"Default");
+    ObjectGroup* pGroup = GameManager::GetCurrentWorld()->GetObjectGroup(L"Default");
     Object* dirLight;
     dirLight = pGroup->CreateObject(L"Direction_Light1", L"Default");
     Light* pDirLight1 = dirLight->AddComponent<Light>();
-    pDirLight1->SetLightDirection(Vector4(0, 0, 1, 0));
+    pDirLight1->SetLightDirection(Vector4(0, -1, 1, 0));
 
     dirLight = pGroup->CreateObject(L"Direction_Light2", L"Default");
     Light* pDirLight2 = dirLight->AddComponent<Light>();
-    pDirLight2->SetLightDirection(Vector4(0, 1, 0, 0));
-
-    dirLight = pGroup->CreateObject(L"Direction_Light3", L"Default");
-    Light* pDirLight3 = dirLight->AddComponent<Light>();
-    pDirLight3->SetLightDirection(Vector4(1, 0, 0, 0));
+    pDirLight2->SetLightDirection(Vector4(0.3, -1, 0.15, 0));
+    dirLight->SetActive(false); // 초기 비활성화
 
     mMainCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
     if (EditorManager::mDebugEditor)
@@ -84,7 +87,6 @@ void ModelSpawner::Start()
         EditorManager::mDebugEditor->SetCamera(mMainCamera);
         EditorManager::mDebugEditor->AddLight(pDirLight1);
         EditorManager::mDebugEditor->AddLight(pDirLight2);
-        EditorManager::mDebugEditor->AddLight(pDirLight3);
     }
     //EditorManager::mDebugEditor->AddRenderModel(;
 }

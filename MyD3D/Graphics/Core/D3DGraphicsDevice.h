@@ -11,7 +11,7 @@ class D3DGraphicsRTV;
 class D3DGraphicsDSV;
 class D3DGraphicsSRV;
 
-class D3DGraphicsDevice 
+class D3DGraphicsDevice
 {
 public:
     static BOOL Initialize();
@@ -26,17 +26,17 @@ private:
     static IDXGIFactory* mFactory;
     static IDXGIAdapter3* mAdapter;
 public:
-    static inline auto GetDevice() { 
-        if(!CanUse) 
+    static inline auto GetDevice() {
+        if (!CanUse)
             throw std::runtime_error("No Initialize to D3DGraphicsDevice.");
-        return mDevice; 
+        return mDevice;
     }
     static inline auto GetFactory() {
         if (!CanUse)
             throw std::runtime_error("No Initialize to D3DGraphicsDevice.");
         return mFactory;
     }
-    static inline auto GetAdapter()  {
+    static inline auto GetAdapter() {
         if (!CanUse)
             throw std::runtime_error("No Initialize to D3DGraphicsDevice.");
         return mAdapter;

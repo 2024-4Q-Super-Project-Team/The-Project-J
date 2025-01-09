@@ -18,25 +18,6 @@ D3DGraphicsRenderTarget::D3DGraphicsRenderTarget(HWND _hWnd)
         width = clientRect.right - clientRect.left;
         height = clientRect.bottom - clientRect.top;
     }
-    //{
-    //    // RTV, SRV 생성
-    //    D3D11_TEXTURE2D_DESC RTVDesc = {};
-    //    RTVDesc.Width = width;
-    //    RTVDesc.Height = height;
-    //    RTVDesc.MipLevels = 1;
-    //    RTVDesc.ArraySize = 1;
-    //    RTVDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    //    RTVDesc.SampleDesc.Count = 1;
-    //    RTVDesc.Usage = D3D11_USAGE_DEFAULT;
-    //    RTVDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    //    RTVDesc.CPUAccessFlags = 0;
-    //    RTVDesc.MiscFlags = 0;
-    //    ID3D11Texture2D* pTexture = nullptr;
-    //    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateTexture2D(&RTVDesc, nullptr, &pTexture), "HRESULT Failed To CreateTexture2D()");
-    //    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateRenderTargetView(pTexture, nullptr, &mRenderTargetView), "HRESULT Failed To CreateRenderTargetView()");
-    //    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateShaderResourceView(pTexture, nullptr, &mShaderResourceView), "HRESULT Failed To CreateShaderResourceView()");
-    //    pTexture->Release();
-    //}
     DXGI_SWAP_CHAIN_DESC swapDesc = {};
     { // 스왑체인 생성
         swapDesc.BufferCount = 1;
@@ -58,28 +39,29 @@ D3DGraphicsRenderTarget::D3DGraphicsRenderTarget(HWND _hWnd)
     }
     { // 백버퍼 생성
         ID3D11Texture2D* backBufferTexture = nullptr;
-        mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture);
-        pDevice->CreateRenderTargetView(backBufferTexture, nullptr, &mRenderTargetView);
-        if (backBufferTexture)
-            backBufferTexture->Release();	//외부 참조 카운트를 감소시킨다.
+        Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&backBufferTexture));
+        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(backBufferTexture);
+        mRenderTargetView = new D3DGraphicsRTV(pTexture, nullptr);
+        if (pTexture)
+            pTexture->Release();
     }
     {
         // Depth Stencil Texture 생성
-        D3D11_TEXTURE2D_DESC DSVDesc = {};
-        DSVDesc.Width = width;
-        DSVDesc.Height = height;
-        DSVDesc.MipLevels = 1;
-        DSVDesc.ArraySize = 1;
-        DSVDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        DSVDesc.SampleDesc.Count = 1;
-        DSVDesc.Usage = D3D11_USAGE_DEFAULT;
-        DSVDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-        DSVDesc.CPUAccessFlags = 0;
-        DSVDesc.MiscFlags = 0;
-        ID3D11Texture2D* pTexture = nullptr;
-        Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateTexture2D(&DSVDesc, nullptr, &pTexture), "HRESULT Failed To CreateTexture2D()");
-        Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateDepthStencilView(pTexture, nullptr, &mDepthStencilView), "HRESULT Failed To CreateDepthStencilView()");
-        pTexture->Release();
+        D3D11_TEXTURE2D_DESC texDesc = {};
+        texDesc.Width = width;
+        texDesc.Height = height;
+        texDesc.MipLevels = 1;
+        texDesc.ArraySize = 1;
+        texDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        texDesc.SampleDesc.Count = 1;
+        texDesc.Usage = D3D11_USAGE_DEFAULT;
+        texDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        texDesc.CPUAccessFlags = 0;
+        texDesc.MiscFlags = 0;
+        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&texDesc);
+        mDepthStencilView = new D3DGraphicsDSV(pTexture, nullptr);
+        if (pTexture)
+            pTexture->Release();
     }
 }
 

@@ -6,6 +6,9 @@
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 
+#include "Manager/GameManager.h"
+#include "ViewportScene/ViewportScene.h"
+
 namespace Editor
 {
     TestEditorTab::TestEditorTab()
@@ -16,18 +19,26 @@ namespace Editor
 
     void TestEditorTab::Render()
     {
+        //D3DGraphicsRenderTarget* RenderTarget = GameManager::GetCurrentViewport()->GetRenderTarget();
+
+        //ImGui::Image((ImTextureID)RenderTarget->mShaderResourceView->mSRV, ImVec2(250,250));
+
         if (mCamera)
         {
             mCamera->EditorRendering();
         }
-        ImGui::Separator();
+
         for (auto light : mLights)
         {
+            ImGui::NewLine();
+            ImGui::Separator();
             light->gameObject->EditorRendering();
             light->EditorRendering();
         }
+
         for (auto model : mModels)
         {
+            ImGui::NewLine();
             ImGui::Separator();
             model->gameObject->EditorRendering();
             model->EditorRendering();

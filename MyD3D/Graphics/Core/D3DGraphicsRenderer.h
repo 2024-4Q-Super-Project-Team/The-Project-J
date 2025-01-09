@@ -18,12 +18,18 @@ public:
     static BOOL Initialize();
     static void Finalization();
 public:
+    static void SetRenderTarget(IN D3DGraphicsRTV* _pRTV, IN D3DGraphicsDSV* _pDSV);
     static void SetRenderTarget(IN D3DGraphicsRenderTarget* _pRenderTarget);
     static void Clear();
     static void DrawCall(IN UINT _numIndex, IN UINT _startIndex, IN INT _baseVertex);
+
+    static inline D3DGraphicsRTV* GetCurrentRTV() { return mCurrRTV; }
+    static inline D3DGraphicsDSV* GetCurrentDSV() { return mCurrDSV; }
 public:
+    static D3DGraphicsRTV* mCurrRTV;
+    static D3DGraphicsDSV* mCurrDSV;
     static D3DGraphicsRenderTarget* mCurrRenderTarget;
-    static ID3D11DeviceContext*     mDeviceContext;
+    static ID3D11DeviceContext* mDeviceContext;
 public:
     static inline ID3D11DeviceContext* GetDevicecontext() { return mDeviceContext; }
 };

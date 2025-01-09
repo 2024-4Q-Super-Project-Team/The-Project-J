@@ -9,7 +9,6 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(MeshRenderer);
 	REGISTER_COMPONENT(SkinnedMeshRenderer);
 
-
 	return true;
 }
 

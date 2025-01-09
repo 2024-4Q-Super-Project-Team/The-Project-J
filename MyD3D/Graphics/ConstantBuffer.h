@@ -3,9 +3,9 @@
 struct MaterialProperty
 {
     // ³­¹Ý»ç ºû
-    ColorF	DiffuseRGB  = { 1.0f,1.0f,1.0f,1.0f };
+    ColorF	DiffuseRGB = { 1.0f,1.0f,1.0f,1.0f };
     // ÁÖº¯±¤ ºû
-    ColorF	AmbientRGB  = { 1.0f,1.0f,1.0f,1.0f };
+    ColorF	AmbientRGB = { 1.0f,1.0f,1.0f,1.0f };
     // Á¤¹Ý»ç ºû
     ColorF	SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
     // °ÅÄ¥±â ±âº» °ª 0.5
@@ -19,14 +19,17 @@ struct MaterialProperty
 
 struct LightProperty
 {
-    Vector4 Position    = { 0.0f,0.0f,0.0f,1.0f };
-    Vector4 Direction   = { 0.0f,0.0f,0.0f,0.0f };
-    ColorF  Radiance    = { 1.0f,1.0f,1.0f,1.0f };
-    ColorF  DiffuseRGB  = { 1.0f,1.0f,1.0f,1.0f };
-    ColorF  AmbientRGB  = { 1.0f,1.0f,1.0f,1.0f };
+    Vector4 Position = { 0.0f,0.0f,0.0f,1.0f };
+    Vector4 Direction = { 0.0f,0.0f,0.0f,0.0f };
+    ColorF  Radiance = { 1.0f,1.0f,1.0f,1.0f };
+    ColorF  DiffuseRGB = { 1.0f,1.0f,1.0f,1.0f };
+    ColorF  AmbientRGB = { 1.0f,1.0f,1.0f,1.0f };
     ColorF  SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
     Vector3 Padding;
+
+    Matrix  ShadowView = Matrix::Identity;
+    Matrix  ShadowProjection = Matrix::Identity;
 };
 
 struct TransformCBuffer
@@ -63,9 +66,16 @@ struct LightCBuffer
 {
     LightProperty LightProp[MAX_LIGHT_COUNT];
     // Á¶¸í ¼ö
-    INT           NumLight = 0;
+    UINT          NumLight = 0;
+    UINT          LightFlags;
+    UINT          ShadowFlags;
     // È¯°æ±¤ °­µµ
     FLOAT         AmbientIntensity = 1.0f;
-    Vector2       Padding;
+
+    BOOL GetLightFlag(UINT _flag);
+    void SetLightFlag(UINT _flag, BOOL _bValue);
+    BOOL GetShadowFlag(UINT _flag);
+    void SetShadowFlag(UINT _flag, BOOL _bValue);
 };
 
+#define LIGHT_FLAG_SHADOW_USE_PCF 1

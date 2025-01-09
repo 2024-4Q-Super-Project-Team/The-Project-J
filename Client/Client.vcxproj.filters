@@ -72,4 +72,17 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="resource\shader\BlinnPhong_PS.hlsl" />
+    <FxCompile Include="resource\shader\PBR_PS.hlsl" />
+    <FxCompile Include="resource\shader\Shadow_VS.hlsl" />
+    <FxCompile Include="resource\shader\SkyBox_PS.hlsl" />
+    <FxCompile Include="resource\shader\SkyBox_VS.hlsl" />
+    <FxCompile Include="resource\shader\Sprite_PS.hlsl" />
+    <FxCompile Include="resource\shader\Sprite_VS.hlsl" />
+    <FxCompile Include="resource\shader\Standard_VS.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="resource\shader\Shared.fxh" />
+  </ItemGroup>
 </Project>

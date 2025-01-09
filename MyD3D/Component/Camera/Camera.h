@@ -3,10 +3,11 @@
 
 class D3DGraphicsRenderTarget;
 class D3DGraphicsViewport;
-
 class RendererComponent;
+class Light;
 
-using DrawQueue = std::queue<RendererComponent*>;
+using DrawQueue = std::vector<RendererComponent*>;
+using LightQueue = std::vector<Light*>;
 
 class Camera
     : public Component
@@ -27,8 +28,12 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
+    // 카메라에 Draw할 컴포넌트를 Push합니다.
     void PushDrawList(RendererComponent* _renderComponent);
-    void ExcuteDrawList();
+    // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
+    void PushLight(Light* _pLight);
+    // 렌더 큐의 Draw 작업 수행
+    void ExcuteDrawList(); 
 private:
     void UpdateCamera();
 public:
@@ -46,7 +51,8 @@ public:
     virtual json Serialize() override;
     virtual json Deserialize() override;
 private:
-    DrawQueue mDrawQueue[RENDERING_MODE_COUNT];
+    DrawQueue  mDrawQueue[RENDERING_MODE_COUNT];
+    LightQueue mSceneLights;
 
     Degree  mFovAngle;
     float   mProjectionNear;

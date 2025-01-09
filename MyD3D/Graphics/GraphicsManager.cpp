@@ -13,10 +13,10 @@
 #include "Graphics/GPUResource/D3DGraphicsShader.h"
 #include "Graphics/GPUResource/D3DGraphicsTexture.h"
 
-D3DGraphicsConstantBuffer*  GraphicsManager::mCBufferArray[CBUFFER_TYPE_COUNT];
-D3DGraphicsSamplerState*    GraphicsManager::mSamplerStates[SAMPLER_STATE_TYPE_COUNT];
-D3DGraphicsVertexShader*    GraphicsManager::mVertexShaders[VS_TYPE_COUNT];
-D3DGraphicsPixelShader*     GraphicsManager::mPixelShaders[PS_TYPE_COUNT];
+D3DGraphicsConstantBuffer* GraphicsManager::mCBufferArray[CBUFFER_TYPE_COUNT];
+D3DGraphicsSamplerState* GraphicsManager::mSamplerStates[SAMPLER_STATE_TYPE_COUNT];
+D3DGraphicsVertexShader* GraphicsManager::mVertexShaders[VS_TYPE_COUNT];
+D3DGraphicsPixelShader* GraphicsManager::mPixelShaders[PS_TYPE_COUNT];
 
 BOOL GraphicsManager::Initialize()
 {
@@ -78,48 +78,69 @@ BOOL GraphicsManager::Initialize()
     //////////////////////////////////////////
     mVertexShaders[(UINT)eVertexShaderType::STANDARD] = new D3DGraphicsVertexShader(L"resource/shader/Standard_VS.cso");
     mVertexShaders[(UINT)eVertexShaderType::SKYBOX] = new D3DGraphicsVertexShader(L"resource/shader/SkyBox_VS.cso");
+    mVertexShaders[(UINT)eVertexShaderType::SPRITE] = new D3DGraphicsVertexShader(L"resource/shader/Sprite_VS.cso");
+    mVertexShaders[(UINT)eVertexShaderType::SHADOW] = new D3DGraphicsVertexShader(L"resource/shader/Shadow_VS.cso");
     //////////////////////////////////////////
     // Pixel Shader
     //////////////////////////////////////////
     mPixelShaders[(UINT)ePixelShaderType::BLINN_PHONG] = new D3DGraphicsPixelShader(L"resource/shader/BlinnPhong_PS.cso");
     mPixelShaders[(UINT)ePixelShaderType::PBR] = new D3DGraphicsPixelShader(L"resource/shader/PBR_PS.cso");
     mPixelShaders[(UINT)ePixelShaderType::SKYBOX] = new D3DGraphicsPixelShader(L"resource/shader/SkyBox_PS.cso");
+    mPixelShaders[(UINT)ePixelShaderType::SPRITE] = new D3DGraphicsPixelShader(L"resource/shader/Sprite_PS.cso");
     //////////////////////////////////////////
     // Sampler State
     //////////////////////////////////////////
     D3DGraphicsSamplerState* pSamplerState;
     {
-        D3D11_SAMPLER_DESC spDesc = {};
-        spDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        spDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-        spDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
-        spDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
-        spDesc.MinLOD = 0;
-        spDesc.MaxLOD = D3D11_FLOAT32_MAX;
+        D3D11_SAMPLER_DESC sampDesc = {};
+        sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+        sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+        sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+        sampDesc.MinLOD = 0;
+        sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
         UINT slot = static_cast<UINT>(eSamplerStateType::LINEAR_WRAP);
-        pSamplerState = new D3DGraphicsSamplerState(&spDesc);
+        pSamplerState = new D3DGraphicsSamplerState(&sampDesc);
         pSamplerState->SetBindSlot(slot);
         pSamplerState->SetBindStage(eShaderStage::PS);
         mSamplerStates[slot] = pSamplerState;
+        pSamplerState->Bind();
     }
     {
-        D3D11_SAMPLER_DESC spDesc = {};
-        spDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
-        spDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
-        spDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
-        spDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
-        spDesc.MaxAnisotropy = 1;
-        spDesc.MinLOD = 0;
-        spDesc.MaxLOD = D3D11_FLOAT32_MAX;
+        D3D11_SAMPLER_DESC sampDesc = {};
+        sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+        sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.MaxAnisotropy = 1;
+        sampDesc.MinLOD = 0;
+        sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
         UINT slot = static_cast<UINT>(eSamplerStateType::LINEAR_CLAMP);
-        pSamplerState = new D3DGraphicsSamplerState(&spDesc);
+        pSamplerState = new D3DGraphicsSamplerState(&sampDesc);
         pSamplerState->SetBindSlot(slot);
         pSamplerState->SetBindStage(eShaderStage::PS);
         mSamplerStates[slot] = pSamplerState;
+        pSamplerState->Bind();
     }
-   
+    {
+        D3D11_SAMPLER_DESC sampDesc = {};
+        sampDesc.Filter = D3D11_FILTER_COMPARISON_MIN_MAG_MIP_LINEAR;
+        sampDesc.ComparisonFunc = D3D11_COMPARISON_LESS_EQUAL;
+        sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
+        sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
+
+
+        UINT slot = static_cast<UINT>(eSamplerStateType::LINEAR_COMPARISON);
+        pSamplerState = new D3DGraphicsSamplerState(&sampDesc);
+        pSamplerState->SetBindSlot(slot);
+        pSamplerState->SetBindStage(eShaderStage::PS);
+        mSamplerStates[slot] = pSamplerState;
+        pSamplerState->Bind();
+    }
+
     return TRUE;
 }
 

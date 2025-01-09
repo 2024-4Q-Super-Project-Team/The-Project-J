@@ -5,26 +5,14 @@
 #include "Graphics/Core/D3DGraphicsSwapChain.h"
 #include "Graphics/GPUResource/D3DGraphicsTexture.h"
 
-D3DGraphicsRenderTarget*    D3DGraphicsRenderer::mCurrRenderTarget = nullptr;
-ID3D11DeviceContext*        D3DGraphicsRenderer::mDeviceContext = nullptr;
-
-
-void D3DGraphicsRenderer::SetRenderTarget(D3DGraphicsRenderTarget* _pRenderTarget)
-{
-    if (_pRenderTarget)
-    {
-        // 이미 현재 렌더타겟과 같으면 바꿀 필요가 없다.
-        if (mCurrRenderTarget == _pRenderTarget)
-            return;
-        mCurrRenderTarget = _pRenderTarget;
-        mDeviceContext->OMSetRenderTargets(1,
-            &mCurrRenderTarget->mRenderTargetView,
-            mCurrRenderTarget->mDepthStencilView);
-    }
-}
+D3DGraphicsRTV* D3DGraphicsRenderer::mCurrRTV = nullptr;
+D3DGraphicsDSV* D3DGraphicsRenderer::mCurrDSV = nullptr;
+D3DGraphicsRenderTarget* D3DGraphicsRenderer::mCurrRenderTarget = nullptr;
+ID3D11DeviceContext* D3DGraphicsRenderer::mDeviceContext = nullptr;
 
 BOOL D3DGraphicsRenderer::Initialize()
 {
+    mDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     return TRUE;
 }
 
@@ -33,32 +21,52 @@ void D3DGraphicsRenderer::Finalization()
     SAFE_RELEASE(mDeviceContext);
 }
 
+void D3DGraphicsRenderer::SetRenderTarget(IN D3DGraphicsRTV* _pRTV, IN D3DGraphicsDSV* _pDSV)
+{
+    ID3D11RenderTargetView* RTV = nullptr;
+    ID3D11DepthStencilView* DSV = nullptr;
+    if (_pRTV)
+    {
+        RTV = _pRTV->mRTV;
+        mCurrRTV = _pRTV;
+    }
+    if (_pDSV)
+    {
+        DSV = _pDSV->mDSV;
+        mCurrDSV = _pDSV;
+    }
+
+    mDeviceContext->OMSetRenderTargets(1, &RTV, DSV);
+}
+
+void D3DGraphicsRenderer::SetRenderTarget(IN D3DGraphicsRenderTarget* _pRenderTarget)
+{
+    if (_pRenderTarget)
+    {
+        SetRenderTarget(_pRenderTarget->mRenderTargetView, _pRenderTarget->mDepthStencilView);
+    }
+}
+
 void D3DGraphicsRenderer::Clear()
 {
     if (nullptr == mDeviceContext)
         throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
-    if (mCurrRenderTarget)
+
+    if (mCurrRTV)
     {
-        if (mCurrRenderTarget->mRenderTargetView)
-        {
-            const FLOAT* clearColor = mCurrRenderTarget->mClearColor;
-            mDeviceContext->ClearRenderTargetView(
-                mCurrRenderTarget->mRenderTargetView,
-                mCurrRenderTarget->mClearColor);
-        }
-        if (mCurrRenderTarget->mDepthStencilView)
-        {
-            mDeviceContext->ClearDepthStencilView(
-                mCurrRenderTarget->mDepthStencilView,
-                D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-                1.0f, 0);
-        }
+        const FLOAT clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
+        mDeviceContext->ClearRenderTargetView(mCurrRTV->mRTV, clearColor);
+    }
+    if (mCurrDSV)
+    {
+        mDeviceContext->ClearDepthStencilView(mCurrDSV->mDSV,
+            D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
     }
 }
 
 void D3DGraphicsRenderer::DrawCall(UINT _numIndex, UINT _startIndex, INT _baseVertex)
 {
-    if(mDeviceContext)
+    if (mDeviceContext)
         mDeviceContext->DrawIndexed(_numIndex, _startIndex, _baseVertex);
     else throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
 }

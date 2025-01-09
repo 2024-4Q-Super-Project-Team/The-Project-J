@@ -50,7 +50,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         // N·L * 광원 Diff * 머티리얼 Diff * 머티리얼 Diff_Map(표면 색상)
         DiffuseLight = NDotL * LightProp[i].DiffuseColor * MaterialProp.DiffuseColor * pow(MapColor[DIFFUSE_MAP], GAMMA);
         // 주변광 확산율 * 광원 Ambi * 머티리얼 Ambi * 머티리얼 Ambi_Map
-        AmbientLight = LightProp[i].AmbientStrength * LightProp[i].AmbientColor * MaterialProp.AmbientColor * MapColor[AMBIENT_MAP];
+        AmbientLight = LightProp[i].AmbientColor * MaterialProp.AmbientColor * MapColor[AMBIENT_MAP];
         // ( H·N (or R·V) ^ 머티리얼 Shin(광택) ) * 광원 Spec * 머티리얼 Spec
         SpecularLight = pow(HDotN, MaterialProp.RoughnessScale) * MaterialProp.SpecularColor * LightProp[i].SpecularColor * MapColor[SPECULAR_MAP];
         // 머티리얼 Emissive_Map

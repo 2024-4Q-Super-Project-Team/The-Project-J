@@ -10,7 +10,7 @@ struct STD_VS_INPUT
     float3 tangent : TANGENT;
     float3 bitangent : BITANGENT;
     float2 uv : TEXCOORD0;
-    int4 boneID : BLENDINDICES;
+    int4   boneID : BLENDINDICES;
     float4 boneWeight : BLENDWEIGHT;
 };
 
@@ -22,7 +22,7 @@ struct STD_VS_OUTPUT
     float3 tangent : TANGENT;
     float3 bitangent : BITANGENT;
     float2 uv : TEXCOORD0;
-    float4 worldPos : POSITION;
+    float4 worldPos : TEXCOORD1;
 };
 
 struct SKY_VS_OUT
@@ -34,7 +34,7 @@ struct SKY_VS_OUT
 #define PI 3.141592
 #define GAMMA 2.2
 #define Fdielectric 0.04
-#define Epsilon 0.00001
+#define Epsilon 0.001
 
 #define TRUE    1
 #define FALSE   0
@@ -58,9 +58,11 @@ struct LightProperty
     float4 DiffuseColor;
     float4 AmbientColor;
     float4 SpecularColor;
-    int LightType;
-    float AmbientStrength;
-    float2 Padding;
+    int    LightType;
+    float3 Padding;
+    
+    Matrix ShadowViewMatrix;
+    Matrix ShadowProjectionMatrix;
 };
 
 struct MaterialProperty
@@ -83,12 +85,17 @@ TextureCube IBLEnvironmentMap   : register(t20);
 TextureCube IBLDiffuseMap       : register(t21);
 TextureCube IBLSpecularMap      : register(t22);
 Texture2D   BRDFLookUpTable     : register(t23);
+// 그림자 텍스쳐
+#define SHADOW_SRV_OFFSET 24
+#define SHADOW_SRV_SIZE   8192.0f
+Texture2D ShadowTexture[MAX_LIGHT] : register(t24);
 
 // =================================================
 // SamplerState=====================================
 // =================================================
 SamplerState LinearWrapSampler : register(s0);  
 SamplerState LinearClampSampler : register(s1); 
+SamplerComparisonState LinearComparisonSampler : register(s2);
 
 // =================================================
 // ConstantBuffer===================================
@@ -121,6 +128,8 @@ cbuffer BoneMatrixBuffer : register(b3)
 cbuffer LightBuffer : register(b4)
 {
     LightProperty LightProp[MAX_LIGHT];
-    int NumLights;
-    float3 padding;
+    uint NumLights;
+    uint LightFlags;
+    uint ShadowFlags;
+    float AmbientIntensity;
 }

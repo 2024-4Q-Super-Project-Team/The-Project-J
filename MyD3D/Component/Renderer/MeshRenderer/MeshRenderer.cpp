@@ -78,7 +78,7 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
     clone->SetMaterial(this->mMateiral->mMaterialResource);
 }
 
-void MeshRenderer::DrawCall()
+void MeshRenderer::DrawMesh(Camera* _camera)
 {
     // 머티리얼 바인딩
     if (mMateiral)
@@ -90,6 +90,26 @@ void MeshRenderer::DrawCall()
     {
         mMesh->Bind();
     }
+    mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+    mTransformMatrices.View         = XMMatrixTranspose(_camera->GetView());
+    mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
+    // 트랜스폼 상수 버퍼 바인딩
+    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+}
+
+void MeshRenderer::DrawShadow(Light* _pLight)
+{
+    // '메쉬만' 바인딩
+    if (mMesh)
+    {
+        mMesh->Bind();
+    }
+    // View, Projection은 그림자의 V,P로 써야한다.
+    mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+    mTransformMatrices.View         = _pLight->GetProperty().ShadowView;
+    mTransformMatrices.Projection   = _pLight->GetProperty().ShadowProjection;
+    // 트랜스폼 상수 버퍼 바인딩
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
 }

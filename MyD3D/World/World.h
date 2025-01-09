@@ -3,9 +3,6 @@
 #include "Interface/ICycleEventHandler.h"
 #include "Helper/Entity/Entity.h"
 
-#include <nlohmann/json.hpp>
-using namespace nlohmann;
-
 class LightSystem;
 class ViewportScene;
 class ObjectGroup;

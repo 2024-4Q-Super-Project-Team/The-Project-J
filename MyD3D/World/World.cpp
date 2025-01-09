@@ -9,7 +9,7 @@
 #include "Object/Object.h"
 
 World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty)
-    : Entity(_name, _tag) 
+    : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
     , mLightSystem(new LightSystem)
     , mSkyBox(new SkyBox(this))
@@ -70,13 +70,17 @@ void World::PreRender()
 void World::Render()
 {
     OnRender();
-    mLightSystem->Bind();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Render())
 }
 
 void World::Draw(Camera* _camera)
 {
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Draw(_camera));
+    // 라이트는 Draw중 Camera를 받아 연산하기 때문에 Draw가 다 끝난 후 LightSystem의 Bind를 호출한다.
+    mLightSystem->Bind();
+    // 카메라가 담고 있는 그리기 작업목록을 수행
+    _camera->ExcuteDrawList();
+    // 스카이박스 렌더
     mSkyBox->Draw(_camera);
 }
 
@@ -134,16 +138,6 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
         });
     return (FIND_SUCCESS(itr, mObjectGroups)) ? (*itr) : nullptr;
 }
-
-//json World::Serialize()
-//{
-//    json ret;
-//    for (auto& objGroup : mObjectGroups)
-//    {
-//        ret += objGroup->Serialize();
-//    }
-//    return ret;
-//}
 
 void World::UpdateGroup()
 {

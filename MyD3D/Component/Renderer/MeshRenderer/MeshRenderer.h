@@ -25,7 +25,8 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawCall() override;
+    virtual void DrawMesh(Camera* _camera) override;
+    virtual void DrawShadow(Light* _pLight) override;
 public:
     virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) override;
     virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) override;

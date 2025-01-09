@@ -17,7 +17,7 @@ class GraphicsManager
 {
 public:
     GraphicsManager() = default;
-	~GraphicsManager() = default;
+    ~GraphicsManager() = default;
 public:
     static BOOL Initialize();
     static void Finalization();
@@ -27,8 +27,8 @@ public:
     static inline auto GetVertexShader(eVertexShaderType _type) { return mVertexShaders[(UINT)_type]; }
     static inline auto GetPixelShader(ePixelShaderType _type) { return mPixelShaders[(UINT)_type]; }
 private:
-    static D3DGraphicsConstantBuffer*   mCBufferArray[CBUFFER_TYPE_COUNT];
-    static D3DGraphicsSamplerState*     mSamplerStates[SAMPLER_STATE_TYPE_COUNT];
-    static D3DGraphicsVertexShader*     mVertexShaders[VS_TYPE_COUNT];
-    static D3DGraphicsPixelShader*      mPixelShaders[PS_TYPE_COUNT];
+    static D3DGraphicsConstantBuffer* mCBufferArray[CBUFFER_TYPE_COUNT];
+    static D3DGraphicsSamplerState* mSamplerStates[SAMPLER_STATE_TYPE_COUNT];
+    static D3DGraphicsVertexShader* mVertexShaders[VS_TYPE_COUNT];
+    static D3DGraphicsPixelShader* mPixelShaders[PS_TYPE_COUNT];
 };

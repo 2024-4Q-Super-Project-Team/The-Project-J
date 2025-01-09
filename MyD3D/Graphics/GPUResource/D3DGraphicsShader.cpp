@@ -44,7 +44,7 @@ HRESULT D3DGraphicsVertexShader::Create()
     Helper::HRT(pDevice->CreateVertexShader(
         mBlob->GetBufferPointer(), mBlob->GetBufferSize(), nullptr, &mVertexShader)
         , "Hresult Failed to Create GraphicsVertexShader::CreateVertexShader->CreateVertexShader()...");
-    
+
     ID3D11ShaderReflection* pReflector = NULL;
     D3D11_SHADER_DESC shaderDesc;
     Helper::HRT(D3DReflect(mBlob->GetBufferPointer(), mBlob->GetBufferSize(), IID_ID3D11ShaderReflection, (void**)&pReflector));
@@ -97,7 +97,7 @@ HRESULT D3DGraphicsVertexShader::Create()
         mBlob->GetBufferSize(),
         &mInputLayout),
         "Hresult Failed to Create GraphicsVertexShader::CreateVertexShader->CreateInputLayout()...");
-    
+
     pReflector->Release();
 
     return S_OK;
@@ -120,10 +120,8 @@ HRESULT D3DGraphicsVertexShader::Reset()
     ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
     if (pDeviceContext)
     {
-        ID3D11InputLayout* nullInputLayout = nullptr;
-        ID3D11VertexShader* nullShadser = nullptr;
-        pDeviceContext->IASetInputLayout(nullInputLayout);
-        pDeviceContext->VSSetShader(nullShadser, nullptr, 0);
+        pDeviceContext->IASetInputLayout(nullptr);
+        pDeviceContext->VSSetShader(nullptr, nullptr, 0);
         return S_OK;
     }
     return E_FAIL;
@@ -138,7 +136,7 @@ D3DGraphicsPixelShader::D3DGraphicsPixelShader(std::wstring_view _path)
 HRESULT D3DGraphicsPixelShader::Create()
 {
     auto pDevice = D3DGraphicsDevice::GetDevice();
-    Helper::HRT(pDevice->CreatePixelShader(mBlob->GetBufferPointer(), 
+    Helper::HRT(pDevice->CreatePixelShader(mBlob->GetBufferPointer(),
         mBlob->GetBufferSize(),
         nullptr,
         &mPixelShader),
@@ -162,8 +160,7 @@ HRESULT D3DGraphicsPixelShader::Reset()
     ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
     if (pDeviceContext)
     {
-        ID3D11PixelShader* nullShadser = nullptr;
-        pDeviceContext->PSSetShader(nullShadser, nullptr, 0);
+        pDeviceContext->PSSetShader(nullptr, nullptr, 0);
         return S_OK;
     }
     return E_FAIL;

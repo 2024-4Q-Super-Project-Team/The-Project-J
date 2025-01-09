@@ -195,21 +195,21 @@ void D3DGraphicsSwapChain::ReSize()
 void D3DGraphicsSwapChain::Draw(D3DGraphicsRenderTarget* _pRenderTarget)
 {
     // TODO : 렌더타겟의 ShaderResourceView를 백버퍼에 그린다. 어떻게?
-    auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
-    if (pDeviceContext) 
-    {
-        pDeviceContext->OMSetRenderTargets(1, &mBackBufferRTV, mDepthStencilView);
-
-        //GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
-        //GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
-
-        mVertexBuffer->Bind();
-        mIndexBuffer->Bind();
-
-        pDeviceContext->PSSetShaderResources(0, 1, &_pRenderTarget->mShaderResourceView);
-
-        D3DGraphicsRenderer::DrawCall(6, 0, 0);
-    }
+    //auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    //if (pDeviceContext) 
+    //{
+    //    pDeviceContext->OMSetRenderTargets(1, &mBackBufferRTV, mDepthStencilView);
+    //
+    //    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
+    //    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    //
+    //    mVertexBuffer->Bind();
+    //    mIndexBuffer->Bind();
+    //
+    //    pDeviceContext->PSSetShaderResources(0, 1, &_pRenderTarget->mShaderResourceView);
+    //
+    //    D3DGraphicsRenderer::DrawCall(6, 0, 0);
+    //}
 }
 
 void D3DGraphicsSwapChain::EndDraw()

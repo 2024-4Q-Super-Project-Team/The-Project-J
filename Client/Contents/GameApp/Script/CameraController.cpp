@@ -7,18 +7,16 @@ CameraController::~CameraController()
 
 void CameraController::Start()
 {
-    mCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
+	mCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
 	mTr = mCamera->gameObject->transform;
-	mMoveSpeed = 10.0f;
+	mMoveSpeed = 100.0f;
 
-	mTr->position = Vector3(0, 17, -25);
-    
-    //CurrentAngles[Yaw] = Degree(180);
-    CurrentAngles[Pitch] = 0;
-    CurrentAngles[Roll] = 0;
-    //CurrentAngles[Roll] = Degree(180);
+	mTr->position = Vector3(0, 100, -100);
 
-	//Serialize(Vector3, vec);
+	CurrentAngles[Yaw] = Degree::ToRadian(180);
+	CurrentAngles[Pitch] = 0;
+	CurrentAngles[Roll] = 0;
+	//CurrentAngles[Roll] = Degree(180);
 }
 
 void CameraController::Update()
@@ -27,15 +25,15 @@ void CameraController::Update()
 	if (Input::IsMouseHold(Mouse::RIGHT) || Input::IsMouseHold(Mouse::MID))
 	{
 		Input::ShowMouseCursor(false);
-        // 각도를 라디안으로 계산 (Pitch, Yaw)
-        Radian deltaAngleX;
-        Radian deltaAngleY;
-        deltaAngleX = Input::GetDeltaMousePos().x * sensitivity;
-        deltaAngleY = -Input::GetDeltaMousePos().y * sensitivity;
-        CurrentAngles[Yaw] += deltaAngleX;
-        CurrentAngles[Pitch]  += deltaAngleY;
-        CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle, maxYAngle);
-    }
+		// 각도를 라디안으로 계산 (Pitch, Yaw)
+		Radian deltaAngleX;
+		Radian deltaAngleY;
+		deltaAngleX = Input::GetDeltaMousePos().x * sensitivity;
+		deltaAngleY = -Input::GetDeltaMousePos().y * sensitivity;
+		CurrentAngles[Yaw] += deltaAngleX;
+		CurrentAngles[Pitch] += deltaAngleY;
+		CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle, maxYAngle);
+	}
 	else
 	{
 		Input::ShowMouseCursor(true);
@@ -64,9 +62,9 @@ void CameraController::Update()
 	{
 		mTr->position -= mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
 	}
-    if (Input::GetWheelDeltaPos() != 0)
-    {
-        mTr->position += Input::GetWheelDeltaPos() * mTr->Forward() * Time::GetScaledDeltaTime() * 10.0f;
-    }
-    mTr->rotation = DirectX::XMQuaternionRotationRollPitchYaw(CurrentAngles[Pitch], CurrentAngles[Yaw], CurrentAngles[Roll]);
+	if (Input::GetWheelDeltaPos() != 0)
+	{
+		mTr->position += Input::GetWheelDeltaPos() * mTr->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+	}
+	mTr->rotation = DirectX::XMQuaternionRotationRollPitchYaw(CurrentAngles[Pitch], CurrentAngles[Yaw], CurrentAngles[Roll]);
 }

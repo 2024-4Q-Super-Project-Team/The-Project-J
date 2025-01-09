@@ -4,6 +4,8 @@
 class MeshResource;
 class MaterialResource;
 class Material;
+class Light;
+class Camera;
 
 class RendererComponent
     : public Component
@@ -31,6 +33,7 @@ public:
     virtual json Serialize() = 0;
     virtual json Deserialize() = 0;
 public:
-    virtual void DrawCall() = 0;
+    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawShadow(Light* _pLight) = 0;
 };
 

@@ -5,14 +5,17 @@
 #include "Graphics/Core/D3DGraphicsSwapChain.h"
 #include "Graphics/GPUResource/D3DGraphicsTexture.h"
 
-ID3D11Device*   D3DGraphicsDevice::mDevice = nullptr;
-IDXGIFactory*   D3DGraphicsDevice::mFactory = nullptr;
-IDXGIAdapter3*  D3DGraphicsDevice::mAdapter = nullptr;
-BOOL            D3DGraphicsDevice::CanUse = FALSE;
+ID3D11Device*  D3DGraphicsDevice::mDevice = nullptr;
+IDXGIFactory*  D3DGraphicsDevice::mFactory = nullptr;
+IDXGIAdapter3* D3DGraphicsDevice::mAdapter = nullptr;
+BOOL           D3DGraphicsDevice::CanUse = FALSE;
 
 BOOL D3DGraphicsDevice::Initialize()
 {
     UINT creationFlags = 0;
+#ifdef _DEBUG
+    creationFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
     Helper::HRT(D3D11CreateDevice(nullptr, D3D_DRIVER_TYPE_HARDWARE, nullptr, creationFlags, nullptr,
         0, D3D11_SDK_VERSION, &mDevice, nullptr, &D3DGraphicsRenderer::mDeviceContext));
     Helper::HRT(CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&mFactory));

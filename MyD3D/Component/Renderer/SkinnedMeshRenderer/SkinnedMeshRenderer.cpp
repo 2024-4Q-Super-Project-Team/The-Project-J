@@ -96,7 +96,7 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     clone->SetMaterial(this->mMateiral->mMaterialResource);
 }
 
-void SkinnedMeshRenderer::DrawCall()
+void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
 {
     // 머티리얼 바인딩
     if (mMateiral)
@@ -108,6 +108,25 @@ void SkinnedMeshRenderer::DrawCall()
     {
         mMesh->Bind();
     }
+    mTransformMatrices.World = XMMatrixTranspose(mRootBone->GetWorldMatrix());
+    mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
+    mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
+    GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
+    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+}
+
+void SkinnedMeshRenderer::DrawShadow(Light* _pLight)
+{
+    // '메쉬만' 바인딩
+    if (mMesh)
+    {
+        mMesh->Bind();
+    }
+    // View, Projection은 그림자의 V,P로 써야한다.
+    mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+    mTransformMatrices.View = _pLight->GetProperty().ShadowView;
+    mTransformMatrices.Projection = _pLight->GetProperty().ShadowProjection;
     GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);

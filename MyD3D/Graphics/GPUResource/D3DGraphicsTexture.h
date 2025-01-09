@@ -4,11 +4,12 @@
 
 class D3DGraphicsDevice;
 
-class D3DGraphicsTexture2D 
+class D3DGraphicsTexture2D
     : public I3DGraphicsGPUResource
 {
 public:
     explicit D3DGraphicsTexture2D(D3D11_TEXTURE2D_DESC* _Desc);
+    explicit D3DGraphicsTexture2D(ID3D11Texture2D* _pTex);
     virtual ~D3DGraphicsTexture2D() = default;
 public:
     virtual void Release() override;
@@ -20,7 +21,7 @@ public:
     D3D11_TEXTURE2D_DESC* mDesc;
 };
 
-class D3DGraphicsRTV 
+class D3DGraphicsRTV
     : public I3DGraphicsGPUResource
 {
 public:
@@ -36,7 +37,7 @@ public:
     ID3D11RenderTargetView* mRTV = nullptr;
 };
 
-class D3DGraphicsDSV 
+class D3DGraphicsDSV
     : public I3DGraphicsGPUResource
 {
 public:
@@ -52,7 +53,7 @@ public:
     ID3D11DepthStencilView* mDSV = nullptr;
 };
 
-class D3DGraphicsSRV 
+class D3DGraphicsSRV
     : public I3DGraphicsGPUResource
     , public RenderStageBindHandler
     , public RegisterSlotBindHandler

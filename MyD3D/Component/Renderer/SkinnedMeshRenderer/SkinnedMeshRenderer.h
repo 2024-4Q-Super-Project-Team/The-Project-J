@@ -25,13 +25,14 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawCall() override;
+    virtual void DrawMesh(Camera* _camera) override;
+    virtual void DrawShadow(Light* _pLight) override;
 public:
     virtual std::shared_ptr<MeshResource> GetMesh() override;
     virtual Material* GetMaterial() override;
     virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) override;
     virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) override;
-    void SetRootBone(Transform* _rootBone);
+    void         SetRootBone(Transform* _rootBone);
 private:
     void UpdateTable();
     void BoneMapping(Transform* currentBone);
@@ -44,8 +45,8 @@ private:
     bool isDirty = true;
 
     std::shared_ptr<MeshResource>   mMesh; // 스킨드 메쉬
-    Material* mMateiral; // 사용할 머티리얼
-    Transform* mRootBone; // 루트 본 트랜스폼
+    Material*                       mMateiral; // 사용할 머티리얼
+    Transform*                      mRootBone; // 루트 본 트랜스폼
 
     std::unordered_map<std::wstring, Transform*> mBoneMappingTable; // 본 이름과 트랜스폼 매칭
     BoneMatrixCBuffer mFinalBoneMatrices; // 최종 본 매트릭스 (셰이더로 전달)

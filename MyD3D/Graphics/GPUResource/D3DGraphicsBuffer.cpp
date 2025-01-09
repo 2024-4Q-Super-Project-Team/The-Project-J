@@ -78,11 +78,10 @@ HRESULT D3DGraphicsIndexBuffer::Bind()
 
 HRESULT D3DGraphicsIndexBuffer::Reset()
 {
-    ID3D11Buffer* nullBuffer = nullptr;
     auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
     if (pDeviceContext)
     {
-        pDeviceContext->IASetIndexBuffer(nullBuffer, mFormat, mOffset);
+        pDeviceContext->IASetIndexBuffer(nullptr, mFormat, mOffset);
         return S_OK;
     }
     return E_FAIL;

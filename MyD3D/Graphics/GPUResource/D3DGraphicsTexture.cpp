@@ -5,8 +5,15 @@
 
 D3DGraphicsTexture2D::D3DGraphicsTexture2D(D3D11_TEXTURE2D_DESC* _Desc)
     : mDesc(_Desc)
+    , mTex(nullptr)
 {
     Create();
+}
+
+D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
+    : mDesc(nullptr)
+    , mTex(_pTex)
+{
 }
 
 void D3DGraphicsTexture2D::Release()
@@ -53,15 +60,22 @@ HRESULT D3DGraphicsRTV::Bind()
     auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
     if (pDeviceContext)
     {
-        ID3D11DepthStencilView* nullDSV = nullptr;
-        pDeviceContext->OMSetRenderTargets(1, &mRTV, nullDSV);
+        pDeviceContext->OMSetRenderTargets(1, &mRTV, NULL);
         return S_OK;
     }
     return E_FAIL;
 }
 HRESULT D3DGraphicsRTV::Reset()
 {
-    return E_NOTIMPL;
+    // RTV와 DSV의 동시 바인드는 Renderer에서 해줌
+    auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
+    if (pDeviceContext)
+    {
+        const FLOAT clearColor[4] = { 1.0f,1.0f,1.0f,1.0f };
+        pDeviceContext->ClearRenderTargetView(mRTV, clearColor);
+        return S_OK;
+    }
+    return E_FAIL;
 }
 ////////////////////////////////////////////////
 /// D3DGraphicsDSV
@@ -86,15 +100,21 @@ HRESULT D3DGraphicsDSV::Bind()
     auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
     if (pDeviceContext)
     {
-        ID3D11RenderTargetView* nullRTV = nullptr;
-        pDeviceContext->OMSetRenderTargets(0, &nullRTV, mDSV);
+        pDeviceContext->OMSetRenderTargets(0, NULL, mDSV);
         return S_OK;
     }
     return E_FAIL;
 }
 HRESULT D3DGraphicsDSV::Reset()
 {
-    return E_NOTIMPL;
+    // RTV와 DSV의 동시 바인드는 Renderer에서 해줌
+    auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
+    if (pDeviceContext)
+    {
+        pDeviceContext->ClearDepthStencilView(mDSV,
+            D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    }
+    return E_FAIL;
 }
 ////////////////////////////////////////////////
 /// D3DGraphicsSRV

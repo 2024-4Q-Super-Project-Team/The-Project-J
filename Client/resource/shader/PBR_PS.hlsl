@@ -50,6 +50,58 @@ float3 FresnelEquation( float3 F0, float HdotV)
     return F0 + (1.0 - F0) * pow(1.0 - HdotV, 5.0);
 }
 
+// 그림자 스케일 계산 (0이 그림자가 있는거다)
+float CaclulateShadowScale(int Index, float4 WorldPosition)
+{
+    float ShadowScale = 0;
+    float4 ShadowPositon = float4(1.0f, 1.0f, 1.0f, 1.0f);
+    ShadowPositon = mul(WorldPosition, LightProp[Index].ShadowViewMatrix);
+    ShadowPositon = mul(ShadowPositon, LightProp[Index].ShadowProjectionMatrix);
+    float CurrShadowDepth = ShadowPositon.z / ShadowPositon.w;
+    float2 UV = ShadowPositon.xy / ShadowPositon.w;
+    UV.y = -UV.y; // y축 반전
+    UV = UV * 0.5 + 0.5; // (~1 ~ 1)의 값을 (0 ~ 1)으로 변환
+    
+    // 0 ~ 1 사이값이 아닐 시 처리하지 않음
+    if (UV.x >= 0 && UV.x <= 1 && UV.y >= 0 && UV.y <= 1)
+    {
+        // uSE tcp
+        if (true)
+        {
+            float2 offset[9] =
+            {
+                float2(-1, -1), float2(0, -1), float2(1, -1),
+                float2(-1, 0), float2(0, 0), float2(1, 0),
+                float2(-1, 1), float2(0, 1), float2(1, 1)
+            };
+            float TexelSize = 1.0 / SHADOW_SRV_SIZE; //텍셀 크기
+            ShadowScale = 0;
+            for (int i = 0; i < 9; ++i)
+            {
+                float2 SampleUV = UV + offset[i] * TexelSize;
+                // SamplerCmpLevelZero로 PCF 샘플링
+                ShadowScale += ShadowTexture[Index].SampleCmpLevelZero(LinearComparisonSampler, SampleUV, CurrShadowDepth - Epsilon);
+            }
+            // 평균 값을 구한다
+            ShadowScale /= 9.0f;
+        }
+        else
+        {
+            // ShadowSRV에 저장한 Depth값 샘플링
+            float SampleShadowDepth = ShadowTexture[SHADOW_SRV_OFFSET + Index].Sample(LinearWrapSampler, UV).r;
+            if (CurrShadowDepth >= SampleShadowDepth + Epsilon)
+            {
+                ShadowScale = 0;
+            }
+            else
+            {
+                ShadowScale = 1;
+            }
+        }
+    }
+    return ShadowScale;
+}
+
 float4 main(STD_VS_OUTPUT input) : SV_TARGET
 {
     float4 FinalColor = float4(0.0f, 0.0f, 0.0f, 1.0f);
@@ -114,7 +166,6 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         float NdotL = saturate(dot(N, L));
         float HdotN = saturate(dot(H, N));
         float HdotV = saturate(dot(H, V));
-        
          // Fresnel
         float3 F = FresnelEquation(F0, HdotV);
          // Microfacet Distribution (GGX)
@@ -124,8 +175,13 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         
         float3 DifuuseBRDF  = CalcuateDiffuseBRDF(F, MapColor[DIFFUSE_MAP].rgb, MapColor[METALNESS_MAP].r);
         float3 SpecularBRDF = CalcuateSpecularBRDF(D, F, G, NdotL, NdotV);
-
+        
+        float  ShadowScale   = CaclulateShadowScale(i, input.worldPos);
+        
         DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * NdotL;
+        // 이걸 마지막에 곱해서 대입하지 않으면?
+        // 이전 라이트 값이 남아있어 뒤에 조명 그림자가 적용이 안된다.
+        DirectLight.rgb *= ShadowScale;
     }
     // ===== IBL 계산 =====
     {
@@ -143,7 +199,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         float3 DiffuseIBL = CalcuateDiffuseIBL(F, MapColor[DIFFUSE_MAP].rgb, MapColor[METALNESS_MAP].r, Irradiance);
         float3 SpecularIBL = CalcuateSpecularIBL(F0, SpecularBRDF, ReflectedLighColor);
     
-        AmbientLight.rgb += (DiffuseIBL + SpecularIBL) * MapColor[AMBIENT_OCCLUSION_MAP].r;
+        AmbientLight.rgb += (DiffuseIBL + SpecularIBL) * MapColor[AMBIENT_OCCLUSION_MAP].r * AmbientIntensity;
     }
     // 최종색상에 계산된 조명값과 Emissive 등을 합한다.
     if (USE_MAP(EMISSIVE_MAP) >= TRUE)
@@ -158,3 +214,4 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     FinalColor.a    = MapColor[OPACITY_MAP].a;
     return saturate(FinalColor);
 }
+

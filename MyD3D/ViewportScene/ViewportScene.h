@@ -39,5 +39,6 @@ protected:
 public:
 	inline auto* GetIWindow() { return mWindow; }
 	inline auto* GetWorldManager() { return mWorldManager; }
+	inline auto* GetRenderTarget() { return mRenderTarget; }
 };
 

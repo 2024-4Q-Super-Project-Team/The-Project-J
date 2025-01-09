@@ -21,13 +21,13 @@ public:
     // 스크린 클리어시 색깔
     FLOAT                       mClearColor[3] = { 1.0f,1.0f,1.0f };
     // 
-    IDXGISwapChain*             mSwapChain;
+    IDXGISwapChain* mSwapChain;
     // 렌더링할때 그려지는 주체 (쓰기 전용)
-    ID3D11RenderTargetView*     mRenderTargetView;
+    D3DGraphicsRTV* mRenderTargetView;
     // 깊이 값을 통한 Z-PASS 수행
-    ID3D11DepthStencilView*     mDepthStencilView;
+    D3DGraphicsDSV* mDepthStencilView;
     // 후처리할때 쓸 세이더 리소스 뷰 (읽기 전용)
-    ID3D11ShaderResourceView*   mShaderResourceView;
+    D3DGraphicsSRV* mShaderResourceView;
 };
 
 //class D3DGraphicsRenderTarget : public I3DGraphicsCore

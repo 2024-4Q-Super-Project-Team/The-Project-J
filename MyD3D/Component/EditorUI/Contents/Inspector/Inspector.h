@@ -16,8 +16,9 @@ namespace Editor
     public:
         void SetFocusObject(Object* _object);
         Object* GetFocusObject();
-        void AddComponent(const std::string _name, Object* _object);
+        void ShowComponentList();
     private:
         Object* mFocusObject;
+        bool mbComponentChoosing = false;
     };
 }

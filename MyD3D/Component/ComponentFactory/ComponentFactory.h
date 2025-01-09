@@ -38,6 +38,7 @@ public:
     static void Register(const std::string& name, ICreator* creator)
     {
         mFactoryMap[name] = creator;
+        mComopnentNames.push_back(name);
     }
 
     static void* Create(const std::string& name, Object* owner, void* args = nullptr)
@@ -47,9 +48,14 @@ public:
             return it->second->Create(owner, args);
         return nullptr;
     }
-
+    static std::vector<std::string>& GetComopnentNames()
+    {
+        return mComopnentNames;
+    }
 private:
     static std::unordered_map<std::string, ICreator*> mFactoryMap;
+
+    static std::vector<std::string> mComopnentNames;
 };
 
 

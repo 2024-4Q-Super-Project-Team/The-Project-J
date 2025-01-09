@@ -20,15 +20,15 @@ namespace Editor
         {
             mFocusObject->EditorRendering();
             ImGui::Separator();
-            //컴포넌트 추가 버튼
-            //ImGui::SameLine();
-            std::string objBtnName = "AddComponent##" + std::to_string(reinterpret_cast<uintptr_t>(mFocusObject));
-            bool buttonClicked = ImGui::Button(objBtnName.c_str());
 
-            if (buttonClicked)
-            {
-                AddComponent("MeshRenderer", mFocusObject);
-            }
+            //컴포넌트 추가 버튼
+            std::string cmpBtnName = "AddComponent##" + std::to_string(reinterpret_cast<uintptr_t>(mFocusObject));
+            bool buttonClicked = ImGui::Button(cmpBtnName.c_str());
+            if (buttonClicked) 
+                mbComponentChoosing = true;
+            if (mbComponentChoosing)
+                ShowComponentList();
+
             for (auto compArr : mFocusObject->mComponentArray)
             {
                 for (auto comp : compArr)
@@ -48,8 +48,23 @@ namespace Editor
         return mFocusObject;
     }
 
-    void Inspector::AddComponent(const std::string _name, Object* _object)
+    void Inspector::ShowComponentList()
     {
-        CREATE_COMPONENT(_name, _object);
+        ImGui::OpenPopup("Component List");
+        if (ImGui::BeginPopup("Component List"))
+        {
+            std::vector<std::string>& names = ComponentFactory::GetComopnentNames();
+
+            for (const std::string& name : names)
+            {
+                if (ImGui::Selectable(name.c_str()))
+                {
+                    CREATE_COMPONENT(name, mFocusObject);
+                    mbComponentChoosing = false;
+                }
+            }
+            ImGui::EndPopup();
+        }
+       
     }
 }

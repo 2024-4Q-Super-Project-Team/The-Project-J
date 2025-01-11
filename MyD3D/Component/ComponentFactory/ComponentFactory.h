@@ -64,4 +64,3 @@ ComponentFactory::Register(#Type, new Creator<Type>())
 
 #define CREATE_COMPONENT(TypeName, ...)\
 ComponentFactory::Create(TypeName, __VA_ARGS__)
-

@@ -63,9 +63,6 @@ public:
     void SetParent(Transform* _parent);
 
 public:
-    virtual json Serialize() override { return json(); }
-    virtual json Deserialize() override { return json(); }
-public:
     // Position to Vector3
     Vector3			position;
     // Rotation To Quaternion

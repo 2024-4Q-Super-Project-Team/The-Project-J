@@ -121,49 +121,6 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 {
 }
 
-json Light::Serialize()
-{
-    json ret;
-    ret += {"pos.x", mLightProp.Position.x };
-    ret += {"pos.y", mLightProp.Position.y };
-    ret += {"pos.z", mLightProp.Position.z };
-    ret += {"pos.w", mLightProp.Position.w };
-
-    ret += {"dir.x", mLightProp.Direction.x };
-    ret += {"dir.y", mLightProp.Direction.y };
-    ret += {"dir.z", mLightProp.Direction.z };
-    ret += {"dir.w", mLightProp.Direction.w };
-
-    ret += {"rad.r", mLightProp.Radiance.r };
-    ret += {"rad.g", mLightProp.Radiance.g };
-    ret += {"rad.b", mLightProp.Radiance.b };
-    ret += {"rad.a", mLightProp.Radiance.a };
-
-    ret += {"diff.r", mLightProp.DiffuseRGB.r };
-    ret += {"diff.g", mLightProp.DiffuseRGB.g };
-    ret += {"diff.b", mLightProp.DiffuseRGB.b };
-    ret += {"diff.a", mLightProp.DiffuseRGB.a };
-
-    ret += {"amb.r", mLightProp.AmbientRGB.r };
-    ret += {"amb.g", mLightProp.AmbientRGB.g };
-    ret += {"amb.b", mLightProp.AmbientRGB.b };
-    ret += {"amb.a", mLightProp.AmbientRGB.a };
-
-    ret += {"spec.r", mLightProp.SpecularRGB.r };
-    ret += {"spec.g", mLightProp.SpecularRGB.g };
-    ret += {"spec.b", mLightProp.SpecularRGB.b };
-    ret += {"spec.a", mLightProp.SpecularRGB.a };
-
-    ret += {"type", mLightProp.LightType };
-
-    return ret;
-}
-
-json Light::Deserialize()
-{
-    return json();
-}
-
 void Light::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

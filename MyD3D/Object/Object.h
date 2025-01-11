@@ -9,12 +9,14 @@
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Animator/Animator.h"
 #include "Component/EditorUI/EditorUI.h"
+#include "Interface/IGUID.h"
 class Component;
 class ObjectGroup;
 
 class Object
 	: public Engine::Entity
     , public Engine::ICycleHandler
+    , public Engine::IGUID
 {
 public:
 	explicit Object(std::wstring_view _name, std::wstring_view _tag);
@@ -52,9 +54,7 @@ public:
     T* CloneComponent(T* _pSrc);
 
 public:
-    //Á÷·ÄÈ­
-    json Serialize();
-    json Deserialize() { return json(); }
+  
 public:
     Transform* const transform;
 public:

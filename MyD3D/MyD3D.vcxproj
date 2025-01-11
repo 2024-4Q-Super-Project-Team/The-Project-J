@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Interface\IGUID.h" />
     <ClInclude Include="Manager\ComponentManager.h" />
     <ClInclude Include="Component\ComponentFactory\ComponentFactory.h" />
     <ClInclude Include="Component\Camera\Camera.h" />
@@ -230,6 +231,7 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Interface\IGUID.cpp" />
     <ClCompile Include="Manager\ComponentManager.cpp" />
     <ClCompile Include="Component\ComponentFactory\ComponentFactory.cpp" />
     <ClCompile Include="Component\Camera\Camera.cpp" />

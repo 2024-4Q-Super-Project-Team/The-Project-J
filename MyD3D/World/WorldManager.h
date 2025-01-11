@@ -32,6 +32,9 @@ public:
 	BOOL	DestroyWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(World* _pWorld);
+
+	void SaveWorld(std::wstring name = L"default");
+	void LoadWorld(std::wstring name = L"default");
 public:
     auto    GetViewportScene() const { return mOwnerScene; }
 private:

@@ -1,7 +1,15 @@
 [
     [
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class Camera"
+            ],
             [
                 [
                     "angle",
@@ -22,7 +30,15 @@
             ]
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class Light"
+            ],
             [
                 [
                     "pos.x",
@@ -127,7 +143,15 @@
             ]
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class Light"
+            ],
             [
                 [
                     "pos.x",
@@ -234,45 +258,109 @@
     ],
     [
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class ModelSpawner"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class MeshRenderer"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class CameraController"
+            ],
             null
         ]
     ],
     [
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class MeshRenderer"
+            ],
             null
         ]
     ],
     [
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class MeshRenderer"
+            ],
             null
         ]
     ],
     [
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class Animator"
+            ],
             [
                 [
                     "anim",
@@ -295,214 +383,494 @@
                 ],
                 [
                     "duration",
-                    59.350093841552734
+                    52.55985641479492
                 ]
             ]
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class SkinnedMeshRenderer"
+            ],
             null
         ],
         [
+            [
+                "name",
+                "class Transform"
+            ],
             null,
+            [
+                "name",
+                "class SkinnedMeshRenderer"
+            ],
             null
         ]
     ]

@@ -15,9 +15,7 @@ public:
     virtual void PreRender() override;
     virtual void Render() override;
     virtual void PostRender() override;
-public:
-    virtual json Serialize() override { return json(); }
-    virtual json Deserialize() override { return json(); }
+
 private:
     std::vector<std::shared_ptr<FBXModelResource>>  mFBXModelResources;
     std::vector<std::shared_ptr<Prefab>>            mModelPrefabs;

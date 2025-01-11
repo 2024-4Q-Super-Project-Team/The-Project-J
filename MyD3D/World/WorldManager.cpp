@@ -3,6 +3,8 @@
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 
+#include <fstream>
+
 WorldManager::WorldManager(ViewportScene* _pViewport)
 	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr)
 {
@@ -147,4 +149,47 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
         return TRUE;
     }
     return FALSE;
+}
+
+void WorldManager::SaveWorld(std::wstring worldName)
+{
+	World* world;
+	if (worldName == L"default")
+	{
+		if (mCurrActiveWorld == nullptr)
+			return;
+		world = mCurrActiveWorld;
+	}	
+	else
+		world = mWorlds[worldName];
+
+	//json data = world->Serialize();
+	std::wstring name = world->GetName();
+	std::ofstream file(name + L".json");
+	if (file.is_open())
+		file << data.dump(4);
+
+	file.close();
+}
+
+void WorldManager::LoadWorld(std::wstring worldName)
+{
+	World* world;
+	if (worldName == L"default")
+	{
+		if (mCurrActiveWorld == nullptr)
+			return;
+		world = mCurrActiveWorld;
+	}
+	else
+		world = mWorlds[worldName];
+
+	std::wstring name = world->GetName();
+	std::ifstream file(name + L".json");
+	json j;
+	file >> j;
+
+	//world->Deserialize(j);
+
+	file.close();
 }

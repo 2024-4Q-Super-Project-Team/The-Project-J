@@ -202,17 +202,3 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
     }
 }
 
-nlohmann::json Object::Serialize()
-{
-    nlohmann::json ret;
-
-    for (size_t i = 0; i < ComponentSize; i++)
-    {
-        size_t size = mComponentArray[i].size();
-        for (size_t j = 0; j < size; j++)
-        {
-            ret += mComponentArray[i][j]->Serialize();
-        }
-    }
-    return ret;
-}

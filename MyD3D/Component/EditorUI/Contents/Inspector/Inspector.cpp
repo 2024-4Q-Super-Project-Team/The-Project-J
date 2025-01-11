@@ -50,6 +50,7 @@ namespace Editor
 
     void Inspector::ShowComponentList()
     {
+        ImGui::SetNextWindowPos(ImGui::GetCursorScreenPos());
         ImGui::OpenPopup("Component List");
         if (ImGui::BeginPopup("Component List"))
         {
@@ -63,6 +64,12 @@ namespace Editor
                     mbComponentChoosing = false;
                 }
             }
+
+            if (ImGui::IsMouseClicked(1))
+            {
+                mbComponentChoosing = false;
+            }
+
             ImGui::EndPopup();
         }
        

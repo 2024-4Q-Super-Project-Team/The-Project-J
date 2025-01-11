@@ -59,9 +59,7 @@ public:
     inline auto GetSkyBox() const { return mSkyBox; }
 
 public:
-	//Á÷·ÄÈ­
-	json Serialize();
-	json Deserialize() { return json(); }
+
 protected:
     ViewportScene* const mOwnerScene;
 private:

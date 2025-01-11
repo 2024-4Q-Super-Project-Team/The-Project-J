@@ -5,7 +5,6 @@
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 
-#include <fstream>
 
 namespace Editor
 {
@@ -183,14 +182,7 @@ namespace Editor
 
     void GameEditor::SaveWorld()
     {
-        World* pCurWorld = mRefWorldManager->GetActiveWorld();
-        json data = pCurWorld->Serialize();
-
-        std::ofstream file("./save.json");
-        if(file.is_open())
-            file << data.dump(4);
-
-        file.close();
+        mRefWorldManager->SaveWorld();
     }
  
     void GameEditor::SetFocusInspector(Inspector* _pInspector)

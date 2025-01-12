@@ -9,6 +9,9 @@ public:
 	~CameraController();
 	void Start();
 	void Update();
+
+public:
+    virtual json Serialize() override;
 public:
 
 	float mMoveSpeed;

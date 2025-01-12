@@ -122,3 +122,8 @@ void ModelSpawner::Render()
 void ModelSpawner::PostRender()
 {
 }
+
+json ModelSpawner::Serialize()
+{
+    return json();
+}

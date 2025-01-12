@@ -121,6 +121,20 @@ void Camera::UpdateCamera()
     }
 }
 
+json Camera::Serialize()
+{
+    json ret;
+
+    ret["fov angle"] = mFovAngle.GetAngle();
+    ret["near"] = mProjectionNear;
+    ret["far"] = mProjectionFar;
+    ret["type"] = mProjectionType;
+    ret["ortho width"] = mOrthoWidth;
+    ret["ortho height"] = mOrthoHeight;
+
+    return ret;
+}
+
 void Camera::PushDrawList(RendererComponent* _renderComponent)
 {
     if (_renderComponent == nullptr) return;

@@ -25,14 +25,14 @@ public:
     virtual void PostRender() override;
 public:
     void SetAnimation(std::shared_ptr<AnimationResource> _pAnim);
+
+    virtual json Serialize() override;
 private:
     void        CalculateAnimationTramsform(Transform* _pBone);
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
-public:
-    virtual json Serialize() override;
-    virtual json Deserialize() override;
+
 private:
     std::shared_ptr<AnimationResource> mActiveAnimation;
 

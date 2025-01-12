@@ -121,6 +121,24 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 {
 }
 
+json Light::Serialize()
+{
+    json ret;
+
+    json prop = json::object();
+    prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
+    prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
+    prop["radiance"] = { mLightProp.Radiance.r, mLightProp.Radiance.g, mLightProp.Radiance.b, mLightProp.Radiance.a };
+    prop["diffuse"] = { mLightProp.DiffuseRGB.r, mLightProp.DiffuseRGB.g, mLightProp.DiffuseRGB.b, mLightProp.DiffuseRGB.a };
+    prop["ambient"] = { mLightProp.AmbientRGB.r, mLightProp.AmbientRGB.g, mLightProp.AmbientRGB.b, mLightProp.AmbientRGB.a };
+    prop["specular"] = { mLightProp.SpecularRGB.r, mLightProp.SpecularRGB.g, mLightProp.SpecularRGB.b, mLightProp.SpecularRGB.a };
+    prop["type"] = mLightProp.LightType;
+
+    ret["property"] = prop;
+
+    return ret;
+}
+
 void Light::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

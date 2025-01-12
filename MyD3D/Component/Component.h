@@ -68,6 +68,8 @@ public:
 	{
 		mSerials.push_back(_serial);
 	}
+
+	virtual json Serialize() = 0;
 public:
 	Object* const	gameObject;
 protected:

@@ -62,6 +62,7 @@ public:
     // 부모를 변경한다.
     void SetParent(Transform* _parent);
 
+    virtual json Serialize();
 public:
     // Position to Vector3
     Vector3			position;

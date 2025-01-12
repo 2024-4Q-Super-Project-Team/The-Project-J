@@ -11,13 +11,3 @@ MeshFilter::MeshFilter(Object* _owner)
 MeshFilter::~MeshFilter()
 {
 }
-
-json MeshFilter::Serialize()
-{
-    return json();
-}
-
-json MeshFilter::Deserialize()
-{
-    return json();
-}

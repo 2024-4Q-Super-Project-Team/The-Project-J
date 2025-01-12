@@ -52,13 +52,11 @@ public:
     // 오브젝트 그룹 컨테이너를 반환
     inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
 	//직렬화
-	//json Serialize();
+	json Serialize();
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }
     inline auto GetSkyBox() const { return mSkyBox; }
-
-public:
 
 protected:
     ViewportScene* const mOwnerScene;

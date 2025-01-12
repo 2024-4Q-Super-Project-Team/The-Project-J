@@ -102,3 +102,18 @@ void ObjectGroup::SetWorld(World* _world)
 		return;
     _world->ReceiveObjectGroup(this);
 }
+
+json ObjectGroup::Serialize()
+{
+    json ret;
+    ret["id"] = mId;
+    ret["name"] = mName.c_str();
+
+    json objs = json::array();
+    for (auto obj : mObjects)
+    {
+        objs.push_back(obj->Serialize());
+    }
+    ret["objects"] = objs;
+    return ret;
+}

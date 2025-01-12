@@ -163,7 +163,7 @@ void WorldManager::SaveWorld(std::wstring worldName)
 	else
 		world = mWorlds[worldName];
 
-	//json data = world->Serialize();
+	json data = world->Serialize();
 	std::wstring name = world->GetName();
 	std::ofstream file(name + L".json");
 	if (file.is_open())

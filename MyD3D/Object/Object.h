@@ -54,7 +54,7 @@ public:
     T* CloneComponent(T* _pSrc);
 
 public:
-  
+  	json Serialize();
 public:
     Transform* const transform;
 public:

@@ -134,9 +134,9 @@ Material* MeshRenderer::GetMaterial()
 json MeshRenderer::Serialize()
 {
     json ret;
-    ret += {"mesh", mMesh->GetName()};
-    ret += {"material", mMateiral->mMaterialResource->GetName()};
-    return json();
+    ret["mesh"] = mMesh->GetName();
+    ret["material"] = mMateiral->mMaterialResource->GetName();
+    return ret;
 }
 
 json MeshRenderer::Deserialize()

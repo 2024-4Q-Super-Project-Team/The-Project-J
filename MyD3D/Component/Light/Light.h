@@ -37,7 +37,8 @@ public:
     inline auto GetShadowDSV() { return mShadowDSV; }
     inline auto GetShadowSRV() { return mShadowSRV; }
     inline auto GetProperty() { return mLightProp; }
-
+public:
+    virtual json Serialize() override;
 private:
     LightProperty        mLightProp;
     D3DGraphicsDSV*      mShadowDSV;

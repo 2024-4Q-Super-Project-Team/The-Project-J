@@ -1,877 +1,2498 @@
-[
-    [
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class Camera"
-            ],
-            [
-                [
-                    "angle",
-                    1.5707963705062866
-                ],
-                [
-                    "near",
-                    1.0
-                ],
-                [
-                    "far",
-                    30000.0
-                ],
-                [
-                    "type",
-                    0
-                ]
+{
+    "name": "TestWorld",
+    "object groups": [
+        {
+            "id": 0,
+            "name": "Default",
+            "objects": [
+                {
+                    "components": [
+                        {
+                            "id": 2,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                100.0,
+                                -100.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                1.0,
+                                0.0,
+                                3.5762786865234375e-07
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "far": 30000.0,
+                            "fov angle": 1.5707963705062866,
+                            "near": 1.0,
+                            "ortho height": 10.0,
+                            "ortho width": 10.0,
+                            "type": 0
+                        }
+                    ],
+                    "id": 1,
+                    "name": "Main_Camera"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 333,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "property": {
+                                "ambient": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "diffuse": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "direction": [
+                                    0.0,
+                                    -1.0,
+                                    1.0,
+                                    0.0
+                                ],
+                                "position": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "radiance": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "specular": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "type": 0
+                            }
+                        }
+                    ],
+                    "id": 332,
+                    "name": "Direction_Light1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 336,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "property": {
+                                "ambient": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "diffuse": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "direction": [
+                                    0.30000001192092896,
+                                    -1.0,
+                                    0.15000000596046448,
+                                    0.0
+                                ],
+                                "position": [
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0
+                                ],
+                                "radiance": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "specular": [
+                                    1.0,
+                                    1.0,
+                                    1.0,
+                                    1.0
+                                ],
+                                "type": 0
+                            }
+                        }
+                    ],
+                    "id": 335,
+                    "name": "Direction_Light2"
+                }
             ]
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class Light"
-            ],
-            [
-                [
-                    "pos.x",
-                    0.0
-                ],
-                [
-                    "pos.y",
-                    0.0
-                ],
-                [
-                    "pos.z",
-                    0.0
-                ],
-                [
-                    "pos.w",
-                    1.0
-                ],
-                [
-                    "dir.x",
-                    0.0
-                ],
-                [
-                    "dir.y",
-                    -1.0
-                ],
-                [
-                    "dir.z",
-                    1.0
-                ],
-                [
-                    "dir.w",
-                    0.0
-                ],
-                [
-                    "rad.r",
-                    1.0
-                ],
-                [
-                    "rad.g",
-                    1.0
-                ],
-                [
-                    "rad.b",
-                    1.0
-                ],
-                [
-                    "rad.a",
-                    1.0
-                ],
-                [
-                    "diff.r",
-                    1.0
-                ],
-                [
-                    "diff.g",
-                    1.0
-                ],
-                [
-                    "diff.b",
-                    1.0
-                ],
-                [
-                    "diff.a",
-                    1.0
-                ],
-                [
-                    "amb.r",
-                    1.0
-                ],
-                [
-                    "amb.g",
-                    1.0
-                ],
-                [
-                    "amb.b",
-                    1.0
-                ],
-                [
-                    "amb.a",
-                    1.0
-                ],
-                [
-                    "spec.r",
-                    1.0
-                ],
-                [
-                    "spec.g",
-                    1.0
-                ],
-                [
-                    "spec.b",
-                    1.0
-                ],
-                [
-                    "spec.a",
-                    1.0
-                ],
-                [
-                    "type",
-                    0
-                ]
+        },
+        {
+            "id": 4,
+            "name": "Test",
+            "objects": [
+                {
+                    "components": [
+                        {
+                            "id": 15,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        null
+                    ],
+                    "id": 14,
+                    "name": "ModelController"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 18,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.7071066498756409,
+                                0.0,
+                                0.0,
+                                0.70710688829422
+                            ],
+                            "scale": [
+                                1000.0,
+                                1000.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "material": [
+                                68,
+                                101,
+                                102,
+                                97,
+                                117,
+                                108,
+                                116,
+                                95,
+                                77,
+                                97,
+                                116,
+                                101,
+                                114,
+                                105,
+                                97,
+                                108
+                            ],
+                            "mesh": [
+                                68,
+                                101,
+                                102,
+                                97,
+                                117,
+                                108,
+                                116,
+                                95,
+                                80,
+                                108,
+                                97,
+                                105,
+                                110,
+                                95,
+                                77,
+                                101,
+                                115,
+                                104
+                            ]
+                        }
+                    ],
+                    "id": 17,
+                    "name": "Plain"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 339,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        null
+                    ],
+                    "id": 338,
+                    "name": "CameraController"
+                }
             ]
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class Light"
-            ],
-            [
-                [
-                    "pos.x",
-                    0.0
-                ],
-                [
-                    "pos.y",
-                    0.0
-                ],
-                [
-                    "pos.z",
-                    0.0
-                ],
-                [
-                    "pos.w",
-                    1.0
-                ],
-                [
-                    "dir.x",
-                    0.30000001192092896
-                ],
-                [
-                    "dir.y",
-                    -1.0
-                ],
-                [
-                    "dir.z",
-                    0.15000000596046448
-                ],
-                [
-                    "dir.w",
-                    0.0
-                ],
-                [
-                    "rad.r",
-                    1.0
-                ],
-                [
-                    "rad.g",
-                    1.0
-                ],
-                [
-                    "rad.b",
-                    1.0
-                ],
-                [
-                    "rad.a",
-                    1.0
-                ],
-                [
-                    "diff.r",
-                    1.0
-                ],
-                [
-                    "diff.g",
-                    1.0
-                ],
-                [
-                    "diff.b",
-                    1.0
-                ],
-                [
-                    "diff.a",
-                    1.0
-                ],
-                [
-                    "amb.r",
-                    1.0
-                ],
-                [
-                    "amb.g",
-                    1.0
-                ],
-                [
-                    "amb.b",
-                    1.0
-                ],
-                [
-                    "amb.a",
-                    1.0
-                ],
-                [
-                    "spec.r",
-                    1.0
-                ],
-                [
-                    "spec.g",
-                    1.0
-                ],
-                [
-                    "spec.b",
-                    1.0
-                ],
-                [
-                    "spec.a",
-                    1.0
-                ],
-                [
-                    "type",
-                    0
-                ]
+        },
+        {
+            "id": 27,
+            "name": "Model_Group1",
+            "objects": [
+                {
+                    "components": [
+                        {
+                            "id": 29,
+                            "parent": 99999999999,
+                            "position": [
+                                0.0,
+                                45.0,
+                                0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 28,
+                    "name": "resource/fbx/gun.fbx"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 31,
+                            "parent": 29,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 30,
+                    "name": "RootNode"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 33,
+                            "parent": 31,
+                            "position": [
+                                2.2559845547220903e-06,
+                                0.0,
+                                93.72016143798828
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.70710688829422,
+                                0.0,
+                                0.0,
+                                0.7071066498756409
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "material": [
+                                48,
+                                56,
+                                32,
+                                45,
+                                32,
+                                68,
+                                101,
+                                102,
+                                97,
+                                117,
+                                108,
+                                116
+                            ],
+                            "mesh": [
+                                77,
+                                101,
+                                115,
+                                104,
+                                95,
+                                48
+                            ]
+                        }
+                    ],
+                    "id": 32,
+                    "name": "Cerberus00_Fixed"
+                }
             ]
-        ]
-    ],
-    [
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class ModelSpawner"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class MeshRenderer"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class CameraController"
-            ],
-            null
-        ]
-    ],
-    [
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class MeshRenderer"
-            ],
-            null
-        ]
-    ],
-    [
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class MeshRenderer"
-            ],
-            null
-        ]
-    ],
-    [
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class Animator"
-            ],
-            [
-                [
-                    "anim",
-                    [
-                        109,
-                        105,
-                        120,
-                        97,
-                        109,
-                        111,
-                        46,
-                        99,
-                        111,
-                        109
-                    ]
-                ],
-                [
-                    "isPlay",
-                    true
-                ],
-                [
-                    "duration",
-                    52.55985641479492
-                ]
+        },
+        {
+            "id": 42,
+            "name": "Model_Group2",
+            "objects": [
+                {
+                    "components": [
+                        {
+                            "id": 44,
+                            "parent": 99999999999,
+                            "position": [
+                                100.0,
+                                50.0,
+                                50.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 43,
+                    "name": "resource/fbx/sphere.fbx"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 46,
+                            "parent": 44,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 45,
+                    "name": "RootNode"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 48,
+                            "parent": 46,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.7071068286895752,
+                                0.0,
+                                0.0,
+                                0.7071067094802856
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "material": [
+                                68,
+                                101,
+                                102,
+                                97,
+                                117,
+                                108,
+                                116,
+                                77,
+                                97,
+                                116,
+                                101,
+                                114,
+                                105,
+                                97,
+                                108
+                            ],
+                            "mesh": [
+                                83,
+                                112,
+                                104,
+                                101,
+                                114,
+                                101,
+                                95,
+                                48
+                            ]
+                        }
+                    ],
+                    "id": 47,
+                    "name": "Sphere"
+                }
             ]
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class SkinnedMeshRenderer"
-            ],
-            null
-        ],
-        [
-            [
-                "name",
-                "class Transform"
-            ],
-            null,
-            [
-                "name",
-                "class SkinnedMeshRenderer"
-            ],
-            null
-        ]
+        },
+        {
+            "id": 190,
+            "name": "Model_Group3",
+            "objects": [
+                {
+                    "components": [
+                        {
+                            "id": 192,
+                            "parent": 99999999999,
+                            "position": [
+                                -100.0,
+                                0.0,
+                                50.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "active animation": [
+                                109,
+                                105,
+                                120,
+                                97,
+                                109,
+                                111,
+                                46,
+                                99,
+                                111,
+                                109
+                            ]
+                        }
+                    ],
+                    "id": 191,
+                    "name": "resource/fbx/Mixamo/SkinningTest.fbx"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 194,
+                            "parent": 192,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 193,
+                    "name": "RootNode"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 196,
+                            "parent": 194,
+                            "position": [
+                                0.011545914225280285,
+                                97.57627868652344,
+                                -1.1863479614257813
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.006722579710185528,
+                                -8.75991172506474e-05,
+                                -0.0010488064726814628,
+                                0.9999768733978271
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 195,
+                    "name": "mixamorig:Hips"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 198,
+                            "parent": 196,
+                            "position": [
+                                -4.255830687860396e-10,
+                                10.1824369430542,
+                                3.969047313034935e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0073684388771653175,
+                                0.1317865252494812,
+                                -0.017914656549692154,
+                                0.9910888075828552
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 197,
+                    "name": "mixamorig:Spine"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 200,
+                            "parent": 198,
+                            "position": [
+                                -9.328540667176707e-21,
+                                10.00267505645752,
+                                -5.833880131907686e-16
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0719611868262291,
+                                0.13271144032478333,
+                                -0.009564694948494434,
+                                0.9884927272796631
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 199,
+                    "name": "mixamorig:Spine1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 202,
+                            "parent": 200,
+                            "position": [
+                                1.137543140602602e-14,
+                                9.322091102600098,
+                                -2.8236811999704514e-07
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.012770023196935654,
+                                0.13185028731822968,
+                                -0.017865633592009544,
+                                0.9910263419151306
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 201,
+                    "name": "mixamorig:Spine2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 204,
+                            "parent": 202,
+                            "position": [
+                                4.147488463779325e-10,
+                                16.86532211303711,
+                                -5.76863860499155e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                5.6182030675699934e-05,
+                                -0.13206040859222412,
+                                0.01620686613023281,
+                                0.9911091923713684
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 203,
+                    "name": "mixamorig:Neck"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 206,
+                            "parent": 204,
+                            "position": [
+                                -1.0756748025642082e-07,
+                                9.341923713684082,
+                                -2.841040849685669
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.00014172498777043074,
+                                -0.2617773413658142,
+                                0.03210267052054405,
+                                0.9645941853523254
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 205,
+                    "name": "mixamorig:Head"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 208,
+                            "parent": 206,
+                            "position": [
+                                9.856973974819994e-07,
+                                20.96278190612793,
+                                -10.12293529510498
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 207,
+                    "name": "mixamorig:HeadTop_End"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 210,
+                            "parent": 202,
+                            "position": [
+                                -4.56997013092041,
+                                11.195844650268555,
+                                0.806631863117218
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.48442935943603516,
+                                -0.570962131023407,
+                                -0.5261653065681458,
+                                -0.40308877825737
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 209,
+                    "name": "mixamorig:RightShoulder"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 212,
+                            "parent": 210,
+                            "position": [
+                                3.151008091806912e-15,
+                                10.838175773620605,
+                                9.694985589551032e-16
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.06478149443864822,
+                                0.4042019844055176,
+                                -0.08438776433467865,
+                                0.9084618091583252
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 211,
+                    "name": "mixamorig:RightArm"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 214,
+                            "parent": 212,
+                            "position": [
+                                -9.964063352185804e-09,
+                                27.84151840209961,
+                                -3.5581794130025435e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                -0.7663434147834778,
+                                0.6424311399459839
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 213,
+                    "name": "mixamorig:RightForeArm"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 216,
+                            "parent": 214,
+                            "position": [
+                                2.285859955009073e-05,
+                                28.328838348388672,
+                                -4.472538876143517e-06
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.021895483136177063,
+                                -0.04061483219265938,
+                                -0.020759129896759987,
+                                0.9987192153930664
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 215,
+                    "name": "mixamorig:RightHand"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 218,
+                            "parent": 216,
+                            "position": [
+                                2.681851863861084,
+                                2.4648051261901855,
+                                -1.573983907699585
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.20425771176815033,
+                                -0.09262692183256149,
+                                -0.30360230803489685,
+                                0.9260262846946716
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 217,
+                    "name": "mixamorig:RightHandThumb1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 220,
+                            "parent": 218,
+                            "position": [
+                                -1.5692586390492896e-14,
+                                4.188985347747803,
+                                9.679277575302438e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.028285909444093704,
+                                0.001159127103164792,
+                                0.1364801973104477,
+                                0.9902382493019104
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 219,
+                    "name": "mixamorig:RightHandThumb2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 222,
+                            "parent": 220,
+                            "position": [
+                                -1.8376710133531475e-14,
+                                3.416271209716797,
+                                -1.9955813328306933e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.1402827650308609,
+                                0.000799529196228832,
+                                0.026050986722111702,
+                                0.989768385887146
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 221,
+                    "name": "mixamorig:RightHandThumb3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 224,
+                            "parent": 222,
+                            "position": [
+                                -1.4209324973699262e-14,
+                                2.574977397918701,
+                                2.661321277285314e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.005774855148047209,
+                                0.11750921607017517,
+                                -0.04874371364712715,
+                                0.9918580055236816
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 223,
+                    "name": "mixamorig:RightHandThumb4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 226,
+                            "parent": 216,
+                            "position": [
+                                2.2598350048065186,
+                                9.108283042907715,
+                                -0.5178621411323547
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.02103394828736782,
+                                4.827894528602883e-08,
+                                0.021631820127367973,
+                                0.9995447397232056
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 225,
+                    "name": "mixamorig:RightHandIndex1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 228,
+                            "parent": 226,
+                            "position": [
+                                -8.564062138486164e-15,
+                                3.700000047683716,
+                                9.364993623520255e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -2.8680349828391627e-07,
+                                1.6670583548645157e-15,
+                                -6.164559085419796e-09,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 227,
+                    "name": "mixamorig:RightHandIndex2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 230,
+                            "parent": 228,
+                            "position": [
+                                -3.4287107658279026e-13,
+                                2.8499999046325684,
+                                8.893045189140025e-10
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                1.0108387016316556e-08,
+                                2.2043803753397408e-15,
+                                2.1728519072894414e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 229,
+                    "name": "mixamorig:RightHandIndex3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 232,
+                            "parent": 230,
+                            "position": [
+                                7.906754135970917e-13,
+                                2.772190570831299,
+                                -5.114471068878856e-10
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -8.659861094884036e-08,
+                                -0.0010026921518146992,
+                                8.705834625288844e-05,
+                                0.9999995231628418
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 231,
+                    "name": "mixamorig:RightHandIndex4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 234,
+                            "parent": 216,
+                            "position": [
+                                -2.3687323846388608e-05,
+                                9.532501220703125,
+                                -3.98556912841741e-05
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.021033572033047676,
+                                8.004484186585614e-09,
+                                0.021632125601172447,
+                                0.9995447397232056
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 233,
+                    "name": "mixamorig:RightHandMiddle1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 236,
+                            "parent": 234,
+                            "position": [
+                                -1.0026188389179909e-14,
+                                3.700000047683716,
+                                2.8084324349051358e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                -1.0033400599240849e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 235,
+                    "name": "mixamorig:RightHandMiddle2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 238,
+                            "parent": 236,
+                            "position": [
+                                -2.5163898742519564e-13,
+                                2.950000047683716,
+                                1.5411337983550766e-08
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                2.0575822645696462e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 237,
+                    "name": "mixamorig:RightHandMiddle3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 240,
+                            "parent": 238,
+                            "position": [
+                                1.1329193740907892e-13,
+                                2.9466288089752197,
+                                -7.2058732314417284e-09
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -1.549827004510007e-07,
+                                -0.0009288142318837345,
+                                0.00016639448585920036,
+                                0.9999995827674866
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 239,
+                    "name": "mixamorig:RightHandMiddle4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 242,
+                            "parent": 216,
+                            "position": [
+                                -1.8651331663131714,
+                                9.103591918945313,
+                                -0.04306964948773384
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.021033644676208496,
+                                3.601210707415703e-08,
+                                0.021631794050335884,
+                                0.9995447397232056
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 241,
+                    "name": "mixamorig:RightHandRing1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 244,
+                            "parent": 242,
+                            "position": [
+                                -5.1494656520649496e-15,
+                                3.379272937774658,
+                                2.837085018411907e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -4.6127041741783614e-08,
+                                -7.0718916291533096e-15,
+                                1.433313343568443e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 243,
+                    "name": "mixamorig:RightHandRing2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 246,
+                            "parent": 244,
+                            "position": [
+                                2.6225075171366907e-13,
+                                2.8896846771240234,
+                                -8.202332701934267e-10
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                1.945754958521638e-15,
+                                8.532889950174649e-09,
+                                -2.3089938849807368e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 245,
+                    "name": "mixamorig:RightHandRing3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 248,
+                            "parent": 246,
+                            "position": [
+                                4.719501157067485e-13,
+                                2.6388156414031982,
+                                -5.68229630015793e-10
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                1.3396450526670378e-07,
+                                -0.00014607504999730736,
+                                -0.0007992862956598401,
+                                0.9999997019767761
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 247,
+                    "name": "mixamorig:RightHandRing4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 250,
+                            "parent": 216,
+                            "position": [
+                                -3.8062775135040283,
+                                8.076676368713379,
+                                -0.48670369386672974
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.02103390358388424,
+                                3.5696245959115913e-10,
+                                0.021632395684719086,
+                                0.9995447397232056
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 249,
+                    "name": "mixamorig:RightHandPinky1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 252,
+                            "parent": 250,
+                            "position": [
+                                -1.071511755463151e-14,
+                                3.5999999046325684,
+                                3.08777898811851e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                -2.5297049432992935e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 251,
+                    "name": "mixamorig:RightHandPinky2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 254,
+                            "parent": 252,
+                            "position": [
+                                -5.2800266329283696e-14,
+                                2.0999999046325684,
+                                2.1163895524978216e-08
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                -2.3166649043560028e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 253,
+                    "name": "mixamorig:RightHandPinky3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 256,
+                            "parent": 254,
+                            "position": [
+                                1.295905657089369e-13,
+                                2.11578106880188,
+                                -1.440735175606278e-08
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                6.420660980666071e-08,
+                                -0.0015694816829636693,
+                                -4.1285289626102895e-05,
+                                0.9999988079071045
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 255,
+                    "name": "mixamorig:RightHandPinky4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 258,
+                            "parent": 202,
+                            "position": [
+                                4.570446014404297,
+                                11.19564437866211,
+                                0.8066272139549255
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.4844215512275696,
+                                -0.5709688663482666,
+                                -0.5261633992195129,
+                                0.4030911922454834
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 257,
+                    "name": "mixamorig:LeftShoulder"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 260,
+                            "parent": 258,
+                            "position": [
+                                -2.6006848567451625e-15,
+                                10.837705612182617,
+                                9.23750732990372e-16
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.06477545946836472,
+                                -0.40420305728912354,
+                                0.08439595252275467,
+                                0.9084609746932983
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 259,
+                    "name": "mixamorig:LeftArm"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 262,
+                            "parent": 260,
+                            "position": [
+                                9.038045682143673e-15,
+                                27.841522216796875,
+                                4.311933449863527e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -4.7431253591412315e-08,
+                                -3.4532028792000347e-08,
+                                0.7663434147834778,
+                                0.6424311399459839
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 261,
+                    "name": "mixamorig:LeftForeArm"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 264,
+                            "parent": 262,
+                            "position": [
+                                5.438735115603777e-06,
+                                28.328834533691406,
+                                5.564248795053572e-07
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.028236500918865204,
+                                0.05100530385971069,
+                                0.02196824736893177,
+                                0.9980574250221252
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 263,
+                    "name": "mixamorig:LeftHand"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 266,
+                            "parent": 264,
+                            "position": [
+                                -2.6817314624786377,
+                                2.4661448001861572,
+                                -1.576192855834961
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.20176473259925842,
+                                0.0886235386133194,
+                                0.2853488326072693,
+                                0.9327448606491089
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 265,
+                    "name": "mixamorig:LeftHandThumb1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 268,
+                            "parent": 266,
+                            "position": [
+                                -8.920065004019463e-15,
+                                4.187094688415527,
+                                -1.185940655032934e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.01953083649277687,
+                                -0.0010349191725254059,
+                                -0.12126386910676956,
+                                0.9924276471138
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 267,
+                    "name": "mixamorig:LeftHandThumb2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 270,
+                            "parent": 268,
+                            "position": [
+                                -1.28233482555131e-15,
+                                3.4183883666992188,
+                                -5.503635877113569e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.12803004682064056,
+                                -0.0007387709920294583,
+                                0.02863348089158535,
+                                0.991356611251831
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 269,
+                    "name": "mixamorig:LeftHandThumb3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 272,
+                            "parent": 270,
+                            "position": [
+                                1.646228184153109e-14,
+                                2.5805814266204834,
+                                -2.600447052245221e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.00515340780839324,
+                                -0.12268277257680893,
+                                0.04165153205394745,
+                                0.9915581941604614
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 271,
+                    "name": "mixamorig:LeftHandThumb4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 274,
+                            "parent": 264,
+                            "position": [
+                                -2.2598628997802734,
+                                9.109309196472168,
+                                -0.5180343389511108
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.02707827463746071,
+                                -1.504287361342449e-09,
+                                -0.023379534482955933,
+                                0.9993599057197571
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 273,
+                    "name": "mixamorig:LeftHandIndex1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 276,
+                            "parent": 274,
+                            "position": [
+                                -6.429325659102619e-15,
+                                3.700000047683716,
+                                7.240397822581238e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -4.0070443674267153e-07,
+                                -7.151425285290003e-11,
+                                3.706686868554243e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 275,
+                    "name": "mixamorig:LeftHandIndex2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 278,
+                            "parent": 276,
+                            "position": [
+                                -7.177584806887516e-13,
+                                2.8499999046325684,
+                                -3.210010924604989e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -3.3475058103249467e-07,
+                                4.438130071782176e-11,
+                                8.198699674721865e-08,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 277,
+                    "name": "mixamorig:LeftHandIndex3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 280,
+                            "parent": 278,
+                            "position": [
+                                8.58972723678797e-13,
+                                2.7748656272888184,
+                                -3.977551523825368e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                4.934580299931213e-09,
+                                0.00037756332312710583,
+                                -1.3069545275357086e-05,
+                                0.9999999403953552
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 279,
+                    "name": "mixamorig:LeftHandIndex4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 282,
+                            "parent": 264,
+                            "position": [
+                                -3.66043605026789e-05,
+                                9.533401489257813,
+                                3.254047260270454e-05
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.027078891173005104,
+                                2.4456925373783633e-09,
+                                -0.023380205035209656,
+                                0.9993598461151123
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 281,
+                    "name": "mixamorig:LeftHandMiddle1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 284,
+                            "parent": 282,
+                            "position": [
+                                -1.8484327787062502e-15,
+                                3.700000047683716,
+                                4.107825614629553e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                3.081426314111013e-08,
+                                6.864348933016684e-12,
+                                2.4121510477925767e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 283,
+                    "name": "mixamorig:LeftHandMiddle2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 286,
+                            "parent": 284,
+                            "position": [
+                                -2.870734899795835e-12,
+                                2.950000047683716,
+                                1.8927174823095416e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                4.2758992435665277e-07,
+                                1.7785335704179062e-11,
+                                -2.1537437078222865e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 285,
+                    "name": "mixamorig:LeftHandMiddle3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 288,
+                            "parent": 286,
+                            "position": [
+                                -8.712009412492616e-12,
+                                2.9528634548187256,
+                                1.3157034598094974e-13
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -2.8660405604341577e-08,
+                                0.0010241408599540591,
+                                2.798481727950275e-05,
+                                0.999999463558197
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 287,
+                    "name": "mixamorig:LeftHandMiddle4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 290,
+                            "parent": 264,
+                            "position": [
+                                1.8650810718536377,
+                                9.104528427124023,
+                                -0.04302823543548584
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.02707761339843273,
+                                1.9150880348206556e-07,
+                                -0.02338607981801033,
+                                0.9993597865104675
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 289,
+                    "name": "mixamorig:LeftHandRing1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 292,
+                            "parent": 290,
+                            "position": [
+                                -3.88070050608689e-15,
+                                3.1500000953674316,
+                                1.2637012442061942e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -9.865976835499168e-08,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 291,
+                    "name": "mixamorig:LeftHandRing2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 294,
+                            "parent": 292,
+                            "position": [
+                                2.6432892354932847e-06,
+                                2.950000047683716,
+                                -5.209859637034242e-07
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 293,
+                    "name": "mixamorig:LeftHandRing3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 296,
+                            "parent": 294,
+                            "position": [
+                                -2.327433139726054e-05,
+                                2.6443164348602295,
+                                1.4607575167246978e-06
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                2.7316932005305716e-07,
+                                -0.0004934373428113759,
+                                1.604702447366435e-05,
+                                0.9999998807907104
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 295,
+                    "name": "mixamorig:LeftHandRing4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 298,
+                            "parent": 264,
+                            "position": [
+                                3.8062632083892822,
+                                8.077778816223145,
+                                -0.48687702417373657
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.027078745886683464,
+                                -5.529831703654509e-09,
+                                -0.023379825055599213,
+                                0.9993599057197571
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 297,
+                    "name": "mixamorig:LeftHandPinky1"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 300,
+                            "parent": 298,
+                            "position": [
+                                -3.894070497642826e-15,
+                                3.5999999046325684,
+                                -2.5409894051061158e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                2.698355672237085e-07,
+                                2.6439003764089364e-10,
+                                -2.8123497486376436e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 299,
+                    "name": "mixamorig:LeftHandPinky2"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 302,
+                            "parent": 300,
+                            "position": [
+                                2.4071784604680346e-13,
+                                2.1000001430511475,
+                                -3.3381642990191335e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -1.0560541596760231e-07,
+                                1.4180408583475135e-11,
+                                1.1306838132441044e-07,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 301,
+                    "name": "mixamorig:LeftHandPinky3"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 304,
+                            "parent": 302,
+                            "position": [
+                                1.1037364598676103e-12,
+                                2.1255314350128174,
+                                4.760809666414997e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -2.2034711832930043e-07,
+                                0.0007833988638594747,
+                                -0.0002953856310341507,
+                                0.9999997019767761
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 303,
+                    "name": "mixamorig:LeftHandPinky4"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 306,
+                            "parent": 196,
+                            "position": [
+                                -8.207789421081543,
+                                -6.771764278411865,
+                                1.512218713760376
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.0014569687191396952,
+                                -0.19820527732372284,
+                                0.9801546335220337,
+                                -0.003064396558329463
+                            ],
+                            "scale": [
+                                0.9999998807907104,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 305,
+                    "name": "mixamorig:RightUpLeg"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 308,
+                            "parent": 306,
+                            "position": [
+                                6.19727558159866e-09,
+                                44.371463775634766,
+                                1.6627694501229057e-13
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.3815332353115082,
+                                -0.0022646228317171335,
+                                -0.0007417617598548532,
+                                0.9243521094322205
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999999403953552,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 307,
+                    "name": "mixamorig:RightLeg"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 310,
+                            "parent": 308,
+                            "position": [
+                                -5.538293379458992e-09,
+                                44.52781295776367,
+                                -1.8670633954360506e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.5989194512367249,
+                                0.00035167421447113156,
+                                -0.0008819333161227405,
+                                0.8008087277412415
+                            ],
+                            "scale": [
+                                1.0,
+                                0.9999998807907104,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 309,
+                    "name": "mixamorig:RightFoot"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 312,
+                            "parent": 310,
+                            "position": [
+                                -1.2271307237634319e-15,
+                                13.816865921020508,
+                                -4.8857847191011595e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.33524152636528015,
+                                3.515347657412349e-08,
+                                -9.879212825580908e-08,
+                                0.9421322345733643
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 311,
+                    "name": "mixamorig:RightToeBase"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 314,
+                            "parent": 312,
+                            "position": [
+                                -3.372542412320782e-16,
+                                9.278120994567871,
+                                -4.289019938090877e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                -0.011608066968619823,
+                                0.0,
+                                0.9999326467514038
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 313,
+                    "name": "mixamorig:RightToe_End"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 316,
+                            "parent": 196,
+                            "position": [
+                                8.207788467407227,
+                                -6.77180290222168,
+                                1.5122138261795044
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.001784378895536065,
+                                -0.18493598699569702,
+                                0.9827478528022766,
+                                0.0014736874727532268
+                            ],
+                            "scale": [
+                                1.0000001192092896,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 315,
+                    "name": "mixamorig:LeftUpLeg"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 318,
+                            "parent": 316,
+                            "position": [
+                                6.4682672551441556e-09,
+                                44.37139129638672,
+                                -3.750620894047395e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.4002227187156677,
+                                0.002542816800996661,
+                                0.0009610592969693244,
+                                0.9164139032363892
+                            ],
+                            "scale": [
+                                0.9999999403953552,
+                                1.0,
+                                0.9999999403953552
+                            ]
+                        }
+                    ],
+                    "id": 317,
+                    "name": "mixamorig:LeftLeg"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 320,
+                            "parent": 318,
+                            "position": [
+                                -5.547779569070599e-09,
+                                44.52784729003906,
+                                2.2030601897881502e-14
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.5976439118385315,
+                                -0.0006447875057347119,
+                                0.0015868504997342825,
+                                0.8017597794532776
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 319,
+                    "name": "mixamorig:LeftFoot"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 322,
+                            "parent": 320,
+                            "position": [
+                                2.379745841574535e-15,
+                                13.816864967346191,
+                                3.431525286905039e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                -0.38071131706237793,
+                                4.107636542016735e-08,
+                                -9.976868398098304e-08,
+                                0.9246939420700073
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 321,
+                    "name": "mixamorig:LeftToeBase"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 324,
+                            "parent": 322,
+                            "position": [
+                                -4.354517634240043e-17,
+                                9.27813720703125,
+                                1.3126545816565145e-15
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.011869166046380997,
+                                0.0,
+                                0.9999295473098755
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        }
+                    ],
+                    "id": 323,
+                    "name": "mixamorig:LeftToe_End"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 326,
+                            "parent": 194,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "material": [
+                                66,
+                                101,
+                                116,
+                                97,
+                                95,
+                                72,
+                                105,
+                                103,
+                                104,
+                                76,
+                                105,
+                                109,
+                                98,
+                                115,
+                                71,
+                                101,
+                                111,
+                                83,
+                                71,
+                                51
+                            ],
+                            "mesh": [
+                                66,
+                                101,
+                                116,
+                                97,
+                                95,
+                                83,
+                                117,
+                                114,
+                                102,
+                                97,
+                                99,
+                                101,
+                                95,
+                                48
+                            ],
+                            "root bone": 194
+                        }
+                    ],
+                    "id": 325,
+                    "name": "Beta_Surface"
+                },
+                {
+                    "components": [
+                        {
+                            "id": 328,
+                            "parent": 194,
+                            "position": [
+                                0.0,
+                                0.0,
+                                -0.0
+                            ],
+                            "root parent": 99999999999,
+                            "rotation": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                1.0
+                            ],
+                            "scale": [
+                                1.0,
+                                1.0,
+                                1.0
+                            ]
+                        },
+                        {
+                            "material": [
+                                66,
+                                101,
+                                116,
+                                97,
+                                95,
+                                74,
+                                111,
+                                105,
+                                110,
+                                116,
+                                115,
+                                95,
+                                77,
+                                65,
+                                84,
+                                49
+                            ],
+                            "mesh": [
+                                66,
+                                101,
+                                116,
+                                97,
+                                95,
+                                74,
+                                111,
+                                105,
+                                110,
+                                116,
+                                115,
+                                95,
+                                49
+                            ],
+                            "root bone": 194
+                        }
+                    ],
+                    "id": 327,
+                    "name": "Beta_Joints"
+                }
+            ]
+        }
     ]
-]
+}

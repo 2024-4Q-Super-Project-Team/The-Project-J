@@ -111,6 +111,11 @@ void EditorUI::SetFocusWindow(Display::IWindow* _pWindow)
     }
 }
 
+json EditorUI::Serialize()
+{
+    return json();
+}
+
 
 void EditorUI::AddWidget(Editor::Widget* _pWidget)
 {

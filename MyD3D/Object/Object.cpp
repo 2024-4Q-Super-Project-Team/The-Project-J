@@ -202,3 +202,22 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
     }
 }
 
+json Object::Serialize()
+{
+    json ret;
+    ret["id"] = mId;
+    ret["name"] = mName.c_str();
+
+    json cmps = json::array();
+    for (auto& cmpArr : mComponentArray)
+    {
+        for (auto& cmp : cmpArr)
+        {
+            cmps.push_back(cmp->Serialize());
+        }
+    }
+    ret["components"] = cmps;
+
+    return ret;
+}
+

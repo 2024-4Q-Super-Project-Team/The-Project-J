@@ -68,3 +68,6 @@ using json = nlohmann::json;
 #include "Graphics/GraphicsFramework.h"
 
 #include "Component/ComponentFactory/ComponentFactory.h"
+
+
+#define NULLID 99999999999

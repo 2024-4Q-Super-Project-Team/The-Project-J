@@ -161,3 +161,8 @@ void EditorManager::CreateGameEditor(Editor::TabBar* _pSrcTabBar)
     }
 }
 
+json EditorManager::Serialize()
+{
+    return json();
+}
+

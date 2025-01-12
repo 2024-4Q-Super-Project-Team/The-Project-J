@@ -67,9 +67,9 @@ public:
     // 에디터를 출력할 윈도우
     void SetFocusWindow(Display::IWindow* _pWindow);
     inline Display::IWindow* GetWindow()    { return mWindow; }
+
 public:
-    virtual json Serialize() override { return json(); }
-    virtual json Deserialize() override { return json(); }
+    virtual json Serialize() override;
 private:
     std::vector<Editor::Widget*> mWidgetContainer;
 private:

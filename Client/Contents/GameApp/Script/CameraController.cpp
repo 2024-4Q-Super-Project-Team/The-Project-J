@@ -68,3 +68,8 @@ void CameraController::Update()
 	}
 	mTr->rotation = DirectX::XMQuaternionRotationRollPitchYaw(CurrentAngles[Pitch], CurrentAngles[Yaw], CurrentAngles[Roll]);
 }
+
+json CameraController::Serialize()
+{
+	return json();
+}

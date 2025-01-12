@@ -20,9 +20,7 @@ public:
     virtual void Render() override {};
     virtual void Draw(Camera* _camera) override {};
     virtual void PostRender() override {};
-public:
-    virtual json Serialize() override;
-    virtual json Deserialize() override;
+
 public:
    // void SetMesh()
 private:

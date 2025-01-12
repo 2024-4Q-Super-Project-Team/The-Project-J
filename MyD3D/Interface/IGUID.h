@@ -1,4 +1,5 @@
 #pragma once
+
 namespace Engine
 {
 	class IGUID
@@ -8,6 +9,4 @@ namespace Engine
 		IGUID() :mId(mIdSize++) {}
 		unsigned int mId;
 	};
-
-	int IGUID::mIdSize = 0;
 }

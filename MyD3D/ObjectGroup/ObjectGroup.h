@@ -43,6 +43,7 @@ public:
 	inline World*	GetWorld() const { return mOwnerWorld; }
 	inline INT		GetOrder() const { return mGroupOrder; }
 
+	json Serialize();
 public:
 
 private:

@@ -205,9 +205,10 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
 json SkinnedMeshRenderer::Serialize()
 {
     json ret;
-    ret += {"mesh", mMesh->GetName()};
-    ret += {"material", mMateiral->mMaterialResource->GetName()};
-    return json();
+    ret["mesh"] = mMesh->GetName();
+    ret["material"] = mMateiral->mMaterialResource->GetName();
+    ret["root bone"] = mRootBone ? mRootBone->mId : NULLID;
+    return ret;
 }
 
 json SkinnedMeshRenderer::Deserialize()

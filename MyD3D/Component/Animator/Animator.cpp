@@ -70,6 +70,15 @@ void Animator::SetAnimation(std::shared_ptr<AnimationResource> _pAnim)
     mActiveAnimation = _pAnim;
 }
 
+json Animator::Serialize()
+{
+    json ret;
+
+    ret["active animation"] = mActiveAnimation->GetName();
+
+    return ret;
+}
+
 void Animator::CalculateAnimationTramsform(Transform* _pBone)
 {
     auto pChannel = mActiveAnimation->GetChannel(_pBone->gameObject->GetName());
@@ -149,16 +158,3 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
     return Scaling;
 }
 
-json Animator::Serialize()
-{
-    json ret;
-    ret += {"anim", mActiveAnimation->GetName()};
-    ret += {"isPlay", isPlay};
-    ret += {"duration", mDuration};
-    return ret;
-}
-
-json Animator::Deserialize()
-{
-    return json();
-}

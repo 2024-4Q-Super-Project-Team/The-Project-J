@@ -37,6 +37,8 @@ using namespace DirectX::SimpleMath;
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+//Imguizmo
+#include "..\MyD3D\ThirdParty\imguizmo\ImGuizmo.h"
 //Assimp
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>

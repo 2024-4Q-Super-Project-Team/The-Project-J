@@ -16,15 +16,22 @@ namespace Editor
     }
     void Inspector::Render()
     {
-         if (mFocusObject)
+        // TODO : 웨 안들어옴?
+        if (mFocusObject)
         {
             mFocusObject->EditorRendering();
             ImGui::Separator();
 
+            // ImGuizmo
+            ImGuiIO& io = ImGui::GetIO();
+            ImGuizmo::SetOrthographic(false); // !isPerspective
+            ImGuizmo::SetDrawlist(ImGui::GetCurrentWindow()->DrawList);
+            ImGuizmo::BeginFrame();
+
             //컴포넌트 추가 버튼
             std::string cmpBtnName = "AddComponent##" + std::to_string(reinterpret_cast<uintptr_t>(mFocusObject));
             bool buttonClicked = ImGui::Button(cmpBtnName.c_str());
-            if (buttonClicked) 
+            if (buttonClicked)
                 mbComponentChoosing = true;
             if (mbComponentChoosing)
                 ShowComponentList();

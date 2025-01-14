@@ -73,3 +73,7 @@ json CameraController::Serialize()
 {
 	return json();
 }
+
+void CameraController::Deserialize(json& j)
+{
+}

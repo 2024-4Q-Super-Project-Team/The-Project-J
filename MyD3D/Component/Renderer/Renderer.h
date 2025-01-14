@@ -31,7 +31,7 @@ public:
     virtual Material* GetMaterial() = 0;
 public:
     virtual json Serialize() = 0;
-    virtual json Deserialize() = 0;
+    virtual void Deserialize(json& j) = 0;
 public:
     virtual void DrawMesh(Camera* _camera) = 0;
     virtual void DrawShadow(Light* _pLight) = 0;

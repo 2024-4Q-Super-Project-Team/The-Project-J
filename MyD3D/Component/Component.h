@@ -59,7 +59,8 @@ public:
 
 public:
 	inline eComponentType	GetType()				{ return mType; }
-	inline void				SetActive(bool _active) { isActive = _active; }
+	inline void				SetActive(bool _active) { isActive = _active; 
+														if (!mIsAwake && _active) { mIsAwake = true; Start(); }}
 	inline bool				IsActive()				{ return isActive; }
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) {};
@@ -70,13 +71,15 @@ public:
 	}
 
 	virtual json Serialize() = 0;
+	virtual void Deserialize(json& j) = 0;
 public:
 	Object* const	gameObject;
 protected:
 	eComponentType	mType;
-	bool			isActive;
+	bool			isActive; 
 private:
-	//std::vector< asd > vec
+	bool			mIsAwake = false; //깨어났는지를 나타냅니다. Start함수 호출 여부와 같습니다. 
+
 	std::vector<Serial*> mSerials;
 public:
     virtual void EditorRendering();

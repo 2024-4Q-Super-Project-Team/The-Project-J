@@ -117,6 +117,7 @@ void Light::PostRender()
 {
 }
 
+
 void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
 {
 }
@@ -126,6 +127,8 @@ json Light::Serialize()
     json ret;
 
     json prop = json::object();
+    ret["id"] = mId;
+    ret["name"] = "Light";
     prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
     prop["radiance"] = { mLightProp.Radiance.r, mLightProp.Radiance.g, mLightProp.Radiance.b, mLightProp.Radiance.a };
@@ -137,6 +140,10 @@ json Light::Serialize()
     ret["property"] = prop;
 
     return ret;
+}
+
+void Light::Deserialize( json& j)
+{
 }
 
 void Light::EditorRendering()

@@ -49,6 +49,7 @@ public:
     inline const auto* GetViewport() { return mViewport; }
 
     virtual json Serialize() override;
+    virtual void Deserialize(json& j);
 private:
     DrawQueue  mDrawQueue[RENDERING_MODE_COUNT];
     LightQueue mSceneLights;

@@ -146,6 +146,17 @@ void MonoBehaviour::Destroy(Object* _object)
 	_object->SetDestroy();
 }
 
+json MonoBehaviour::Serialize()
+{
+	json ret;
+	ret["initial active"] = isActive;
+	return ret;
+}
+
+void MonoBehaviour::Deserialize( json& j)
+{
+}
+
 void MonoBehaviour::EditorRendering()
 {
 

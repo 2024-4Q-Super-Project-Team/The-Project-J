@@ -189,7 +189,7 @@ void WorldManager::LoadWorld(std::wstring worldName)
 	json j;
 	file >> j;
 
-	//world->Deserialize(j);
+	world->Deserialize(j);
 
 	file.close();
 }

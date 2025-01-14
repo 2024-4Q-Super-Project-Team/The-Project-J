@@ -116,6 +116,10 @@ json EditorUI::Serialize()
     return json();
 }
 
+void EditorUI::Deserialize( json& j)
+{
+}
+
 
 void EditorUI::AddWidget(Editor::Widget* _pWidget)
 {

@@ -133,6 +133,7 @@ json Transform::Serialize()
 {
     json ret;
     ret["id"] = mId;
+    ret["name"] = "Transform";
  
     ret["position"] = { position.x, position.y, position.z };
     ret["rotation"] = { rotation.x, rotation.y, rotation.z, rotation.w };
@@ -146,6 +147,36 @@ json Transform::Serialize()
     //오브젝트 그룹 - 오브젝트 - 컴포넌트종류  이렇게 파일 (1) -> 먼저 역직렬화
     //컴포넌트 목록 {id, 데이터} 이렇게 파일 (2) -> 나중에 역직렬화. id로 컴포넌트 찾아서 데이터 넣어줌.
     return ret;
+}
+
+void Transform::Deserialize(json& j)
+{
+    mId = j["id"].get<unsigned int>();
+
+    position.x = j["position"][0].get<float>();
+    position.y = j["position"][1].get<float>();
+    position.z = j["position"][2].get<float>();
+
+    rotation.x = j["rotation"][0].get<float>();
+    rotation.y = j["rotation"][1].get<float>();
+    rotation.z = j["rotation"][2].get<float>();
+    rotation.w = j["rotation"][2].get<float>();
+
+    scale.x = j["scale"][0].get<float>();
+    scale.y = j["scale"][1].get<float>();
+    scale.z = j["scale"][2].get<float>();
+
+    unsigned int rootId = j["root parent"].get<unsigned int>();
+    if (rootId == NULLID)
+        mRootParent = nullptr;
+    else;
+        //TODO: id로 Transform 찾아서 넣는다. 
+
+    unsigned int parentId = j["parent"].get<unsigned int>();
+    if (parentId == NULLID)
+        mRootParent = nullptr;
+    else;
+        //TODO: id로 Transform 찾아서 넣는다. 
 }
 
 void Transform::EditorRendering()

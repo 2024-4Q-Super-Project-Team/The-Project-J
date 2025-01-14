@@ -53,8 +53,13 @@ public:
     template <class T>
     T* CloneComponent(T* _pSrc);
 
+    //에디터 전용 컴포넌트 추가 함수입니다. 
+    template <class T, typename... Args>
+    T* EditorAddComponent(Args&&... args);
+
 public:
   	json Serialize();
+    void Deserialize(json& j);
 public:
     Transform* const transform;
 public:
@@ -135,4 +140,20 @@ inline T* Object::CloneComponent(T* _pSrc)
 {
 
     return nullptr;
+}
+
+template <class T, typename... Args>
+T* Object::EditorAddComponent(Args&&... args)
+{
+    static_assert(std::is_base_of<Component, T>::value, "EditorAddComponent_Fail");
+    T* component = new T(this, std::forward<Args>(args)...);
+    eComponentType type = component->GetType();
+    int index = static_cast<UINT>(type);
+    if (type == eComponentType::SCRIPT)
+        component->SetActive(false);
+    else
+        component->SetActive(true);
+    mComponentArray[index].push_back(component);
+    
+    return component;
 }

@@ -117,3 +117,15 @@ json ObjectGroup::Serialize()
     ret["objects"] = objs;
     return ret;
 }
+
+void ObjectGroup::Deserialize(json& j)
+{
+    mId = j["id"].get<unsigned int>();
+    mName = j["name"].get<std::wstring>();
+
+    for (auto& objectJson : j["objects"])
+    {
+        Object* object = CreateObject(L"");
+        object->Deserialize(objectJson);
+    }
+}

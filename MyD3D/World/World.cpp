@@ -154,6 +154,16 @@ json World::Serialize()
     return ret;
 }
 
+void World::Deserialize(json& j)
+{
+    mName = j["name"].get<std::wstring>();
+    for (auto& groupJson : j["object groups"])
+    {
+        ObjectGroup* group = CreateObjectGroup(L"");
+        group->Deserialize(groupJson);
+    }
+}
+
 void World::UpdateGroup()
 {
     // 昏力 棺 积己 贸府

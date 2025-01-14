@@ -166,3 +166,7 @@ json EditorManager::Serialize()
     return json();
 }
 
+void EditorManager::Deserialize( json& j)
+{
+}
+

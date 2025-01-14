@@ -63,6 +63,7 @@ public:
     void SetParent(Transform* _parent);
 
     virtual json Serialize();
+    virtual void Deserialize(json& j);
 public:
     // Position to Vector3
     Vector3			position;

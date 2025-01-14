@@ -127,3 +127,7 @@ json ModelSpawner::Serialize()
 {
     return json();
 }
+
+void ModelSpawner::Deserialize(json& j)
+{
+}

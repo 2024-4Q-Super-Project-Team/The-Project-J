@@ -12,6 +12,7 @@ public:
 
 public:
     virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
 public:
 
 	float mMoveSpeed;

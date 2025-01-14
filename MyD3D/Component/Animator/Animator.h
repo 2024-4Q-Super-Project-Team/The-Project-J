@@ -27,6 +27,7 @@ public:
     void SetAnimation(std::shared_ptr<AnimationResource> _pAnim);
 
     virtual json Serialize() override;
+    virtual void Deserialize(json& j);
 private:
     void        CalculateAnimationTramsform(Transform* _pBone);
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);

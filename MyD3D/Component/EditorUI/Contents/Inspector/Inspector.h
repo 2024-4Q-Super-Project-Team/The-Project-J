@@ -20,5 +20,6 @@ namespace Editor
     private:
         Object* mFocusObject;
         bool mbComponentChoosing = false;
+
     };
 }

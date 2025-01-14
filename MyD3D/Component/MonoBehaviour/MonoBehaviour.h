@@ -13,16 +13,16 @@ public:
     explicit MonoBehaviour(Object* _owner);
     virtual ~MonoBehaviour() = default;
 public:
-    virtual void Start() override {};
-    virtual void Tick() override {};
-    virtual void FixedUpdate() override {};
-    virtual void PreUpdate() override {};
-    virtual void Update() override {};
-    virtual void PostUpdate() override {};
-    virtual void PreRender() override {};
-    virtual void Render() override {};
-    virtual void Draw(Camera* _camera) override {};
-    virtual void PostRender() override {};
+    virtual void Start() override {}
+    virtual void Tick() override {}
+    virtual void FixedUpdate() override {}
+    virtual void PreUpdate() override {}
+    virtual void Update() override {}
+    virtual void PostUpdate() override {}
+    virtual void PreRender() override {}
+    virtual void Render() override {}
+    virtual void Draw(Camera* _camera) override {}
+    virtual void PostRender() override {}
 
 protected: // MonoBehaviour메소드==================
 	// ===========================================
@@ -43,6 +43,12 @@ protected: // MonoBehaviour메소드==================
 	Object* Instantiate(Prefab* _pInstant, Vector3 _position);
     Object* CreateObject(std::wstring_view _name, std::wstring_view _tag);
 	void    Destroy(Object* _object);
+
+	void	SetInitialActive(bool _active) { mInitialActive = _active; }
+	//직렬화
+public:
+	virtual json Serialize() override;
+	virtual void Deserialize(json& j) override;
 	// ===========================================
 	// 
 	// CallBack함수===============================
@@ -64,7 +70,7 @@ public:
 	virtual void _CALLBACK OnAnimationStart() {};
 	virtual void _CALLBACK OnAnimationEnd() {};
 protected:
-
+	bool	mInitialActive = true; //게임을 시작할때 활성화할 것인지를 나타냅니다.
 public:
 	virtual void EditorRendering() override;
 

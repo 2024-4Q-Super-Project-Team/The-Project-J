@@ -54,13 +54,13 @@ namespace Editor
         ImGui::OpenPopup("Component List");
         if (ImGui::BeginPopup("Component List"))
         {
-            std::vector<std::string>& names = ComponentFactory::GetComopnentNames();
+            std::vector<std::string_view>& names = ComponentFactory::GetComopnentNames();
 
-            for (const std::string& name : names)
+            for (const std::string_view& name : names)
             {
-                if (ImGui::Selectable(name.c_str()))
+                if (ImGui::Selectable(((std::string)name).c_str()))
                 {
-                    CREATE_COMPONENT(name, mFocusObject);
+                    CREATE_EDITOR_COMPONENT(name, mFocusObject);
                     mbComponentChoosing = false;
                 }
             }

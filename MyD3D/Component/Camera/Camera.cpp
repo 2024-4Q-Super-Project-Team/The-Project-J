@@ -124,6 +124,8 @@ void Camera::UpdateCamera()
 json Camera::Serialize()
 {
     json ret;
+    ret["id"] = mId;
+    ret["name"] = "Camera";
 
     ret["fov angle"] = mFovAngle.GetAngle();
     ret["near"] = mProjectionNear;
@@ -133,6 +135,10 @@ json Camera::Serialize()
     ret["ortho height"] = mOrthoHeight;
 
     return ret;
+}
+
+void Camera::Deserialize(json& j)
+{
 }
 
 void Camera::PushDrawList(RendererComponent* _renderComponent)

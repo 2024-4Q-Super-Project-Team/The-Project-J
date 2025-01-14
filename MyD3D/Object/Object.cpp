@@ -213,11 +213,24 @@ json Object::Serialize()
     {
         for (auto& cmp : cmpArr)
         {
-            cmps.push_back(cmp->Serialize());
+            cmps.push_back(cmp->mId); //오브젝트는 컴포넌트의 ID만 저장해둡니다. 
         }
     }
     ret["components"] = cmps;
 
     return ret;
+}
+
+void Object::Deserialize(json& j)
+{
+    mId = j["id"].get<unsigned int>();
+    mName = j["name"].get<std::wstring>();
+
+    for (auto& componentJson : j["components"])
+    {
+        Component* component = static_cast<Component*>(CREATE_COMPONENT(componentJson["name"].get<std::string>(), this));
+        component->mId = componentJson["id"];
+        //컴포넌트의 Deserialize는 별도로 해줍니다. 
+    }
 }
 

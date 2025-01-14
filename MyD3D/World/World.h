@@ -53,6 +53,7 @@ public:
     inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
 	//Á÷·ÄÈ­
 	json Serialize();
+	void Deserialize(json& j);
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }

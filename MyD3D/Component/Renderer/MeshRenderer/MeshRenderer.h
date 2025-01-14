@@ -34,7 +34,7 @@ public:
     virtual Material* GetMaterial() override;
 public:
     virtual json Serialize() override;
-    virtual json Deserialize() override;
+    virtual void Deserialize(json& j) override;
 private:
     std::shared_ptr<MeshResource>   mMesh;          // 스킨드 메쉬
     Material* mMateiral;      // 사용할 머티리얼

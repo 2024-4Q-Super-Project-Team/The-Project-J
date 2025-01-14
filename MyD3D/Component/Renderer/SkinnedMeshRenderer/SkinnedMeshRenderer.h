@@ -39,7 +39,7 @@ private:
     void CalculateBoneTransform();
 public:
     virtual json Serialize() override;
-    virtual json Deserialize() override;
+    virtual void Deserialize(json& j) override;
 private:
     // 본이나 메쉬 등이 수정되었는가
     bool isDirty = true;

@@ -17,6 +17,13 @@ void CameraController::Start()
 	CurrentAngles[Pitch] = 0;
 	CurrentAngles[Roll] = 0;
 	//CurrentAngles[Roll] = Degree(180);
+
+	auto pSkyBox = ResourceManager::AddResource<SkyBox>(L"Default_SkyBox");
+	pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
+	pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
+	pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
+	pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
+	mCamera->SetSkyBox(pSkyBox);
 }
 
 void CameraController::Update()

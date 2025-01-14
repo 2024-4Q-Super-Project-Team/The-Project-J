@@ -13,8 +13,8 @@ EditorManager::~EditorManager()
 void EditorManager::Start()
 {
     mEditor = gameObject->AddComponent<EditorUI>();
-    mGameViewport = GameManager::GetViewportManager()->GetViewportSceneFromWindowName(WINDOW_TITLE);
-    mEditorViewport = GameManager::GetViewportManager()->GetViewportSceneFromWindowName(EDITOR_TITLE);
+    mGameViewport = ViewportManager::GetViewportSceneFromWindowName(WINDOW_TITLE);
+    mEditorViewport = ViewportManager::GetViewportSceneFromWindowName(EDITOR_TITLE);
     if (mEditorViewport)
         mEditor->SetFocusWindow(mEditorViewport->GetIWindow());
 

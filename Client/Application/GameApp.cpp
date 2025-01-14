@@ -26,7 +26,7 @@ BOOL GameApp::OnPostInitialize()
             winDecs.WndStyle = WS_OVERLAPPEDWINDOW;
             winDecs.WndClass.lpszClassName = WINDOW_TITLE;
             winDecs.WndClass.lpfnWndProc = WinProc;
-            mMainScene = GameManager::GetViewportManager()->CreateViewportScene(&winDecs);
+            mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
         WorldManager* wrdMng = mMainScene->GetWorldManager();
@@ -47,7 +47,7 @@ BOOL GameApp::OnPostInitialize()
                 winDecs.WndClass.lpszClassName = EDITOR_TITLE;
                 winDecs.WndClass.lpfnWndProc = EditorWinProc;
                 winDecs.WndParent = mMainScene->GetIWindow();
-                mEditorScene = GameManager::GetViewportManager()->CreateViewportScene(&winDecs);
+                mEditorScene = ViewportManager::CreateViewportScene(&winDecs);
             }
             WorldManager* wrdMng = mEditorScene->GetWorldManager();
             if (nullptr == wrdMng) return FALSE;
@@ -68,6 +68,22 @@ void GameApp::OnPreFinalization()
 
 void GameApp::OnPostFinalization()
 {
+}
+
+void _CALLBACK GameApp::OnWindowMessage(ViewportScene* _pViewport, UINT _msg, WPARAM _wParam, LPARAM _lParam)
+{
+    switch (_msg)
+    {
+    case WM_SIZE:
+        EditorRePosition();
+        break;
+    case WM_MOVE:
+        EditorRePosition();
+        break;
+    default:
+        break;
+    }
+    return void _CALLBACK();
 }
 
 void GameApp::EditorRePosition()

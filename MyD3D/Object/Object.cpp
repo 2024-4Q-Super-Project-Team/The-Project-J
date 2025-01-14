@@ -3,19 +3,19 @@
 #include "ObjectGroup/ObjectGroup.h"
 
 Object::Object(std::wstring_view _name, std::wstring_view _tag)
-	: Engine::Entity(_name, _tag)
+    : Engine::Entity(_name, _tag)
     , transform(new Transform(this))
-	, mOwnerGroup(nullptr)
+    , mOwnerGroup(nullptr)
 {
     mComponentArray[static_cast<UINT>(eComponentType::Transform)].push_back(transform);
 }
 
 Object::~Object()
 {
-	for (auto& compArr : mComponentArray)
-	{
+    for (auto& compArr : mComponentArray)
+    {
         SAFE_DELETE_VECTOR(compArr);
-	}
+    }
 }
 
 Object::Object(const Object& _other)
@@ -28,14 +28,14 @@ Object::Object(const Object& _other)
 
 void Object::Tick()
 {
-    for(int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
-	{
-		for (auto& comp : mComponentArray[i])
-		{
-			if (comp->IsActive())
-				comp->Tick();
-		}
-	}
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
+    {
+        for (auto& comp : mComponentArray[i])
+        {
+            if (comp->IsActive())
+                comp->Tick();
+        }
+    }
 }
 
 void Object::FixedUpdate()
@@ -96,7 +96,7 @@ void Object::PreRender()
                 comp->PreRender();
         }
     }
-    if(!transform->GetParent())
+    if (!transform->GetParent())
         transform->UpdateMatrix();
 }
 
@@ -142,17 +142,17 @@ void _CALLBACK Object::OnEnable()
     {
         child->gameObject->SetActive(true);
     }
-	for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
-	{
-		if (comp->IsActive())
-			static_cast<MonoBehaviour*>(comp)->OnEnable();
-	}
-	for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-	{
-		if (comp->IsActive())
+    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
+    {
+        if (comp->IsActive())
             static_cast<MonoBehaviour*>(comp)->OnEnable();
-	}
-	return void _CALLBACK();
+    }
+    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
+    {
+        if (comp->IsActive())
+            static_cast<MonoBehaviour*>(comp)->OnEnable();
+    }
+    return void _CALLBACK();
 }
 
 void _CALLBACK Object::OnDisable()
@@ -161,17 +161,17 @@ void _CALLBACK Object::OnDisable()
     {
         child->gameObject->SetActive(false);
     }
-	for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
-	{
-		if (comp->IsActive())
+    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
+    {
+        if (comp->IsActive())
             static_cast<MonoBehaviour*>(comp)->OnDisable();
-	}
-	for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-	{
-		if (comp->IsActive())
+    }
+    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
+    {
+        if (comp->IsActive())
             static_cast<MonoBehaviour*>(comp)->OnDisable();
-	}
-	return void _CALLBACK();
+    }
+    return void _CALLBACK();
 }
 
 void _CALLBACK Object::OnDestroy()
@@ -188,7 +188,7 @@ void _CALLBACK Object::OnDestroy()
     {
         static_cast<MonoBehaviour*>(comp)->OnDestroy();
     }
-	return void _CALLBACK();
+    return void _CALLBACK();
 }
 
 void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _objTable)
@@ -206,14 +206,17 @@ json Object::Serialize()
 {
     json ret;
     ret["id"] = mId;
-    ret["name"] = mName.c_str();
+    ret["name"] = Helper::ToString(mName);
 
     json cmps = json::array();
     for (auto& cmpArr : mComponentArray)
     {
         for (auto& cmp : cmpArr)
         {
-            cmps.push_back(cmp->mId); //오브젝트는 컴포넌트의 ID만 저장해둡니다. 
+            json j;
+            j["id"] = cmp->mId;
+            j["type"] = typeid(*cmp).name() + sizeof("Class");
+            cmps.push_back(j); //오브젝트는 컴포넌트의 ID와 타입만 저장해둡니다. 
         }
     }
     ret["components"] = cmps;
@@ -221,16 +224,33 @@ json Object::Serialize()
     return ret;
 }
 
+json Object::SerializeComponents()
+{
+    json ret;
+
+    for (auto& cmpArr : mComponentArray)
+    {
+        for (auto& cmp : cmpArr)
+        {
+            ret["id"] = cmp->mId;
+            ret["data"] = cmp->Serialize();
+        }
+    }
+    return ret;
+}
+
 void Object::Deserialize(json& j)
 {
     mId = j["id"].get<unsigned int>();
-    mName = j["name"].get<std::wstring>();
+    std::string str = j["name"].get<std::string>();
+    mName = Helper::ToWString(str);
 
     for (auto& componentJson : j["components"])
     {
-        Component* component = static_cast<Component*>(CREATE_COMPONENT(componentJson["name"].get<std::string>(), this));
-        component->mId = componentJson["id"];
+        std::string name = componentJson["type"].get<std::string>();
+        Component* component = static_cast<Component*>(CREATE_COMPONENT(name, this));
+        if (component)
+            component->mId = componentJson["id"].get<unsigned int>();
         //컴포넌트의 Deserialize는 별도로 해줍니다. 
     }
 }
-

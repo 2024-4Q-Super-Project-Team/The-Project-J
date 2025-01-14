@@ -11,7 +11,7 @@
 
 #define SAFE_RELEASE(ptr)           if( (ptr) ) { (ptr)->Release(); } (ptr) = nullptr;
 #define SAFE_RELEASE_ARRAY(Arr)     for( auto& ptr : Arr ) { if( (ptr) ) { (ptr)->Release(); (ptr) = nullptr; } }
-#define SAFE_RELEASE_MAP(Arr)       for(  auto& [key, ptr] : Map ) { if( (ptr) ) { (ptr)->Release(); (ptr) = nullptr; } } Map.clear()
+#define SAFE_RELEASE_MAP(Map)       for(  auto& [key, ptr] : Map ) { if( (ptr) ) { (ptr)->Release(); (ptr) = nullptr; } } Map.clear()
 #define SAFE_DELETE(ptr)            if( (ptr) ) { delete (ptr); } (ptr) = nullptr;
 #define SAFE_DELETE_ARRAY(Arr)      for( auto& ptr : Arr ) { if( (ptr) ) { delete (ptr); (ptr) = nullptr; } }
 #define SAFE_DELETE_VECTOR(Vec)     for( auto& ptr : Vec ) { if(!Vec.empty()) { if( (ptr) ) { delete (ptr); (ptr) = nullptr; } } } Vec.clear()

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "World.h"
-#include "World/SkyBox/SkyBox.h"
 #include "World/Light/LightSystem.h"
 #include "Manager/GameManager.h"
 #include "Physics/PhysicsManager.h"
@@ -12,7 +11,6 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
     , mLightSystem(new LightSystem)
-    , mSkyBox(new SkyBox(this))
 {
     if (!isEmpty)
     {
@@ -27,7 +25,6 @@ World::~World()
 {
     SAFE_DELETE_VECTOR(mObjectGroups);
     SAFE_DELETE(mLightSystem);
-    SAFE_DELETE(mSkyBox);
 }
 
 void World::Tick()
@@ -80,8 +77,6 @@ void World::Draw(Camera* _camera)
     mLightSystem->Bind();
     // 카메라가 담고 있는 그리기 작업목록을 수행
     _camera->ExcuteDrawList();
-    // 스카이박스 렌더
-    mSkyBox->Draw(_camera);
 }
 
 void World::PostRender()

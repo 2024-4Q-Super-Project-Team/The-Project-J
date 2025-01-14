@@ -57,13 +57,10 @@ public:
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }
-    inline auto GetSkyBox() const { return mSkyBox; }
-
 protected:
     ViewportScene* const mOwnerScene;
 private:
     std::vector<ObjectGroup*> mObjectGroups;
     LightSystem* mLightSystem;
-    SkyBox* mSkyBox;
 };
 

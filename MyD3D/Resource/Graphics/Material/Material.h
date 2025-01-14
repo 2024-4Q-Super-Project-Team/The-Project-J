@@ -17,7 +17,7 @@ public: _READ_ONLY
 public:
     void SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath);
     void SetMaterialProperty(MaterialProperty* _pProp);
-    void SetBlendingMode(eBlendingMode _type);
+    void SetBlendingMode(eBlendType _type);
     const std::wstring& GetMaterialMapPath(eMaterialMapType _mapType);
 public:
     // 머티리얼이 사용할 각 맵 텍스쳐 경로
@@ -25,7 +25,7 @@ public:
     // 머티리얼 고유 속성
     MaterialProperty mMaterialProperty;
     // 블렌드 타입
-    eBlendingMode mBlendMode = eBlendingMode::OPAQUE_BLEND;
+    eBlendType mBlendMode = eBlendType::OPAQUE_BLEND;
     // 기본 머티리얼
     static std::shared_ptr<MaterialResource> DefaultMaterial;
 };

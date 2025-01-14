@@ -16,14 +16,20 @@ D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
 {
 }
 
-void D3DGraphicsTexture2D::Release()
+D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
 {
     SAFE_RELEASE(mTex);
 }
 
+void D3DGraphicsTexture2D::Release()
+{
+    SAFE_RELEASE(mTex);
+    delete this;
+}
+
 HRESULT D3DGraphicsTexture2D::Create()
 {
-    D3DGraphicsDevice::GetDevice()->CreateTexture2D(mDesc, nullptr, &mTex);
+    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateTexture2D(mDesc, nullptr, &mTex), "HRESULT Failed To CreateTexture2D()");
     return S_OK;
 }
 
@@ -44,6 +50,12 @@ D3DGraphicsRTV::D3DGraphicsRTV(D3DGraphicsTexture2D* _pTex2D, const D3D11_RENDER
 {
     Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateRenderTargetView(_pTex2D->mTex, _pDesc, &mRTV), "HRESULT Failed To CreateRenderTargetView()");
 }
+
+D3DGraphicsRTV::~D3DGraphicsRTV()
+{
+    SAFE_RELEASE(mRTV);
+}
+
 void D3DGraphicsRTV::Release()
 {
     SAFE_RELEASE(mRTV);
@@ -84,6 +96,12 @@ D3DGraphicsDSV::D3DGraphicsDSV(D3DGraphicsTexture2D* _pTex2D, const D3D11_DEPTH_
 {
     Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateDepthStencilView(_pTex2D->mTex, _pDesc, &mDSV), "HRESULT Failed To CreateDepthStencilView()");
 }
+
+D3DGraphicsDSV::~D3DGraphicsDSV()
+{
+    SAFE_RELEASE(mDSV);
+}
+
 void D3DGraphicsDSV::Release()
 {
     SAFE_RELEASE(mDSV);
@@ -123,6 +141,12 @@ D3DGraphicsSRV::D3DGraphicsSRV(D3DGraphicsTexture2D* _pTex2D, const D3D11_SHADER
 {
     Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateShaderResourceView(_pTex2D->mTex, _pDesc, &mSRV), "HRESULT Failed To CreateShaderResourceView()");
 }
+
+D3DGraphicsSRV::~D3DGraphicsSRV()
+{
+    SAFE_RELEASE(mSRV);
+}
+
 void D3DGraphicsSRV::Release()
 {
     SAFE_RELEASE(mSRV);

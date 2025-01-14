@@ -49,19 +49,30 @@ enum class eVertexShaderType
 enum class ePixelShaderType
 {
     BLINN_PHONG,
-    PBR,
+    FOWARD_PBR,
+    DEFERRED_PBR,
     SKYBOX,
     SPRITE,
+    G_BUFFER,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)
 
-enum class eBlendingMode
+enum class eBlendType
 {
     OPAQUE_BLEND,
-    CUTOUT_BLEND,
     TRANSPARENT_BLEND,
-    POSTPROCESS_BLEND,
     SIZE,
 };
-#define RENDERING_MODE_COUNT static_cast<UINT>(eBlendingMode::SIZE)
+#define BLEND_TYPE_COUNT static_cast<UINT>(eBlendType::SIZE)
+
+enum class eGBufferType
+{
+    ALBEDO,
+    NORMAL,
+    MATERIAL,
+    EMESSIVE,
+    WORLD_POSITION,
+    SIZE,
+};
+#define GBUFFER_TYPE_COUNT static_cast<UINT>(eGBufferType::SIZE)

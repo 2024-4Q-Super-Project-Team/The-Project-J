@@ -31,6 +31,27 @@ struct SKY_VS_OUT
     float4 pos : SV_POSITION;
 };
 
+struct QUAD_VS_INPUT
+{
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD0;
+};
+
+struct QUAD_VS_OUTPUT
+{
+    float4 pos : SV_POSITION;
+    float2 uv : TEXCOORD;
+};
+
+struct DEFERRED_PS_OUT
+{
+    float4 albedo   : SV_Target0;
+    float4 normal   : SV_Target1;
+    float4 material : SV_Target2;
+    float4 emissive : SV_Target3;
+    float4 worldpos : SV_Target4;
+};
+
 #define PI 3.141592
 #define GAMMA 2.2
 #define Fdielectric 0.04
@@ -59,7 +80,8 @@ struct LightProperty
     float4 AmbientColor;
     float4 SpecularColor;
     int    LightType;
-    float3 Padding;
+    float  LightIntensity;
+    float2 Padding;
     
     Matrix ShadowViewMatrix;
     Matrix ShadowProjectionMatrix;
@@ -79,16 +101,25 @@ struct MaterialProperty
 // =================================================
 // Texture==========================================
 // =================================================
-Texture2D MaterialMap[MATERIAL_MAP_COUNT] : register(t0); // 머티리얼 텍스쳐 맵 0~8
+ // 머티리얼 텍스쳐 맵 0~8
+Texture2D   MaterialMap[MATERIAL_MAP_COUNT] : register(t0);
+// 디퍼드용 G-Buffer
+Texture2D   GBuffer_Albedo                  : register(t12);
+Texture2D   GBuffer_Normal                  : register(t13);
+Texture2D   GBuffer_Material                : register(t14);
+Texture2D   GBuffer_Emessive                : register(t15);
+Texture2D   GBuffer_WorldPos                : register(t16);
+// 카메라 렌더타겟
+Texture2D CameraRenderTarget                : register(t17);
 // IBL 텍스쳐 맵
-TextureCube IBLEnvironmentMap   : register(t20);
-TextureCube IBLDiffuseMap       : register(t21);
-TextureCube IBLSpecularMap      : register(t22);
-Texture2D   BRDFLookUpTable     : register(t23);
+TextureCube IBLEnvironmentMap               : register(t20);
+TextureCube IBLDiffuseMap                   : register(t21);
+TextureCube IBLSpecularMap                  : register(t22);
+Texture2D   BRDFLookUpTable                 : register(t23);
 // 그림자 텍스쳐
 #define SHADOW_SRV_OFFSET 24
-#define SHADOW_SRV_SIZE   8192.0f
-Texture2D ShadowTexture[MAX_LIGHT] : register(t24);
+#define SHADOW_SRV_SIZE   4096.0f
+Texture2D ShadowTexture[MAX_LIGHT]          : register(t24);
 
 // =================================================
 // SamplerState=====================================
@@ -102,9 +133,9 @@ SamplerComparisonState LinearComparisonSampler : register(s2);
 // =================================================
 cbuffer TransformBuffer : register(b0)
 {
-    matrix worldMatrix;
-    matrix viewMatrix;
-    matrix projectionMatrix;
+    matrix WorldMatrix;
+    matrix ViewMatrix;
+    matrix ProjectionMatrix;
 }
 
 // 매크로: 특정 플래그 확인
@@ -118,6 +149,10 @@ cbuffer MaterialBuffer : register(b1)
 cbuffer CameraBuffer : register(b2)
 {
     float4 CameraPosition;
+    matrix CameraView;
+    matrix ivCameraView;
+    matrix CameraProjection;
+    matrix ivCameraProjection;
 }
 
 cbuffer BoneMatrixBuffer : register(b3)

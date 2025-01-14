@@ -12,6 +12,9 @@ protected:
     virtual void OnPreFinalization() override final;
     virtual void OnPostFinalization() override final;
 public:
+    virtual void _CALLBACK OnWindowMessage(ViewportScene* _pViewport, UINT _msg, WPARAM _wParam, LPARAM _lParam) override final;
+
+public:
     static ViewportScene* mMainScene;
     static ViewportScene* mEditorScene;
     static void EditorRePosition();

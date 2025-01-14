@@ -1,13 +1,6 @@
-struct VS_OUT
-{
-    float4 pos : SV_POSITION;
-    float2 uv : TEXCOORD;
-};
+#include "Shared.fxh"
 
-Texture2D inputTexture : register(t0); // SRV
-SamplerState samplerState : register(s0);
-
-float4 main(VS_OUT output) : SV_TARGET
+float4 main(QUAD_VS_OUTPUT output) : SV_TARGET
 {
-    return inputTexture.Sample(samplerState, output.uv);
+    return CameraRenderTarget.Sample(LinearWrapSampler, output.uv);
 }

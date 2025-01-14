@@ -9,18 +9,21 @@
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Animator/Animator.h"
 #include "Component/EditorUI/EditorUI.h"
+#include "Component/Audio/AudioSource.h"
+
 #include "Interface/IGUID.h"
+
 class Component;
 class ObjectGroup;
 
 class Object
-	: public Engine::Entity
+    : public Engine::Entity
     , public Engine::ICycleHandler
     , public Engine::IGUID
 {
 public:
-	explicit Object(std::wstring_view _name, std::wstring_view _tag);
-	virtual ~Object();
+    explicit Object(std::wstring_view _name, std::wstring_view _tag);
+    virtual ~Object();
     Object(const Object& _other);
 public:
     virtual void Tick()			override;
@@ -33,19 +36,19 @@ public:
     virtual void Draw(Camera* _camera);
     virtual void PostRender()	override;
 private:
-	virtual void _CALLBACK OnEnable()  override;
-	virtual void _CALLBACK OnDisable() override;
-	virtual void _CALLBACK OnDestroy() override;
+    virtual void _CALLBACK OnEnable()  override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
 public:
     // 대상 오브젝트와 그 오브젝트가 속한테이블을 받아야한다.
     void Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _objTable);
 public:
     // 컴포넌트를 생성한 후 반환하는 함수. 가변인자를 통해 추가적인 인자를 전달할 수 있음.
-	template <class T, typename... Args>
-	T* AddComponent(Args&&... args);
+    template <class T, typename... Args>
+    T* AddComponent(Args&&... args);
     // 특정 타입의 컴포넌트가 있으면 그 컴포넌트 중 제일 첫 번째 컴포넌트가 반환됨. 없으면 nullptr반환
-	template <class T>
-	T* GetComponent();
+    template <class T>
+    T* GetComponent();
     // 특정 타입 컴포넌트를 배열로 전부 반환. 없으면 빈 배열이 반환됨.
     template <class T>
     std::vector<T*>& GetComponents();
@@ -58,7 +61,8 @@ public:
     T* EditorAddComponent(Args&&... args);
 
 public:
-  	json Serialize();
+    json Serialize();
+    json SerializeComponents();
     void Deserialize(json& j);
 public:
     Transform* const transform;
@@ -67,7 +71,7 @@ public:
     inline void SetOwnerGroup(ObjectGroup* _pObjectGroup) { mOwnerGroup = _pObjectGroup; }
 protected:
     ObjectGroup* mOwnerGroup;
-	std::vector<Component*> mComponentArray [ComponentSize];
+    std::vector<Component*> mComponentArray[ComponentSize];
 public:
     void EditorRendering()
     {
@@ -92,47 +96,47 @@ public:
 template <class T, typename... Args>
 T* Object::AddComponent(Args&&... args)
 {
-	static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
-	T* component = new T(this, std::forward<Args>(args)...);
+    static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
+    T* component = new T(this, std::forward<Args>(args)...);
     eComponentType type = component->GetType();
     int index = static_cast<UINT>(type);
-	mComponentArray[index].push_back(component);
-	component->Start();
-	return component;
+    mComponentArray[index].push_back(component);
+    component->Start();
+    return component;
 }
 
 template <class T>
 T* Object::GetComponent()
 {
-	for (auto& compVec : mComponentArray)
-	{
-		for (auto& comp : compVec)
-		{
-			T* temp = dynamic_cast<T*>(comp);
-			if (temp) return temp;
-		}
-	}
-	return nullptr;
+    for (auto& compVec : mComponentArray)
+    {
+        for (auto& comp : compVec)
+        {
+            T* temp = dynamic_cast<T*>(comp);
+            if (temp) return temp;
+        }
+    }
+    return nullptr;
 }
 
 template <class T>
 std::vector<T*>& Object::GetComponents()
 {
-	static std::vector<T*> result; // 반환할 결과 컨테이너
-	result.clear(); // 이전 데이터 초기화
+    static std::vector<T*> result; // 반환할 결과 컨테이너
+    result.clear(); // 이전 데이터 초기화
 
-	for (auto& compVec : mComponentArray)
-	{
-		for (auto* comp : compVec)
-		{
-			T* temp = dynamic_cast<T*>(comp); // 타입 캐스팅
-			if (temp)
-			{
-				result.push_back(temp); // 일치하는 타입이면 추가
-			}
-		}
-	}
-	return result;
+    for (auto& compVec : mComponentArray)
+    {
+        for (auto* comp : compVec)
+        {
+            T* temp = dynamic_cast<T*>(comp); // 타입 캐스팅
+            if (temp)
+            {
+                result.push_back(temp); // 일치하는 타입이면 추가
+            }
+        }
+    }
+    return result;
 }
 
 template<class T>
@@ -154,6 +158,6 @@ T* Object::EditorAddComponent(Args&&... args)
     else
         component->SetActive(true);
     mComponentArray[index].push_back(component);
-    
+
     return component;
 }

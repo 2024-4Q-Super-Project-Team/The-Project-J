@@ -8,7 +8,7 @@ namespace Display
 }
 class WorldManager;
 class GraphicsManager;
-class D3DGraphicsRenderTarget;
+class D3DHwndRenderTarget;
 
 // 게임 윈도우 하나에 대한 클래스
 // 윈도우, 렌더타겟, 월드매니저의 객체를 포함하고 있다.
@@ -17,7 +17,7 @@ class ViewportScene
 	, public Engine::ICycleHandler
 {
 public:
-	explicit ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, D3DGraphicsRenderTarget* _pRenderTarget);
+	explicit ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, D3DHwndRenderTarget* _pSwapChain);
 	virtual ~ViewportScene();
 	ViewportScene(ViewportScene&) = delete;
 	ViewportScene& operator=(const ViewportScene&) = delete;
@@ -33,12 +33,12 @@ public:
 	virtual void Render()       override;
 	virtual void PostRender()	override;
 protected:
-	WorldManager* mWorldManager;
-	Display::IWindow* mWindow;
-	D3DGraphicsRenderTarget* mRenderTarget;
+	WorldManager*			mWorldManager;
+	Display::IWindow*		mWindow;
+	D3DHwndRenderTarget*	mSwapChain;
 public:
-	inline auto* GetIWindow() { return mWindow; }
-	inline auto* GetWorldManager() { return mWorldManager; }
-	inline auto* GetRenderTarget() { return mRenderTarget; }
+	inline auto* GetIWindow()		{ return mWindow; }
+	inline auto* GetWorldManager()	{ return mWorldManager; }
+	inline auto* GetSwapChain()		{ return mSwapChain; }
 };
 

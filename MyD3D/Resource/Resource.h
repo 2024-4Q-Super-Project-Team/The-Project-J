@@ -2,18 +2,15 @@
 
 enum class eResourceType
 {
-    VertexShader,
-    PixelShader,
-    InputLayout,
-    SamplerState,
     FBXModel,
     Mesh,
     Material,
     Texture2D,
     Animation,
     Bone,
+    SkyBox,
     Prefab,
-    AudioClip,
+    AudioResource,
     Font,
     SIZE,
 };

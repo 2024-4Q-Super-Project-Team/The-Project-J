@@ -1,6 +1,6 @@
 #pragma once
 
-struct BackBufferVertex
+struct GraphicsVertex2D
 {
     float Position[4]; // NDC ÁÂÇ¥
     float TexCoord[2]; // ÅØ½ºÃ³ ÁÂÇ¥

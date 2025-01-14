@@ -7,7 +7,7 @@ class D3DGraphicsBuffer
 {
 public:
     explicit D3DGraphicsBuffer(const D3D11_BUFFER_DESC* _pBufferDesc, D3D11_SUBRESOURCE_DATA* _pBufferSubDesc);
-    virtual ~D3DGraphicsBuffer() = default;
+    virtual ~D3DGraphicsBuffer();
 public:
     virtual void Release() override;
 public:

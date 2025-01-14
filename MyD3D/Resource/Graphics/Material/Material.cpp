@@ -29,7 +29,7 @@ void MaterialResource::SetMaterialProperty(MaterialProperty* _pProp)
     }
 }
 
-void MaterialResource::SetBlendingMode(eBlendingMode _type)
+void MaterialResource::SetBlendingMode(eBlendType _type)
 {
     mBlendMode = _type;
 }
@@ -42,7 +42,7 @@ const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapTy
 Material::Material()
 {
     SetVertexShader(GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD));
-    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::PBR));
+    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR));
 }
 
 Material::Material(std::shared_ptr<MaterialResource> _pMatResource)
@@ -50,7 +50,7 @@ Material::Material(std::shared_ptr<MaterialResource> _pMatResource)
 {
     SetMaterial(_pMatResource);
     SetVertexShader(GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD));
-    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::PBR));
+    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR));
 }
 
 Material::~Material()
@@ -103,8 +103,8 @@ void Material::Bind()
 {
     GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
 
-    mVertexShader->Bind();
-    mPixelShader->Bind();
+    //mVertexShader->Bind();
+    //mPixelShader->Bind();
 
     for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
     {

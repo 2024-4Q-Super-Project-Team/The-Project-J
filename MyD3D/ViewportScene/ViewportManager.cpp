@@ -1,12 +1,16 @@
 #include "pch.h"
 #include "ViewportManager.h"
-#include "Graphics/GraphicsManager.h"
-#include "Manager/GameManager.h"
-#include "ViewportScene/ViewportScene.h"
 #include "Application/Application.h"
+#include "Manager/GameManager.h"
+#include "Graphics/GraphicsManager.h"
+#include "ViewportScene/ViewportScene.h"
 
-ViewportManager::ViewportManager()
-    : mActiveViewport(nullptr)
+
+ViewportScene*              ViewportManager::mActiveViewport = nullptr;
+Display::IDisplayDevice*    ViewportManager::mDisplayDevice = nullptr;
+std::vector<ViewportScene*> ViewportManager::mViewportScenes;
+
+BOOL ViewportManager::Initialize()
 {
     HRESULT hr = Display::CreateIDisplayDevice(
         GameManager::GetApplication()->GetHInstance()
@@ -15,15 +19,24 @@ ViewportManager::ViewportManager()
     {
         throw std::runtime_error("Hresult Failed to CreateIDisplayDevice");
     }
-}
-
-ViewportManager::~ViewportManager()
-{
-}
-
-BOOL ViewportManager::Initialize()
-{
     return TRUE;
+}
+
+void ViewportManager::Run()
+{
+    for (auto& vp : mViewportScenes)
+    {
+        mActiveViewport = vp;
+        Tick();
+        FixedUpdate();
+        PreUpdate();
+        Update();
+        PostUpdate();
+        PreRender();
+        Render();
+        PostRender();
+    }
+    mActiveViewport = nullptr;
 }
 
 void ViewportManager::Finalization()
@@ -34,106 +47,68 @@ void ViewportManager::Finalization()
 
 void ViewportManager::Tick()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->Tick();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->Tick();
 }
 
 void ViewportManager::FixedUpdate()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
+    static float counter = 0.0f;
+
+    counter += Time::GetUnScaledDeltaTime();
+    while (counter >= GameManager::GetFixedUpdateTick())
     {
-        mActiveViewport = vp;
-        vp->FixedUpdate();
+        counter -= GameManager::GetFixedUpdateTick();
+        mActiveViewport->FixedUpdate();
     }
-    mActiveViewport = nullptr;
 }
 
 void ViewportManager::PreUpdate()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->FixedUpdate();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->FixedUpdate();
 }
 
 void ViewportManager::Update()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->Update();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->Update();
 }
 
 void ViewportManager::PostUpdate()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->PostUpdate();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->PostUpdate();
 }
 
 void ViewportManager::PreRender()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->PreRender();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->PreRender();
 }
 
 void ViewportManager::Render()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->Render();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->Render();
 }
 
 void ViewportManager::PostRender()
 {
-    mActiveViewport = nullptr;
-    for (auto& vp : mViewportScenes)
-    {
-        mActiveViewport = vp;
-        vp->PostRender();
-    }
-    mActiveViewport = nullptr;
+    mActiveViewport->PostRender();
 }
 
 ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDesc)
 {
-    Display::IWindow* pWindow = nullptr;
-    D3DGraphicsRenderTarget* pRenderTarget = nullptr;
+    _pWinDesc->WndClass.lpfnWndProc = ViewportManager::WinProc;
+
+    Display::IWindow*       pWindow = nullptr;
+    D3DHwndRenderTarget*   pSwapChain = nullptr;
     if (FAILED(mDisplayDevice->CreateWindowDisplay(_pWinDesc, &pWindow)))
     {
         throw std::runtime_error("Hresult Failed to ViewportScene::CreateViewport...CreateWindowDisplay()");
     }
-    pRenderTarget = new D3DGraphicsRenderTarget(pWindow->GetHandle());
-    if (pWindow && pRenderTarget)
+    pSwapChain = new D3DHwndRenderTarget(pWindow->GetHandle());
+    if (pWindow && pSwapChain)
     {
         const WCHAR* winName = _pWinDesc->WndClass.lpszClassName;
-        ViewportScene* pViewport = new ViewportScene(winName, pWindow, pRenderTarget);
+        ViewportScene* pViewport = new ViewportScene(winName, pWindow, pSwapChain);
         mViewportScenes.push_back(pViewport);
+        mActiveViewport = pViewport;
         return pViewport;
     }
     return nullptr;
@@ -171,4 +146,60 @@ ViewportScene* ViewportManager::GetViewportSceneFromHwnd(HWND _hWnd)
     {
         return nullptr;
     }
+}
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
+{
+    if (ImGui_ImplWin32_WndProcHandler(_hwnd, _msg, _wParam, _lParam))
+    {
+        return true;
+    }
+    
+    auto pViewport = GetViewportSceneFromHwnd(_hwnd);
+
+    switch (_msg)
+    {
+        // 윈도우 만들어 졌을 때
+    case WM_CREATE:
+        break;
+        // 윈도우 사이즈 조절할 때
+    case WM_SIZE:
+        break;
+        // 윈도우 이동할 때
+    case WM_MOVE:
+        break;
+        // 시스템 키 눌르고 뗏을 때일걸..요?
+    case WM_SYSKEYDOWN:
+    case WM_SYSKEYUP:
+        if (_wParam == VK_MENU)
+            return 0;
+        break;
+        // 윈도우가 포커싱 되었을 때
+    case WM_SETFOCUS:
+        break;
+        // 윈도우가 사라질 때
+    case WM_DESTROY:
+        //pApp->DestroyDisplay(_hwnd);
+        break;
+        // 윈도우 우측 상단 종료 버튼을 눌렀을 때
+    case WM_CLOSE:
+        if (GameManager::GetApplication())
+            GameManager::GetApplication()->ShutDown();
+        break;
+    default:
+        return DefWindowProc(_hwnd, _msg, _wParam, _lParam);
+    }
+    // Application CallBack
+    if (GameManager::GetApplication() && pViewport)
+    {
+        GameManager::GetApplication()->OnWindowMessage(
+            pViewport,
+            _msg,
+            _wParam,
+            _lParam
+        );
+    }
+    return 0;
 }

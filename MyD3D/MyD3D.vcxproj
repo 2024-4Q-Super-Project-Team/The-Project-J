@@ -112,7 +112,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -129,7 +129,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_UNICODE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
@@ -143,6 +143,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioSystem\AudioFramework.h" />
+    <ClInclude Include="AudioSystem\AudioObject\AudioClip.h" />
+    <ClInclude Include="AudioSystem\AudioObject\AudioChannel.h" />
+    <ClInclude Include="AudioSystem\Core\AudioMixer.h" />
+    <ClInclude Include="AudioSystem\AudioObject\AudioGroup.h" />
+    <ClInclude Include="AudioSystem\Core\AudioController.h" />
+    <ClInclude Include="AudioSystem\Core\AudioHub.h" />
+    <ClInclude Include="Component\Audio\AudioListener.h" />
+    <ClInclude Include="Component\Audio\AudioSource.h" />
+    <ClInclude Include="AudioSystem\Interface\IAudio.h" />
+    <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Interface\IWindowMessageHandler.h" />
+    <ClInclude Include="Resource\AudioResource\AudioResource.h" />
+    <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
+    <ClInclude Include="Graphics\Extra\D3DGraphicsDefault.h" />
     <ClInclude Include="Interface\IGUID.h" />
     <ClInclude Include="Manager\ComponentManager.h" />
     <ClInclude Include="Component\ComponentFactory\ComponentFactory.h" />
@@ -169,9 +184,8 @@
     <ClInclude Include="Graphics\Core\D3DGraphicsDevice.h" />
     <ClInclude Include="Graphics\Core\D3DGraphicsRenderer.h" />
     <ClInclude Include="Graphics\Core\D3DGraphicsRenderTarget.h" />
-    <ClInclude Include="Graphics\Core\D3DGraphicsSwapChain.h" />
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsBuffer.h" />
-    <ClInclude Include="Graphics\GPUResource\D3DGraphicsSamplerState.h" />
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsState.h" />
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsShader.h" />
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsTexture.h" />
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsViewport.h" />
@@ -212,7 +226,7 @@
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\EditorUI\Contents\TestTab\TestEditorTab.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
-    <ClInclude Include="World\SkyBox\SkyBox.h" />
+    <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
     <ClInclude Include="World\WorldManager.h" />
     <ClInclude Include="Resource\Graphics\FBXModel\FBXModel.h" />
@@ -231,6 +245,20 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioSystem\AudioObject\AudioClip.cpp" />
+    <ClCompile Include="AudioSystem\AudioObject\AudioChannel.cpp" />
+    <ClCompile Include="AudioSystem\Core\AudioMixer.cpp" />
+    <ClCompile Include="AudioSystem\AudioObject\AudioGroup.cpp" />
+    <ClCompile Include="AudioSystem\Core\AudioController.cpp" />
+    <ClCompile Include="AudioSystem\Core\AudioHub.cpp" />
+    <ClCompile Include="Component\Audio\AudioListener.cpp" />
+    <ClCompile Include="Component\Audio\AudioSource.cpp" />
+    <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
+    <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
+    <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
+    <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />
+    <ClCompile Include="Graphics\Extra\D3DGraphicsDefault.cpp" />
     <ClCompile Include="Interface\IGUID.cpp" />
     <ClCompile Include="Manager\ComponentManager.cpp" />
     <ClCompile Include="Component\ComponentFactory\ComponentFactory.cpp" />
@@ -257,9 +285,8 @@
     <ClCompile Include="Graphics\Core\D3DGraphicsDevice.cpp" />
     <ClCompile Include="Graphics\Core\D3DGraphicsRenderer.cpp" />
     <ClCompile Include="Graphics\Core\D3DGraphicsRenderTarget.cpp" />
-    <ClCompile Include="Graphics\Core\D3DGraphicsSwapChain.cpp" />
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsBuffer.cpp" />
-    <ClCompile Include="Graphics\GPUResource\D3DGraphicsSamplerState.cpp" />
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsState.cpp" />
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsShader.cpp" />
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsTexture.cpp" />
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsViewport.cpp" />
@@ -298,7 +325,7 @@
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\TestTab\TestEditorTab.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
-    <ClCompile Include="World\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />
     <ClCompile Include="World\WorldManager.cpp" />
     <ClCompile Include="Resource\Graphics\FBXModel\FBXModel.cpp" />

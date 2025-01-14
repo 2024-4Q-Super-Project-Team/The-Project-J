@@ -11,34 +11,36 @@ class ViewportScene;
 class GraphicsManager;
 
 class ViewportManager
-	: public Engine::ICycleHandler
 {
 public:
-	explicit ViewportManager();
-	virtual ~ViewportManager();
+	explicit ViewportManager() = default;
+	virtual ~ViewportManager() = default;
 	ViewportManager(ViewportManager&) = delete;
 	ViewportManager& operator=(const ViewportManager&) = delete;
 	ViewportManager(ViewportManager&&) noexcept = default;
 	ViewportManager& operator=(ViewportManager&&) noexcept = default;
 public:
-	BOOL Initialize();
-	void Finalization();
+	static BOOL Initialize();
+	static void Run();
+	static void Finalization();
 public:
-	virtual void Tick()			override;
-	virtual void FixedUpdate()	override;
-	virtual void PreUpdate()	override;
-	virtual void Update()		override;
-	virtual void PostUpdate()	override;
-	virtual void PreRender()	override;
-	virtual void Render() override;
-	virtual void PostRender()	override;
+	static void Tick();
+	static void FixedUpdate();
+	static void PreUpdate();
+	static void Update();
+	static void PostUpdate();
+	static void PreRender();
+	static void Render();
+	static void PostRender();
 public:
-	ViewportScene* CreateViewportScene(Display::WindowDesc* _pWinDesc);
-	ViewportScene* GetViewportSceneFromWindowName(std::wstring _winName);
-	ViewportScene* GetViewportSceneFromHwnd(HWND _hWnd);
-	ViewportScene* GetActiveViewport() { return  mActiveViewport; }
+	static ViewportScene* CreateViewportScene(Display::WindowDesc* _pWinDesc);
+	static ViewportScene* GetViewportSceneFromWindowName(std::wstring _winName);
+	static ViewportScene* GetViewportSceneFromHwnd(HWND _hWnd);
+	static ViewportScene* GetActiveViewport() { return  mActiveViewport; }
 private:
-	Display::IDisplayDevice* mDisplayDevice;
-	ViewportScene* mActiveViewport;
-	std::vector<ViewportScene*> mViewportScenes;
+	static ViewportScene* mActiveViewport;
+	static Display::IDisplayDevice* mDisplayDevice;
+	static std::vector<ViewportScene*> mViewportScenes;
+public:
+	static LRESULT CALLBACK WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 };

@@ -1,12 +1,11 @@
 #include "pch.h"
-#include "D3DGraphicsSamplerState.h"
+#include "D3DGraphicsState.h"
 #include "Graphics/Core/D3DGraphicsDevice.h"
 #include "Graphics/Core/D3DGraphicsRenderer.h"
 
 D3DGraphicsSamplerState::D3DGraphicsSamplerState(IN D3D11_SAMPLER_DESC* _pSamplerDesc)
 {
-    auto pDevice = D3DGraphicsDevice::GetDevice();
-    Helper::HRT(pDevice->CreateSamplerState(_pSamplerDesc, &mSamplerState),
+    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateSamplerState(_pSamplerDesc, &mSamplerState),
         "Hresult Failed to Create IInputLayout::CreateInputLayout.");
 }
 
@@ -103,6 +102,44 @@ HRESULT D3DGraphicsSamplerState::Reset()
         default:
             return E_INVALIDARG;
         }
+        return S_OK;
+    }
+    return E_FAIL;
+}
+
+D3DGraphicsBlendState::D3DGraphicsBlendState(IN D3D11_BLEND_DESC* _pBlendDesc)
+{
+    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateBlendState(_pBlendDesc, &mBlendState),
+        "Hresult Failed to Create D3DGraphicsBlendState::CreateBlendState.");
+}
+
+void D3DGraphicsBlendState::Release()
+{
+    SAFE_RELEASE(mBlendState);
+}
+
+HRESULT D3DGraphicsBlendState::Create()
+{
+    return S_OK;
+}
+
+HRESULT D3DGraphicsBlendState::Bind()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->OMSetBlendState(mBlendState, NULL, 0xffffffff);
+        return S_OK;
+    }
+    return E_FAIL;
+}
+
+HRESULT D3DGraphicsBlendState::Reset()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->OMSetBlendState(NULL, NULL, 0xffffffff);
         return S_OK;
     }
     return E_FAIL;

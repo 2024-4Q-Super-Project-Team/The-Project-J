@@ -3,11 +3,11 @@
 #include "Graphics/GraphicsManager.h"
 #include "World/WorldManager.h"
 
-ViewportScene::ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, D3DGraphicsRenderTarget* _pRenderTarget)
+ViewportScene::ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, D3DHwndRenderTarget* _pSwapChain)
     : Entity(_name, L"")
     , mWorldManager(new WorldManager(this))
     , mWindow(_pWindow)
-    , mRenderTarget(_pRenderTarget)
+    , mSwapChain(_pSwapChain)
 {
 }
 
@@ -68,10 +68,13 @@ void ViewportScene::Render()
 {
     if (mWorldManager)
     {
-        D3DGraphicsRenderer::SetRenderTarget(mRenderTarget);
-        D3DGraphicsRenderer::Clear();
+        mSwapChain->BeginDraw();
+
+        mSwapChain->Clear();
+       
         mWorldManager->Render();
-        mRenderTarget->mSwapChain->Present(0, 0);
+
+        mSwapChain->EndDraw();
     }
 }
 

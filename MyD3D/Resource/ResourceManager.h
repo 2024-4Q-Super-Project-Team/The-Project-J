@@ -5,7 +5,9 @@
 #include "Resource/Graphics/Material/Material.h"
 #include "Resource/Graphics/Bone/Bone.h"
 #include "Resource/Graphics/Animation/Animation.h"
+#include "Resource/Graphics/SkyBox/SkyBox.h"
 #include "Resource/Prefab/Prefab.h"
+#include "Resource/AudioResource/AudioResource.h"
 
 class IInputLayout;
 class IVertexShader;

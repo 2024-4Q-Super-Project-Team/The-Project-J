@@ -17,13 +17,7 @@ void _CALLBACK TestWorld::OnDestroy()
 }
 
 void _CALLBACK TestWorld::OnEnable()
-{
-    auto pSkyBox = GetSkyBox();
-    pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
-    pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
-    pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
-    pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
-    
+{   
     ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/gun.fbx");
     ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Jinx Default.fbx");
     ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/sphere.fbx");

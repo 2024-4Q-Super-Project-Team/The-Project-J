@@ -155,12 +155,12 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 if (floatVal < 1.0f)
                 {
                     // Transparent 贸府
-                    pMaterial->SetBlendingMode(eBlendingMode::TRANSPARENT_BLEND);
+                    pMaterial->SetBlendingMode(eBlendType::TRANSPARENT_BLEND);
                 }
                 else
                 {
                     // Opaque 贸府
-                    pMaterial->SetBlendingMode(eBlendingMode::OPAQUE_BLEND);
+                    pMaterial->SetBlendingMode(eBlendType::OPAQUE_BLEND);
                 }
             }
         }

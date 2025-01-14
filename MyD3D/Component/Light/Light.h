@@ -34,18 +34,15 @@ public:
     inline void SetSpecularColor(ColorF _color) { mLightProp.SpecularRGB = _color; }
 public:
     inline auto GetShadowViewport() { return mShadowViewport; }
-    inline auto GetShadowDSV() { return mShadowDSV; }
-    inline auto GetShadowSRV() { return mShadowSRV; }
+    inline auto GetShadowRenderTarget() { return mShadowRenderTarget; }
     inline auto GetProperty() { return mLightProp; }
 public:
     virtual json Serialize() override;
-    virtual void Deserialize( json& j) override;
-
+    virtual void Deserialize(json& j) override {}
 private:
-    LightProperty        mLightProp;
-    D3DGraphicsDSV*      mShadowDSV;
-    D3DGraphicsSRV*      mShadowSRV;
-    D3DGraphicsViewport* mShadowViewport;
+    LightProperty           mLightProp;
+    D3DBitmapRenderTarget*  mShadowRenderTarget;
+    D3DGraphicsViewport*    mShadowViewport;
 
     // Light의 Near, Far
     float mLightNear = 50.0f;
@@ -54,6 +51,8 @@ private:
     float mCameradDist = 0.0f;
     // 그림자 -> 조명 거리
     float mUpDist = 3000.0f;
+    // 그림자 렌더 범위
+    static float ShadowArea;
 public:
     virtual void EditorRendering() override;
 };

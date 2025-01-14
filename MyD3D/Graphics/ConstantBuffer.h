@@ -26,7 +26,8 @@ struct LightProperty
     ColorF  AmbientRGB = { 1.0f,1.0f,1.0f,1.0f };
     ColorF  SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
-    Vector3 Padding;
+    FLOAT   LightIntensity = 1.0f;
+    Vector2 Padding;
 
     Matrix  ShadowView = Matrix::Identity;
     Matrix  ShadowProjection = Matrix::Identity;
@@ -52,7 +53,10 @@ struct MaterialCBuffer
 struct CameraCBuffer
 {
     Vector4 Position;
-    //....
+    Matrix  View;
+    Matrix  InverseView;
+    Matrix  Projection;
+    Matrix  InverseProjection;
 };
 
 #define MAX_BONE_COUNT 128

@@ -16,6 +16,11 @@ D3DGraphicsBuffer::D3DGraphicsBuffer(const D3D11_BUFFER_DESC* _pBufferDesc, D3D1
     }
 }
 
+D3DGraphicsBuffer::~D3DGraphicsBuffer()
+{
+    SAFE_RELEASE(mBuffer);
+}
+
 void D3DGraphicsBuffer::Release()
 {
     SAFE_RELEASE(mBuffer);

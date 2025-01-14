@@ -3,7 +3,7 @@
 #include "Graphics/Interface/IGraphics.h"
 
 class D3DGraphicsRenderer;
-class D3DGraphicsSwapChain;
+class D3DHwndRenderTarget;
 class D3DGraphicsRenderTarget;
 
 class D3DGraphicsTexture2D;
@@ -17,8 +17,6 @@ public:
     static BOOL Initialize();
     static void Finalization();
 public:
-    // Swapchain.cpp¿¡ ±¸Çö
-    static HRESULT CreateD3DSwapChain(IN HWND _hWnd, OUT D3DGraphicsSwapChain** _ppSwapChain);
 private:
     static BOOL CanUse;
 
@@ -41,4 +39,7 @@ public:
             throw std::runtime_error("No Initialize to D3DGraphicsDevice.");
         return mAdapter;
     }
+public:
+    static void GetDisplayMemoryInfo(std::string& out);
+    static void GetVirtualMemoryInfo(std::string& out);
 };

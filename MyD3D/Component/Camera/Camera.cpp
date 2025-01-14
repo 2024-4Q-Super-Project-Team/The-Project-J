@@ -10,24 +10,48 @@
 #include "Object/Object.h"
 
 #include "Resource/Graphics/Material/Material.h"
+#include "Resource/Graphics/SkyBox/SkyBox.h"
+
+std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>>    Camera::gCameraMainRenderTargetTable;
+std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>>    Camera::gCameraDeferredRenderTargetTable;
+std::unordered_map<ViewportScene*, std::weak_ptr<D3DGraphicsViewport>>      Camera::gCameraMainViewportTable;
 
 Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
     , mProjectionType(ProjectionType::Perspective)
+    , mCameraRenderType(CameraRenderType::Forward)
+    , mWidth(0), mHeight(0), mOffsetX(0), mOffsetY(0)
     , mFovAngle(XM_PIDIV2)
     , mProjectionNear(1.0f)
     , mProjectionFar(30000.0f)
     , mOrthoWidth(10.0f)
     , mOrthoHeight(10.0f)
     , mViewport(nullptr)
+    , mCameraViewport(nullptr)
 {
     mType = eComponentType::CAMERA;
-    mViewport = new D3DGraphicsViewport(0.0f, 0.0f, _size.x, _size.y);
+    mViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
+
+    mCameraViewport = ViewportManager::GetActiveViewport();
+    if (mCameraViewport)
+    {
+        GetMainRenderTarget(mCameraViewport);
+        GetMainViewport(mCameraViewport);
+        auto size = mCameraViewport->GetIWindow()->GetSize();
+        auto offset = mCameraViewport->GetIWindow()->GetOffset();
+        mWidth = (UINT)(size.x - offset.x);
+        mHeight = (UINT)(size.y - offset.y);
+    }
+    else
+    {
+        Helper::HRT(E_FAIL, "Null pointer reference to CameraViewport");
+    }
 }
 
 Camera::~Camera()
 {
     SAFE_RELEASE(mViewport)
+    SAFE_RELEASE(mMainRenderTarget)
 }
 
 void Camera::Start()
@@ -68,16 +92,23 @@ void Camera::Render()
         mCameraCBuffer.Position.y = gameObject->transform->position.y;
         mCameraCBuffer.Position.z = gameObject->transform->position.z;
         mCameraCBuffer.Position.w = 1.0f;
+        mCameraCBuffer.View = XMMatrixTranspose(mViewMatrix);
+        mCameraCBuffer.Projection = XMMatrixTranspose(mProjectionMatrix);
+        mCameraCBuffer.InverseView = DirectX::XMMatrixInverse(nullptr, mViewMatrix);
+        mCameraCBuffer.InverseView = XMMatrixTranspose(mCameraCBuffer.InverseView);
+        mCameraCBuffer.InverseProjection = DirectX::XMMatrixInverse(nullptr, mProjectionMatrix);
+        mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
-        // 뷰포트 바인딩
-        mViewport->Bind();
+
+        mViewport->SetWidth(mWidth);
+        mViewport->SetHeight(mHeight);
+        mViewport->SetOffsetX(mOffsetX);
+        mViewport->SetOffsetY(mOffsetY);
+
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
-
-    // 렌더 큐를 처리한다.
-    ExcuteDrawList();
 }
 
 void Camera::Draw(Camera* _camera)
@@ -88,6 +119,26 @@ void Camera::PostRender()
 {
 }
 
+void Camera::SetCameraArea(UINT _offsetX, UINT _offsetY, UINT _width, UINT _height)
+{
+    mWidth = _width;
+    mHeight = _height;
+    mOffsetX = _offsetY;
+    mOffsetY = _offsetY;
+}
+
+void Camera::SetCameraSize(UINT _width, UINT _height)
+{
+    mWidth = _width;
+    mHeight = _height;
+}
+
+void Camera::SetCameraOffset(UINT _offsetX, UINT _offsetY)
+{
+    mOffsetX = _offsetY;
+    mOffsetY = _offsetY;
+}
+
 void Camera::UpdateCamera()
 {
     Vector3 pos = gameObject->transform->position;
@@ -96,20 +147,18 @@ void Camera::UpdateCamera()
     Vector3 at = pos + dir;
     mViewMatrix = XMMatrixLookAtLH(pos, at, up);
 
-    // 가로 세로 비율?
-    ViewportManager* vptMng = GameManager::GetViewportManager();
     float aspectRatio = mViewport->GetWidth() / mViewport->GetHeight();
 
     switch (mProjectionType)
     {
-    case Camera::ProjectionType::Perspective:
+    case ProjectionType::Perspective:
         mProjectionMatrix = XMMatrixPerspectiveFovLH(
             mFovAngle,
             aspectRatio,
             mProjectionNear,
             mProjectionFar);
         break;
-    case Camera::ProjectionType::Orthographic:
+    case ProjectionType::Orthographic:
         mProjectionMatrix = XMMatrixOrthographicLH(
             mOrthoWidth,
             mOrthoHeight / aspectRatio,
@@ -121,11 +170,245 @@ void Camera::UpdateCamera()
     }
 }
 
+void Camera::GetMainViewport(ViewportScene* _pViewport)
+{
+    auto itr = gCameraMainViewportTable.find(_pViewport);
+    if (itr != gCameraMainViewportTable.end())
+    {
+        if (itr->second.lock())
+        {
+            mMainViewport = itr->second.lock();
+            return;
+        }
+        else
+        {
+            gCameraMainViewportTable.erase(itr);
+        }
+    }
+    RECT clientRect = {};
+    UINT width, height;
+
+    if (_pViewport == nullptr) return;
+    if (_pViewport->GetIWindow() == nullptr) return;
+
+    auto size = _pViewport->GetIWindow()->GetSize();
+    auto offset = _pViewport->GetIWindow()->GetOffset();
+
+    width = (UINT)(size.x - offset.x);
+    height = (UINT)(size.y - offset.y);
+
+    auto pViewport = std::make_shared<D3DGraphicsViewport>(0.0f, 0.0f, width, height);
+
+    gCameraMainViewportTable[_pViewport] = pViewport;
+
+    mMainViewport = pViewport;
+}
+
+void Camera::GetMainRenderTarget(ViewportScene* _pViewport)
+{
+    auto itr = gCameraMainRenderTargetTable.find(_pViewport);
+    if (itr != gCameraMainRenderTargetTable.end())
+    {
+        if (itr->second.lock())
+        {
+            mMainRenderTarget = itr->second.lock();
+            return;
+        }
+        else
+        {
+            gCameraMainRenderTargetTable.erase(itr);
+        }
+    }
+    RECT clientRect = {};
+    UINT width, height;
+    
+    if (_pViewport == nullptr) return;
+    if (_pViewport->GetIWindow() == nullptr) return;
+    
+    auto size = _pViewport->GetIWindow()->GetSize();
+    auto offset = _pViewport->GetIWindow()->GetOffset();
+
+    width  = (UINT)(size.x - offset.x);
+    height = (UINT)(size.y - offset.y);
+
+    auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
+    
+    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultRenderTargetView(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
+
+    auto pSRV = pRenderTarget->GetSRV(pRenderTarget->GetRTV());
+    pSRV->SetBindStage(eShaderStage::PS);
+    pSRV->SetBindSlot(17);
+
+    gCameraMainRenderTargetTable[_pViewport] = pRenderTarget;
+
+    mMainRenderTarget = pRenderTarget;
+}
+
+void Camera::GetDeferredRenderTarget(ViewportScene* _pViewport)
+{
+    auto itr = gCameraDeferredRenderTargetTable.find(_pViewport);
+    if (itr != gCameraDeferredRenderTargetTable.end())
+    {
+        if (itr->second.lock())
+        {
+            mDeferredRenderTarget = itr->second.lock();
+            return;
+        }
+        else
+        {
+            gCameraDeferredRenderTargetTable.erase(itr);
+        }
+    }
+    RECT clientRect = {};
+    UINT width, height;
+
+    if (_pViewport == nullptr) return;
+    if (_pViewport->GetIWindow() == nullptr) return;
+
+    auto size = _pViewport->GetIWindow()->GetSize();
+    auto offset = _pViewport->GetIWindow()->GetOffset();
+
+    width = (UINT)(size.x - offset.x);
+    height = (UINT)(size.y - offset.y);
+
+    auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
+    // G-Buffer
+    pRenderTarget->PushResourceView(GraphicsManager::CreateAlbedoGBuffer(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateNormalGBuffer(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateMaterialGBuffer(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateEmessiveGBuffer(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateWorldPosGBuffer(width, height));
+    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
+
+    gCameraDeferredRenderTargetTable[_pViewport] = pRenderTarget;
+
+    mDeferredRenderTarget = pRenderTarget;
+}
+
+void Camera::DrawShadow()
+{
+    GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Reset();
+
+    for (int i = 0; i < mSceneLights.size(); i++)
+    {
+        auto rt = mSceneLights[i]->GetShadowRenderTarget();
+        auto ShaderSRV = rt->GetSRV(rt->GetDSV());
+        ShaderSRV->Reset();
+        ShaderSRV->SetBindSlot(24 + i);
+        // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
+        mSceneLights[i]->GetShadowRenderTarget()->BeginDraw();
+        mSceneLights[i]->GetShadowRenderTarget()->Clear();
+        // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
+        for (auto& drawQueue : mDrawQueue)
+        {
+            for (auto& drawInfo : drawQueue)
+            {
+                drawInfo->DrawShadow(mSceneLights[i]);
+            }
+        }
+        mSceneLights[i]->GetShadowRenderTarget()->EndDraw();
+        ShaderSRV->Bind();
+    }
+}
+
+void Camera::DrawForward()
+{
+    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
+
+    for (int i = 0; i < BLEND_TYPE_COUNT; ++i)
+    {
+        //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
+        for (auto& drawInfo : mDrawQueue[i])
+        {
+            drawInfo->DrawMesh(this);
+        }
+        // 그리기 큐를 초기화한다.
+        mDrawQueue[i].clear();
+    }
+    // 조명 리스트를 초기화한다.
+    mSceneLights.clear();
+}
+
+void Camera::DrawDeferred()
+{
+    //Deferred Pass
+    {   
+        mDeferredRenderTarget->BeginDraw();
+        mDeferredRenderTarget->Clear();
+
+        // BlendState를 설정해줘야 OM이 rgb값을 a로 훼손시키지 않고 제대로 넣어준다.
+        GraphicsManager::GetBlendState(eBlendType::OPAQUE_BLEND)->Bind();
+        GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+        GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Bind();
+
+        for (int i = 0; i < BLEND_TYPE_COUNT; ++i)
+        {
+            for (auto& drawInfo : mDrawQueue[i])
+            {
+                drawInfo->DrawMesh(this);
+            }
+            // 그리기 큐를 초기화한다.
+            mDrawQueue[i].clear();
+        }
+        // 조명 리스트를 초기화한다.
+        mSceneLights.clear();
+
+        mDeferredRenderTarget->EndDraw();
+    }
+
+    // QuadFrame Pass
+    GraphicsManager::GetBlendState(eBlendType::OPAQUE_BLEND)->Reset();
+    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR)->Bind();
+    D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
+    D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
+
+    mDeferredRenderTarget->BindAllSRV();
+
+    D3DGraphicsRenderer::DrawCall(6, 0, 0);
+
+    mDeferredRenderTarget->ResetAllSRV();
+}
+
+void Camera::DrawSwapChain()
+{
+    // QuadFrame Pass
+    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
+    D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
+
+    mMainRenderTarget->BindAllSRV();
+
+    D3DGraphicsRenderer::DrawCall(6, 0, 0);
+
+    mMainRenderTarget->ResetAllSRV();
+}
+
+void Camera::SetProjectionType(ProjectionType _type)
+{
+    mProjectionType = _type;
+}
+
+void Camera::SetCameraRenderType(CameraRenderType _type)
+{
+    mCameraRenderType = _type;
+    if (_type == CameraRenderType::Forward)
+    {
+        mDeferredRenderTarget.reset();
+    }
+    if (_type == CameraRenderType::Deferred)
+    {
+        GetDeferredRenderTarget(mCameraViewport);
+    }
+}
+
 json Camera::Serialize()
 {
     json ret;
-    ret["id"] = mId;
-    ret["name"] = "Camera";
 
     ret["fov angle"] = mFovAngle.GetAngle();
     ret["near"] = mProjectionNear;
@@ -137,15 +420,20 @@ json Camera::Serialize()
     return ret;
 }
 
-void Camera::Deserialize(json& j)
+D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
 {
+    if (mMainRenderTarget)
+    {
+        return mMainRenderTarget.get();
+    }
+    return nullptr;
 }
 
 void Camera::PushDrawList(RendererComponent* _renderComponent)
 {
     if (_renderComponent == nullptr) return;
     auto pMaterial = _renderComponent->GetMaterial();
-    eBlendingMode blendMode = eBlendingMode::OPAQUE_BLEND;
+    eBlendType blendMode = eBlendType::OPAQUE_BLEND;
     if (pMaterial)
     {
         blendMode = pMaterial->mMaterialResource->mBlendMode;
@@ -161,54 +449,50 @@ void Camera::PushLight(Light* _pLight)
 
 void Camera::ExcuteDrawList()
 {
-    // 0. 이전 렌더타겟을 저장해놓는다.
-    auto RTV = D3DGraphicsRenderer::GetCurrentRTV();
-    auto DSV = D3DGraphicsRenderer::GetCurrentDSV();
-    // 1. 그림자용 셰이더 바인딩
-    GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
-    GraphicsManager::GetPixelShader(ePixelShaderType::PBR)->Reset();
-    for (int i = 0; i < mSceneLights.size(); i++)
+    if (mMainRenderTarget == nullptr)
     {
-        // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
-        mSceneLights[i]->GetShadowDSV()->Reset();
-        mSceneLights[i]->GetShadowViewport()->Bind();
-        // 뎁스 뷰 SetRenderTarget
-        D3DGraphicsRenderer::SetRenderTarget(nullptr, mSceneLights[i]->GetShadowDSV());
-        // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
-        for (auto& drawQueue : mDrawQueue)
+
+    }
+    if (mMainRenderTarget)
+    {
         {
-            for (auto& drawInfo : drawQueue)
+            mMainRenderTarget->BeginDraw();
+            mMainRenderTarget->Clear();
+            ////////////////////////////////////////////////////
+            // 그림자 연산
+            ////////////////////////////////////////////////////
+            DrawShadow();
+
+            mMainViewport->Bind();
+
+            // 렌더타입으로 Draw실행
+            switch (mCameraRenderType)
             {
-                drawInfo->DrawShadow(mSceneLights[i]);
+            case CameraRenderType::Forward:
+                DrawForward();
+                break;
+            case CameraRenderType::Deferred:
+                DrawDeferred();
+                break;
+            default:
+                break;
             }
+
+            ////////////////////////////////////////////////////
+            // SkyBox Draw
+            ////////////////////////////////////////////////////
+            // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
+            if (mSkyBox)
+            {
+                mSkyBox->Draw(this);
+            }
+
+            mMainRenderTarget->EndDraw();
         }
-    }
 
-    // 원래 렌더타겟으로 복구해준다.
-    mViewport->Bind();
-    D3DGraphicsRenderer::SetRenderTarget(RTV, DSV);
-    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
-    GraphicsManager::GetPixelShader(ePixelShaderType::PBR)->Bind();
-
-    // SRV를 공유하는 텍스쳐가 렌더타겟으로 설정되어있으면 바인딩이 되지 않으므로 여기서 한번에 바인딩 해준다.
-    for (int i = 0; i < mSceneLights.size(); i++)
-    {
-        mSceneLights[i]->GetShadowSRV()->SetBindSlot(24 + i);
-        mSceneLights[i]->GetShadowSRV()->Bind();
+        mViewport->Bind();
+        DrawSwapChain();
     }
-
-    // 그리고 실제 Draw 작업을 수행해준다.
-    for (auto& drawQueue : mDrawQueue)
-    {
-        for (auto& drawInfo : drawQueue)
-        {
-            drawInfo->DrawMesh(this);
-        }
-        // 그리기 큐를 초기화한다.
-        drawQueue.clear();
-    }
-    // 조명 리스트를 초기화한다.
-    mSceneLights.clear();
 }
 
 void Camera::EditorRendering()
@@ -216,9 +500,75 @@ void Camera::EditorRendering()
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::CollapsingHeader(("Camera" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
+        bool isForward = mCameraRenderType == CameraRenderType::Forward ? true : false;
+        if (ImGui::Checkbox("isForward", &isForward))
+        {
+            if (isForward)
+            {
+                SetCameraRenderType(CameraRenderType::Forward);
+            }
+            else
+            {
+                SetCameraRenderType(CameraRenderType::Deferred);
+            }
+        }
+        int Area[4] = { mWidth, mHeight, mOffsetX, mOffsetY };
+        if (ImGui::SliderInt(("RectWidth" + uid).c_str(), &Area[0], 0, 3000))
+            mWidth = Area[0];
+        if(ImGui::SliderInt(("RectHeight" + uid).c_str(), &Area[1], 0, 3000))
+            mHeight = Area[1];
+        if(ImGui::SliderInt(("RectOffsetX" + uid).c_str(), &Area[2], 0, 3000))
+            mOffsetX = Area[2];
+        if(ImGui::SliderInt(("RectOffsetY" + uid).c_str(), &Area[3], 0, 3000))
+            mOffsetY = Area[3];
+
+        ImGui::Separator();
+
         ImGui::Text("Projection");
         ImGui::SliderFloat(("fovAngle" + uid).c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
         ImGui::SliderFloat(("Near" + uid).c_str(), &mProjectionNear, 0.1f, 1000.0f);
         ImGui::SliderFloat(("Far" + uid).c_str(), &mProjectionFar, 1.0f, 100000.0f);
+
+        if (mCameraRenderType == CameraRenderType::Deferred && mDeferredRenderTarget)
+        {
+            ImGui::Separator();
+            ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");
+            auto CameraRTV = mDeferredRenderTarget->GetRTV();
+            auto CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+
+            ImGui::Separator();
+            ImGui::Text("Normal + Depth ( rgb(Normal), a(Depth) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(1);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+
+            ImGui::Separator();
+            ImGui::Text("Material ( r(Metalness), g(Roughness), b(Specular), a(AmbientOcclusion) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(2);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+
+            ImGui::Separator();
+            ImGui::Text("Emessive ( rgb(Emessive) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(3);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+
+            ImGui::Separator();
+            ImGui::Text("WorldPosition ( rgb(WorldPosition) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(4);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+        }
+        if(mMainRenderTarget)
+        {
+            ImGui::Separator();
+            ImGui::Text("Output");
+            auto CameraRTV = mMainRenderTarget->GetRTV();
+            auto CameraSRV = mMainRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+        }
+       
     }
 }

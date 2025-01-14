@@ -16,7 +16,13 @@
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
-
+// FMOD
+#include "ThirdParty/fmod/include/fmod.hpp"
+#include "ThirdParty/fmod/include/fmod_studio.hpp"
+#include "ThirdParty/fmod/include/fmod_common.h"
+#include "ThirdParty/fmod/include/fmod_codec.h"
+#pragma comment (lib, "../MyD3D/ThirdParty/fmod/fmod_vc.lib")
+#pragma comment (lib, "../MyD3D/ThirdParty/fmod/fmodstudio_vc.lib")
 //Direct3D
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -66,6 +72,8 @@ using json = nlohmann::json;
 #include "Graphics/Graphics.h"
 #include "Graphics/ConstantBuffer.h"
 #include "Graphics/GraphicsFramework.h"
+
+#include "AudioSystem/AudioFramework.h"
 
 #include "Component/ComponentFactory/ComponentFactory.h"
 

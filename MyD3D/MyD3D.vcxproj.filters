@@ -216,7 +216,7 @@
     <ClInclude Include="Component\EditorUI\Contents\TestTab\TestEditorTab.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="World\SkyBox\SkyBox.h">
+    <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\EditorUI\Contents\GameEditor\GameEditor.h">
@@ -225,7 +225,7 @@
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Graphics\GPUResource\D3DGraphicsSamplerState.h">
+    <ClInclude Include="Graphics\GPUResource\D3DGraphicsState.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsShader.h">
@@ -244,9 +244,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Core\D3DGraphicsRenderTarget.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Graphics\Core\D3DGraphicsSwapChain.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\Interface\IGraphics.h">
@@ -268,6 +265,51 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Manager\ComponentManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Extra\D3DGraphicsDefault.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\AudioResource\AudioResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Audio\AudioSource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Audio\AudioListener.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\Core\AudioHub.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\Core\AudioController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\Interface\IAudio.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\eAudio.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\AudioObject\AudioGroup.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\Core\AudioMixer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\AudioObject\AudioChannel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\AudioObject\AudioClip.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioSystem\AudioFramework.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Interface\IWindowMessageHandler.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Interface\IGUID.h">
@@ -467,7 +509,7 @@
     <ClCompile Include="Component\EditorUI\Contents\TestTab\TestEditorTab.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="World\SkyBox\SkyBox.cpp">
+    <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\EditorUI\Contents\GameEditor\GameEditor.cpp">
@@ -476,7 +518,7 @@
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsBuffer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\GPUResource\D3DGraphicsSamplerState.cpp">
+    <ClCompile Include="Graphics\GPUResource\D3DGraphicsState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsShader.cpp">
@@ -497,9 +539,6 @@
     <ClCompile Include="Graphics\Core\D3DGraphicsRenderTarget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Graphics\Core\D3DGraphicsSwapChain.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Graphics\Interface\IGraphics.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -516,6 +555,48 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Manager\ComponentManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Extra\D3DGraphicsDefault.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\AudioResource\AudioResource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Audio\AudioSource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Audio\AudioListener.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\Core\AudioHub.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\Core\AudioController.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\Interface\IAudio.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\eAudio.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\AudioObject\AudioGroup.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\Core\AudioMixer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\AudioObject\AudioChannel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioSystem\AudioObject\AudioClip.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Interface\IWindowMessageHandler.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Interface\IGUID.cpp">

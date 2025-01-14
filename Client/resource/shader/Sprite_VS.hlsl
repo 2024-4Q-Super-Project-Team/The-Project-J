@@ -1,20 +1,9 @@
+#include "Shared.fxh"
 
-struct VS_IN
+QUAD_VS_OUTPUT main(QUAD_VS_INPUT input)
 {
-    float4 pos : POSITION;
-    float2 uv  : TEXCOORD;
-};
-
-struct VS_OUT
-{
-    float4 pos : SV_POSITION;
-    float2 uv  : TEXCOORD;
-};
-
-VS_OUT main(VS_IN input)
-{
-    VS_OUT output;
-    output.pos = float4(input.pos); // NDC 좌표 유지
-    output.uv = input.uv; // 텍스처 좌표 전달
+    QUAD_VS_OUTPUT output;
+    output.pos  = input.pos;
+    output.uv   = input.uv;
     return output;
 }

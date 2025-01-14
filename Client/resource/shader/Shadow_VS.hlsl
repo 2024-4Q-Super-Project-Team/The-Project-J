@@ -7,7 +7,7 @@ struct SHADOW_VS_OUT
 
 SHADOW_VS_OUT main(STD_VS_INPUT input)
 {
-    matrix worldTransform = worldMatrix;
+    matrix worldTransform = WorldMatrix;
     // 본 스키닝 정보가 있으면 본트랜스폼을 적용한 매트릭스를 쓴다
     if (input.boneWeight[0] > 0.0f)
     {
@@ -18,7 +18,7 @@ SHADOW_VS_OUT main(STD_VS_INPUT input)
     }
     SHADOW_VS_OUT output;
     output.pos = mul(input.pos, worldTransform);
-    output.pos = mul(output.pos, viewMatrix);
-    output.pos = mul(output.pos, projectionMatrix);
+    output.pos = mul(output.pos, ViewMatrix);
+    output.pos = mul(output.pos, ProjectionMatrix);
     return output;
 }

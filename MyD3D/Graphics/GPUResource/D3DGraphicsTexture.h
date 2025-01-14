@@ -10,7 +10,7 @@ class D3DGraphicsTexture2D
 public:
     explicit D3DGraphicsTexture2D(D3D11_TEXTURE2D_DESC* _Desc);
     explicit D3DGraphicsTexture2D(ID3D11Texture2D* _pTex);
-    virtual ~D3DGraphicsTexture2D() = default;
+    virtual ~D3DGraphicsTexture2D();
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;
@@ -21,12 +21,18 @@ public:
     D3D11_TEXTURE2D_DESC* mDesc;
 };
 
-class D3DGraphicsRTV
+class D3DResourceView 
     : public I3DGraphicsGPUResource
+{
+
+};
+
+class D3DGraphicsRTV
+    : public D3DResourceView
 {
 public:
     explicit D3DGraphicsRTV(D3DGraphicsTexture2D* _pTex2D, const D3D11_RENDER_TARGET_VIEW_DESC* _pDesc);
-    virtual ~D3DGraphicsRTV() = default;
+    virtual ~D3DGraphicsRTV();
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;
@@ -38,11 +44,11 @@ public:
 };
 
 class D3DGraphicsDSV
-    : public I3DGraphicsGPUResource
+    : public D3DResourceView
 {
 public:
     explicit D3DGraphicsDSV(D3DGraphicsTexture2D* _pTex2D, const D3D11_DEPTH_STENCIL_VIEW_DESC* _pDesc);
-    virtual ~D3DGraphicsDSV() = default;
+    virtual ~D3DGraphicsDSV();
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;
@@ -54,13 +60,13 @@ public:
 };
 
 class D3DGraphicsSRV
-    : public I3DGraphicsGPUResource
+    : public D3DResourceView
     , public RenderStageBindHandler
     , public RegisterSlotBindHandler
 {
 public:
     explicit D3DGraphicsSRV(D3DGraphicsTexture2D* _pTex2D, const D3D11_SHADER_RESOURCE_VIEW_DESC* _pDesc);
-    virtual ~D3DGraphicsSRV() = default;
+    virtual ~D3DGraphicsSRV();
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;
@@ -73,7 +79,7 @@ public:
 
 // 텍스쳐를 불러오기 위해 만든 놈인데 이름이 마땅히...
 class D3DGraphicsImg
-    : public I3DGraphicsGPUResource
+    : public D3DResourceView
     , public GraphicsResourceKeyHandler
     , public RenderStageBindHandler
     , public RegisterSlotBindHandler

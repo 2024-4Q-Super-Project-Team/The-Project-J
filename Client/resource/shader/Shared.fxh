@@ -103,14 +103,14 @@ struct MaterialProperty
 // =================================================
  // 머티리얼 텍스쳐 맵 0~8
 Texture2D   MaterialMap[MATERIAL_MAP_COUNT] : register(t0);
+// 카메라 렌더타겟
+Texture2D   CameraRenderTarget              : register(t11);
 // 디퍼드용 G-Buffer
 Texture2D   GBuffer_Albedo                  : register(t12);
 Texture2D   GBuffer_Normal                  : register(t13);
 Texture2D   GBuffer_Material                : register(t14);
 Texture2D   GBuffer_Emessive                : register(t15);
 Texture2D   GBuffer_WorldPos                : register(t16);
-// 카메라 렌더타겟
-Texture2D CameraRenderTarget                : register(t17);
 // IBL 텍스쳐 맵
 TextureCube IBLEnvironmentMap               : register(t20);
 TextureCube IBLDiffuseMap                   : register(t21);

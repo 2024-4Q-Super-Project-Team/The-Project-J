@@ -50,13 +50,11 @@ public:
     void PushLight(Light* _pLight);
     // 렌더 큐의 Draw 작업 수행
     void ExcuteDrawList(); 
-
-    //static QueryReSizeRenderTarget();
 private:
     void UpdateCamera();
-    void GetMainViewport(ViewportScene* _pViewport);
-    void GetMainRenderTarget(ViewportScene* _pViewport);
-    void GetDeferredRenderTarget(ViewportScene* _pViewport);
+    void UpdateMatrix();
+    void UpdateViewport();
+private:
     void DrawShadow();
     void DrawForward();
     void DrawDeferred();
@@ -81,17 +79,17 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override {}
 private:
-    // 공유할 리소스(윈도우마다 사이즈별로 하나씩 만들어주고, 뷰포트를 다르게 해서 사용)
-    static std::unordered_map<ViewportScene*, std::weak_ptr<D3DGraphicsViewport>>   gCameraMainViewportTable;
-    static std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>> gCameraMainRenderTargetTable;
-    static std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>> gCameraDeferredRenderTargetTable;
-
+    /////////////////////////////////////////////
+    // 뷰포트의 자원을 공유받는다.
+    /////////////////////////////////////////////
     // 현재 카메라가 속한 Viewport씬
     ViewportScene* mCameraViewport;
-    // 현재 카메라가 쓰고 있는 리소스
+    // 현재 카메라가 쓰고 있는 리소스 뷰
     std::shared_ptr<D3DGraphicsViewport>        mMainViewport;
     std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
     std::shared_ptr<D3DBitmapRenderTarget>      mDeferredRenderTarget;
+private:
+    D3DGraphicsViewport*    mViewport;
 
     DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
     LightQueue              mSceneLights;
@@ -112,12 +110,11 @@ private:
     // 직교투영전용 변수
     float                   mOrthoWidth;
     float                   mOrthoHeight;
-
-    D3DGraphicsViewport* mViewport;
-    UINT mWidth;
-    UINT mHeight;
-    UINT mOffsetX;
-    UINT mOffsetY;
+   
+    FLOAT mWidthScale;
+    FLOAT mHeightScale;
+    FLOAT mOffsetXScale;
+    FLOAT mOffsetYScale;
 
     // 카메라 스카이박스
     std::shared_ptr<SkyBox> mSkyBox;

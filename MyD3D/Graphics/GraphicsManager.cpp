@@ -255,7 +255,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultRender
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     return std::make_pair(pRTV, pSRV);
 }
@@ -294,7 +293,6 @@ std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultDepthS
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsDSV* pDSV = new D3DGraphicsDSV(pTexture, &DSVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     return std::make_pair(pDSV, pSRV);
 }
@@ -333,7 +331,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateAlbedoGBuffer
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     pSRV->SetBindStage(eShaderStage::PS);
     pSRV->SetBindSlot(12);
@@ -375,7 +372,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateNormalGBuffer
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     pSRV->SetBindStage(eShaderStage::PS);
     pSRV->SetBindSlot(13);
@@ -417,7 +413,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateMaterialGBuff
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     pSRV->SetBindStage(eShaderStage::PS);
     pSRV->SetBindSlot(14);
@@ -459,7 +454,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateEmessiveGBuff
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     pSRV->SetBindStage(eShaderStage::PS);
     pSRV->SetBindSlot(15);
@@ -501,7 +495,6 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateWorldPosGBuff
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
     D3DGraphicsRTV* pRTV = new D3DGraphicsRTV(pTexture, &RTVDesc);
     D3DGraphicsSRV* pSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    pTexture->Release();
 
     pSRV->SetBindStage(eShaderStage::PS);
     pSRV->SetBindSlot(16);

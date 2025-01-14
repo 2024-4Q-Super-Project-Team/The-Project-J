@@ -16,8 +16,7 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     {
         ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
         Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
-        POINT windowSize = _pViewport->GetIWindow()->GetSize();
-        mainCamera->AddComponent<Camera>(Vector2(windowSize.x, windowSize.y));
+        mainCamera->AddComponent<Camera>();
     }
 }
 

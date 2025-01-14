@@ -12,15 +12,11 @@
 #include "Resource/Graphics/Material/Material.h"
 #include "Resource/Graphics/SkyBox/SkyBox.h"
 
-std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>>    Camera::gCameraMainRenderTargetTable;
-std::unordered_map<ViewportScene*, std::weak_ptr<D3DBitmapRenderTarget>>    Camera::gCameraDeferredRenderTargetTable;
-std::unordered_map<ViewportScene*, std::weak_ptr<D3DGraphicsViewport>>      Camera::gCameraMainViewportTable;
-
 Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
     , mProjectionType(ProjectionType::Perspective)
     , mCameraRenderType(CameraRenderType::Forward)
-    , mWidth(0), mHeight(0), mOffsetX(0), mOffsetY(0)
+    , mWidthScale(0), mHeightScale(0), mOffsetXScale(0), mOffsetYScale(0)
     , mFovAngle(XM_PIDIV2)
     , mProjectionNear(1.0f)
     , mProjectionFar(30000.0f)
@@ -32,20 +28,14 @@ Camera::Camera(Object* _owner, Vector2 _size)
     mType = eComponentType::CAMERA;
     mViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mCameraViewport = ViewportManager::GetActiveViewport();
-    if (mCameraViewport)
-    {
-        GetMainRenderTarget(mCameraViewport);
-        GetMainViewport(mCameraViewport);
-        auto size = mCameraViewport->GetIWindow()->GetSize();
-        auto offset = mCameraViewport->GetIWindow()->GetOffset();
-        mWidth = (UINT)(size.x - offset.x);
-        mHeight = (UINT)(size.y - offset.y);
-    }
-    else
-    {
-        Helper::HRT(E_FAIL, "Null pointer reference to CameraViewport");
-    }
+    mCameraViewport     = ViewportManager::GetActiveViewport();
+    mMainViewport       = mCameraViewport->GetMainViewport();
+    mMainRenderTarget   = mCameraViewport->GetMainRenderTarget();
+
+    mWidthScale      = 1.0f;
+    mHeightScale     = 1.0f;
+    mOffsetXScale    = 0.0f;
+    mOffsetYScale    = 0.0f;
 }
 
 Camera::~Camera()
@@ -100,12 +90,6 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
-
-        mViewport->SetWidth(mWidth);
-        mViewport->SetHeight(mHeight);
-        mViewport->SetOffsetX(mOffsetX);
-        mViewport->SetOffsetY(mOffsetY);
-
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
@@ -121,169 +105,76 @@ void Camera::PostRender()
 
 void Camera::SetCameraArea(UINT _offsetX, UINT _offsetY, UINT _width, UINT _height)
 {
-    mWidth = _width;
-    mHeight = _height;
-    mOffsetX = _offsetY;
-    mOffsetY = _offsetY;
+    mWidthScale = _width;
+    mHeightScale = _height;
+    mOffsetXScale = _offsetY;
+    mOffsetYScale = _offsetY;
 }
 
 void Camera::SetCameraSize(UINT _width, UINT _height)
 {
-    mWidth = _width;
-    mHeight = _height;
+    mWidthScale = _width;
+    mHeightScale = _height;
 }
 
 void Camera::SetCameraOffset(UINT _offsetX, UINT _offsetY)
 {
-    mOffsetX = _offsetY;
-    mOffsetY = _offsetY;
+    mOffsetXScale = _offsetY;
+    mOffsetYScale = _offsetY;
 }
 
 void Camera::UpdateCamera()
 {
-    Vector3 pos = gameObject->transform->position;
-    Vector3 dir = gameObject->transform->Forward();
-    Vector3 up = Vector3::Up;
-    Vector3 at = pos + dir;
-    mViewMatrix = XMMatrixLookAtLH(pos, at, up);
+    UpdateMatrix();
+    UpdateViewport();
+}
 
-    float aspectRatio = mViewport->GetWidth() / mViewport->GetHeight();
-
-    switch (mProjectionType)
+void Camera::UpdateMatrix()
+{
+    if (mWidthScale > 0.0f && mHeightScale > 0.0f)
     {
-    case ProjectionType::Perspective:
-        mProjectionMatrix = XMMatrixPerspectiveFovLH(
-            mFovAngle,
-            aspectRatio,
-            mProjectionNear,
-            mProjectionFar);
-        break;
-    case ProjectionType::Orthographic:
-        mProjectionMatrix = XMMatrixOrthographicLH(
-            mOrthoWidth,
-            mOrthoHeight / aspectRatio,
-            mProjectionNear,
-            mProjectionFar);
-        break;
-    default:
-        break;
+        Vector3 pos = gameObject->transform->GetWorldPosition();
+        Vector3 dir = gameObject->transform->Forward();
+        Vector3 up = Vector3::Up;
+        Vector3 at = pos + dir;
+        mViewMatrix = XMMatrixLookAtLH(pos, at, up);
+
+        FLOAT widthRatio    = (FLOAT)mMainViewport->GetWidth() * mWidthScale;
+        FLOAT heightRatio   = (FLOAT)mMainViewport->GetHeight() * mHeightScale;
+
+        float aspectRatio   = widthRatio / heightRatio;
+
+        switch (mProjectionType)
+        {
+        case ProjectionType::Perspective:
+            mProjectionMatrix = XMMatrixPerspectiveFovLH(
+                mFovAngle,
+                aspectRatio,
+                mProjectionNear,
+                mProjectionFar);
+            break;
+        case ProjectionType::Orthographic:
+            mProjectionMatrix = XMMatrixOrthographicLH(
+                mOrthoWidth,
+                mOrthoHeight / aspectRatio,
+                mProjectionNear,
+                mProjectionFar);
+            break;
+        default:
+            break;
+        }
     }
 }
 
-void Camera::GetMainViewport(ViewportScene* _pViewport)
+void Camera::UpdateViewport()
 {
-    auto itr = gCameraMainViewportTable.find(_pViewport);
-    if (itr != gCameraMainViewportTable.end())
+    if (mViewport && mMainViewport)
     {
-        if (itr->second.lock())
-        {
-            mMainViewport = itr->second.lock();
-            return;
-        }
-        else
-        {
-            gCameraMainViewportTable.erase(itr);
-        }
+        mViewport->SetWidth(mWidthScale * mMainViewport->GetWidth());
+        mViewport->SetHeight(mHeightScale * mMainViewport->GetHeight());
+        mViewport->SetOffsetX(mOffsetXScale * mMainViewport->GetWidth());
+        mViewport->SetOffsetY(mOffsetYScale * mMainViewport->GetHeight());
     }
-    RECT clientRect = {};
-    UINT width, height;
-
-    if (_pViewport == nullptr) return;
-    if (_pViewport->GetIWindow() == nullptr) return;
-
-    auto size = _pViewport->GetIWindow()->GetSize();
-    auto offset = _pViewport->GetIWindow()->GetOffset();
-
-    width = (UINT)(size.x - offset.x);
-    height = (UINT)(size.y - offset.y);
-
-    auto pViewport = std::make_shared<D3DGraphicsViewport>(0.0f, 0.0f, width, height);
-
-    gCameraMainViewportTable[_pViewport] = pViewport;
-
-    mMainViewport = pViewport;
-}
-
-void Camera::GetMainRenderTarget(ViewportScene* _pViewport)
-{
-    auto itr = gCameraMainRenderTargetTable.find(_pViewport);
-    if (itr != gCameraMainRenderTargetTable.end())
-    {
-        if (itr->second.lock())
-        {
-            mMainRenderTarget = itr->second.lock();
-            return;
-        }
-        else
-        {
-            gCameraMainRenderTargetTable.erase(itr);
-        }
-    }
-    RECT clientRect = {};
-    UINT width, height;
-    
-    if (_pViewport == nullptr) return;
-    if (_pViewport->GetIWindow() == nullptr) return;
-    
-    auto size = _pViewport->GetIWindow()->GetSize();
-    auto offset = _pViewport->GetIWindow()->GetOffset();
-
-    width  = (UINT)(size.x - offset.x);
-    height = (UINT)(size.y - offset.y);
-
-    auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
-    
-    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultRenderTargetView(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
-
-    auto pSRV = pRenderTarget->GetSRV(pRenderTarget->GetRTV());
-    pSRV->SetBindStage(eShaderStage::PS);
-    pSRV->SetBindSlot(17);
-
-    gCameraMainRenderTargetTable[_pViewport] = pRenderTarget;
-
-    mMainRenderTarget = pRenderTarget;
-}
-
-void Camera::GetDeferredRenderTarget(ViewportScene* _pViewport)
-{
-    auto itr = gCameraDeferredRenderTargetTable.find(_pViewport);
-    if (itr != gCameraDeferredRenderTargetTable.end())
-    {
-        if (itr->second.lock())
-        {
-            mDeferredRenderTarget = itr->second.lock();
-            return;
-        }
-        else
-        {
-            gCameraDeferredRenderTargetTable.erase(itr);
-        }
-    }
-    RECT clientRect = {};
-    UINT width, height;
-
-    if (_pViewport == nullptr) return;
-    if (_pViewport->GetIWindow() == nullptr) return;
-
-    auto size = _pViewport->GetIWindow()->GetSize();
-    auto offset = _pViewport->GetIWindow()->GetOffset();
-
-    width = (UINT)(size.x - offset.x);
-    height = (UINT)(size.y - offset.y);
-
-    auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
-    // G-Buffer
-    pRenderTarget->PushResourceView(GraphicsManager::CreateAlbedoGBuffer(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateNormalGBuffer(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateMaterialGBuffer(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateEmessiveGBuffer(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateWorldPosGBuffer(width, height));
-    pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
-
-    gCameraDeferredRenderTargetTable[_pViewport] = pRenderTarget;
-
-    mDeferredRenderTarget = pRenderTarget;
 }
 
 void Camera::DrawShadow()
@@ -402,7 +293,7 @@ void Camera::SetCameraRenderType(CameraRenderType _type)
     }
     if (_type == CameraRenderType::Deferred)
     {
-        GetDeferredRenderTarget(mCameraViewport);
+        mDeferredRenderTarget = mCameraViewport->GetDeferredRenderTarget();
     }
 }
 
@@ -449,10 +340,6 @@ void Camera::PushLight(Light* _pLight)
 
 void Camera::ExcuteDrawList()
 {
-    if (mMainRenderTarget == nullptr)
-    {
-
-    }
     if (mMainRenderTarget)
     {
         {
@@ -463,7 +350,7 @@ void Camera::ExcuteDrawList()
             ////////////////////////////////////////////////////
             DrawShadow();
 
-            mMainViewport->Bind();
+            mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
 
             // 렌더타입으로 Draw실행
             switch (mCameraRenderType)
@@ -490,7 +377,7 @@ void Camera::ExcuteDrawList()
             mMainRenderTarget->EndDraw();
         }
 
-        mViewport->Bind();
+        mViewport->Bind();  // 카메라 출력될 영역 사이즈
         DrawSwapChain();
     }
 }
@@ -512,15 +399,15 @@ void Camera::EditorRendering()
                 SetCameraRenderType(CameraRenderType::Deferred);
             }
         }
-        int Area[4] = { mWidth, mHeight, mOffsetX, mOffsetY };
-        if (ImGui::SliderInt(("RectWidth" + uid).c_str(), &Area[0], 0, 3000))
-            mWidth = Area[0];
-        if(ImGui::SliderInt(("RectHeight" + uid).c_str(), &Area[1], 0, 3000))
-            mHeight = Area[1];
-        if(ImGui::SliderInt(("RectOffsetX" + uid).c_str(), &Area[2], 0, 3000))
-            mOffsetX = Area[2];
-        if(ImGui::SliderInt(("RectOffsetY" + uid).c_str(), &Area[3], 0, 3000))
-            mOffsetY = Area[3];
+        FLOAT Area[4] = { mWidthScale, mHeightScale, mOffsetXScale, mOffsetYScale };
+        if (ImGui::SliderFloat(("RectWidth" + uid).c_str(), &Area[0], 0.0f, 1.0f))
+            mWidthScale = Area[0];
+        if(ImGui::SliderFloat(("RectHeight" + uid).c_str(), &Area[1], 0.0f, 1.0f))
+            mHeightScale = Area[1];
+        if(ImGui::SliderFloat(("RectOffsetX" + uid).c_str(), &Area[2], 0.0f, 1.0f))
+            mOffsetXScale = Area[2];
+        if(ImGui::SliderFloat(("RectOffsetY" + uid).c_str(), &Area[3], 0.0f, 1.0f))
+            mOffsetYScale = Area[3];
 
         ImGui::Separator();
 

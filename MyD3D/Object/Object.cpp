@@ -239,21 +239,6 @@ json Object::SerializeComponents()
     return ret;
 }
 
-json Object::SerializeComponents()
-{
-    json ret;
-
-    for (auto& cmpArr : mComponentArray)
-    {
-        for (auto& cmp : cmpArr)
-        {
-            ret["id"] = cmp->mId;
-            ret["data"] = cmp->Serialize();
-        }
-    }
-    return ret;
-}
-
 void Object::Deserialize(json& j)
 {
     mId = j["id"].get<unsigned int>();

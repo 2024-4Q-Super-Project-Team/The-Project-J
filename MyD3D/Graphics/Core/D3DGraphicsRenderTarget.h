@@ -20,6 +20,8 @@ public:
     virtual void EndDraw() = 0;
 public:
     BOOL SetTarget();
+    void Reset();
+    virtual void Resize(UINT _width, UINT _height) = 0;
 public:
     inline FLOAT SetClearColor(FLOAT* _color) { memcpy(mClearColor, _color, sizeof(FLOAT) * 3); }
 public:
@@ -58,6 +60,8 @@ public:
 public:
     virtual void Release() override;
     virtual void EndDraw() override;
+public:
+    virtual void Resize(UINT _width, UINT _height) override;
 private:
     const HWND      mHwnd;
     IDXGISwapChain* mSwapChain;
@@ -71,6 +75,8 @@ public:
 public:
     virtual void Release() override;
     virtual void EndDraw() override;
+public:
+    virtual void Resize(UINT _width, UINT _height) override;
 public:
     void BindAllSRV();
     void ResetAllSRV();

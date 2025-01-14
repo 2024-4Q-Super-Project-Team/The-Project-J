@@ -40,5 +40,15 @@ public:
 	inline auto* GetIWindow()		{ return mWindow; }
 	inline auto* GetWorldManager()	{ return mWorldManager; }
 	inline auto* GetSwapChain()		{ return mSwapChain; }
+public:
+	// 공유할 리소스(윈도우마다 사이즈별로 하나씩 만들어주고, 뷰포트를 다르게 해서 사용)
+	std::weak_ptr<D3DGraphicsViewport>		mSharedViewport;
+	std::weak_ptr<D3DBitmapRenderTarget>	mSharedRenderTarget;
+	std::weak_ptr<D3DBitmapRenderTarget>	mSharedDeferredRenderTarget;
+	std::shared_ptr<D3DGraphicsViewport>	GetMainViewport();
+	std::shared_ptr<D3DBitmapRenderTarget>	GetMainRenderTarget();
+	std::shared_ptr<D3DBitmapRenderTarget>	GetDeferredRenderTarget();
+
+	void ResizeSharedResourceView();
 };
 

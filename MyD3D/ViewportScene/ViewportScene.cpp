@@ -85,3 +85,105 @@ void ViewportScene::PostRender()
         mWorldManager->PostRender();
     }
 }
+
+std::shared_ptr<D3DGraphicsViewport> ViewportScene::GetMainViewport()
+{
+    if (mSharedViewport.expired())
+    {
+        auto size = mWindow->GetSize();
+        auto offset = mWindow->GetOffset();
+        UINT width = (UINT)(size.x - offset.x);
+        UINT height = (UINT)(size.y - offset.y);
+
+        auto pViewport = std::make_shared<D3DGraphicsViewport>(0.0f, 0.0f, width, height);
+
+        mSharedViewport = pViewport;
+
+        return pViewport;
+    }
+    else
+    {
+        return mSharedViewport.lock();
+    }
+}
+
+std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetMainRenderTarget()
+{
+    if (mSharedRenderTarget.expired())
+    {
+        auto size   = mWindow->GetSize();
+        auto offset = mWindow->GetOffset();
+        UINT width  = (UINT)(size.x - offset.x);
+        UINT height = (UINT)(size.y - offset.y);
+
+        auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
+
+        pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultRenderTargetView(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
+
+        auto pSRV = pRenderTarget->GetSRV(pRenderTarget->GetRTV());
+        pSRV->SetBindStage(eShaderStage::PS);
+        pSRV->SetBindSlot(11);
+
+        mSharedRenderTarget = pRenderTarget;
+
+        return pRenderTarget;
+    }
+    else
+    {
+        return mSharedRenderTarget.lock();
+    }
+}
+
+std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetDeferredRenderTarget()
+{
+    if (mSharedDeferredRenderTarget.expired())
+    {
+        auto size = mWindow->GetSize();
+        auto offset = mWindow->GetOffset();
+        UINT width = (UINT)(size.x - offset.x);
+        UINT height = (UINT)(size.y - offset.y);
+
+        auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
+        // G-Buffer
+        pRenderTarget->PushResourceView(GraphicsManager::CreateAlbedoGBuffer(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateNormalGBuffer(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateMaterialGBuffer(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateEmessiveGBuffer(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateWorldPosGBuffer(width, height));
+        pRenderTarget->PushResourceView(GraphicsManager::CreateDefaultDepthStencilView(width, height));
+
+        mSharedDeferredRenderTarget = pRenderTarget;
+
+        return pRenderTarget;
+    }
+    else
+    {
+        return mSharedDeferredRenderTarget.lock();
+    }
+}
+
+void ViewportScene::ResizeSharedResourceView()
+{
+    auto size = mWindow->GetSize();
+    auto offset = mWindow->GetOffset();
+    UINT width = (UINT)(size.x - offset.x);
+    UINT height = (UINT)(size.y - offset.y);
+
+    mSwapChain->Resize(width, height);
+
+    // weak_ptr에 존재한다면
+    if (false == mSharedViewport.expired())
+    {
+        mSharedViewport.lock()->SetWidth(width);
+        mSharedViewport.lock()->SetHeight(height);
+    }
+    if (false == mSharedRenderTarget.expired())
+    {
+        mSharedRenderTarget.lock()->Resize(width, height);
+    }
+    if (false == mSharedDeferredRenderTarget.expired())
+    {
+        mSharedDeferredRenderTarget.lock()->Resize(width, height);
+    }
+}

@@ -19,9 +19,13 @@ namespace Editor
 
     void TestEditorTab::Render()
     {
-        //D3DGraphicsRenderTarget* RenderTarget = GameManager::GetCurrentViewport()->GetRenderTarget();
-
-        //ImGui::Image((ImTextureID)RenderTarget->mShaderResourceView->mSRV, ImVec2(250,250));
+        std::string str;
+        ImGui::Text("\nDisplay Memory");
+        D3DGraphicsDevice::GetDisplayMemoryInfo(str);
+        ImGui::Text("%s", str.c_str());
+        ImGui::Text("\nProcess Memory");
+        D3DGraphicsDevice::GetVirtualMemoryInfo(str);
+        ImGui::Text("%s", str.c_str());
 
         if (mCamera)
         {

@@ -4,33 +4,57 @@
 #include "Graphics/Core/D3DGraphicsRenderer.h"
 
 D3DGraphicsTexture2D::D3DGraphicsTexture2D(D3D11_TEXTURE2D_DESC* _Desc)
-    : mDesc(_Desc)
+    : mDesc({})
     , mTex(nullptr)
 {
-    Create();
+    if (_Desc == nullptr)
+    {
+        Helper::HRT(E_FAIL, "Nullpointer reference to D3D11_TEXTURE2D_DESC.");
+    }
+    else
+    {
+        mDesc = (*_Desc);
+    }
+    Helper::HRT(Create(),"Create Fail D3DGraphicsTexture2D.");
 }
 
 D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
-    : mDesc(nullptr)
+    : mDesc({})
     , mTex(_pTex)
 {
+    if (_pTex == nullptr)
+    {
+        Helper::HRT(E_FAIL, "Nullpointer reference to ID3D11Texture2D.");
+    }
+    _pTex->GetDesc(&mDesc);
 }
 
 D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
 {
-    SAFE_RELEASE(mTex);
+    if (mTex)
+    {
+        ULONG refCount = 0;
+        do { refCount = mTex->Release();
+        } while (refCount > 0);
+        mTex = nullptr;
+    }
 }
 
 void D3DGraphicsTexture2D::Release()
 {
-    SAFE_RELEASE(mTex);
+    if (mTex) 
+    {
+        ULONG refCount = 0;
+        do { refCount = mTex->Release();
+        } while (refCount > 0);
+        mTex = nullptr;
+    }
     delete this;
 }
 
 HRESULT D3DGraphicsTexture2D::Create()
 {
-    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateTexture2D(mDesc, nullptr, &mTex), "HRESULT Failed To CreateTexture2D()");
-    return S_OK;
+    return D3DGraphicsDevice::GetDevice()->CreateTexture2D(&mDesc, nullptr, &mTex);
 }
 
 HRESULT D3DGraphicsTexture2D::Bind()
@@ -42,29 +66,59 @@ HRESULT D3DGraphicsTexture2D::Reset()
 {
     return E_NOTIMPL;
 }
+
+HRESULT D3DGraphicsTexture2D::Resize(UINT _width, UINT _height)
+{
+    if (mTex)
+    {
+        mTex->GetDesc(&mDesc);
+        SAFE_RELEASE(mTex);
+        mDesc.Width = _width;
+        mDesc.Height = _height;
+        return Create();
+    }
+    return E_FAIL;
+}
+
+D3DResourceView::D3DResourceView(D3DGraphicsTexture2D* _pRefTex)
+    : mRefTex(_pRefTex)
+{
+}
+
+D3DResourceView::~D3DResourceView()
+{
+    // 여기서 삭제하면 RTV, SRV등 같은 텍스쳐를도 참조하는데 두번 삭제해버리므로, 이중 Delete가 이뤄져 터진다.
+}
+
+HRESULT D3DResourceView::Resize(UINT _width, UINT _height)
+{
+    return mRefTex->Resize(_width, _height);
+}
 ////////////////////////////////////////////////
 /// D3DGraphicsRTV
 ////////////////////////////////////////////////
-
-D3DGraphicsRTV::D3DGraphicsRTV(D3DGraphicsTexture2D* _pTex2D, const D3D11_RENDER_TARGET_VIEW_DESC* _pDesc)
+D3DGraphicsRTV::D3DGraphicsRTV(D3DGraphicsTexture2D* _pTex2D, D3D11_RENDER_TARGET_VIEW_DESC* _pDesc)
+    : D3DResourceView(_pTex2D), mDesc(_pDesc)
 {
-    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateRenderTargetView(_pTex2D->mTex, _pDesc, &mRTV), "HRESULT Failed To CreateRenderTargetView()");
+    Helper::HRT(Create(), "HRESULT Failed To CreateRenderTargetView()");
 }
 
 D3DGraphicsRTV::~D3DGraphicsRTV()
 {
     SAFE_RELEASE(mRTV);
+    SAFE_RELEASE(mRefTex);
 }
 
 void D3DGraphicsRTV::Release()
 {
     SAFE_RELEASE(mRTV);
+    SAFE_RELEASE(mRefTex);
     delete this;
 }
 
 HRESULT D3DGraphicsRTV::Create()
 {
-    return S_OK;
+    return D3DGraphicsDevice::GetDevice()->CreateRenderTargetView(mRefTex->mTex, mDesc, &mRTV);
 }
 HRESULT D3DGraphicsRTV::Bind()
 {
@@ -92,25 +146,28 @@ HRESULT D3DGraphicsRTV::Reset()
 ////////////////////////////////////////////////
 /// D3DGraphicsDSV
 ////////////////////////////////////////////////
-D3DGraphicsDSV::D3DGraphicsDSV(D3DGraphicsTexture2D* _pTex2D, const D3D11_DEPTH_STENCIL_VIEW_DESC* _pDesc)
+D3DGraphicsDSV::D3DGraphicsDSV(D3DGraphicsTexture2D* _pTex2D, D3D11_DEPTH_STENCIL_VIEW_DESC* _pDesc)
+    : D3DResourceView(_pTex2D), mDesc(_pDesc)
 {
-    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateDepthStencilView(_pTex2D->mTex, _pDesc, &mDSV), "HRESULT Failed To CreateDepthStencilView()");
+    Helper::HRT(Create(), "HRESULT Failed To CreateDepthStencilView()");
 }
 
 D3DGraphicsDSV::~D3DGraphicsDSV()
 {
     SAFE_RELEASE(mDSV);
+    SAFE_RELEASE(mRefTex);
 }
 
 void D3DGraphicsDSV::Release()
 {
     SAFE_RELEASE(mDSV);
+    SAFE_RELEASE(mRefTex);
     delete this;
 }
 
 HRESULT D3DGraphicsDSV::Create()
 {
-    return S_OK;
+    return D3DGraphicsDevice::GetDevice()->CreateDepthStencilView(mRefTex->mTex, mDesc, &mDSV);
 }
 HRESULT D3DGraphicsDSV::Bind()
 {
@@ -137,9 +194,10 @@ HRESULT D3DGraphicsDSV::Reset()
 ////////////////////////////////////////////////
 /// D3DGraphicsSRV
 ////////////////////////////////////////////////
-D3DGraphicsSRV::D3DGraphicsSRV(D3DGraphicsTexture2D* _pTex2D, const D3D11_SHADER_RESOURCE_VIEW_DESC* _pDesc)
+D3DGraphicsSRV::D3DGraphicsSRV(D3DGraphicsTexture2D* _pTex2D, D3D11_SHADER_RESOURCE_VIEW_DESC* _pDesc)
+    : D3DResourceView(_pTex2D), mDesc(_pDesc)
 {
-    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateShaderResourceView(_pTex2D->mTex, _pDesc, &mSRV), "HRESULT Failed To CreateShaderResourceView()");
+    Helper::HRT(Create(), "HRESULT Failed To CreateShaderResourceView()");
 }
 
 D3DGraphicsSRV::~D3DGraphicsSRV()
@@ -155,7 +213,7 @@ void D3DGraphicsSRV::Release()
 
 HRESULT D3DGraphicsSRV::Create()
 {
-    return S_OK;
+    return D3DGraphicsDevice::GetDevice()->CreateShaderResourceView(mRefTex->mTex, mDesc, &mSRV);
 }
 
 HRESULT D3DGraphicsSRV::Bind()
@@ -246,7 +304,7 @@ HRESULT D3DGraphicsSRV::Reset()
 }
 
 D3DGraphicsImg::D3DGraphicsImg(std::wstring_view _path)
-    : GraphicsResourceKeyHandler(_path)
+    : D3DResourceView(nullptr), GraphicsResourceKeyHandler(_path)
 {
     Create();
 }
@@ -378,3 +436,4 @@ HRESULT D3DGraphicsImg::Reset()
     }
     return E_FAIL;
 }
+

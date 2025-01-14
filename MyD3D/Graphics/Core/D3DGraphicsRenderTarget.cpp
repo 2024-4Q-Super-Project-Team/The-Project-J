@@ -54,6 +54,18 @@ BOOL D3DGraphicsRenderTarget::SetTarget()
     return FALSE;
 }
 
+void D3DGraphicsRenderTarget::Reset()
+{
+    if (FALSE == isBinding)
+    {
+        SAFE_RELEASE(mDepthStencilView);
+        SAFE_DELETE_VECTOR(mRenderTargetViews);
+        SAFE_DELETE_MAP(mShaderResourceViewTable);
+        mWidth = 0;
+        mHeight = 0;
+    }
+}
+
 D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
     : mHwnd(_hWnd)
 {
@@ -90,8 +102,6 @@ D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
             Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
             D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
             mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
-            if (pTexture)
-                pTexture->Release();
         }
     }
 
@@ -120,17 +130,6 @@ void D3DHwndRenderTarget::Release()
     delete this;
 }
 
-//void D3DHwndRenderTarget::BeginDraw()
-//{
-//    auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
-//    if (pDeviceContext)
-//    {
-//        pDeviceContext->OMSetRenderTargets(1, &mRenderTargetViews[0]->mRTV, mDepthStencilView->mDSV);
-//        D3DGraphicsRenderTarget::mRenderTargetBindingStack.push_back(this);
-//        isBinding = TRUE;
-//    }
-//}
-
 void D3DHwndRenderTarget::EndDraw()
 {
     // 바인드 타겟 스택이 비어있으면 에러
@@ -147,6 +146,71 @@ void D3DHwndRenderTarget::EndDraw()
     else // 아니라면 순서가 잘못된거다.
     {
         throw std::runtime_error("Out of order BeginDraw() & EndDraw()");
+    }
+}
+
+void D3DHwndRenderTarget::Resize(UINT _width, UINT _height)
+{
+    //모든 참조 객체를 Release해야 ResizeBuffers가 에러를 안낸다.
+    SAFE_RELEASE_VECTOR(mRenderTargetViews);
+    
+    Helper::HRT(mSwapChain->ResizeBuffers(
+        0,              // 버퍼 수 (0은 기존 값을 유지)
+        _width,       // 새 가로 크기
+        _height,      // 새 세로 크기
+        DXGI_FORMAT_UNKNOWN, // 기존 포맷 유지
+        0               // 플래그
+    ));
+    { // 백버퍼 RTV 생성
+        ID3D11Texture2D* pD3DTex2D = nullptr;
+        Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
+        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
+        mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
+    }
+    
+    //SAFE_RELEASE_VECTOR(mRenderTargetViews);
+    //SAFE_RELEASE(mSwapChain);
+    //auto* pFactory = D3DGraphicsDevice::GetFactory();
+    //auto* pDevice = D3DGraphicsDevice::GetDevice();
+    //{ // 스왑체인 생성
+    //    DXGI_SWAP_CHAIN_DESC swapDesc = {};
+    //    swapDesc.BufferCount = 1;
+    //    swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    //    swapDesc.OutputWindow = mHwnd;	// 스왑체인 출력할 창 핸들 값.
+    //    swapDesc.Windowed = true;		// 창 모드 여부 설정.
+    //    swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    //    // 백버퍼(텍스처)의 가로/세로 크기 설정.
+    //    swapDesc.BufferDesc.Width = _width;
+    //    swapDesc.BufferDesc.Height = _height;
+    //    // 화면 주사율 설정.
+    //    swapDesc.BufferDesc.RefreshRate.Numerator = 60;
+    //    swapDesc.BufferDesc.RefreshRate.Denominator = 1;
+    //    // 샘플링 관련 설정.
+    //    swapDesc.SampleDesc.Count = 1;
+    //    swapDesc.SampleDesc.Quality = 0;
+    //    // 스왑체인 생성.
+    //    Helper::HRT(pFactory->CreateSwapChain(pDevice, &swapDesc, &mSwapChain));
+
+    //    { // 백버퍼 RTV 생성
+    //        ID3D11Texture2D* pD3DTex2D = nullptr;
+    //        Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
+    //        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
+    //        mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
+    //    }
+    //    {
+    //        DXGI_MODE_DESC fullscreenDesc = {};
+    //        fullscreenDesc.Width = _width;
+    //        fullscreenDesc.Height = _height;
+    //        fullscreenDesc.RefreshRate.Numerator = 60;
+    //        fullscreenDesc.RefreshRate.Denominator = 1;
+    //        fullscreenDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    //        Helper::HRT(mSwapChain->ResizeTarget(&fullscreenDesc));
+    //    }
+    //}
+    if (mDepthStencilView)
+    {
+        mDepthStencilView->Resize(_width, _height);
     }
 }
 
@@ -171,23 +235,6 @@ void D3DBitmapRenderTarget::Release()
     delete this;
 }
 
-//void D3DBitmapRenderTarget::BeginDraw()
-//{
-//    auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
-//    if (pDeviceContext)
-//    {
-//        std::vector<ID3D11RenderTargetView*> RTVs;
-//        RTVs.reserve(mRenderTargetViews.size());
-//        for (auto rtv : mRenderTargetViews) RTVs.push_back(rtv->mRTV);
-//        // 벡터가 비어있어도 nullptr이 들어가기 때문에 상관없다.
-//
-//        pDeviceContext->OMSetRenderTargets(mRenderTargetViews.size(), RTVs.data(), mDepthStencilView == nullptr ? nullptr : mDepthStencilView->mDSV);
-//
-//        // 바인딩 스택에 넣는다.
-//        D3DGraphicsRenderTarget::mRenderTargetBindingStack.push_back(this);
-//        isBinding = TRUE;
-//    }
-//}
 
 void D3DBitmapRenderTarget::EndDraw()
 {
@@ -212,6 +259,18 @@ void D3DBitmapRenderTarget::EndDraw()
         {
             throw std::runtime_error("Out of order BeginDraw() & EndDraw()");
         }
+    }
+}
+
+void D3DBitmapRenderTarget::Resize(UINT _width, UINT _height)
+{
+    if (mDepthStencilView)
+    {
+        mDepthStencilView->Resize(_width, _height);
+    }
+    for (auto& rtv : mRenderTargetViews)
+    {
+        rtv->Resize(_width, _height);
     }
 }
 

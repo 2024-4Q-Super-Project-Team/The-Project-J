@@ -97,7 +97,7 @@ ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDe
     _pWinDesc->WndClass.lpfnWndProc = ViewportManager::WinProc;
 
     Display::IWindow*       pWindow = nullptr;
-    D3DHwndRenderTarget*   pSwapChain = nullptr;
+    D3DHwndRenderTarget*    pSwapChain = nullptr;
     if (FAILED(mDisplayDevice->CreateWindowDisplay(_pWinDesc, &pWindow)))
     {
         throw std::runtime_error("Hresult Failed to ViewportScene::CreateViewport...CreateWindowDisplay()");
@@ -161,14 +161,15 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
 
     switch (_msg)
     {
-        // 윈도우 만들어 졌을 때
     case WM_CREATE:
         break;
-        // 윈도우 사이즈 조절할 때
     case WM_SIZE:
         break;
-        // 윈도우 이동할 때
     case WM_MOVE:
+        if (pViewport)
+        {
+            pViewport->ResizeSharedResourceView();
+        }
         break;
         // 시스템 키 눌르고 뗏을 때일걸..요?
     case WM_SYSKEYDOWN:

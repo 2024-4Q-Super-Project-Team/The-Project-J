@@ -7,7 +7,16 @@ CameraController::~CameraController()
 
 void CameraController::Start()
 {
+	// 스카이 박스
+	auto pSkyBox = ResourceManager::AddResource<SkyBox>(L"Default_SkyBox");
+	pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
+	pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
+	pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
+	pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
+
 	mCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
+	mCamera->SetSkyBox(pSkyBox);
+
 	mTr = mCamera->gameObject->transform;
 	mMoveSpeed = 100.0f;
 
@@ -16,14 +25,16 @@ void CameraController::Start()
 	CurrentAngles[Yaw] = Degree::ToRadian(180);
 	CurrentAngles[Pitch] = 0;
 	CurrentAngles[Roll] = 0;
-	//CurrentAngles[Roll] = Degree(180);
 
-	auto pSkyBox = ResourceManager::AddResource<SkyBox>(L"Default_SkyBox");
-	pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
-	pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
-	pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
-	pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
-	mCamera->SetSkyBox(pSkyBox);
+	CurrentSubCameraAngles[Yaw] = Degree::ToRadian(180);
+	CurrentSubCameraAngles[Pitch] = 0;
+	CurrentSubCameraAngles[Roll] = 0;
+
+	auto SubCamera = CreateObject(L"Sub_Camera", L"Default");
+	SubCamera->transform->position = Vector3(0, 100, -100);
+	mSubCamera = SubCamera->AddComponent<Camera>();
+	mSubCamera->SetCameraSize(0.3f, 0.3f);
+	mSubCamera->SetSkyBox(pSkyBox);
 }
 
 void CameraController::Update()
@@ -37,9 +48,18 @@ void CameraController::Update()
 		Radian deltaAngleY;
 		deltaAngleX = Input::GetDeltaMousePos().x * sensitivity;
 		deltaAngleY = -Input::GetDeltaMousePos().y * sensitivity;
-		CurrentAngles[Yaw] += deltaAngleX;
-		CurrentAngles[Pitch] += deltaAngleY;
-		CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle, maxYAngle);
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			CurrentSubCameraAngles[Yaw] += deltaAngleX;
+			CurrentSubCameraAngles[Pitch] += deltaAngleY;
+			CurrentSubCameraAngles[Pitch] = Clamp(CurrentSubCameraAngles[Pitch], -maxYAngle, maxYAngle);
+		}
+		else
+		{
+			CurrentAngles[Yaw] += deltaAngleX;
+			CurrentAngles[Pitch] += deltaAngleY;
+			CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle, maxYAngle);
+		}
 	}
 	else
 	{
@@ -47,40 +67,86 @@ void CameraController::Update()
 	}
 	if (Input::IsKeyHold('Q'))
 	{
-		mTr->position += mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position += mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('E'))
 	{
-		mTr->position -= mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position -= mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('W'))
 	{
-		mTr->position += mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position += mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('S'))
 	{
-		mTr->position -= mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position -= mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('A'))
 	{
-		mTr->position += mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position += mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('D'))
 	{
-		mTr->position -= mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+			mTr->position -= mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
 	}
 	if (Input::GetWheelDeltaPos() != 0)
 	{
-		mTr->position += Input::GetWheelDeltaPos() * mTr->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+		if (Input::IsKeyHold(Key::LCONTROL))
+		{
+			mSubCamera->gameObject->transform->position += Input::GetWheelDeltaPos() * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+		}
+		else
+		{
+			mTr->position += Input::GetWheelDeltaPos() * mTr->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+		}
 	}
-	mTr->rotation = DirectX::XMQuaternionRotationRollPitchYaw(CurrentAngles[Pitch], CurrentAngles[Yaw], CurrentAngles[Roll]);
+
+	mTr->rotation
+		= DirectX::XMQuaternionRotationRollPitchYaw(
+			CurrentAngles[Pitch],
+			CurrentAngles[Yaw],
+			CurrentAngles[Roll]
+		);
+
+	mSubCamera->gameObject->transform->rotation
+		= DirectX::XMQuaternionRotationRollPitchYaw(
+			CurrentSubCameraAngles[Pitch],
+			CurrentSubCameraAngles[Yaw],
+			CurrentSubCameraAngles[Roll]
+		);
 }
 
 json CameraController::Serialize()
 {
 	return json();
-}
-
-void CameraController::Deserialize(json& j)
-{
 }

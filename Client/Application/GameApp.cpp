@@ -34,6 +34,7 @@ BOOL GameApp::OnPostInitialize()
 
         World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
         wrdMng->SetActiveWorld(L"TestWorld");
+        //wrdMng->LoadWorld(L"TestWorld");
 #ifdef _DEBUG
         /////////////////////////////////////////////////////
         // ¿¡µðÅÍ
@@ -53,7 +54,7 @@ BOOL GameApp::OnPostInitialize()
             if (nullptr == wrdMng) return FALSE;
 
             World* wolrd = wrdMng->CreateWorld<EditorWorld>(L"EditorWorld", L"");
-            wrdMng->SetActiveWorld(L"EditorWorld");
+            wrdMng->SetActiveWorld(L"EditorWorld");  
         }
         GameApp::EditorRePosition();
 #endif // DEBUG

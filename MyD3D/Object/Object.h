@@ -59,6 +59,7 @@ public:
 
 public:
   	json Serialize();
+    json SerializeComponents();
     void Deserialize(json& j);
 public:
     Transform* const transform;

@@ -1,4 +1,6 @@
 #pragma once
+#include <codecvt> // codecvt_utf8
+#include <locale>  // wstring_convert
 
 namespace Helper
 {
@@ -48,4 +50,9 @@ namespace Helper
     void HRT(HRESULT _hr, const char* _errorMsg = "");
     void DecomposeMatrix(const Matrix& mat, Vector3& position, Quaternion& rotation, Vector3& scale);
     HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size);
+
+
+    std::string to_utf8(std::wstring& wide_string);
+
+    std::wstring to_wstr(const std::string& utf8_string);
 }

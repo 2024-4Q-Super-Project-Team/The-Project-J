@@ -2,6 +2,8 @@
 #include "WorldManager.h"
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
+#include "ObjectGroup/ObjectGroup.h"
+#include "Object/Object.h"
 
 #include <fstream>
 
@@ -163,13 +165,27 @@ void WorldManager::SaveWorld(std::wstring worldName)
 	else
 		world = mWorlds[worldName];
 
+
+	//(1) 월드 - 오브젝트  그룹 - 오브젝트 -컴포넌트 id 까지 직렬화
 	json data = world->Serialize();
 	std::wstring name = world->GetName();
 	std::ofstream file(name + L".json");
 	if (file.is_open())
 		file << data.dump(4);
-
 	file.close();
+
+
+	//(2) 각 컴포넌트 직렬화 
+	json cmpData = json::array();
+	for (const auto& group : world->GetObjectGroups())
+		for (const auto& object : group->GetObjects())
+			cmpData.push_back(object->SerializeComponents());
+
+	std::ofstream file2(name + L"Cmps.json");
+	if (file2.is_open())
+		file2 << cmpData.dump(4);
+	file2.close();
+	
 }
 
 void WorldManager::LoadWorld(std::wstring worldName)

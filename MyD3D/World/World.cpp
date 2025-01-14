@@ -137,7 +137,7 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
 json World::Serialize()
 {
     json ret;
-    ret["name"] = mName.c_str();
+    ret["name"] = Helper::to_utf8(mName);
 
     json objGroups = json::array();
     for (auto group : mObjectGroups)
@@ -151,7 +151,8 @@ json World::Serialize()
 
 void World::Deserialize(json& j)
 {
-    mName = j["name"].get<std::wstring>();
+    std::string str = j["name"].get<std::string>();
+    mName = Helper::to_wstr(str);
     for (auto& groupJson : j["object groups"])
     {
         ObjectGroup* group = CreateObjectGroup(L"");

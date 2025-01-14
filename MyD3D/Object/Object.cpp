@@ -206,7 +206,7 @@ json Object::Serialize()
 {
     json ret;
     ret["id"] = mId;
-    ret["name"] = Helper::ToString(mName);
+    ret["name"] = Helper::to_utf8(mName);
 
     json cmps = json::array();
     for (auto& cmpArr : mComponentArray)
@@ -239,17 +239,36 @@ json Object::SerializeComponents()
     return ret;
 }
 
+json Object::SerializeComponents()
+{
+    json ret;
+
+    for (auto& cmpArr : mComponentArray)
+    {
+        for (auto& cmp : cmpArr)
+        {
+            ret["id"] = cmp->mId;
+            ret["data"] = cmp->Serialize();
+        }
+    }
+    return ret;
+}
+
 void Object::Deserialize(json& j)
 {
     mId = j["id"].get<unsigned int>();
     std::string str = j["name"].get<std::string>();
-    mName = Helper::ToWString(str);
+    mName = Helper::to_wstr(str);
 
     for (auto& componentJson : j["components"])
     {
         std::string name = componentJson["type"].get<std::string>();
-        Component* component = static_cast<Component*>(CREATE_COMPONENT(name, this));
-        if (component)
+        Component* component;
+        if (name == "Transform") //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
+            component = transform;
+        else
+            component = static_cast<Component*>(CREATE_COMPONENT(name, this));
+        if(component)
             component->mId = componentJson["id"].get<unsigned int>();
         //컴포넌트의 Deserialize는 별도로 해줍니다. 
     }

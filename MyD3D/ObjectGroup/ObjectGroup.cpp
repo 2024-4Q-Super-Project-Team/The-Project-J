@@ -107,7 +107,7 @@ json ObjectGroup::Serialize()
 {
     json ret;
     ret["id"] = mId;
-    ret["name"] = mName.c_str();
+    ret["name"] = Helper::to_utf8(mName);
 
     json objs = json::array();
     for (auto obj : mObjects)
@@ -121,7 +121,8 @@ json ObjectGroup::Serialize()
 void ObjectGroup::Deserialize(json& j)
 {
     mId = j["id"].get<unsigned int>();
-    mName = j["name"].get<std::wstring>();
+    std::string str = j["name"].get<std::string>();
+    mName = Helper::to_wstr(str);
 
     for (auto& objectJson : j["objects"])
     {

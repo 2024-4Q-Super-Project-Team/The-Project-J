@@ -61,7 +61,7 @@ public:
     T* EditorAddComponent(Args&&... args);
 
 public:
-    json Serialize();
+  	json Serialize();
     json SerializeComponents();
     void Deserialize(json& j);
 public:

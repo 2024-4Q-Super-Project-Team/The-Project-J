@@ -8,6 +8,7 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(Light);
 	REGISTER_COMPONENT(MeshRenderer);
 	REGISTER_COMPONENT(SkinnedMeshRenderer);
+	REGISTER_COMPONENT(Transform);
 
 	return true;
 }

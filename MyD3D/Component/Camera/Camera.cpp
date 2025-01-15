@@ -16,7 +16,8 @@ Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
     , mProjectionType(ProjectionType::Perspective)
     , mCameraRenderType(CameraRenderType::Forward)
-    , mWidthScale(0), mHeightScale(0), mOffsetXScale(0), mOffsetYScale(0)
+    , mSizeScale(Vector2::One)
+    , mOffsetScale(Vector2::Zero)
     , mFovAngle(XM_PIDIV2)
     , mProjectionNear(1.0f)
     , mProjectionFar(30000.0f)
@@ -31,11 +32,6 @@ Camera::Camera(Object* _owner, Vector2 _size)
     mCameraViewport     = ViewportManager::GetActiveViewport();
     mMainViewport       = mCameraViewport->GetMainViewport();
     mMainRenderTarget   = mCameraViewport->GetMainRenderTarget();
-
-    mWidthScale      = 1.0f;
-    mHeightScale     = 1.0f;
-    mOffsetXScale    = 0.0f;
-    mOffsetYScale    = 0.0f;
 }
 
 Camera::~Camera()
@@ -103,24 +99,14 @@ void Camera::PostRender()
 {
 }
 
-void Camera::SetCameraArea(UINT _offsetX, UINT _offsetY, UINT _width, UINT _height)
+void Camera::SetCameraSize(Vector2 _sizeScale)
 {
-    mWidthScale = _width;
-    mHeightScale = _height;
-    mOffsetXScale = _offsetY;
-    mOffsetYScale = _offsetY;
+    mSizeScale = _sizeScale;
 }
 
-void Camera::SetCameraSize(UINT _width, UINT _height)
+void Camera::SetCameraOffset(Vector2 _offsetScale)
 {
-    mWidthScale = _width;
-    mHeightScale = _height;
-}
-
-void Camera::SetCameraOffset(UINT _offsetX, UINT _offsetY)
-{
-    mOffsetXScale = _offsetY;
-    mOffsetYScale = _offsetY;
+	mOffsetScale = _offsetScale;
 }
 
 void Camera::UpdateCamera()
@@ -131,7 +117,7 @@ void Camera::UpdateCamera()
 
 void Camera::UpdateMatrix()
 {
-    if (mWidthScale > 0.0f && mHeightScale > 0.0f)
+    if (mSizeScale.Length() > 0.05f)
     {
         Vector3 pos = gameObject->transform->GetWorldPosition();
         Vector3 dir = gameObject->transform->Forward();
@@ -139,8 +125,8 @@ void Camera::UpdateMatrix()
         Vector3 at = pos + dir;
         mViewMatrix = XMMatrixLookAtLH(pos, at, up);
 
-        FLOAT widthRatio    = (FLOAT)mLocalViewport->GetWidth() * mWidthScale;
-        FLOAT heightRatio   = (FLOAT)mLocalViewport->GetHeight() * mHeightScale;
+        FLOAT widthRatio    = (FLOAT)mLocalViewport->GetWidth() * mSizeScale.x;
+        FLOAT heightRatio   = (FLOAT)mLocalViewport->GetHeight() * mSizeScale.y;
 
         float aspectRatio   = widthRatio / heightRatio;
 
@@ -170,10 +156,10 @@ void Camera::UpdateViewport()
 {
     if (mLocalViewport && mMainViewport)
     {
-        mLocalViewport->SetWidth(mWidthScale * mMainViewport->GetWidth());
-        mLocalViewport->SetHeight(mHeightScale * mMainViewport->GetHeight());
-        mLocalViewport->SetOffsetX(mOffsetXScale * mMainViewport->GetWidth());
-        mLocalViewport->SetOffsetY(mOffsetYScale * mMainViewport->GetHeight());
+        mLocalViewport->SetWidth(mSizeScale.x * mMainViewport->GetWidth());
+        mLocalViewport->SetHeight(mSizeScale.y * mMainViewport->GetHeight());
+        mLocalViewport->SetOffsetX(mOffsetScale.x * mMainViewport->GetWidth());
+        mLocalViewport->SetOffsetY(mOffsetScale.y * mMainViewport->GetHeight());
     }
 }
 
@@ -335,7 +321,7 @@ void Camera::PushLight(Light* _pLight)
 
 void Camera::ExcuteDrawList()
 {
-    if (mWidthScale > 0.0f && mHeightScale > 0.0f)
+    if (mSizeScale.Length() > 0.05f)
     {
         if (mMainRenderTarget)
         {
@@ -385,88 +371,100 @@ void Camera::ExcuteDrawList()
 void Camera::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::CollapsingHeader(("Camera" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+
+    if (ImGui::TreeNodeEx(("Camera" + uid).c_str(), EDITOR_FLAG_COMPONENT))
     {
-        bool isForward = mCameraRenderType == CameraRenderType::Forward ? true : false;
-        if (ImGui::Checkbox("isForward", &isForward))
+        const char* renderMode[] = { "Forward", "Deferred"};
+        int SelectIndex = (int)mCameraRenderType; // 현재 선택된 항목 (인덱스)
+
+        ImGui::Text("RenderMode : ");
+        if (ImGui::Combo((uid + "RenderMode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
         {
-            if (isForward)
-            {
-                SetCameraRenderType(CameraRenderType::Forward);
-            }
-            else
-            {
-                SetCameraRenderType(CameraRenderType::Deferred);
-            }
+			if (SelectIndex == 0)
+			{
+				SetCameraRenderType(CameraRenderType::Forward);
+			}
+			else
+			{
+				SetCameraRenderType(CameraRenderType::Deferred);
+			}
         }
-        FLOAT Area[4] = { mWidthScale, mHeightScale, mOffsetXScale, mOffsetYScale };
-
-        ImGui::Text(("RTVWidth : " + std::to_string(mMainRenderTarget->GetWidth())).c_str());
-        ImGui::Text(("RTVHeight : " + std::to_string(mMainRenderTarget->GetHeight())).c_str());
-        ImGui::Separator();
-        ImGui::Text(("RectWidth : " + std::to_string(mLocalViewport->GetWidth())).c_str());
-        if (ImGui::SliderFloat(("WidthScale : " + uid).c_str(), &Area[0], 0.0f, 1.0f))
-            mWidthScale = Area[0];
-
-        ImGui::Text(("RectHeight : " + std::to_string(mLocalViewport->GetHeight())).c_str());
-        if(ImGui::SliderFloat(("HeightScale : " + uid).c_str(), &Area[1], 0.0f, 1.0f))
-            mHeightScale = Area[1];
-
-        ImGui::Text(("RectOffsetX : " + std::to_string(mLocalViewport->GetOffsetX())).c_str());
-        if(ImGui::SliderFloat(("OffsetXScale : " + uid).c_str(), &Area[2], 0.0f, 1.0f))
-            mOffsetXScale = Area[2];
-
-        ImGui::Text(("RectOffsetY : " + std::to_string(mLocalViewport->GetOffsetY())).c_str());
-        if(ImGui::SliderFloat(("OffsetYScale : " + uid).c_str(), &Area[3], 0.0f, 1.0f))
-            mOffsetYScale = Area[3];
 
         ImGui::Separator();
 
-        ImGui::Text("Projection");
-        ImGui::SliderFloat(("fovAngle" + uid).c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
-        ImGui::SliderFloat(("Near" + uid).c_str(), &mProjectionNear, 0.1f, 1000.0f);
-        ImGui::SliderFloat(("Far" + uid).c_str(), &mProjectionFar, 1.0f, 100000.0f);
+        UINT size[2] = { 
+            mSizeScale.x * mLocalViewport->GetWidth(),
+            mSizeScale.y * mLocalViewport->GetHeight() 
+        };
+		UINT offset[2] = { 
+            mOffsetScale.x * mLocalViewport->GetWidth(),
+            mOffsetScale.y * mLocalViewport->GetHeight()
+        };
+        ImGui::Text(("SizeScale : (" + std::to_string(size[0]) + ", " + std::to_string(size[1]).c_str() + ")").c_str());
+        ImGui::SliderFloat2((uid + "SizeScale").c_str(), &mSizeScale.x, 0.0f, 1.0f);
+        ImGui::Text(("OffsetScale : (" + std::to_string(offset[0]) + ", " + std::to_string(offset[1]).c_str() + ")").c_str());
+        ImGui::SliderFloat2((uid + "OffsetScale").c_str(), &mOffsetScale.x, 0.0f, 1.0f);
+
+        ImGui::Separator();
+
+        ImGui::Text("fovAngle : ");
+        ImGui::SliderFloat((uid + "fovAngle").c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
+        ImGui::Text("Near : ");
+        ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
+        ImGui::Text("Far : ");
+        ImGui::SliderFloat((uid + "Far").c_str(), &mProjectionFar, 1.0f, 100000.0f);
 
         if (mCameraRenderType == CameraRenderType::Deferred && mDeferredRenderTarget)
         {
             ImGui::Separator();
-            ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");
-            auto CameraRTV = mDeferredRenderTarget->GetRTV();
-            auto CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
 
-            ImGui::Separator();
-            ImGui::Text("Normal + Depth ( rgb(Normal), a(Depth) )");
-            CameraRTV = mDeferredRenderTarget->GetRTV(1);
-            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+            EDITOR_COLOR_EXTRA;
+            if (ImGui::TreeNodeEx(("Deferred View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+            {
+                //ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");
+                auto CameraRTV = mDeferredRenderTarget->GetRTV();
+                auto CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+                ImGui::SameLine();
+                //ImGui::Text("Normal + Depth ( rgb(Normal), a(Depth) )");
+                CameraRTV = mDeferredRenderTarget->GetRTV(1);
+                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
 
-            ImGui::Separator();
-            ImGui::Text("Material ( r(Metalness), g(Roughness), b(Specular), a(AmbientOcclusion) )");
-            CameraRTV = mDeferredRenderTarget->GetRTV(2);
-            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+                //ImGui::Text("Material ( r(Metalness), g(Roughness), b(Specular), a(AmbientOcclusion) )");
+                CameraRTV = mDeferredRenderTarget->GetRTV(2);
+                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+                ImGui::SameLine();
+                //ImGui::Text("Emessive ( rgb(Emessive) )");
+                CameraRTV = mDeferredRenderTarget->GetRTV(3);
+                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
 
-            ImGui::Separator();
-            ImGui::Text("Emessive ( rgb(Emessive) )");
-            CameraRTV = mDeferredRenderTarget->GetRTV(3);
-            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
-
-            ImGui::Separator();
-            ImGui::Text("WorldPosition ( rgb(WorldPosition) )");
-            CameraRTV = mDeferredRenderTarget->GetRTV(4);
-            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+                //ImGui::Text("WorldPosition ( rgb(WorldPosition) )");
+                CameraRTV = mDeferredRenderTarget->GetRTV(4);
+                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+               
+                ImGui::TreePop();
+            }
+            EDITOR_COLOR_POP(1);
         }
-        if(mMainRenderTarget)
+        if (mMainRenderTarget)
         {
             ImGui::Separator();
-            ImGui::Text("Output");
-            auto CameraRTV = mMainRenderTarget->GetRTV();
-            auto CameraSRV = mMainRenderTarget->GetSRV(CameraRTV);
-            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(200, 200));
+
+            EDITOR_COLOR_EXTRA;
+            if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+            {
+                auto CameraRTV = mMainRenderTarget->GetRTV();
+                auto CameraSRV = mMainRenderTarget->GetSRV(CameraRTV);
+                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+
+                ImGui::TreePop();
+            }
+            EDITOR_COLOR_POP(1);
         }
-       
+        ImGui::TreePop();
     }
 }

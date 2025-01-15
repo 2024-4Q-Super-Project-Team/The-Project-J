@@ -79,17 +79,22 @@ public:
 	virtual void EditorRendering() override
     {
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+        std::string name = Helper::ToString(GetName());
         {   // 활성화 / 비활성화
-            std::string label;
-            label.assign(mName.begin(), mName.end());
-            label += uid;
             bool preState = mState == EntityState::Active ? true : false;
             bool isActive = preState;
-            ImGui::Checkbox(label.c_str(), &isActive);
+            ImGui::Checkbox((uid + "IsActive").c_str(), &isActive);
             if (isActive != preState)
             {
                 isActive == true ? OnEnable() : OnDisable();
                 mState = isActive == true ? EntityState::Active : EntityState::Passive;
+            }
+            ImGui::SameLine();
+            static char buffer[128] = ""; 
+            strcpy_s(buffer, Helper::ToString(GetName()).c_str()); 
+            if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
+				std::wstring newName = Helper::ToWString(std::string(buffer));
+				SetName(newName);
             }
         }
     }

@@ -41,9 +41,8 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
-    void SetCameraArea(UINT _offsetX, UINT _offsetY, UINT _width, UINT _height);
-    void SetCameraSize(UINT _width, UINT _height);
-    void SetCameraOffset(UINT _offsetX, UINT _offsetY);
+    void SetCameraSize(Vector2 _sizeScale);
+    void SetCameraOffset(Vector2 _offsetScale);
     // 카메라에 Draw할 컴포넌트를 Push합니다.
     void PushDrawList(RendererComponent* _renderComponent);
     // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
@@ -110,11 +109,9 @@ private:
     // 직교투영전용 변수
     float                   mOrthoWidth;
     float                   mOrthoHeight;
-   
-    FLOAT mWidthScale;
-    FLOAT mHeightScale;
-    FLOAT mOffsetXScale;
-    FLOAT mOffsetYScale;
+
+    Vector2 mSizeScale;
+    Vector2 mOffsetScale;
 
     // 카메라 스카이박스
     std::shared_ptr<SkyBox> mSkyBox;

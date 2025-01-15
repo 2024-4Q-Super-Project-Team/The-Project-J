@@ -149,17 +149,16 @@ void MeshRenderer::Deserialize(json& j)
 void MeshRenderer::EditorRendering()
 {
     std::string uid = std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::CollapsingHeader(("Mesh Renderer##" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx(("Mesh Renderer##" + uid).c_str(), EDITOR_FLAG_COMPONENT))
     {
-        ImGui::Separator();
+        if (mMesh)
         {
-            if (mMesh)
-            {
-                mMesh->EditorRendering();
-            }
-            else ImGui::Text("NULL Mesh");
+            mMesh->EditorRendering();
         }
+        else ImGui::Text("NULL Mesh");
+
         ImGui::Separator();
+
         if (mMateiral)
         {
             if (mMateiral->mMaterialResource)
@@ -168,5 +167,7 @@ void MeshRenderer::EditorRendering()
             }
             else ImGui::Text("NULL Material");
         }
+        ImGui::TreePop();
     }
+   
 }

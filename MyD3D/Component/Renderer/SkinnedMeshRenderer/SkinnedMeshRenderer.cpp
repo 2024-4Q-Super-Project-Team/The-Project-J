@@ -220,26 +220,24 @@ void SkinnedMeshRenderer::Deserialize(json& j)
 
 void SkinnedMeshRenderer::EditorRendering()
 {
-    std::string uid = std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::CollapsingHeader(("Skinned Mesh Renderer" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    if (ImGui::TreeNodeEx(("Skinned Mesh Renderer" + uid).c_str(), EDITOR_FLAG_COMPONENT))
     {
+        if (mRootBone)
+            ImGui::Text(Helper::ToString(mRootBone->gameObject->GetName()).c_str());
+        else
+            ImGui::Text("NULL RootBone");
+        
         ImGui::Separator();
-        {
-            std::string rootBoneName = "RootBone   : ";
-            if (mRootBone)
-                rootBoneName += Helper::ToString(mRootBone->gameObject->GetName());
-            else
-                rootBoneName += "NULL";
-            ImGui::Text(rootBoneName.c_str());
-        }
-        {
-            if (mMesh)
-            {
-				mMesh->EditorRendering();
-            }
-            else ImGui::Text("NULL Mesh");
-        }
+
+		if (mMesh)
+		{
+			mMesh->EditorRendering();
+		}
+		else ImGui::Text("NULL Mesh");
+
         ImGui::Separator();
+
         if (mMateiral)
         {
             if (mMateiral->mMaterialResource)
@@ -248,5 +246,6 @@ void SkinnedMeshRenderer::EditorRendering()
             }
             else ImGui::Text("NULL Material");
         }
+        ImGui::TreePop();
     }
 }

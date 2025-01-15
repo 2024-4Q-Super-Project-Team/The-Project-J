@@ -34,7 +34,6 @@ namespace Editor
                 for (auto comp : compArr)
                 {
                     comp->EditorRendering();
-                    ImGui::Separator();
                 }
             }
         }

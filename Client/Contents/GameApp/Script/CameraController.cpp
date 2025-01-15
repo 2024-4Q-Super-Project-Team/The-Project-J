@@ -34,7 +34,7 @@ void CameraController::Start()
 	auto SubCamera = CreateObject(L"Sub_Camera", L"Default");
 	SubCamera->transform->position = Vector3(0, 100, -100);
 	mSubCamera = SubCamera->AddComponent<Camera>();
-	mSubCamera->SetCameraSize(0.3f, 0.3f);
+	mSubCamera->SetCameraSize(Vector2(0.3f, 0.3f));
 	mSubCamera->SetSkyBox(pSkyBox);
 }
 

@@ -42,23 +42,19 @@ bool AudioChannel::IsPaused()
 
 HRESULT AudioChannel::Play(AudioClip* _pAudio)
 {
-	FMOD::System* pSystem = AudioHub::GetSystem();
+	FMOD::System* pSystem = AudioHub::GetCoreSystem();
 	if (!pSystem) return E_FAIL;
 	if (_pAudio == nullptr) return E_FAIL;
 	if (_pAudio->GetGroup() == nullptr) return E_FAIL;
 	if (_pAudio->GetGroup()->mGroup == nullptr) return E_FAIL;
 	if (_pAudio->GetSound() == nullptr) return E_FAIL;
 
-	FMOD_RESULT fr = pSystem->playSound(
+	FMOD_CHECK(pSystem->playSound(
 		_pAudio->GetSound(),
 		_pAudio->GetGroup()->mGroup,
 		false,
-		&mChannel);
-
-	if (FMOD_OK != fr)
-	{
-		return E_FAIL;
-	}
+		&mChannel)
+	);
 
 	return S_OK;
 }
@@ -111,4 +107,14 @@ HRESULT AudioChannel::Resume()
 		}
 	}
 	return E_FAIL;
+}
+
+void AudioChannel::SetLoop(bool _isLoop)
+{
+	FMOD_CHECK(mChannel->setMode(_isLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
+}
+
+void AudioChannel::SetSurround(bool _isSuround)
+{
+	FMOD_CHECK(mChannel->setMode(_isSuround ? FMOD_3D : FMOD_2D));
 }

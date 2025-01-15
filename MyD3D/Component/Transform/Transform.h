@@ -49,13 +49,13 @@ public:
         return mChildren[_index];
     }
     inline const std::vector<Transform*>& GetChildren() { return mChildren; }
-    inline const Vector3 GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
-    inline const Matrix& GetLocalMatrix() { return mLocalMatrix; }
-    inline const Matrix& GetWorldMatrix() { return mWorldMatrix; }
-    inline const Vector3 Forward() { return GetWorldMatrix().Forward(); }
-    inline const Vector3 Up() { return GetWorldMatrix().Up(); }
-    inline const Vector3 Right() { return GetWorldMatrix().Right(); }
-    inline const Vector3 Backward() { return GetWorldMatrix().Backward(); }
+    inline const Vector3& GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
+    inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
+    inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
+    inline const Vector3& Forward() { return GetWorldMatrix().Forward(); }
+    inline const Vector3& Up() { return GetWorldMatrix().Up(); }
+    inline const Vector3& Right() { return GetWorldMatrix().Right(); }
+    inline const Vector3& Backward() { return GetWorldMatrix().Backward(); }
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();

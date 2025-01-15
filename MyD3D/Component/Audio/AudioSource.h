@@ -23,7 +23,7 @@ public:
     virtual void PostRender() override {}
 public:
     void SetCurrentAudio(const std::wstring& _key);
-    BOOL AddAudioFromTable(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio);
+    BOOL AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio);
     std::shared_ptr<AudioResource> GetAudioFromTable(const std::wstring& _key);
 public:
     bool IsPlaying();
@@ -33,8 +33,13 @@ public:
     void Play();
     void Pause();
 public:
-    virtual json Serialize() override;
-    //virtual json Deserialize() override;
+    // 루프 설정을 합니다.(왠만해선 Resource에서 설정할 것)
+    void SetLoop(bool _isLoop);
+    // 3D 입체 음향을 사용합니다
+    void SetSurround(bool _isSuround);
+public:
+    virtual json Serialize() override { return json(); }
+    virtual void Deserialize(json& j) override {}
 private:
     // 현재 재생 예정, 혹은 재생 중인 오디오
     AudioResource* mActiveAudio; 

@@ -22,7 +22,7 @@
 #include "ThirdParty/fmod/include/fmod_common.h"
 #include "ThirdParty/fmod/include/fmod_codec.h"
 #pragma comment (lib, "../MyD3D/ThirdParty/fmod/fmod_vc.lib")
-#pragma comment (lib, "../MyD3D/ThirdParty/fmod/fmodstudio_vc.lib")
+#pragma comment (lib, "../MyD3D/ThirdParty/fmod/fmodstudioL_vc.lib")
 //Direct3D
 #include <d3d11.h>
 #include <d3dcompiler.h>

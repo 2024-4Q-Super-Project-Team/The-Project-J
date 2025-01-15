@@ -4,7 +4,8 @@
 
 AudioSource::AudioSource(Object* _owner)
 	: Component(_owner)
-	, mAudioChannel(nullptr)
+	, mActiveAudio(nullptr)
+	, mAudioChannel(new AudioChannel)
 {
 }
 
@@ -21,7 +22,7 @@ void AudioSource::SetCurrentAudio(const std::wstring& _key)
 	}
 }
 
-BOOL AudioSource::AddAudioFromTable(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio)
+BOOL AudioSource::AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio)
 {
 	auto itr = mAudioTable.find(_key);
 	if (FIND_FAILED(itr, mAudioTable))
@@ -90,7 +91,12 @@ void AudioSource::Pause()
 	}
 }
 
-json AudioSource::Serialize()
+void AudioSource::SetLoop(bool _isLoop)
 {
-	return json();
+	mAudioChannel->SetLoop(_isLoop);
+}
+
+void AudioSource::SetSurround(bool _isSuround)
+{
+	mAudioChannel->SetSurround(_isSuround);
 }

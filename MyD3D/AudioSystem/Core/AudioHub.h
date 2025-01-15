@@ -13,10 +13,19 @@ public:
 	static void Update();
 private:
 	static BOOL CanUse;
-	static FMOD::System* mSystem;
+	static FMOD::System* mCoreSystem;
+	static FMOD::Studio::System* mSystem;
 public:
-	static inline auto GetSystem() {
-		if (CanUse) return mSystem;
+	static inline auto GetCoreSystem() {
+		if (CanUse) return mCoreSystem;
 		else Helper::HRT(E_FAIL, "Nullpointer reference from AudioSystem");
+	}
+	static inline auto GetNumDriver() {
+		if (CanUse)
+		{
+			int numDrivers = 0;
+			mCoreSystem->getNumDrivers(&numDrivers);
+			return numDrivers;
+		}
 	}
 };

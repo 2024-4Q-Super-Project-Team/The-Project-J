@@ -27,10 +27,7 @@ HRESULT AudioClip::Create()
 {
 	std::string path;
 	path.assign(mPath.begin(), mPath.end());
-	if (FMOD_OK != AudioHub::GetSystem()->createSound(path.c_str(), isLoop ? FMOD_LOOP_NORMAL : FMOD_DEFAULT, nullptr, &mSound))
-	{
-		return E_FAIL;
-	}
+	FMOD_CHECK(AudioHub::GetCoreSystem()->createSound(path.c_str(), FMOD_DEFAULT, nullptr, &mSound));
 	return S_OK;
 }
 
@@ -50,4 +47,14 @@ void AudioClip::SetGroup(AudioGroup* _pGroup)
 	{
 		mGroup = _pGroup;
 	}
+}
+
+void AudioClip::SetLoop(bool _isLoop)
+{
+	FMOD_CHECK(mSound->setMode(_isLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
+}
+
+void AudioClip::SetSurround(bool _isSuround)
+{
+	FMOD_CHECK(mSound->setMode(_isSuround ? FMOD_3D : FMOD_2D));
 }

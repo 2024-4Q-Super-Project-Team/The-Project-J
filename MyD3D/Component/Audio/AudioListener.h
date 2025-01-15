@@ -21,6 +21,21 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
+    // 거리 감쇠율
+    inline void SetDistanceAttenuationScale(float _val) { mDistanceAttenuationScale = Clamp(_val, 0.0f, 1.0f); }
+public:
+    virtual json Serialize() override { return json(); }
+    virtual void Deserialize(json& j) override {}
+public:
+    static AudioListener* mMainListener;
 
+    float mDistanceAttenuationScale;
 };
 
+
+//FMOD_VECTOR customCurve[3] = {
+//{ 0.0f, 1.0f, 0.0f }, // 가까운 거리 (풀 볼륨)
+//{ 10.0f, 0.5f, 0.0f }, // 중간 거리 (볼륨 절반)
+//{ 50.0f, 0.0f, 0.0f }  // 먼 거리 (소리 없음)
+//};
+//channel->set3DCustomRolloff(customCurve, 3);

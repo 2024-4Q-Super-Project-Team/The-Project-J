@@ -19,16 +19,13 @@ AudioController::~AudioController()
 
 BOOL AudioController::Initialize()
 {
-	auto pSystem = AudioHub::GetSystem();
+	auto pSystem = AudioHub::GetCoreSystem();
 	// 채널 최대 개수를 받아와서 System초기화
 	if (FMOD_OK != pSystem->getSoftwareChannels(&mNumChannel))
 	{
 		return FALSE;
 	}
-	if (FMOD_OK != pSystem->init(mNumChannel, FMOD_INIT_NORMAL, nullptr))
-	{
-		return FALSE;
-	}
+	
 	mAllChannels.reserve(mNumChannel);
 	mActiveChannels.reserve(mNumChannel);
 	for (int i = 0; i < mNumChannel; ++i)

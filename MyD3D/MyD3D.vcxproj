@@ -143,6 +143,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AudioSystem\AudioManager.h" />
     <ClInclude Include="AudioSystem\AudioFramework.h" />
     <ClInclude Include="AudioSystem\AudioObject\AudioClip.h" />
     <ClInclude Include="AudioSystem\AudioObject\AudioChannel.h" />
@@ -245,6 +246,8 @@
     <ClInclude Include="World\World.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AudioSystem\AudioManager.cpp" />
+    <ClCompile Include="AudioSystem\AudioFramework.cpp" />
     <ClCompile Include="AudioSystem\AudioObject\AudioClip.cpp" />
     <ClCompile Include="AudioSystem\AudioObject\AudioChannel.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioMixer.cpp" />

@@ -25,7 +25,7 @@ HRESULT AudioGroup::Create()
 {
 	std::string name;
 	name.assign(mGroupName.begin(), mGroupName.end());
-	if (FMOD_OK != AudioHub::GetSystem()->createChannelGroup(name.data(), &mGroup))
+	if (FMOD_OK != AudioHub::GetCoreSystem()->createChannelGroup(name.data(), &mGroup))
 	{
 		return E_FAIL;
 	}

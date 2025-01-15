@@ -10,6 +10,7 @@
 #include "Component/Animator/Animator.h"
 #include "Component/EditorUI/EditorUI.h"
 #include "Component/Audio/AudioSource.h"
+#include "Component/Audio/AudioListener.h"
 
 #include "Interface/IGUID.h"
 

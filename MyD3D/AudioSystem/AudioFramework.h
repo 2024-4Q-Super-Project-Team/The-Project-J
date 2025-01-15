@@ -8,3 +8,6 @@
 #include "AudioSystem/AudioObject/AudioChannel.h"
 #include "AudioSystem/AudioObject/AudioClip.h"
 #include "AudioSystem/AudioObject/AudioGroup.h"
+
+void FMOD_CHECK(FMOD_RESULT _fr);
+const char* FMOD_ErrorString(FMOD_RESULT errcode);

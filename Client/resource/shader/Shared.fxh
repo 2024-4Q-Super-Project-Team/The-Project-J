@@ -101,7 +101,7 @@ struct MaterialProperty
 // =================================================
 // Texture==========================================
 // =================================================
- // 머티리얼 텍스쳐 맵 0~8
+ // 머티리얼 텍스쳐 맵 0~10까지 사용할 것
 Texture2D   MaterialMap[MATERIAL_MAP_COUNT] : register(t0);
 // 카메라 렌더타겟
 Texture2D   CameraRenderTarget              : register(t11);

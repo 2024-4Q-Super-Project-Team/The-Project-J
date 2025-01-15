@@ -12,7 +12,12 @@ public:
 	virtual HRESULT Create() override;
 	virtual void	Release() override;
 public:
+	// 오디오 그룹을 설정합니다.
 	void SetGroup(AudioGroup* _pGroup);
+	// 루프 설정을 합니다.
+	void SetLoop(bool _isLoop);
+	// 3D 입체 음향을 사용합니다. (왠만해선 사용X. 채널에서 설정 가능)
+	void SetSurround(bool _isSuround);
 public:
 	std::wstring	mPath;
 	bool			isLoop;

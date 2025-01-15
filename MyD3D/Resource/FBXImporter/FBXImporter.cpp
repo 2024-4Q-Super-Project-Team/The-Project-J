@@ -44,6 +44,9 @@ FBXResource* FBXImporter::ImportFBXModel_All(const std::wstring _path)
         ProcessAnimation(pAiScene);
         ProcessModelNode(pAiScene->mRootNode, mFBXResource->RootNode);
     }
+    else
+    {
+    }
     return mFBXResource;
 }
 

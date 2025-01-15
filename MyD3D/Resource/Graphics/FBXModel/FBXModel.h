@@ -17,6 +17,8 @@ public:
     explicit FBXModelResource(std::wstring_view _name);
     virtual ~FBXModelResource();
 public:
+    bool isEmpty() { return !(mRootNode == nullptr); }
+public:
     // 이걸 굳이 다 shared_ptr로? 할필요가 있을까 ㅇㅇ
     // Material
     std::vector<std::shared_ptr<MaterialResource>> mMaterialArray;

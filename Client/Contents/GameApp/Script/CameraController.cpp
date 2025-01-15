@@ -16,6 +16,7 @@ void CameraController::Start()
 
 	mCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
 	mCamera->SetSkyBox(pSkyBox);
+	mCamera->gameObject->AddComponent<AudioListener>();
 
 	mTr = mCamera->gameObject->transform;
 	mMoveSpeed = 100.0f;

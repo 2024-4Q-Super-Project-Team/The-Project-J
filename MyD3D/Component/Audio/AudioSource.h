@@ -28,8 +28,7 @@ public:
 public:
     bool IsPlaying();
     bool IsPaused();
-    // ActiveAudio를 바꾸고 Play
-    void Play(std::wstring_view _key);
+    void Play(std::wstring_view _key); // ActiveAudio를 바꾸고 Play
     void Play();
     void Pause();
 public:

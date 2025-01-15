@@ -13,6 +13,7 @@
 #include "Component/Audio/AudioListener.h"
 
 #include "Interface/IGUID.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class Component;
 class ObjectGroup;
@@ -21,6 +22,7 @@ class Object
     : public Engine::Entity
     , public Engine::ICycleHandler
     , public Engine::IGUID
+	, public IEditorObject  
 {
 public:
     explicit Object(std::wstring_view _name, std::wstring_view _tag);
@@ -74,7 +76,7 @@ protected:
     ObjectGroup* mOwnerGroup;
     std::vector<Component*> mComponentArray[ComponentSize];
 public:
-    void EditorRendering()
+	virtual void EditorRendering() override
     {
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
         {   // 활성화 / 비활성화

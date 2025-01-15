@@ -21,7 +21,7 @@ BOOL AudioHub::Initialize()
 	FMOD_CHECK(system->getCoreSystem(&coreSystem));
 	FMOD_CHECK(system->initialize(1024, FMOD_STUDIO_INIT_NORMAL, FMOD_INIT_NORMAL, extraDriverData)); // 1024 채널 사용
 
-	FMOD_CHECK(coreSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_5POINT1, 0));
+	FMOD_CHECK(coreSystem->setSoftwareFormat(0, FMOD_SPEAKERMODE_5POINT1, 0)); // 5.1채널 사용. 스피커가 5.1채널을 지원하지 않을 시 다운샘플링
 	FMOD_CHECK(coreSystem->setDSPBufferSize(1024, 4)); // DSP버퍼 설정 (기본 값)
 	FMOD_CHECK(coreSystem->set3DSettings(1.0f, 1.0f, 1.0f)); // 3D설정 (Doppler, Distance Factor, Rolloff Scale)
 
@@ -46,9 +46,11 @@ BOOL AudioHub::Initialize()
 void AudioHub::Finalization()
 {
 	mSystem->release();
+	mCoreSystem->release();
 }
 
 void AudioHub::Update()
 {
 	mSystem->update();
+	mCoreSystem->update();
 }

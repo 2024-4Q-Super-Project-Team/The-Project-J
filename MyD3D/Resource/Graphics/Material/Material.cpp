@@ -5,6 +5,22 @@
 #include "Graphics/GraphicsManager.h"
 #include "Resource/Graphics/Texture/Texture.h"
 
+#define SetMaterialEditor(typeEnum, label) \
+if (mMaterialMaps[(UINT)typeEnum]) \
+{ \
+    ImGui::Separator();\
+    if (ImGui::TreeNodeEx((label + uid).c_str(), ImGuiTreeNodeFlags_Selected)){ \
+        ImGui::Checkbox(("Using " + std::string(label) + uid).c_str(), (bool*)&UseMap); \
+        mMatCBuffer.SetUsingMap(typeEnum, UseMap); \
+        std::wstring wTexPath = mMaterialResource->GetMaterialMapPath(typeEnum); \
+        std::string TexPath = Helper::ToString(wTexPath); \
+        ImGui::Text(TexPath.c_str()); \
+        ImGui::Image((ImTextureID)mMaterialMaps[(UINT)typeEnum] \
+            ->Texture->mSRV, ImVec2(150, 150)); \
+        ImGui::TreePop(); \
+    }\
+}\
+
 std::shared_ptr<MaterialResource> MaterialResource::DefaultMaterial = std::make_shared<MaterialResource>(L"Default_Material");
 
 MaterialResource::MaterialResource(std::wstring_view _name)
@@ -37,6 +53,13 @@ void MaterialResource::SetBlendingMode(eBlendType _type)
 const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapType)
 {
     return  mMaterialMapPath[static_cast<UINT>(_mapType)];
+}
+
+void MaterialResource::EditorRendering()
+{
+    std::string name = Helper::ToString(mName);
+    ImGui::Text(name.c_str());
+
 }
 
 Material::Material()
@@ -117,3 +140,75 @@ void Material::Bind()
         }
     }
 }
+
+void Material::EditorRendering()
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string name = Helper::ToString(mMaterialResource->GetName());
+
+    EDITOR_COLOR_RESOURCE;
+    if (ImGui::TreeNodeEx(("Material" + uid).c_str(), ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen))
+    {
+        ImGui::Text(("Material : " + name).c_str());
+        ImGui::ColorEdit3(("Diffuse" + uid).c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
+        ImGui::ColorEdit3(("Ambient" + uid).c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
+        ImGui::ColorEdit3(("Specular" + uid).c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
+        ImGui::DragFloat(("Roughness Scale" + uid).c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
+        ImGui::DragFloat(("Metallic Scale" + uid).c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
+        ImGui::DragFloat(("AmbienOcclusion Scale" + uid).c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+        EDITOR_COLOR_EXTRA;
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL UseMap = mMatCBuffer.GetUsingMap((eMaterialMapType)type);
+            switch (type)
+            {
+            case (UINT)eMaterialMapType::DIFFUSE:
+                SetMaterialEditor(eMaterialMapType::DIFFUSE, "Diffuse Map");
+                break;
+            case (UINT)eMaterialMapType::SPECULAR:
+                SetMaterialEditor(eMaterialMapType::SPECULAR, "Specular Map");
+                break;
+            case (UINT)eMaterialMapType::AMBIENT:
+                SetMaterialEditor(eMaterialMapType::AMBIENT, "Ambient Map");
+                break;
+            case (UINT)eMaterialMapType::EMISSIVE:
+                SetMaterialEditor(eMaterialMapType::EMISSIVE, "Emissive Map");
+                break;
+            case (UINT)eMaterialMapType::NORMAL:
+                SetMaterialEditor(eMaterialMapType::NORMAL, "Normal Map");
+                break;
+            case (UINT)eMaterialMapType::ROUGHNESS:
+                SetMaterialEditor(eMaterialMapType::ROUGHNESS, "Roughness Map");
+                break;
+            case (UINT)eMaterialMapType::OPACITY:
+                SetMaterialEditor(eMaterialMapType::OPACITY, "Opacity Map");
+                break;
+            case (UINT)eMaterialMapType::METALNESS:
+                SetMaterialEditor(eMaterialMapType::METALNESS, "Metalness Map");
+                break;
+            case (UINT)eMaterialMapType::AMBIENT_OCCLUSION:
+                SetMaterialEditor(eMaterialMapType::AMBIENT_OCCLUSION, "AmbienOcclusion Map");
+                break;
+            default:
+                break;
+            }
+        }
+        EDITOR_COLOR_POP(1);
+        ImGui::TreePop();
+    }
+    EDITOR_COLOR_POP(1);
+}
+
+//if (mMaterialMaps[(UINT)eMaterialMapType::DIFFUSE])
+//{                                                                                          
+//    ImGui::Text("Diffuse");
+//    if (ImGui::TreeNodeEx(("Diffuse" + uid).c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
+//    {
+//        ImGui::Checkbox(("IsUse##" + std::string("Diffuse") + uid).c_str(), (bool*)&UseMap);
+//        mMatCBuffer.SetUsingMap(eMaterialMapType::DIFFUSE, UseMap);
+//        std::wstring wTexPath = mMaterialResource->GetMaterialMapPath(eMaterialMapType::DIFFUSE);
+//        std::string TexPath = Helper::ToString(wTexPath);
+//        ImGui::Text(TexPath.c_str());
+//        ImGui::Image((ImTextureID)mMaterialMaps[(UINT)eMaterialMapType::DIFFUSE]->Texture->mSRV, ImVec2(150, 150));
+//    }
+//}

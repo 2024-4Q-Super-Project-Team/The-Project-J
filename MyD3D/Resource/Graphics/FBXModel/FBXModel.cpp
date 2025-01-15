@@ -36,6 +36,10 @@ FBXModelResource::~FBXModelResource()
     SAFE_DELETE_ARRAY(mModelNodeArray);
 }
 
+void FBXModelResource::EditorRendering()
+{
+}
+
 ModelNode::ModelNode(std::wstring_view _name, ModelNode* _pParent)
     : mNodeName(_name), mParent(_pParent)
 {

@@ -102,12 +102,12 @@ void ModelSpawner::Start()
         EditorManager::mDebugEditor->AddLight(pDirLight2);
     }
     
-    auto pAudioResource = ResourceManager::AddResource<AudioResource>(L"resource/sound/odesa_new.ogg");
-    auto pAudioSource = gameObject->AddComponent<AudioSource>();
-    pAudioResource->GetAudioClip()->SetSurround(true);
-    pAudioSource->SetSurround(true);
-    pAudioSource->AddAudio(L"test", pAudioResource);
-    pAudioSource->Play(L"test");
+    //auto pAudioResource = ResourceManager::AddResource<AudioResource>(L"resource/sound/odesa_new.ogg");
+    //auto pAudioSource = gameObject->AddComponent<AudioSource>();
+    //pAudioResource->GetAudioClip()->SetSurround(true);
+    //pAudioSource->SetSurround(true);
+    //pAudioSource->AddAudio(L"test", pAudioResource);
+    //pAudioSource->Play(L"test");
 }
 
 void ModelSpawner::Tick()

@@ -10,3 +10,7 @@ Bone::Bone(std::wstring_view _name, Matrix _matrix)
 Bone::~Bone()
 {
 }
+
+void Bone::EditorRendering()
+{
+}

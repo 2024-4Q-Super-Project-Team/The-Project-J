@@ -5,6 +5,7 @@ class D3DGraphicsImg;
 
 class Texture2D
     : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::Texture2D);
@@ -12,4 +13,6 @@ public:
     virtual ~Texture2D();
 public:
     D3DGraphicsImg* Texture;
+public:
+	virtual void EditorRendering() override;
 };

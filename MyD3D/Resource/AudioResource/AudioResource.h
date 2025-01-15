@@ -1,10 +1,12 @@
 #pragma once
 #include "Resource/Resource.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class AudioClip;
 
 class AudioResource
 	: public Resource
+	, public IEditorObject
 {
 public:
 	RESOURCE_TYPE(eResourceType::AudioResource);
@@ -14,4 +16,6 @@ public:
 	inline AudioClip* GetAudioClip() { return mAudioClip; }
 public:
 	AudioClip* mAudioClip;
+public:
+	virtual void EditorRendering() override;
 };

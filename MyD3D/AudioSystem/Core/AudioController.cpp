@@ -26,14 +26,14 @@ BOOL AudioController::Initialize()
 		return FALSE;
 	}
 	
-	mAllChannels.reserve(mNumChannel);
-	mActiveChannels.reserve(mNumChannel);
-	for (int i = 0; i < mNumChannel; ++i)
-	{
-		AudioChannel* pChannel = new AudioChannel;
-		mAvailableChannels.push(pChannel);
-		mAllChannels.push_back(pChannel);
-	}
+	//mAllChannels.reserve(mNumChannel);
+	//mActiveChannels.reserve(mNumChannel);
+	//for (int i = 0; i < mNumChannel; ++i)
+	//{
+	//	AudioChannel* pChannel = new AudioChannel;
+	//	mAvailableChannels.push(pChannel);
+	//	mAllChannels.push_back(pChannel);
+	//}
 	return TRUE;
 }
 

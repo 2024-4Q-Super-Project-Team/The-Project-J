@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Vertex.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class D3DGraphicsVertexBuffer;
 class D3DGraphicsIndexBuffer;
@@ -8,7 +9,9 @@ class MaterialResource;
 class Material;
 class Bone;
 
-class MeshResource : public Resource
+class MeshResource
+    : public Resource
+	, public IEditorObject  
 {
 public:
     RESOURCE_TYPE(eResourceType::Mesh);
@@ -19,7 +22,7 @@ public:
     void    Bind();
 public:
     D3DGraphicsVertexBuffer* mVertexBuffer;
-    D3DGraphicsIndexBuffer* mIndexBuffer;
+    D3DGraphicsIndexBuffer*  mIndexBuffer;
     std::vector<Vertex>      mVertices;
     std::vector<UINT>	     mIndices;
 
@@ -35,4 +38,6 @@ public:
     static void InitSkyCubeMesh();
     static void InitCubeMesh();
     static void InitPlainMesh();
+public: 
+	virtual void EditorRendering() override;
 };

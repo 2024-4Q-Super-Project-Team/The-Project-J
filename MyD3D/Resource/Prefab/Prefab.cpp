@@ -130,3 +130,11 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
     }
 }
 
+void Prefab::EditorRendering()
+{
+	for (auto& object : mObjectList)
+	{
+		object->EditorRendering();
+	}
+}
+

@@ -1,10 +1,13 @@
 #pragma once
 #include "Resource/Resource.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class AnimationNode;
 
 // 하나의 모션을 가지는 애니메이션 구조체
-class AnimationResource : public Resource
+class AnimationResource 
+    : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::Animation);
@@ -22,6 +25,8 @@ private:
     float mTotalFrame;
     float mFramePerSecond;
     std::unordered_map<std::wstring, AnimationNode*> mChannels;
+public:
+	virtual void EditorRendering() override;
 };
 // 애니메이션을 구성하는 각 노드의 정보들
 // 채널은 노드의 이름과 같아야한다.

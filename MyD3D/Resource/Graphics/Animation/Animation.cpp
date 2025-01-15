@@ -30,6 +30,10 @@ BOOL AnimationResource::AddChannel(AnimationNode* _pChannel)
     return FALSE;
 }
 
+void AnimationResource::EditorRendering()
+{
+}
+
 AnimationNode::AnimationNode(std::wstring_view _name, AnimationResource* _pAnimResource)
     : mName(_name), mOwner(_pAnimResource)
 {

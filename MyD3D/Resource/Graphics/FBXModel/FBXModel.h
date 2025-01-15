@@ -1,5 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class MeshResource;
 class MaterialResource;
@@ -10,7 +11,9 @@ class Prefab;
 
 // 걍 얘는 신창섭임. 모델의 모든 정보를 가지고 있다 보면 됨. ㅇㅇ
 // 유니티의 아바타 같은 느낌이라 생각하면 될듯
-class FBXModelResource : public Resource
+class FBXModelResource 
+    : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::FBXModel);
@@ -37,6 +40,8 @@ public:
     std::unordered_map<std::wstring, ModelNode*> mModelNodeTable;
 
     ModelNode* mRootNode;
+public:
+	virtual void EditorRendering() override;
 };
 
 class ModelNode

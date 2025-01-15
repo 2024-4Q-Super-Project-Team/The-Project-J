@@ -13,3 +13,7 @@ Texture2D::~Texture2D()
 {
     SAFE_RELEASE(Texture);
 }
+
+void Texture2D::EditorRendering()
+{
+}

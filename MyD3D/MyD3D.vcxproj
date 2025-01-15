@@ -155,6 +155,7 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\Interface\IEditorObject.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Resource\AudioResource\AudioResource.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
@@ -258,6 +259,7 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\Interface\IEditorObject.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />

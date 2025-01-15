@@ -72,3 +72,7 @@ void SkyBox::SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex)
     mBLDFLookUpTableTex->Texture->Bind();
 }
 
+void SkyBox::EditorRendering()
+{
+}
+

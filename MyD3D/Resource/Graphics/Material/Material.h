@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Graphics/ConstantBuffer.h"
+#include "Editor/Interface/IEditorObject.h"
 
 class Texture2D;
 class D3DGraphicsVertexShader;
@@ -8,7 +9,9 @@ class D3DGraphicsPixelShader;
 struct MaterialCBuffer;
 
 // 여러 머티리얼 객체들이 공유할 수 있는 참조용 리소스
-class MaterialResource : public Resource
+class MaterialResource 
+    : public Resource
+	, public IEditorObject
 {
 public: _READ_ONLY
     RESOURCE_TYPE(eResourceType::Material);
@@ -28,11 +31,14 @@ public:
     eBlendType mBlendMode = eBlendType::OPAQUE_BLEND;
     // 기본 머티리얼
     static std::shared_ptr<MaterialResource> DefaultMaterial;
+public: 
+	virtual void EditorRendering() override;
 };
 
 // MaterialData를 참조하며, 독립적인 머티리얼 상수버퍼 값을 가지는 머티리얼 
 // 머티리얼의 색상 정보(디퓨즈, 앰비언트, 스페큘러 등)와 속성들을 개별적으로 관리.
 class Material
+    : public IEditorObject
 {
 public:
     explicit Material();
@@ -57,4 +63,6 @@ public:
     D3DGraphicsVertexShader* mVertexShader;
     // 머티리얼이 사용할 픽셀 셰이더
     D3DGraphicsPixelShader* mPixelShader;
+public:
+	virtual void EditorRendering() override;
 };

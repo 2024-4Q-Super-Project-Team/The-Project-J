@@ -2,7 +2,9 @@
 #include "Resource/Resource.h"
 
 // 본은 각각의 메쉬에 속하며 메쉬로부터 어느정도 떨어져있는지 행렬을 가지고 있다.
-class Bone : public Resource
+class Bone
+    : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::Bone);
@@ -10,5 +12,7 @@ public:
     virtual ~Bone();
 public:
     const Matrix  mOffsetMatrix;      // 해당 본의 옵셋
+public:
+	virtual void EditorRendering() override;
 };
 

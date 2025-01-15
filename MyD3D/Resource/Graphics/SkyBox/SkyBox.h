@@ -8,7 +8,9 @@ class FBXModelResource;
 class Texture2D;
 class Camera;
 
-class SkyBox : public Resource
+class SkyBox
+    : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::Mesh);
@@ -26,6 +28,7 @@ private:
     std::shared_ptr<Texture2D>  mIBLDiffuseTex;
     std::shared_ptr<Texture2D>  mIBLSpecularTex;
     std::shared_ptr<Texture2D>  mBLDFLookUpTableTex;
-
+public:
+	virtual void EditorRendering() override;
 };
 

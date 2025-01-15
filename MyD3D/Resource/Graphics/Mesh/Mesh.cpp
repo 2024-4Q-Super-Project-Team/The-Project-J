@@ -203,37 +203,19 @@ void MeshResource::InitPlainMesh()
     PlainMesh->Create();
 }
 
+void MeshResource::EditorRendering()
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string name = Helper::ToString(GetName());
 
-/*
- {
-Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, 1, 1 }    ),
-Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }    ),
-Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, 1, 1 }    ),
-Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }    ),
-
-Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-
-Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-
-Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }   ),
-
-Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { 1, -1, 1 }    ),
-Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }    ),
-Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { 1, -1, 1 }    ),
-Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }    ),
-
-Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, -1 }  ),
-Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }  ),
-Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, -1, -1 }  ),
-Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }  ),
+    EDITOR_COLOR_RESOURCE;
+    if (ImGui::TreeNodeEx(("Mesh" + uid).c_str(), ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen))
+    {
+		ImGui::Text(("Mesh : " + name).c_str());
+		ImGui::Text("Vertex Count : %d", mVertices.size());
+		ImGui::Text("Index Count  : %d", mIndices.size());
+		ImGui::Text("Bone Count  : %d", mBoneArray.size());
+		ImGui::TreePop();
+    }
+    EDITOR_COLOR_POP(1);
 }
-*/

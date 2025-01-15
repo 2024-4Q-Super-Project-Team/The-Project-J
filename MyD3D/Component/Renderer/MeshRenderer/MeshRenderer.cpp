@@ -145,107 +145,28 @@ void MeshRenderer::Deserialize(json& j)
 {
 }
 
-#define SetMaterialEditor(typeEnum, label)                                                      \
-    if (mMateiral->mMaterialMaps[(UINT)typeEnum])                                               \
-    {                                                                                           \
-        ImGui::Text(label);                                                                     \
-        ImGui::Checkbox(("IsUse##" + std::string(label) + uid).c_str(), (bool*)&UseMap);        \
-        mMateiral->mMatCBuffer.SetUsingMap(typeEnum, UseMap);                                   \
-        std::wstring wTexPath = mMateiral->mMaterialResource->GetMaterialMapPath(typeEnum);     \
-        std::string TexPath = Helper::ToString(wTexPath);                                       \
-        ImGui::Text(TexPath.c_str());                                                           \
-    }
 
 void MeshRenderer::EditorRendering()
 {
     std::string uid = std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::CollapsingHeader(("Mesh Renderer##" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
     {
-        ImGui::Text("Mesh       : ");
-        ImGui::SameLine(70);
-        if (mMesh) {
-            std::string meshMame;
-            meshMame.assign(mMesh->GetName().begin(),
-                mMesh->GetName().end());
-            ImGui::Text(meshMame.c_str());
-        }
-        else
+        ImGui::Separator();
         {
-            ImGui::Text("NULL");
+            if (mMesh)
+            {
+                mMesh->EditorRendering();
+            }
+            else ImGui::Text("NULL Mesh");
         }
-
-        ImGui::Text("Material   : ");
-        ImGui::SameLine(70);
+        ImGui::Separator();
         if (mMateiral)
         {
             if (mMateiral->mMaterialResource)
             {
-                MaterialResource* pMat = mMateiral->mMaterialResource.get();
-                std::string name = Helper::ToString(pMat->GetName());
-                ImGui::Text(name.c_str());
-
-                ImGui::ColorEdit3(("Diffuse##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.DiffuseRGB.r);
-                ImGui::ColorEdit3(("Ambient##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.AmbientRGB.r);
-                ImGui::ColorEdit3(("Specular##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.SpecularRGB.r);
-                ImGui::DragFloat(("Roughness Scale##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
-                ImGui::DragFloat(("Metallic Scale##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
-                ImGui::DragFloat(("AmbienOcclusion Scale##" + name).c_str(), &mMateiral->mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
-
-                for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
-                {
-                    BOOL UseMap = mMateiral->mMatCBuffer.GetUsingMap((eMaterialMapType)type);
-                    switch (type)
-                    {
-                    case (UINT)eMaterialMapType::DIFFUSE:
-                        SetMaterialEditor(eMaterialMapType::DIFFUSE, "Diffuse");
-                        break;
-                    case (UINT)eMaterialMapType::SPECULAR:
-                        SetMaterialEditor(eMaterialMapType::SPECULAR, "Specular");
-                        break;
-                    case (UINT)eMaterialMapType::AMBIENT:
-                        SetMaterialEditor(eMaterialMapType::AMBIENT, "Ambient");
-                        break;
-                    case (UINT)eMaterialMapType::EMISSIVE:
-                        SetMaterialEditor(eMaterialMapType::EMISSIVE, "Emissive");
-                        break;
-                    case (UINT)eMaterialMapType::NORMAL:
-                        SetMaterialEditor(eMaterialMapType::NORMAL, "Normal");
-                        break;
-                    case (UINT)eMaterialMapType::ROUGHNESS:
-                        SetMaterialEditor(eMaterialMapType::ROUGHNESS, "Roughness");
-                        break;
-                    case (UINT)eMaterialMapType::OPACITY:
-                        SetMaterialEditor(eMaterialMapType::OPACITY, "Opacity");
-                        break;
-                    case (UINT)eMaterialMapType::METALNESS:
-                        SetMaterialEditor(eMaterialMapType::METALNESS, "Metalness");
-                        break;
-                    case (UINT)eMaterialMapType::AMBIENT_OCCLUSION:
-                        SetMaterialEditor(eMaterialMapType::AMBIENT_OCCLUSION, "AmbienOcclusion");
-                        break;
-                    default:
-                        break;
-                    }
-                }
-                //if (i == (UINT)eMaterialMapType::DIFFUSE)
-                //{
-                //    if (mMateiral->mMaterialMaps[i])
-                //    {
-                //        ImGui::Text("Deffuse");
-                //        ImGui::Checkbox(("IsUse##Deffuse" + uid).c_str(), (bool*)&mMateiral->mMatCBuffer.UseMap[i]);
-                //        /*GraphicsTexture2D* pTex2D;
-                //        if (S_OK == mMateiral->mMaterialMaps[i]->GetTexture2D()->QueryInterface(_UTID_GRAPHICS_TEXTURE2D, (void**)&pTex2D))
-                //        {
-                //            ImVec2 imageSize = ImVec2(512, 512);
-                //            ImGui::Image((ImTextureID)pTex2D->GetShaderResourceView(), imageSize);
-                //        }*/
-                //    }
-                //}
+                mMateiral->EditorRendering();
             }
-            else
-            {
-                ImGui::Text("NULL");
-            }
+            else ImGui::Text("NULL Material");
         }
     }
 }

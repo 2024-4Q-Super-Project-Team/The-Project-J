@@ -5,7 +5,9 @@ class Object;
 class FBXModelResource;
 class ModelNode;
 
-class Prefab : public Resource
+class Prefab
+    : public Resource
+	, public IEditorObject
 {
 public:
     RESOURCE_TYPE(eResourceType::Prefab);
@@ -27,4 +29,6 @@ private:
     void    AddObjectFromNode(Object* _pObject, ModelNode* _pNode);
     void    SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel);
     void    SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel);
+public:
+	virtual void EditorRendering() override;
 };

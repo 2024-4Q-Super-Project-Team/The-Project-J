@@ -80,6 +80,9 @@ public:
 public:
     void BindAllSRV();
     void ResetAllSRV();
+
+    void RemoveResourceView(D3DGraphicsRTV* _pRTV);
+    void RemoveResourceView(D3DGraphicsDSV* _pDSV);
 public:
     void PushResourceView(D3DGraphicsRTV* _pRTV, D3DGraphicsSRV* _pSRV = nullptr);
     void PushResourceView(D3DGraphicsDSV* _pDSV, D3DGraphicsSRV* _pSRV = nullptr);

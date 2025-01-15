@@ -93,6 +93,12 @@ void ModelSpawner::Start()
 
 void ModelSpawner::Tick()
 {
+    if (Input::IsKeyHold(Key::SPACEBAR))
+    {
+        auto pViewport = ViewportManager::GetActiveViewport();
+        POINT size = { 800, 800 };
+        pViewport->GetIWindow()->SetSize(size);
+    }
 }
 
 void ModelSpawner::FixedUpdate()

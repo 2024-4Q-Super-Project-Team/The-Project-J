@@ -38,7 +38,7 @@ namespace Display
 	RECT Window::GetRect()
 	{
         RECT rect;
-        if (GetWindowRect(mHwnd, &rect)) {
+        if (GetClientRect(mHwnd, &rect)) {
             return rect;
         }
         return RECT{ 0, 0, 0, 0 }; // 실패 시 기본값 반환
@@ -54,14 +54,17 @@ namespace Display
         return offset;
     }
 
-	POINT Window::GetPosition()
-	{
-        RECT rect = GetRect();
-        POINT position;
-        position.x = rect.left;
-        position.y = rect.top;
+    POINT Window::GetPosition()
+    {
+        RECT rect = {};
+        POINT position = {};
+        if (GetWindowRect(mHwnd, &rect)) {
+            position.x = rect.left;
+            position.y = rect.top;
+            return position;
+        }
         return position;
-	}
+    }
 
 	POINT Window::GetSize()
 	{

@@ -91,9 +91,8 @@ std::shared_ptr<D3DGraphicsViewport> ViewportScene::GetMainViewport()
     if (mSharedViewport.expired())
     {
         auto size = mWindow->GetSize();
-        auto offset = mWindow->GetOffset();
-        UINT width = (UINT)(size.x - offset.x);
-        UINT height = (UINT)(size.y - offset.y);
+        UINT width = (UINT)(size.x);
+        UINT height = (UINT)(size.y);
 
         auto pViewport = std::make_shared<D3DGraphicsViewport>(0.0f, 0.0f, width, height);
 
@@ -111,10 +110,9 @@ std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetMainRenderTarget()
 {
     if (mSharedRenderTarget.expired())
     {
-        auto size   = mWindow->GetSize();
-        auto offset = mWindow->GetOffset();
-        UINT width  = (UINT)(size.x - offset.x);
-        UINT height = (UINT)(size.y - offset.y);
+        auto size = mWindow->GetSize();
+        UINT width = (UINT)(size.x);
+        UINT height = (UINT)(size.y);
 
         auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
 
@@ -140,9 +138,8 @@ std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetDeferredRenderTarget()
     if (mSharedDeferredRenderTarget.expired())
     {
         auto size = mWindow->GetSize();
-        auto offset = mWindow->GetOffset();
-        UINT width = (UINT)(size.x - offset.x);
-        UINT height = (UINT)(size.y - offset.y);
+        UINT width = (UINT)(size.x);
+        UINT height = (UINT)(size.y);
 
         auto pRenderTarget = std::make_shared<D3DBitmapRenderTarget>(width, height);
         // G-Buffer
@@ -166,9 +163,8 @@ std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetDeferredRenderTarget()
 void ViewportScene::ResizeSharedResourceView()
 {
     auto size = mWindow->GetSize();
-    auto offset = mWindow->GetOffset();
-    UINT width = (UINT)(size.x - offset.x);
-    UINT height = (UINT)(size.y - offset.y);
+    UINT width = (UINT)(size.x);
+    UINT height = (UINT)(size.y);
 
     mSwapChain->Resize(width, height);
 

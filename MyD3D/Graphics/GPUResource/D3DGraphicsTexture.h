@@ -31,7 +31,7 @@ public:
     virtual ~D3DResourceView();
 public:
     HRESULT Resize(UINT _width, UINT _height);
-protected:
+public:
     D3DGraphicsTexture2D* mRefTex = nullptr;
 };
 

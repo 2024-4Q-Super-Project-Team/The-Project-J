@@ -92,7 +92,9 @@ void GameApp::EditorRePosition()
     if (mMainScene && mEditorScene)
     {
         auto EditorWindow = mEditorScene->GetIWindow();
-        RECT rect = mMainScene->GetIWindow()->GetRect();
-        EditorWindow->SetPosition({ rect.right, rect.top });
+        POINT pos = mMainScene->GetIWindow()->GetPosition();
+        POINT size = mMainScene->GetIWindow()->GetSize();
+        POINT resPos = { pos.x + size.x + 10 , pos.y};
+        EditorWindow->SetPosition(resPos);
     }
 }

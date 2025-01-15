@@ -69,10 +69,10 @@ void D3DGraphicsRenderTarget::Reset()
 D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
     : mHwnd(_hWnd)
 {
-    RECT clientRect = {};
-    if (GetClientRect(_hWnd, &clientRect)) {
-        mWidth  = (UINT)(clientRect.right - clientRect.left);
-        mHeight = (UINT)(clientRect.bottom - clientRect.top);
+    RECT sizeRect = { 0, 0, 0, 0 };
+    if (GetClientRect(_hWnd, &sizeRect)) {
+        mWidth  = (UINT)(sizeRect.right - sizeRect.left);
+        mHeight = (UINT)(sizeRect.bottom - sizeRect.top);
     }
 
     auto* pFactory = D3DGraphicsDevice::GetFactory();
@@ -154,10 +154,16 @@ void D3DHwndRenderTarget::Resize(UINT _width, UINT _height)
     //모든 참조 객체를 Release해야 ResizeBuffers가 에러를 안낸다.
     SAFE_RELEASE_VECTOR(mRenderTargetViews);
     
+    RECT sizeRect = {};
+    if (GetClientRect(mHwnd, &sizeRect)) {
+        mWidth = (UINT)(sizeRect.right - sizeRect.left);
+        mHeight = (UINT)(sizeRect.bottom - sizeRect.top);
+    }
+
     Helper::HRT(mSwapChain->ResizeBuffers(
         0,              // 버퍼 수 (0은 기존 값을 유지)
-        _width,       // 새 가로 크기
-        _height,      // 새 세로 크기
+        mWidth,       // 새 가로 크기
+        mHeight,      // 새 세로 크기
         DXGI_FORMAT_UNKNOWN, // 기존 포맷 유지
         0               // 플래그
     ));
@@ -167,50 +173,11 @@ void D3DHwndRenderTarget::Resize(UINT _width, UINT _height)
         D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
         mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
     }
-    
-    //SAFE_RELEASE_VECTOR(mRenderTargetViews);
-    //SAFE_RELEASE(mSwapChain);
-    //auto* pFactory = D3DGraphicsDevice::GetFactory();
-    //auto* pDevice = D3DGraphicsDevice::GetDevice();
-    //{ // 스왑체인 생성
-    //    DXGI_SWAP_CHAIN_DESC swapDesc = {};
-    //    swapDesc.BufferCount = 1;
-    //    swapDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    //    swapDesc.OutputWindow = mHwnd;	// 스왑체인 출력할 창 핸들 값.
-    //    swapDesc.Windowed = true;		// 창 모드 여부 설정.
-    //    swapDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    //    // 백버퍼(텍스처)의 가로/세로 크기 설정.
-    //    swapDesc.BufferDesc.Width = _width;
-    //    swapDesc.BufferDesc.Height = _height;
-    //    // 화면 주사율 설정.
-    //    swapDesc.BufferDesc.RefreshRate.Numerator = 60;
-    //    swapDesc.BufferDesc.RefreshRate.Denominator = 1;
-    //    // 샘플링 관련 설정.
-    //    swapDesc.SampleDesc.Count = 1;
-    //    swapDesc.SampleDesc.Quality = 0;
-    //    // 스왑체인 생성.
-    //    Helper::HRT(pFactory->CreateSwapChain(pDevice, &swapDesc, &mSwapChain));
 
-    //    { // 백버퍼 RTV 생성
-    //        ID3D11Texture2D* pD3DTex2D = nullptr;
-    //        Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
-    //        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
-    //        mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
-    //    }
-    //    {
-    //        DXGI_MODE_DESC fullscreenDesc = {};
-    //        fullscreenDesc.Width = _width;
-    //        fullscreenDesc.Height = _height;
-    //        fullscreenDesc.RefreshRate.Numerator = 60;
-    //        fullscreenDesc.RefreshRate.Denominator = 1;
-    //        fullscreenDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-
-    //        Helper::HRT(mSwapChain->ResizeTarget(&fullscreenDesc));
-    //    }
-    //}
+    // 뎁스뷰가 있으면 재생성
     if (mDepthStencilView)
     {
-        mDepthStencilView->Resize(_width, _height);
+        Helper::HRT(mDepthStencilView->Resize(_width, _height));
     }
 }
 
@@ -266,12 +233,88 @@ void D3DBitmapRenderTarget::Resize(UINT _width, UINT _height)
 {
     if (mDepthStencilView)
     {
-        mDepthStencilView->Resize(_width, _height);
+        D3D11_TEXTURE2D_DESC            TexDesc = {};
+        D3D11_DEPTH_STENCIL_VIEW_DESC   DsvDesc = {};
+        D3D11_SHADER_RESOURCE_VIEW_DESC SrvDesc = {};
+
+        D3DGraphicsTexture2D*   pTexture = nullptr;
+        D3DGraphicsDSV*         pDSV = nullptr;
+        D3DGraphicsSRV*         pSRV = GetSRV(mDepthStencilView);
+
+        mDepthStencilView->mRefTex->mTex->GetDesc(&TexDesc);
+        mDepthStencilView->mDSV->GetDesc(&DsvDesc);
+
+        TexDesc.Width = _width;
+        TexDesc.Height = _height;
+
+        pTexture = new D3DGraphicsTexture2D(&TexDesc);
+        pDSV = new D3DGraphicsDSV(pTexture, &DsvDesc);
+        // nullptr이여도 테이블에 넣긴 해야한다.
+        if (pSRV)
+        {
+            UINT slot = pSRV->GetBindSlot();
+            eShaderStage stage = pSRV->GetBindStage();
+
+            pSRV->mSRV->GetDesc(&SrvDesc);
+            SAFE_RELEASE(pSRV);
+            pSRV = new D3DGraphicsSRV(pTexture, &SrvDesc);
+            pSRV->SetBindSlot(slot);
+            pSRV->SetBindStage(stage);
+
+            auto itrSRV = mShaderResourceViewTable.find(mDepthStencilView);
+            if (FIND_SUCCESS(itrSRV, mShaderResourceViewTable))
+            {
+                mShaderResourceViewTable.erase(itrSRV);
+            }
+        }
+
+        SAFE_RELEASE(mDepthStencilView);
+        mDepthStencilView = pDSV;
+        mShaderResourceViewTable[mDepthStencilView] = pSRV;
+       
     }
-    for (auto& rtv : mRenderTargetViews)
+    for (int i = 0; i < mRenderTargetViews.size(); ++i)
     {
-        rtv->Resize(_width, _height);
+        D3D11_TEXTURE2D_DESC            TexDesc = {};
+        D3D11_RENDER_TARGET_VIEW_DESC   RtvDesv = {};
+        D3D11_SHADER_RESOURCE_VIEW_DESC SrvDesc = {};
+
+        D3DGraphicsTexture2D*   pTexture = nullptr;
+        D3DGraphicsRTV*         pRTV = nullptr;
+        D3DGraphicsSRV*         pSRV = GetSRV(mRenderTargetViews[i]);
+
+        mRenderTargetViews[i]->mRefTex->mTex->GetDesc(&TexDesc);
+        mRenderTargetViews[i]->mRTV->GetDesc(&RtvDesv);
+
+        TexDesc.Width = _width;
+        TexDesc.Height = _height;
+
+        pTexture = new D3DGraphicsTexture2D(&TexDesc);
+        pRTV = new D3DGraphicsRTV(pTexture, &RtvDesv);
+
+        if (pSRV)
+        {
+            UINT slot           = pSRV->GetBindSlot();
+            eShaderStage stage  = pSRV->GetBindStage();
+            pSRV->mSRV->GetDesc(&SrvDesc);
+            SAFE_RELEASE(pSRV);
+            pSRV = new D3DGraphicsSRV(pTexture, &SrvDesc);
+            pSRV->SetBindSlot(slot);
+            pSRV->SetBindStage(stage);
+
+            auto itrSRV = mShaderResourceViewTable.find(mRenderTargetViews[i]);
+            if (FIND_SUCCESS(itrSRV, mShaderResourceViewTable))
+            {
+                mShaderResourceViewTable.erase(itrSRV);
+            }
+        }
+
+        SAFE_RELEASE(mRenderTargetViews[i]);
+        mRenderTargetViews[i] = pRTV;
+        mShaderResourceViewTable[mRenderTargetViews[i]] = pSRV;
     }
+    mWidth = _width;
+    mHeight = _height;
 }
 
 void D3DBitmapRenderTarget::BindAllSRV()
@@ -296,6 +339,40 @@ void D3DBitmapRenderTarget::ResetAllSRV()
     }
 }
 
+void D3DBitmapRenderTarget::RemoveResourceView(D3DGraphicsRTV* _pRTV)
+{
+    {
+        auto itr = mShaderResourceViewTable.find(_pRTV);
+        if (FIND_SUCCESS(itr, mShaderResourceViewTable))
+        {
+            SAFE_RELEASE(itr->second);
+            mShaderResourceViewTable.erase(itr);
+        }
+    }
+    {
+        for (auto itr = mRenderTargetViews.begin(); itr != mRenderTargetViews.end(); ++itr)
+        {
+            if ((*itr) == _pRTV)
+            {
+                SAFE_RELEASE(*itr);
+                mRenderTargetViews.erase(itr);
+                break;
+            }
+        }
+    }
+}
+
+void D3DBitmapRenderTarget::RemoveResourceView(D3DGraphicsDSV* _pDSV)
+{
+    auto itr = mShaderResourceViewTable.find(_pDSV);
+    if (FIND_SUCCESS(itr, mShaderResourceViewTable))
+    {
+        SAFE_RELEASE(itr->second);
+        mShaderResourceViewTable.erase(itr);
+    }
+    SAFE_RELEASE(mDepthStencilView);
+}
+
 void D3DBitmapRenderTarget::PushResourceView(D3DGraphicsRTV* _pRTV, D3DGraphicsSRV* _pSRV)
 {
     // 바인딩 중이면 허용하지 않음.
@@ -306,10 +383,7 @@ void D3DBitmapRenderTarget::PushResourceView(D3DGraphicsRTV* _pRTV, D3DGraphicsS
     if (_pRTV)
     {
         mRenderTargetViews.push_back(_pRTV);
-        if (_pSRV)
-        {
-            mShaderResourceViewTable[_pRTV] = _pSRV;
-        }
+        mShaderResourceViewTable[_pRTV] = _pSRV;
     }
 }
 
@@ -323,10 +397,7 @@ void D3DBitmapRenderTarget::PushResourceView(D3DGraphicsDSV* _pDSV, D3DGraphicsS
     if (_pDSV)
     {
         mDepthStencilView = _pDSV;
-        if (_pSRV)
-        {
-            mShaderResourceViewTable[_pDSV] = _pSRV;
-        }
+        mShaderResourceViewTable[_pDSV] = _pSRV;
     }
 }
 

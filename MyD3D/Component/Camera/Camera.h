@@ -72,7 +72,7 @@ public:
     inline const Matrix& GetProjection() { return mProjectionMatrix; }
     inline const float GetProjectionNear() { return mProjectionNear; }
     inline const float GetProjectionFar() { return mProjectionFar; }
-    inline const auto* GetViewport() { return mViewport; }
+    inline const auto* GetViewport() { return mLocalViewport; }
 
     D3DBitmapRenderTarget* GetCurrentRenderTarget();
 public:
@@ -89,7 +89,7 @@ private:
     std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
     std::shared_ptr<D3DBitmapRenderTarget>      mDeferredRenderTarget;
 private:
-    D3DGraphicsViewport*    mViewport;
+    D3DGraphicsViewport*    mLocalViewport;
 
     DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
     LightQueue              mSceneLights;

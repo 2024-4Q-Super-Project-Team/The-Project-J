@@ -164,12 +164,12 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
     case WM_CREATE:
         break;
     case WM_SIZE:
-        break;
-    case WM_MOVE:
         if (pViewport)
         {
             pViewport->ResizeSharedResourceView();
         }
+        break;
+    case WM_MOVE:
         break;
         // 시스템 키 눌르고 뗏을 때일걸..요?
     case WM_SYSKEYDOWN:

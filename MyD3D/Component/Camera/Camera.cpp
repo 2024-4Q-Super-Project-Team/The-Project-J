@@ -22,11 +22,11 @@ Camera::Camera(Object* _owner, Vector2 _size)
     , mProjectionFar(30000.0f)
     , mOrthoWidth(10.0f)
     , mOrthoHeight(10.0f)
-    , mViewport(nullptr)
+    , mLocalViewport(nullptr)
     , mCameraViewport(nullptr)
 {
     mType = eComponentType::CAMERA;
-    mViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
+    mLocalViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
 
     mCameraViewport     = ViewportManager::GetActiveViewport();
     mMainViewport       = mCameraViewport->GetMainViewport();
@@ -40,7 +40,7 @@ Camera::Camera(Object* _owner, Vector2 _size)
 
 Camera::~Camera()
 {
-    SAFE_RELEASE(mViewport)
+    SAFE_RELEASE(mLocalViewport)
     SAFE_RELEASE(mMainRenderTarget)
 }
 
@@ -139,8 +139,8 @@ void Camera::UpdateMatrix()
         Vector3 at = pos + dir;
         mViewMatrix = XMMatrixLookAtLH(pos, at, up);
 
-        FLOAT widthRatio    = (FLOAT)mMainViewport->GetWidth() * mWidthScale;
-        FLOAT heightRatio   = (FLOAT)mMainViewport->GetHeight() * mHeightScale;
+        FLOAT widthRatio    = (FLOAT)mLocalViewport->GetWidth() * mWidthScale;
+        FLOAT heightRatio   = (FLOAT)mLocalViewport->GetHeight() * mHeightScale;
 
         float aspectRatio   = widthRatio / heightRatio;
 
@@ -168,12 +168,12 @@ void Camera::UpdateMatrix()
 
 void Camera::UpdateViewport()
 {
-    if (mViewport && mMainViewport)
+    if (mLocalViewport && mMainViewport)
     {
-        mViewport->SetWidth(mWidthScale * mMainViewport->GetWidth());
-        mViewport->SetHeight(mHeightScale * mMainViewport->GetHeight());
-        mViewport->SetOffsetX(mOffsetXScale * mMainViewport->GetWidth());
-        mViewport->SetOffsetY(mOffsetYScale * mMainViewport->GetHeight());
+        mLocalViewport->SetWidth(mWidthScale * mMainViewport->GetWidth());
+        mLocalViewport->SetHeight(mHeightScale * mMainViewport->GetHeight());
+        mLocalViewport->SetOffsetX(mOffsetXScale * mMainViewport->GetWidth());
+        mLocalViewport->SetOffsetY(mOffsetYScale * mMainViewport->GetHeight());
     }
 }
 
@@ -219,8 +219,6 @@ void Camera::DrawForward()
         // 그리기 큐를 초기화한다.
         mDrawQueue[i].clear();
     }
-    // 조명 리스트를 초기화한다.
-    mSceneLights.clear();
 }
 
 void Camera::DrawDeferred()
@@ -244,9 +242,6 @@ void Camera::DrawDeferred()
             // 그리기 큐를 초기화한다.
             mDrawQueue[i].clear();
         }
-        // 조명 리스트를 초기화한다.
-        mSceneLights.clear();
-
         mDeferredRenderTarget->EndDraw();
     }
 
@@ -340,46 +335,51 @@ void Camera::PushLight(Light* _pLight)
 
 void Camera::ExcuteDrawList()
 {
-    if (mMainRenderTarget)
+    if (mWidthScale > 0.0f && mHeightScale > 0.0f)
     {
+        if (mMainRenderTarget)
         {
-            mMainRenderTarget->BeginDraw();
-            mMainRenderTarget->Clear();
-            ////////////////////////////////////////////////////
-            // 그림자 연산
-            ////////////////////////////////////////////////////
-            DrawShadow();
-
-            mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
-
-            // 렌더타입으로 Draw실행
-            switch (mCameraRenderType)
             {
-            case CameraRenderType::Forward:
-                DrawForward();
-                break;
-            case CameraRenderType::Deferred:
-                DrawDeferred();
-                break;
-            default:
-                break;
+                mMainRenderTarget->BeginDraw();
+                mMainRenderTarget->Clear();
+                ////////////////////////////////////////////////////
+                // 그림자 연산
+                ////////////////////////////////////////////////////
+                DrawShadow();
+
+                mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
+
+                // 렌더타입으로 Draw실행
+                switch (mCameraRenderType)
+                {
+                case CameraRenderType::Forward:
+                    DrawForward();
+                    break;
+                case CameraRenderType::Deferred:
+                    DrawDeferred();
+                    break;
+                default:
+                    break;
+                }
+
+                ////////////////////////////////////////////////////
+                // SkyBox Draw
+                ////////////////////////////////////////////////////
+                // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
+                if (mSkyBox)
+                {
+                    mSkyBox->Draw(this);
+                }
+
+                mMainRenderTarget->EndDraw();
             }
 
-            ////////////////////////////////////////////////////
-            // SkyBox Draw
-            ////////////////////////////////////////////////////
-            // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
-            if (mSkyBox)
-            {
-                mSkyBox->Draw(this);
-            }
-
-            mMainRenderTarget->EndDraw();
+            mLocalViewport->Bind();  // 카메라 출력될 영역 사이즈
+            DrawSwapChain();
         }
-
-        mViewport->Bind();  // 카메라 출력될 영역 사이즈
-        DrawSwapChain();
     }
+    // 조명 리스트를 초기화한다.
+    mSceneLights.clear();
 }
 
 void Camera::EditorRendering()
@@ -400,13 +400,24 @@ void Camera::EditorRendering()
             }
         }
         FLOAT Area[4] = { mWidthScale, mHeightScale, mOffsetXScale, mOffsetYScale };
-        if (ImGui::SliderFloat(("RectWidth" + uid).c_str(), &Area[0], 0.0f, 1.0f))
+
+        ImGui::Text(("RTVWidth : " + std::to_string(mMainRenderTarget->GetWidth())).c_str());
+        ImGui::Text(("RTVHeight : " + std::to_string(mMainRenderTarget->GetHeight())).c_str());
+        ImGui::Separator();
+        ImGui::Text(("RectWidth : " + std::to_string(mLocalViewport->GetWidth())).c_str());
+        if (ImGui::SliderFloat(("WidthScale : " + uid).c_str(), &Area[0], 0.0f, 1.0f))
             mWidthScale = Area[0];
-        if(ImGui::SliderFloat(("RectHeight" + uid).c_str(), &Area[1], 0.0f, 1.0f))
+
+        ImGui::Text(("RectHeight : " + std::to_string(mLocalViewport->GetHeight())).c_str());
+        if(ImGui::SliderFloat(("HeightScale : " + uid).c_str(), &Area[1], 0.0f, 1.0f))
             mHeightScale = Area[1];
-        if(ImGui::SliderFloat(("RectOffsetX" + uid).c_str(), &Area[2], 0.0f, 1.0f))
+
+        ImGui::Text(("RectOffsetX : " + std::to_string(mLocalViewport->GetOffsetX())).c_str());
+        if(ImGui::SliderFloat(("OffsetXScale : " + uid).c_str(), &Area[2], 0.0f, 1.0f))
             mOffsetXScale = Area[2];
-        if(ImGui::SliderFloat(("RectOffsetY" + uid).c_str(), &Area[3], 0.0f, 1.0f))
+
+        ImGui::Text(("RectOffsetY : " + std::to_string(mLocalViewport->GetOffsetY())).c_str());
+        if(ImGui::SliderFloat(("OffsetYScale : " + uid).c_str(), &Area[3], 0.0f, 1.0f))
             mOffsetYScale = Area[3];
 
         ImGui::Separator();

@@ -20,6 +20,8 @@ namespace Editor
     void TestEditorTab::Render()
     {
         std::string str;
+        str = std::to_string(Time::GetFps());
+        ImGui::Text("%s", str.c_str());
         ImGui::Text("\nDisplay Memory");
         D3DGraphicsDevice::GetDisplayMemoryInfo(str);
         ImGui::Text("%s", str.c_str());

@@ -127,9 +127,9 @@ json Light::Serialize()
     prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
     prop["radiance"] = { mLightProp.Radiance.r, mLightProp.Radiance.g, mLightProp.Radiance.b, mLightProp.Radiance.a };
-    prop["diffuse"] = { mLightProp.DiffuseRGB.r, mLightProp.DiffuseRGB.g, mLightProp.DiffuseRGB.b, mLightProp.DiffuseRGB.a };
-    prop["ambient"] = { mLightProp.AmbientRGB.r, mLightProp.AmbientRGB.g, mLightProp.AmbientRGB.b, mLightProp.AmbientRGB.a };
-    prop["specular"] = { mLightProp.SpecularRGB.r, mLightProp.SpecularRGB.g, mLightProp.SpecularRGB.b, mLightProp.SpecularRGB.a };
+    //prop["diffuse"] = { mLightProp.DiffuseRGB.r, mLightProp.DiffuseRGB.g, mLightProp.DiffuseRGB.b, mLightProp.DiffuseRGB.a };
+    //prop["ambient"] = { mLightProp.AmbientRGB.r, mLightProp.AmbientRGB.g, mLightProp.AmbientRGB.b, mLightProp.AmbientRGB.a };
+    //prop["specular"] = { mLightProp.SpecularRGB.r, mLightProp.SpecularRGB.g, mLightProp.SpecularRGB.b, mLightProp.SpecularRGB.a };
     prop["type"] = mLightProp.LightType;
 
     ret["property"] = prop;
@@ -140,31 +140,48 @@ json Light::Serialize()
 void Light::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::CollapsingHeader(("Light" + uid).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx(("Light" + uid).c_str(), EDITOR_FLAG_COMPONENT))
     {
-        std::string name = Helper::ToString(gameObject->GetName());
-        ImGui::DragFloat(("LightNear" + uid).c_str(), &mLightNear, 1.0f, 1.0f, 100000.0f);
-        ImGui::DragFloat(("LightFar" + uid).c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
-        ImGui::DragFloat(("DistFromCamera" + uid).c_str(), &mCameradDist, 1.0f, 1.0f, 100000.0f);
-        ImGui::DragFloat(("UpFromLookAt" + uid).c_str(), &mUpDist, 1.0f, 1.0f, 100000.0f);
-        ImGui::NewLine();
-        ImGui::DragFloat(("Intensity##" + name).c_str(), &mLightProp.LightIntensity, 0.05f, 0.0f, 1.0f);
-        ImGui::DragFloat3(("Radiance##" + name).c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
+        const char* renderMode[] = { "Direction", "Point", "Spot"};
+        int SelectIndex = mLightProp.LightType; // 현재 선택된 항목 (인덱스)
+
+        ImGui::Text("Light Type : ");
+        if (ImGui::Combo((uid + "Light Type").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
+        {
+            SetLightType((eLightType)SelectIndex);
+        }
+
+        ImGui::Separator();
+
         if (mLightProp.LightType == (UINT)eLightType::Direction)
         {
-            ImGui::DragFloat3(("Direction##" + name).c_str(), &mLightProp.Direction.x, 0.05f, -1.0f, 1.0f);
+            ImGui::Text("Light Direction : ");
+            ImGui::DragFloat3((uid + "Direction").c_str(), &mLightProp.Direction.x, 0.05f, -1.0f, 1.0f);
+            mLightProp.Direction.Normalize();
         }
-        
-        
-        ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
+        ImGui::Text("Light Strengh : ");
+        ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
+        ImGui::Text("Light Radiance : ");
+        ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
 
-        // 래거시렌더링의 잔재.....
-        /*ImGui::NewLine();
-        ImGui::ColorEdit3(("Diffuse##" + name).c_str(), &mLightProp.DiffuseRGB.r);
-        ImGui::NewLine();
-        ImGui::ColorEdit3(("Ambient##" + name).c_str(), &mLightProp.AmbientRGB.r);
-        ImGui::DragFloat(("AmbientStrength##" + name).c_str(), &mLightProp.AmbientStrength, 0.05f, 0.0f, 1.0f);
-        ImGui::NewLine();
-        ImGui::ColorEdit3(("Specular##" + name).c_str(), &mLightProp.SpecularRGB.r);*/
+        ImGui::Separator();
+
+        ImGui::Checkbox(("Using Shadow" + uid).c_str(), (bool*)&mLightProp.UseShadow); 
+        ImGui::Text("Shadow Strengh : ");
+        ImGui::DragFloat((uid + "SStrengh").c_str(), &mLightProp.ShadowStrengh, 0.05f, 0.0f, 1.0f);
+        ImGui::Text("Light Near : ");
+        ImGui::DragFloat((uid + "LightNear").c_str(), &mLightNear, 1.0f, 1.0f, 100000.0f);
+        ImGui::Text("Light Far : ");
+        ImGui::DragFloat((uid + "LightFar").c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
+
+        ImGui::Separator();
+        EDITOR_COLOR_EXTRA;
+        if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
+            ImGui::TreePop();
+        }
+        EDITOR_COLOR_POP(1);
+        ImGui::TreePop();
     }
 }

@@ -5,6 +5,7 @@ enum class eLightType
 {
     Direction,
     Point,
+    Spot,
 };
 
 class Light
@@ -29,9 +30,6 @@ public:
 public:
     inline void SetLightDirection(Vector4 _xyz) { mLightProp.Direction = _xyz; }
     inline void SetLightType(eLightType _type) { mLightProp.LightType = static_cast<INT>(_type); }
-    inline void SetAmbientColor(ColorF _color) { mLightProp.AmbientRGB = _color; }
-    inline void SetDiffuseColor(ColorF _color) { mLightProp.DiffuseRGB = _color; }
-    inline void SetSpecularColor(ColorF _color) { mLightProp.SpecularRGB = _color; }
 public:
     inline auto GetShadowViewport() { return mShadowViewport; }
     inline auto GetShadowRenderTarget() { return mShadowRenderTarget; }

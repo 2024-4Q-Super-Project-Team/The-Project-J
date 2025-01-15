@@ -27,9 +27,13 @@ void AudioListener::Tick()
 		FMOD_VECTOR listenerForward = { 0.0f, 0.0f, 1.0f };
 		FMOD_VECTOR listenerUp = { 0.0f, 1.0f, 0.0f };
 
+		Vector3 Forward = gameObject->transform->Forward();
+		Vector3 Up = gameObject->transform->Up();
+
+		// Listener의 위치, 전방, 상단을 설정합니다.
 		memcpy(&listenerPosition, &gameObject->transform->GetWorldPosition(), sizeof(Vector3));
-		memcpy(&listenerForward, &gameObject->transform->Forward(), sizeof(Vector3));
-		memcpy(&listenerUp, &gameObject->transform->Up(), sizeof(Vector3));
+		memcpy(&listenerForward, &Forward, sizeof(Vector3));
+		memcpy(&listenerUp, &Up, sizeof(Vector3));
 
 		FMOD_CHECK(AudioHub::GetCoreSystem()->set3DListenerAttributes(
 			0,

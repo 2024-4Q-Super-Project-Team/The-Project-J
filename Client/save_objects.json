@@ -18,17 +18,29 @@
             {
                 "id": 17,
                 "name": "Transform"
-            },
-            {
-                "id": 19,
-                "name": "Light"
-            },
-            {
-                "id": 18,
-                "name": "MeshRenderer"
             }
         ],
         "id": 16,
-        "name": "qq"
+        "name": "ModelController"
+    },
+    {
+        "components": [
+            {
+                "id": 20,
+                "name": "Transform"
+            }
+        ],
+        "id": 19,
+        "name": "CameraController"
+    },
+    {
+        "components": [
+            {
+                "id": 24,
+                "name": "Transform"
+            }
+        ],
+        "id": 23,
+        "name": "ds"
     }
 ]

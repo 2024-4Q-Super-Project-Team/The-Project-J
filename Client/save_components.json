@@ -53,51 +53,47 @@
         ]
     },
     {
-        "id": 19,
-        "property": {
-            "ambient": [
-                1.0,
-                1.0,
-                1.0,
-                1.0
-            ],
-            "diffuse": [
-                1.0,
-                1.0,
-                1.0,
-                1.0
-            ],
-            "direction": [
-                0.0,
-                0.0,
-                1.0,
-                0.0
-            ],
-            "position": [
-                0.0,
-                0.0,
-                0.0,
-                1.0
-            ],
-            "radiance": [
-                1.0,
-                1.0,
-                1.0,
-                1.0
-            ],
-            "specular": [
-                1.0,
-                1.0,
-                1.0,
-                1.0
-            ],
-            "type": 0
-        }
+        "id": 20,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
     },
     {
-        "id": 18,
-        "material": null,
-        "mesh": null,
-        "name": "MeshRenderer"
+        "id": 24,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
     }
 ]

@@ -7,6 +7,7 @@ ModelSpawner::~ModelSpawner()
 
 void ModelSpawner::Start()
 {
+    //초기 객체 생성하는 코드들은 에디터에서 추가하는 것으로 대체되어야 합니다. 
     {   // Plain
         auto Instance = CreateObject(L"Plain", L"Default");
         Instance->transform->position = Vector3(0, 0, 0);
@@ -45,11 +46,11 @@ void ModelSpawner::Start()
         //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
         Instance->transform->position = Vector3(100, 50, 50);
 
-        //MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
-        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
-        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
-        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
-        //EditorManager::mDebugEditor->AddRenderModel(pRenderer);
+        MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
+        pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
+        EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Mixamo
         auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Mixamo/SkinningTest.fbx");

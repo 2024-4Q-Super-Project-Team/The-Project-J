@@ -1,15 +1,19 @@
 [
     {
         "id": 0,
-        "name": "TestWorld",
+        "name": "World",
         "object groups": [
             {
                 "id": 1,
                 "name": "Default"
             },
             {
-                "id": 15,
-                "name": "ww"
+                "id": 5,
+                "name": "Test"
+            },
+            {
+                "id": 22,
+                "name": "??"
             }
         ]
     }

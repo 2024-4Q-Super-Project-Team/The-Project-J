@@ -33,10 +33,9 @@ BOOL GameApp::OnPostInitialize()
         WorldManager* wrdMng = mMainScene->GetWorldManager();
         if (nullptr == wrdMng) return FALSE;
 
-        //World* wolrd = wrdMng->CreateWorld<World>(L"TestWorld", L"Deafult");
-        wrdMng->LoadWorlds();
+        World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
+        //wrdMng->LoadWorlds();
         wrdMng->SetActiveWorld(L"TestWorld");
-        //wrdMng->LoadWorld(L"TestWorld");
 #ifdef _DEBUG
         /////////////////////////////////////////////////////
         // ฟกต๐ลอ

@@ -180,7 +180,7 @@ void Transform::Deserialize(json& j)
 void Transform::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("Transform" + uid).c_str(), EDITOR_FLAG_COMPONENT))
+    if (ImGui::TreeNodeEx(("Transform" + uid).c_str(), EDITOR_FLAG_MAIN))
     {
         {
             ImGui::Text("Position : ");

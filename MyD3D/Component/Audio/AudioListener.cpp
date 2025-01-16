@@ -27,11 +27,12 @@ void AudioListener::Tick()
 		FMOD_VECTOR listenerForward = { 0.0f, 0.0f, 1.0f };
 		FMOD_VECTOR listenerUp = { 0.0f, 1.0f, 0.0f };
 
+		Vector3 Position = gameObject->transform->GetWorldPosition();
 		Vector3 Forward = gameObject->transform->Forward();
 		Vector3 Up = gameObject->transform->Up();
 
 		// Listener의 위치, 전방, 상단을 설정합니다.
-		memcpy(&listenerPosition, &gameObject->transform->GetWorldPosition(), sizeof(Vector3));
+		memcpy(&listenerPosition, &Position, sizeof(Vector3));
 		memcpy(&listenerForward, &Forward, sizeof(Vector3));
 		memcpy(&listenerUp, &Up, sizeof(Vector3));
 
@@ -76,4 +77,15 @@ void AudioListener::Draw(Camera* _camera)
 void AudioListener::PostRender()
 {
 	mMainListener = nullptr;
+}
+
+void AudioListener::EditorRendering()
+{
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	if (ImGui::TreeNodeEx(("AudioListener" + uid).c_str(), EDITOR_FLAG_MAIN))
+	{
+		ImGui::Text("Distance Attenuation Scale : ");
+		ImGui::DragFloat((uid + "Distance Attenuation Scale").c_str(), &mDistanceAttenuationScale, 0.01f, 0.0f, 1.0f);
+		ImGui::TreePop();
+	}
 }

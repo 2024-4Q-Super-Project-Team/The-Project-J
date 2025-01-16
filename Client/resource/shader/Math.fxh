@@ -52,6 +52,10 @@ float3 FresnelEquation(float3 F0, float HdotV)
 // 그림자 스케일 계산 (0이 그림자가 있는거다)
 float CaclulateShadowScale(int Index, float4 WorldPosition)
 {
+    if (LightProp[Index].UseShadow == FALSE)
+    {
+        return 1;
+    }
     float ShadowScale = 0;
     float4 ShadowPositon = float4(1.0f, 1.0f, 1.0f, 1.0f);
     ShadowPositon = mul(WorldPosition, LightProp[Index].ShadowViewMatrix);
@@ -98,7 +102,6 @@ float CaclulateShadowScale(int Index, float4 WorldPosition)
             }
         }
     }
-    
     return saturate(ShadowScale);
 }
 

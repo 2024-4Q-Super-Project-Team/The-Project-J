@@ -7,10 +7,9 @@ class ModelNode;
 
 class Prefab
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::Prefab);
+    RESOURCE_TYPE(Prefab);
     explicit Prefab(std::wstring_view _name);
     explicit Prefab(std::wstring_view _name, std::shared_ptr<FBXModelResource> _pModel);
     virtual ~Prefab();

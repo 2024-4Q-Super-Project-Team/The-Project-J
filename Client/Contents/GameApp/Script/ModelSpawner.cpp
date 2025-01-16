@@ -67,20 +67,28 @@ void ModelSpawner::Start()
 
         Animator* pAnimator = Instance->AddComponent<Animator>();
         pAnimator->SetAnimation(ResourceManager::GetResource<AnimationResource>(L"mixamo.com"));
+
+        //auto pAudioResource = ResourceManager::AddResource<AudioResource>(L"resource/sound/running-stream-water-sound-239612.mp3");
+        //pAudioResource->mAudioClip->SetSurround(true);
+        //AudioSource* pAudioSource = Instance->AddComponent<AudioSource>();
+        //pAudioSource->SetSurround(true);
+        //pAudioSource->AddAudio(L"test", pAudioResource);
+        //pAudioSource->Play(L"test");
+
     }
     {   // Evironment
-        auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Desert_Rock_007/Desert_Rock_007.FBX");
-        if (ModelResource->mRootNode != nullptr)
-        {
-            auto ModelPrefab = ResourceManager::AddResource<Prefab>(L"resource/fbx/Desert_Rock_007/Desert_Rock_007.FBX", ModelResource);
-            ModelPrefab->SetGroupName(L"Model_Group2");
-            mFBXModelResources.push_back(ModelResource);
-            mModelPrefabs.push_back(ModelPrefab);
-
-            auto Instance = Instantiate(ModelPrefab.get());
-            //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
-            Instance->transform->position = Vector3(100, 50, 50);
-        }
+        //auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Map/lieu1.fbx");
+        //if (ModelResource->mRootNode != nullptr)
+        //{
+        //    auto ModelPrefab = ResourceManager::AddResource<Prefab>(L"resource/fbx/Map/lieu1.fbx", ModelResource);
+        //    ModelPrefab->SetGroupName(L"Model_Group2");
+        //    mFBXModelResources.push_back(ModelResource);
+        //    mModelPrefabs.push_back(ModelPrefab);
+        //
+        //    auto Instance = Instantiate(ModelPrefab.get());
+        //    //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
+        //    Instance->transform->position = Vector3(100, 50, 50);
+        //}
     }
     
     ObjectGroup* pGroup = GameManager::GetCurrentWorld()->GetObjectGroup(L"Default");
@@ -101,13 +109,6 @@ void ModelSpawner::Start()
         EditorManager::mDebugEditor->AddLight(pDirLight1);
         EditorManager::mDebugEditor->AddLight(pDirLight2);
     }
-    
-    //auto pAudioResource = ResourceManager::AddResource<AudioResource>(L"resource/sound/odesa_new.ogg");
-    //auto pAudioSource = gameObject->AddComponent<AudioSource>();
-    //pAudioResource->GetAudioClip()->SetSurround(true);
-    //pAudioSource->SetSurround(true);
-    //pAudioSource->AddAudio(L"test", pAudioResource);
-    //pAudioSource->Play(L"test");
 }
 
 void ModelSpawner::Tick()

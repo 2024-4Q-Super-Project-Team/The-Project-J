@@ -12,11 +12,7 @@ if (mMaterialMaps[(UINT)typeEnum]) \
     if (ImGui::TreeNodeEx((label + uid).c_str(), ImGuiTreeNodeFlags_Selected)){ \
         ImGui::Checkbox(("Using " + std::string(label) + uid).c_str(), (bool*)&UseMap); \
         mMatCBuffer.SetUsingMap(typeEnum, UseMap); \
-        std::wstring wTexPath = mMaterialResource->GetMaterialMapPath(typeEnum); \
-        std::string TexPath = Helper::ToString(wTexPath); \
-        ImGui::Text(TexPath.c_str()); \
-        ImGui::Image((ImTextureID)mMaterialMaps[(UINT)typeEnum] \
-            ->Texture->mSRV, ImVec2(150, 150)); \
+        mMaterialMaps[(UINT)typeEnum]->EditorRendering(); \
         ImGui::TreePop(); \
     }\
 }\
@@ -147,7 +143,7 @@ void Material::EditorRendering()
     std::string name = Helper::ToString(mMaterialResource->GetName());
 
     EDITOR_COLOR_RESOURCE;
-    if (ImGui::TreeNodeEx(("Material" + uid).c_str(), ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx(("Material" + uid).c_str(), EDITOR_FLAG_RESOURCE))
     {
         ImGui::Text(("Material : " + name).c_str());
         ImGui::Text("Diffuse : ");
@@ -204,17 +200,3 @@ void Material::EditorRendering()
     }
     EDITOR_COLOR_POP(1);
 }
-
-//if (mMaterialMaps[(UINT)eMaterialMapType::DIFFUSE])
-//{                                                                                          
-//    ImGui::Text("Diffuse");
-//    if (ImGui::TreeNodeEx(("Diffuse" + uid).c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
-//    {
-//        ImGui::Checkbox(("IsUse##" + std::string("Diffuse") + uid).c_str(), (bool*)&UseMap);
-//        mMatCBuffer.SetUsingMap(eMaterialMapType::DIFFUSE, UseMap);
-//        std::wstring wTexPath = mMaterialResource->GetMaterialMapPath(eMaterialMapType::DIFFUSE);
-//        std::string TexPath = Helper::ToString(wTexPath);
-//        ImGui::Text(TexPath.c_str());
-//        ImGui::Image((ImTextureID)mMaterialMaps[(UINT)eMaterialMapType::DIFFUSE]->Texture->mSRV, ImVec2(150, 150));
-//    }
-//}

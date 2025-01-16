@@ -98,7 +98,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         
         float  ShadowScale   = CaclulateShadowScale(i, input.worldPos);
         
-        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightIntensity * NdotL * ShadowScale;
+        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightStrengh * NdotL * ShadowScale;
         ACESToneMapping(DirectLight.rgb);
     }
     // ===== IBL °è»ê =====

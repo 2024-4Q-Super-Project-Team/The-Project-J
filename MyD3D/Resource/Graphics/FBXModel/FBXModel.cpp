@@ -38,6 +38,50 @@ FBXModelResource::~FBXModelResource()
 
 void FBXModelResource::EditorRendering()
 {
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	std::string name = Helper::ToString(GetName());
+
+	if (ImGui::TreeNodeEx(("FBXModel" + uid).c_str(), EDITOR_FLAG_RESOURCE))
+	{
+		if (ImGui::TreeNodeEx("Material", EDITOR_FLAG_RESOURCE))
+		{
+			for (auto& rsc : mMaterialArray)
+			{
+				if (rsc)
+					rsc->EditorRendering();
+			}
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNodeEx("Mesh", EDITOR_FLAG_RESOURCE))
+		{
+			for (auto& rsc : mMeshArray)
+			{
+				if (rsc)
+					rsc->EditorRendering();
+			}
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNodeEx("Animation", EDITOR_FLAG_RESOURCE))
+		{
+			for (auto& rsc : mAnimationArray)
+			{
+				if (rsc)
+					rsc->EditorRendering();
+			}
+			ImGui::TreePop();
+		}
+		if (ImGui::TreeNodeEx("Bone", EDITOR_FLAG_RESOURCE))
+		{
+			for (auto& rsc : mBoneArray)
+			{
+				if (rsc)
+					rsc->EditorRendering();
+			}
+			ImGui::TreePop();
+		}
+
+		ImGui::TreePop();
+	}
 }
 
 ModelNode::ModelNode(std::wstring_view _name, ModelNode* _pParent)

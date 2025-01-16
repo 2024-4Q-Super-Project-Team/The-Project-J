@@ -8,24 +8,26 @@
 #include "World/World.h"
 #include "World/Light/LightSystem.h"
 
-float Light::ShadowArea = 4096.0f;
+std::queue<D3DBitmapRenderTarget*>  Light::mShadowRenderTargetPool;
 
 Light::Light(Object* _owner)
     : Component(_owner)
+	, mShadowResolution(1024.0f)
+    , mShadowDistance(4096.0f)
 {
     mType = eComponentType::LIGHT;
     SetLightType(eLightType::Direction);
     mLightProp.Direction = Vector4(0, 0, 1, 0);
     // Viewport 생성
-    mShadowViewport = new D3DGraphicsViewport(0.0f, 0.0f, ShadowArea, ShadowArea);
+    mShadowViewport = new D3DGraphicsViewport(0.0f, 0.0f, mShadowResolution, mShadowResolution);
     // 렌더타겟 생성
-    mShadowRenderTarget = new D3DBitmapRenderTarget(ShadowArea, ShadowArea);
+    mShadowRenderTarget = new D3DBitmapRenderTarget(mShadowResolution, mShadowResolution);
 
     // Depth Stencil Texture 생성
     D3D11_TEXTURE2D_DESC TexDesc = D3DGraphicsDefault::DefaultTextureDesc;
     TexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-    TexDesc.Width = ShadowArea;
-    TexDesc.Height = ShadowArea;
+    TexDesc.Width = mShadowResolution;
+    TexDesc.Height = mShadowResolution;
     TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
     D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
 
@@ -87,6 +89,7 @@ void Light::Render()
 void Light::Draw(Camera* _camera)
 {
     // 그림자 계산 수행
+	// 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
     if (mShadowViewport && mShadowRenderTarget)
     {
         mShadowViewport->Bind();
@@ -102,13 +105,11 @@ void Light::Draw(Camera* _camera)
         // Eye = 광원의 위치 LookAt = 그림자의 위치
         // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
         mLightProp.ShadowView       = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
-        mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(ShadowArea, ShadowArea, mLightNear, mLightFar));
-
-        _camera->PushLight(this);
+        mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
     }
     Vector3 WolrdPos = gameObject->transform->GetWorldPosition();
     memcpy(&mLightProp.Position, &WolrdPos, sizeof(Vector3)); // 3원소만 복사
-    GameManager::GetCurrentWorld()->GetLightSystem()->AddLight(mLightProp);
+    _camera->PushLight(this);
 }
 
 void Light::PostRender()
@@ -127,9 +128,6 @@ json Light::Serialize()
     prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
     prop["radiance"] = { mLightProp.Radiance.r, mLightProp.Radiance.g, mLightProp.Radiance.b, mLightProp.Radiance.a };
-    //prop["diffuse"] = { mLightProp.DiffuseRGB.r, mLightProp.DiffuseRGB.g, mLightProp.DiffuseRGB.b, mLightProp.DiffuseRGB.a };
-    //prop["ambient"] = { mLightProp.AmbientRGB.r, mLightProp.AmbientRGB.g, mLightProp.AmbientRGB.b, mLightProp.AmbientRGB.a };
-    //prop["specular"] = { mLightProp.SpecularRGB.r, mLightProp.SpecularRGB.g, mLightProp.SpecularRGB.b, mLightProp.SpecularRGB.a };
     prop["type"] = mLightProp.LightType;
 
     ret["property"] = prop;
@@ -140,7 +138,7 @@ json Light::Serialize()
 void Light::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("Light" + uid).c_str(), EDITOR_FLAG_COMPONENT))
+    if (ImGui::TreeNodeEx(("Light" + uid).c_str(), EDITOR_FLAG_MAIN))
     {
         const char* renderMode[] = { "Direction", "Point", "Spot"};
         int SelectIndex = mLightProp.LightType; // 현재 선택된 항목 (인덱스)
@@ -169,6 +167,11 @@ void Light::EditorRendering()
         ImGui::Checkbox(("Using Shadow" + uid).c_str(), (bool*)&mLightProp.UseShadow); 
         ImGui::Text("Shadow Strengh : ");
         ImGui::DragFloat((uid + "SStrengh").c_str(), &mLightProp.ShadowStrengh, 0.05f, 0.0f, 1.0f);
+        ImGui::Text("Shadow Resolution : ");
+        ImGui::DragFloat((uid + "SResolution").c_str(), &mShadowResolution, 1.0f, 1.0f, 10000.0f);
+        ImGui::Text("Shadow Distance : ");
+        ImGui::DragFloat((uid + "SDistance").c_str(), &mShadowDistance, 1.0f, 1.0f, 10000.0f);
+
         ImGui::Text("Light Near : ");
         ImGui::DragFloat((uid + "LightNear").c_str(), &mLightNear, 1.0f, 1.0f, 100000.0f);
         ImGui::Text("Light Far : ");

@@ -5,10 +5,9 @@ class D3DGraphicsImg;
 
 class Texture2D
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::Texture2D);
+    RESOURCE_TYPE(Texture2D);
     explicit Texture2D(std::wstring_view _path);
     virtual ~Texture2D();
 public:

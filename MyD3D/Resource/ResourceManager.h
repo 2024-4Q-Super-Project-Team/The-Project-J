@@ -18,9 +18,10 @@ class ITexture3D;
 
 class Prefab;
 
+using ResourceTable = std::unordered_map<std::wstring, std::weak_ptr<Resource>>;
+
 class ResourceManager
 {
-    using ResourceTable = std::unordered_map<std::wstring, std::weak_ptr<Resource>>;
 public:
     explicit ResourceManager() = default;
     virtual ~ResourceManager() = default;
@@ -39,6 +40,8 @@ public:
     static BOOL                  PushResource(std::shared_ptr<TYPE> _pResource);
 private:
     static ResourceTable         mResourceTables[static_cast<UINT>(eResourceType::SIZE)];
+public:
+    inline static ResourceTable& GetResourceTable(eResourceType _type) { return mResourceTables[static_cast<UINT>(_type)]; }
 };
 
 template<typename TYPE>

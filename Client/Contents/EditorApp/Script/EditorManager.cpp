@@ -1,10 +1,11 @@
 #include "pch.h"
 #include "EditorManager.h"
 
-Editor::TestEditorTab*  EditorManager::mDebugEditor = nullptr;
-Editor::Inspector*      EditorManager::mInspector = nullptr;
-Editor::Hierarchy*      EditorManager::mHierarchy = nullptr;
-Editor::GameEditor*      EditorManager::mGameEditor = nullptr;
+Editor::TestEditorTab*          EditorManager::mDebugEditor = nullptr;
+Editor::Inspector*              EditorManager::mInspector = nullptr;
+Editor::Hierarchy*              EditorManager::mHierarchy = nullptr;
+Editor::GameEditor*             EditorManager::mGameEditor = nullptr;
+Editor::EditorResourceView*     EditorManager::mResourceViewer = nullptr;
 
 EditorManager::~EditorManager()
 {
@@ -97,6 +98,7 @@ void EditorManager::CreateMainWindowContainer()
             CreateTestTab(pTAbBar);
             CreateHierarchy(pTAbBar);
             CreateGameEditor(pTAbBar);
+            CreateResourceViewer(pTAbBar);
             pWindowRect->AddWidget(pTAbBar);
         }
     }
@@ -158,6 +160,16 @@ void EditorManager::CreateGameEditor(Editor::TabBar* _pSrcTabBar)
         Editor::Tab* pInspectorBar = new Editor::Tab("GameEditor");
         pInspectorBar->AddWidget(mGameEditor);
         _pSrcTabBar->AddTab(pInspectorBar);
+    }
+}
+
+void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
+{
+	{   // ¸®¼Ò½º ºä¾î ÅÇ
+        mResourceViewer = new Editor::EditorResourceView();
+        Editor::Tab* pBar = new Editor::Tab("Resource Viewer");
+        pBar->AddWidget(mResourceViewer);
+        _pSrcTabBar->AddTab(pBar);
     }
 }
 

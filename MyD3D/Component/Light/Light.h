@@ -49,8 +49,12 @@ private:
     float mCameradDist = 0.0f;
     // 그림자 -> 조명 거리
     float mUpDist = 3000.0f;
+	// 그림자 맵 해상도
+	float mShadowResolution;
     // 그림자 렌더 범위
-    static float ShadowArea;
+    float mShadowDistance;
+
+	static std::queue<D3DBitmapRenderTarget*> mShadowRenderTargetPool;
 public:
     virtual void EditorRendering() override;
 };

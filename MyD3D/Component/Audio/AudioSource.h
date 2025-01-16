@@ -11,16 +11,16 @@ public:
     explicit AudioSource(Object* _owner);
     virtual ~AudioSource();
 public:
-    virtual void Start() override {}
-    virtual void Tick() override {}
-    virtual void FixedUpdate() override {}
-    virtual void PreUpdate() override {}
-    virtual void Update() override {}
-    virtual void PostUpdate() override {}
-    virtual void PreRender() override {}
-    virtual void Render() override {}
-    virtual void Draw(Camera* _camera) override {}
-    virtual void PostRender() override {}
+    virtual void Start() override;
+    virtual void Tick() override;
+    virtual void FixedUpdate() override;
+    virtual void PreUpdate() override;
+    virtual void Update() override;
+    virtual void PostUpdate() override;
+    virtual void PreRender() override;
+    virtual void Render() override;
+    virtual void Draw(Camera* _camera) override;
+    virtual void PostRender() override;
 public:
     void SetCurrentAudio(const std::wstring& _key);
     BOOL AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio);
@@ -46,4 +46,6 @@ private:
     AudioChannel* mAudioChannel;
     // 현재 등록된 오디오을 관리하는 테이블
     std::unordered_map<std::wstring, std::shared_ptr<AudioResource>> mAudioTable;
+public:
+	virtual void EditorRendering() override;
 };

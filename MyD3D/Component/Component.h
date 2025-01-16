@@ -1,7 +1,7 @@
 #pragma once
 #include "Interface/ICycleHandler.h"
 #include "Interface/SaveBase.h"
-
+#include "Editor/Interface/IEditorObject.h"
 
 class World;
 class Object;
@@ -39,6 +39,7 @@ constexpr static UINT ComponentSize = static_cast<UINT>(eComponentType::SIZE);
 class Component
 	: public Engine::ICycleHandler
 	, public Engine::SaveBase
+	, public IEditorObject
 {
 public:
 	explicit Component(Object* _owner);
@@ -82,7 +83,7 @@ private:
 
 	std::vector<Serial*> mSerials;
 public:
-    virtual void EditorRendering();
+	virtual void EditorRendering() override;
 };
 
 class DynamicComponent

@@ -77,7 +77,7 @@ float4 main(QUAD_VS_OUTPUT input) : SV_TARGET
         
         float ShadowScale = CaclulateShadowScale(i, WorldPosition);
         
-        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightIntensity * NdotL * ShadowScale;
+        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightStrengh * NdotL * ShadowScale;
         ACESToneMapping(DirectLight.rgb);
         // 이걸 마지막에 곱해서 대입하지 않으면?
         // 이전 라이트 값이 남아있어 뒤에 조명 그림자가 적용이 안된다.

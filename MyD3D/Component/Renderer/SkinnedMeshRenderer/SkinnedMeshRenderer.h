@@ -50,7 +50,9 @@ private:
 
     std::unordered_map<std::wstring, Transform*> mBoneMappingTable; // 본 이름과 트랜스폼 매칭
     BoneMatrixCBuffer mFinalBoneMatrices; // 최종 본 매트릭스 (셰이더로 전달)
-    TransformCBuffer  mTransformMatrices;
+	TransformCBuffer  mTransformMatrices; // 트랜스폼 매트릭스 (셰이더로 전달)
+
+	bool isCastShadow = true;
 public:
     virtual void EditorRendering() override;
 };

@@ -36,7 +36,8 @@ private:
 
 private:
     std::shared_ptr<AnimationResource> mActiveAnimation;
-
-    bool  isPlay;
+    bool  isPlaying;
     float mDuration;
+public:
+    virtual void EditorRendering() override;
 };

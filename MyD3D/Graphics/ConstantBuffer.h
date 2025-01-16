@@ -23,9 +23,12 @@ struct LightProperty
     Vector4 Direction = { 0.0f,0.0f,0.0f,0.0f };
     ColorF  Radiance = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
-    FLOAT   LightStrengh = 1.0f;
-	INT	    UseShadow = FALSE;
+    FLOAT   LightRange = 1.0f; // Point and Spot lights only
+    FLOAT   LightStrengh = 1.0f; 
+    // ==== Shadow ====
+	BOOL    UseShadow = TRUE;
     FLOAT   ShadowStrengh = 1.0f;
+	Vector3 Padding;
 
     Matrix  ShadowView = Matrix::Identity;
     Matrix  ShadowProjection = Matrix::Identity;

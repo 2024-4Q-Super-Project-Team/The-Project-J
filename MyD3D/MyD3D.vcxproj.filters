@@ -321,6 +321,9 @@
     <ClInclude Include="Editor\Interface\IEditorObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\ResourceTab\EditorResourceView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -615,6 +618,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Interface\IEditorObject.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ResourceTab\EditorResourceView.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -209,9 +209,8 @@ void MeshResource::EditorRendering()
     std::string name = Helper::ToString(GetName());
 
     EDITOR_COLOR_RESOURCE;
-    if (ImGui::TreeNodeEx(("Mesh" + uid).c_str(), ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_DefaultOpen))
+    if (ImGui::TreeNodeEx(("Mesh : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
     {
-		ImGui::Text(("Mesh : " + name).c_str());
 		ImGui::Text("Vertex Count : %d", mVertices.size());
 		ImGui::Text("Index Count  : %d", mIndices.size());
 		ImGui::Text("Bone Count  : %d", mBoneArray.size());

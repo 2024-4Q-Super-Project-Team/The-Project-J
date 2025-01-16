@@ -74,5 +74,26 @@ void SkyBox::SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex)
 
 void SkyBox::EditorRendering()
 {
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	if (ImGui::TreeNodeEx(("SkyBox : " + uid).c_str(), EDITOR_FLAG_RESOURCE))
+	{
+		if (mIBLEnvironmentTex)
+		{
+            mIBLEnvironmentTex->EditorRendering();
+		}
+		if (mIBLDiffuseTex)
+		{
+            mIBLDiffuseTex->EditorRendering();
+		}
+		if (mIBLSpecularTex)
+		{
+            mIBLSpecularTex->EditorRendering();
+		}
+		if (mBLDFLookUpTableTex)
+		{
+            mBLDFLookUpTableTex->EditorRendering();
+		}
+		ImGui::TreePop();
+	}
 }
 

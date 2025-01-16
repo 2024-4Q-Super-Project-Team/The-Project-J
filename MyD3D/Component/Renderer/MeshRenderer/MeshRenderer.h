@@ -36,9 +36,11 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
-    std::shared_ptr<MeshResource>   mMesh;          // 스킨드 메쉬
-    Material* mMateiral;      // 사용할 머티리얼
-    TransformCBuffer                mTransformMatrices;
+    std::shared_ptr<MeshResource> mMesh;    // 메쉬
+    Material* mMateiral;                    // 사용할 머티리얼
+	TransformCBuffer mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
+
+    bool isCastShadow = true;               // 그림자 렌더링 여부
 public:
     virtual void EditorRendering() override;
 };

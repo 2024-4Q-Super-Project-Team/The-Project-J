@@ -207,13 +207,11 @@ void _CALLBACK Object::OnDestroy()
 
 void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _objTable)
 {
-    for (auto& compArr : mComponentArray)
+    for (auto& comp : mComponentsToWake)
     {
-        for (auto& comp : compArr)
-        {
-            comp->Clone(_pDest, _objTable);
-        }
+        comp->Clone(_pDest, _objTable);
     }
+
 }
 
 json Object::Serialize()

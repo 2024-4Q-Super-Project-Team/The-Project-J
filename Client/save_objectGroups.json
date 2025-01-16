@@ -10,12 +10,26 @@
         ]
     },
     {
-        "id": 15,
-        "name": "ww",
+        "id": 5,
+        "name": "Test",
         "objects": [
             {
                 "id": 16,
-                "name": "qq"
+                "name": "ModelController"
+            },
+            {
+                "id": 19,
+                "name": "CameraController"
+            }
+        ]
+    },
+    {
+        "id": 22,
+        "name": "??",
+        "objects": [
+            {
+                "id": 23,
+                "name": "ds"
             }
         ]
     }

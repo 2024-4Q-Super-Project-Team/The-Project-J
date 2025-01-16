@@ -65,14 +65,21 @@ void EditorManager::CreateMainMenuBar()
 {
     // 메뉴바 및 메뉴, 메뉴아이템 생성
     Editor::MenuBar* pMenuBar = new Editor::MenuBar();
-    Editor::Menu* pMenu_01 = pMenuBar->AddMenu("Menu");
+    Editor::Menu* worldsMenu = pMenuBar->AddMenu("Worlds");
     Editor::Menu* pMenu_02 = pMenuBar->AddMenu("System");
     Editor::Menu* pMenu_03 = pMenuBar->AddMenu("Option");
 
-    auto pItem_01_01 = pMenu_01->AddItem("Elem_01", "Ctrl + 1", []() {Display::Console::Log("click!");});
-    auto pItem_01_02 = pMenu_01->AddItem("Elem_02", "Ctrl + 2", []() {Display::Console::Log("click!");});
-    auto pItem_01_03 = pMenu_01->AddItem("Elem_03", "Ctrl + 3", []() {Display::Console::Log("click!");});
-    auto pItem_01_04 = pMenu_01->AddItem("Elem_04", "Ctrl + 4", []() {Display::Console::Log("click!");});
+    auto worlds = mGameViewport->GetWorldManager()->GetWorlds();
+    for (auto world : worlds)
+    {
+        World* w = world.second;
+        worldsMenu->AddItem(Helper::ToString(world.first).c_str(),
+            "", [this,w]() {Display::Console::Log("click!"); 
+        mGameViewport->GetWorldManager()->SetActiveWorld(w); });
+    }
+    //auto pItem_01_02 = worldsMenu->AddItem("Elem_02", "Ctrl + 2", []() {Display::Console::Log("click!");});
+    //auto pItem_01_03 = worldsMenu->AddItem("Elem_03", "Ctrl + 3", []() {Display::Console::Log("click!");});
+    //auto pItem_01_04 = worldsMenu->AddItem("Elem_04", "Ctrl + 4", []() {Display::Console::Log("click!");});
 
     auto pItem_02_01 = pMenu_02->AddItem("Elem_01", "Ctrl + 1", []() {Display::Console::Log("click!");});
     auto pItem_02_02 = pMenu_02->AddItem("Elem_02", "Ctrl + 2");

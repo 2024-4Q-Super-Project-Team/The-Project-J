@@ -29,6 +29,7 @@ public:
 	World*	CreateWorld(const std::wstring& _name, std::wstring_view _tag = L"", bool isEmpty = false);
 	World*	CreateEmptyWorld(const std::wstring& _name, std::wstring_view _tag = L"");
 	World*	GetActiveWorld();
+	WorldHashMap& GetWorlds() { return mWorlds; }
 	BOOL	DestroyWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(World* _pWorld);

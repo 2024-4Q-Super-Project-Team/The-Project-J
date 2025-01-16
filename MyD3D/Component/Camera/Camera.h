@@ -115,6 +115,9 @@ private:
 
     // 카메라 스카이박스
     std::shared_ptr<SkyBox> mSkyBox;
+
+    // 카메라 라이트 정보
+	LightCBuffer			mLightCBuffer;
 public:
     virtual void EditorRendering() override;
 };

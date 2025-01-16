@@ -76,13 +76,13 @@ struct LightProperty
     float4 Position;
     float4 Direction;
     float4 Radiance;
-    float4 DiffuseColor;
-    float4 AmbientColor;
-    float4 SpecularColor;
     int    LightType;
-    float  LightIntensity;
-    float2 Padding;
-    
+    float  LightRange;
+    float  LightStrengh;
+    // ==== Shadow ====
+    int    UseShadow;
+    float  ShadowStrengh;
+    float3 Padding;
     Matrix ShadowViewMatrix;
     Matrix ShadowProjectionMatrix;
 };

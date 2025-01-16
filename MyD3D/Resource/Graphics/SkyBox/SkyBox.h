@@ -10,10 +10,9 @@ class Camera;
 
 class SkyBox
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::Mesh);
+    RESOURCE_TYPE(SkyBox);
     explicit SkyBox(std::wstring_view _name);
     virtual ~SkyBox() = default;
 public:

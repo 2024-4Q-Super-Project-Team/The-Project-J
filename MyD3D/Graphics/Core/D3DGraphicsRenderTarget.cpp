@@ -94,6 +94,11 @@ D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
         // 샘플링 관련 설정.
         swapDesc.SampleDesc.Count = 1;
         swapDesc.SampleDesc.Quality = 0;
+
+        //swapDesc.Windowed = TRUE; // 초기 창 모드
+        swapDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+        // Alt+Enter 허용 플래그
+        swapDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
         // 스왑체인 생성.
         Helper::HRT(pFactory->CreateSwapChain(pDevice, &swapDesc, &mSwapChain));
 
@@ -104,7 +109,25 @@ D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
             mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
         }
     }
-
+    {
+        DXGI_MODE_DESC newMode = {};
+        newMode.Width = mWidth; // 원하는 너비
+        newMode.Height = mHeight; // 원하는 높이
+        newMode.RefreshRate.Numerator = 60; // 60Hz
+        newMode.RefreshRate.Denominator = 1;
+        newMode.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // 32비트 색상
+        newMode.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+        newMode.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+		//mSwapChain->SetFullscreenState(true, nullptr); // 전체 화면 모드로 변경
+        HRESULT hr = mSwapChain->ResizeTarget(&newMode);
+        if (FAILED(hr)) {
+            OutputDebugString(L"Failed to resize target\n");
+        }
+        else {
+            OutputDebugString(L"Successfully resized target\n");
+        }
+    }
+  
     //D3D11_TEXTURE2D_DESC TexDesc = D3DGraphicsDefault::DefaultTextureDesc;
     //TexDesc.Width = mWidth;
     //TexDesc.Height = mHeight;

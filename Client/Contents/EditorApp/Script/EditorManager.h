@@ -24,6 +24,7 @@ private:
     void /* */CreateInspector(Editor::TabBar* _pSrcTabBar);
     void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     void /* */CreateGameEditor(Editor::TabBar* _pSrcTabBar);
+    void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 
 public:
     virtual json Serialize() override;
@@ -33,10 +34,11 @@ private:
     ViewportScene* mEditorViewport;
     ViewportScene* mGameViewport;
 public:
-    static Editor::TestEditorTab*   mDebugEditor;
-    static Editor::Inspector*       mInspector;
-    static Editor::Hierarchy*       mHierarchy;
-    static Editor::GameEditor*       mGameEditor;
+    static Editor::TestEditorTab*       mDebugEditor;
+    static Editor::Inspector*           mInspector;
+    static Editor::Hierarchy*           mHierarchy;
+    static Editor::GameEditor*          mGameEditor;
+    static Editor::EditorResourceView*  mResourceViewer;
 public:
     static inline auto GetInspector() { return mInspector; }
 };

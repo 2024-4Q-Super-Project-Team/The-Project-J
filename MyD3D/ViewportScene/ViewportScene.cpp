@@ -163,23 +163,26 @@ std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetDeferredRenderTarget()
 void ViewportScene::ResizeSharedResourceView()
 {
     auto size = mWindow->GetSize();
-    UINT width = (UINT)(size.x);
-    UINT height = (UINT)(size.y);
+    if (size.x != 0 && size.y != 0)
+    {
+        UINT width = (UINT)(size.x);
+        UINT height = (UINT)(size.y);
 
-    mSwapChain->Resize(width, height);
+        mSwapChain->Resize(width, height);
 
-    // weak_ptr에 존재한다면
-    if (false == mSharedViewport.expired())
-    {
-        mSharedViewport.lock()->SetWidth(width);
-        mSharedViewport.lock()->SetHeight(height);
-    }
-    if (false == mSharedRenderTarget.expired())
-    {
-        mSharedRenderTarget.lock()->Resize(width, height);
-    }
-    if (false == mSharedDeferredRenderTarget.expired())
-    {
-        mSharedDeferredRenderTarget.lock()->Resize(width, height);
+        // weak_ptr에 존재한다면
+        if (false == mSharedViewport.expired())
+        {
+            mSharedViewport.lock()->SetWidth(width);
+            mSharedViewport.lock()->SetHeight(height);
+        }
+        if (false == mSharedRenderTarget.expired())
+        {
+            mSharedRenderTarget.lock()->Resize(width, height);
+        }
+        if (false == mSharedDeferredRenderTarget.expired())
+        {
+            mSharedDeferredRenderTarget.lock()->Resize(width, height);
+        }
     }
 }

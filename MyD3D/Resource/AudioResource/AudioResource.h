@@ -1,15 +1,13 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "Editor/Interface/IEditorObject.h"
 
 class AudioClip;
 
 class AudioResource
 	: public Resource
-	, public IEditorObject
 {
 public:
-	RESOURCE_TYPE(eResourceType::AudioResource);
+	RESOURCE_TYPE(AudioResource);
 	explicit AudioResource(std::wstring_view _path);
 	virtual ~AudioResource();
 public:

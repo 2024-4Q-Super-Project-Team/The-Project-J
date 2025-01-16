@@ -1,7 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Graphics/ConstantBuffer.h"
-#include "Editor/Interface/IEditorObject.h"
 
 class Texture2D;
 class D3DGraphicsVertexShader;
@@ -11,10 +10,9 @@ struct MaterialCBuffer;
 // 여러 머티리얼 객체들이 공유할 수 있는 참조용 리소스
 class MaterialResource 
     : public Resource
-	, public IEditorObject
 {
 public: _READ_ONLY
-    RESOURCE_TYPE(eResourceType::Material);
+    RESOURCE_TYPE(Material);
       explicit MaterialResource(std::wstring_view _name);
       virtual ~MaterialResource();
 public:

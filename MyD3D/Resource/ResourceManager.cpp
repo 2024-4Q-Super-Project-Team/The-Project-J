@@ -5,7 +5,7 @@
 #include "Graphics/GraphicsManager.h"
 #include "Object/Object.h"
 
-ResourceManager::ResourceTable ResourceManager::mResourceTables[static_cast<UINT>(eResourceType::SIZE)] = {};
+ResourceTable ResourceManager::mResourceTables[static_cast<UINT>(eResourceType::SIZE)] = {};
 
 BOOL ResourceManager::Initialize()
 {

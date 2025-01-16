@@ -118,3 +118,10 @@ void AudioChannel::SetSurround(bool _isSuround)
 {
 	FMOD_CHECK(mChannel->setMode(_isSuround ? FMOD_3D : FMOD_2D));
 }
+
+void AudioChannel::SetPosition(Vector3 _position, Vector3 _velocity)
+{
+	FMOD_VECTOR pos = { _position.x, _position.y, _position.z };
+	FMOD_VECTOR vel = { _velocity.x, _velocity.y, _velocity.z };
+	mChannel->set3DAttributes(&pos, &vel);
+}

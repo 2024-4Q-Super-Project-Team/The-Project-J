@@ -72,8 +72,6 @@ void World::Render()
 void World::Draw(Camera* _camera)
 {
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Draw(_camera));
-    // 라이트는 Draw중 Camera를 받아 연산하기 때문에 Draw가 다 끝난 후 LightSystem의 Bind를 호출한다.
-    mLightSystem->Bind();
     // 카메라가 담고 있는 그리기 작업목록을 수행
     _camera->ExcuteDrawList();
 }

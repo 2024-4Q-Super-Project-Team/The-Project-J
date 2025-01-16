@@ -59,13 +59,28 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     float4 AmbientLight = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float3 F0 = lerp(Fdielectric, MapColor[DIFFUSE_MAP].rgb, MapColor[METALNESS_MAP].r);
     float3 VrefN = reflect(-V, N); // ¹Ý»ç º¤ÅÍ
+    float att = 0.0f; // °¨¼è °ª
+    float3 L = float3(0.f, 0.f, 0.f); // ºû º¤ÅÍ
     //float3 VrefN = 2.0 * NdotV * N - V;
     // ===== Á÷Á¢ Á¶¸í °è»ê =====
     [unroll]
     for (int i = 0; i < NumLights; i++)
     {
-        // LightDirection
-        float3 L    = -normalize(LightProp[i].Direction.xyz);
+        if (LightProp[i].LightType == 0)
+        {
+            L = -normalize(LightProp[i].Direction.xyz);
+        }
+        else if (LightProp[i].LightType == 1)
+        {
+            L = -normalize(LightProp[i].Position.xyz - input.worldPos.xyz);
+            att = CaclulatePointLight(L, LightProp[i].LightRange, 10.f);
+        }
+        else if (LightProp[i].LightType == 2)
+        {
+            // L = -normalize(LightProp[i].Direction.xyz);
+            // CaclulateSpotLight(L,);
+        }
+        
         // HalfVector
         float3 H    = normalize(L + V);
         float NdotL = saturate(dot(N, L));
@@ -83,7 +98,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         
         float  ShadowScale   = CaclulateShadowScale(i, input.worldPos);
         
-        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightIntensity * NdotL * ShadowScale;
+        DirectLight.rgb += (DifuuseBRDF + SpecularBRDF) * LightProp[i].Radiance.rgb * LightProp[i].LightStrengh * NdotL * ShadowScale;
         ACESToneMapping(DirectLight.rgb);
     }
     // ===== IBL °è»ê =====

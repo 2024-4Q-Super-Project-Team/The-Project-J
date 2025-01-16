@@ -1,16 +1,14 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "Editor/Interface/IEditorObject.h"
 
 class AnimationNode;
 
 // 하나의 모션을 가지는 애니메이션 구조체
 class AnimationResource 
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::Animation);
+    RESOURCE_TYPE(Animation);
     explicit AnimationResource(std::wstring_view _name);
     virtual ~AnimationResource();
 public:

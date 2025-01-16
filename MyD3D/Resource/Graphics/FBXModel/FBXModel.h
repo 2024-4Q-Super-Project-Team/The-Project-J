@@ -1,6 +1,5 @@
 #pragma once
 #include "Resource/Resource.h"
-#include "Editor/Interface/IEditorObject.h"
 
 class MeshResource;
 class MaterialResource;
@@ -13,10 +12,9 @@ class Prefab;
 // 유니티의 아바타 같은 느낌이라 생각하면 될듯
 class FBXModelResource 
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::FBXModel);
+    RESOURCE_TYPE(FBXModel);
     explicit FBXModelResource(std::wstring_view _name);
     virtual ~FBXModelResource();
 public:

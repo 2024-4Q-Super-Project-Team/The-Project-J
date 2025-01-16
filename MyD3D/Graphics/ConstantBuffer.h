@@ -22,12 +22,13 @@ struct LightProperty
     Vector4 Position = { 0.0f,0.0f,0.0f,1.0f };
     Vector4 Direction = { 0.0f,0.0f,0.0f,0.0f };
     ColorF  Radiance = { 1.0f,1.0f,1.0f,1.0f };
-    ColorF  DiffuseRGB = { 1.0f,1.0f,1.0f,1.0f };
-    ColorF  AmbientRGB = { 1.0f,1.0f,1.0f,1.0f };
-    ColorF  SpecularRGB = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
-    FLOAT   LightIntensity = 1.0f;
-    Vector2 Padding;
+    FLOAT   LightRange = 1.0f; // Point and Spot lights only
+    FLOAT   LightStrengh = 1.0f; 
+    // ==== Shadow ====
+	BOOL    UseShadow = TRUE;
+    FLOAT   ShadowStrengh = 1.0f;
+	Vector3 Padding;
 
     Matrix  ShadowView = Matrix::Identity;
     Matrix  ShadowProjection = Matrix::Identity;

@@ -24,9 +24,13 @@ public:
 	void SetLoop(bool _isLoop);
 	// 3D 입체 음향을 사용합니다.
 	void SetSurround(bool _isSuround);
+	// 오디오의 위치를 지정해줍니다. (3D 전용)
+	void SetPosition(Vector3 _position, Vector3 _velocity = { 0,0,0 });
 private:
 	bool isPaused;
 	UINT mFrame;
 	FMOD::Channel* mChannel;
+public:
+	inline FMOD::Channel* GetChannel() { return mChannel; }
 };
 

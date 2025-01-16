@@ -4,10 +4,9 @@
 // 본은 각각의 메쉬에 속하며 메쉬로부터 어느정도 떨어져있는지 행렬을 가지고 있다.
 class Bone
     : public Resource
-	, public IEditorObject
 {
 public:
-    RESOURCE_TYPE(eResourceType::Bone);
+    RESOURCE_TYPE(Bone);
     explicit Bone(std::wstring_view _name, Matrix _matrix);
     virtual ~Bone();
 public:

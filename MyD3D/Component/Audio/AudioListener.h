@@ -30,6 +30,8 @@ public:
     static AudioListener* mMainListener;
 
     float mDistanceAttenuationScale;
+public:
+    virtual void EditorRendering() override;
 };
 
 

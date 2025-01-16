@@ -13,6 +13,50 @@ AudioSource::~AudioSource()
 {
 }
 
+void AudioSource::Start()
+{
+}
+
+void AudioSource::Tick()
+{
+}
+
+void AudioSource::FixedUpdate()
+{
+}
+
+void AudioSource::PreUpdate()
+{
+}
+
+void AudioSource::Update()
+{
+	if (mAudioChannel)
+	{
+		mAudioChannel->SetPosition(gameObject->transform->GetWorldPosition());
+	}
+}
+
+void AudioSource::PostUpdate()
+{
+}
+
+void AudioSource::PreRender()
+{
+}
+
+void AudioSource::Render()
+{
+}
+
+void AudioSource::Draw(Camera* _camera)
+{
+}
+
+void AudioSource::PostRender()
+{
+}
+
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
 	std::shared_ptr<AudioResource> pAudio = GetAudioFromTable(_key);
@@ -99,4 +143,28 @@ void AudioSource::SetLoop(bool _isLoop)
 void AudioSource::SetSurround(bool _isSuround)
 {
 	mAudioChannel->SetSurround(_isSuround);
+}
+
+void AudioSource::EditorRendering()
+{
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	if (ImGui::TreeNodeEx(("AudioSource" + uid).c_str(), EDITOR_FLAG_MAIN))
+	{
+		if (mActiveAudio)
+		{
+			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetName()).c_str());
+		}
+		else
+		{
+			ImGui::Text("Active Audio : NULL");
+		}
+		ImGui::Separator();
+		// 콤보박스로 바꾸기
+		ImGui::Text("Audio Table");
+		for (auto& audio : mAudioTable)
+		{
+			ImGui::Text("%s", Helper::ToString(audio.first).c_str());
+		}
+		ImGui::TreePop();
+	}
 }

@@ -5,6 +5,7 @@ enum class eLightType
 {
     Direction,
     Point,
+    Spot,
 };
 
 class Light
@@ -29,9 +30,6 @@ public:
 public:
     inline void SetLightDirection(Vector4 _xyz) { mLightProp.Direction = _xyz; }
     inline void SetLightType(eLightType _type) { mLightProp.LightType = static_cast<INT>(_type); }
-    inline void SetAmbientColor(ColorF _color) { mLightProp.AmbientRGB = _color; }
-    inline void SetDiffuseColor(ColorF _color) { mLightProp.DiffuseRGB = _color; }
-    inline void SetSpecularColor(ColorF _color) { mLightProp.SpecularRGB = _color; }
 public:
     inline auto GetShadowViewport() { return mShadowViewport; }
     inline auto GetShadowRenderTarget() { return mShadowRenderTarget; }
@@ -51,8 +49,12 @@ private:
     float mCameradDist = 0.0f;
     // 그림자 -> 조명 거리
     float mUpDist = 3000.0f;
+	// 그림자 맵 해상도
+	float mShadowResolution;
     // 그림자 렌더 범위
-    static float ShadowArea;
+    float mShadowDistance;
+
+	static std::queue<D3DBitmapRenderTarget*> mShadowRenderTargetPool;
 public:
     virtual void EditorRendering() override;
 };

@@ -1,7 +1,6 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Vertex.h"
-#include "Editor/Interface/IEditorObject.h"
 
 class D3DGraphicsVertexBuffer;
 class D3DGraphicsIndexBuffer;
@@ -11,10 +10,9 @@ class Bone;
 
 class MeshResource
     : public Resource
-	, public IEditorObject  
 {
 public:
-    RESOURCE_TYPE(eResourceType::Mesh);
+    RESOURCE_TYPE(Mesh);
     explicit MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices);
     virtual ~MeshResource();
 public:

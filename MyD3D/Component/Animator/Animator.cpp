@@ -6,7 +6,7 @@
 
 Animator::Animator(Object* _owner)
     : Component(_owner)
-    , isPlay(true)
+    , isPlaying(true)
 {
     mType = eComponentType::ANIMAITOR;
 }
@@ -45,7 +45,7 @@ void Animator::PreRender()
 
 void Animator::Render()
 {
-    if (isPlay && mActiveAnimation)
+    if (isPlaying && mActiveAnimation)
     {
         mDuration += Time::GetScaledDeltaTime() * mActiveAnimation->GetFramePerSecond();
         float TotalFrame = mActiveAnimation->GetTotalFrame();
@@ -162,5 +162,25 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
         FrameRatio);
 
     return Scaling;
+}
+
+void Animator::EditorRendering()
+{
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	if (ImGui::TreeNodeEx(("Animator" + uid).c_str(), EDITOR_FLAG_MAIN))
+	{
+        ImGui::Text("Duration : %f", mDuration);
+
+        ImGui::Separator();
+
+		if (mActiveAnimation)
+		{
+			
+            ImGui::Separator();
+            mActiveAnimation->EditorRendering();
+		}
+		
+		ImGui::TreePop();
+	}
 }
 

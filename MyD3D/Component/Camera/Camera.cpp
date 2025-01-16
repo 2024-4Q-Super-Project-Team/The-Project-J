@@ -170,23 +170,26 @@ void Camera::DrawShadow()
 
     for (int i = 0; i < mSceneLights.size(); i++)
     {
-        auto rt = mSceneLights[i]->GetShadowRenderTarget();
-        auto ShaderSRV = rt->GetSRV(rt->GetDSV());
-        ShaderSRV->Reset();
-        ShaderSRV->SetBindSlot(24 + i);
-        // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
-        mSceneLights[i]->GetShadowRenderTarget()->BeginDraw();
-        mSceneLights[i]->GetShadowRenderTarget()->Clear();
-        // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
-        for (auto& drawQueue : mDrawQueue)
+        if (mSceneLights[i]->GetProperty().UseShadow)
         {
-            for (auto& drawInfo : drawQueue)
+            auto rt = mSceneLights[i]->GetShadowRenderTarget();
+            auto ShaderSRV = rt->GetSRV(rt->GetDSV());
+            ShaderSRV->Reset();
+            ShaderSRV->SetBindSlot(24 + i);
+            // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
+            mSceneLights[i]->GetShadowRenderTarget()->BeginDraw();
+            mSceneLights[i]->GetShadowRenderTarget()->Clear();
+            // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
+            for (auto& drawQueue : mDrawQueue)
             {
-                drawInfo->DrawShadow(mSceneLights[i]);
+                for (auto& drawInfo : drawQueue)
+                {
+                    drawInfo->DrawShadow(mSceneLights[i]);
+                }
             }
+            mSceneLights[i]->GetShadowRenderTarget()->EndDraw();
+            ShaderSRV->Bind();
         }
-        mSceneLights[i]->GetShadowRenderTarget()->EndDraw();
-        ShaderSRV->Bind();
     }
 }
 
@@ -328,11 +331,17 @@ void Camera::PushDrawList(RendererComponent* _renderComponent)
 void Camera::PushLight(Light* _pLight)
 {
     if (_pLight == nullptr) return;
-    mSceneLights.push_back(_pLight);
+    if (mLightCBuffer.NumLight < MAX_LIGHT_COUNT)
+    {
+        mLightCBuffer.LightProp[mLightCBuffer.NumLight] = _pLight->GetProperty();
+        mLightCBuffer.NumLight++;
+        mSceneLights.push_back(_pLight);
+    }
 }
 
 void Camera::ExcuteDrawList()
 {
+    GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
     if (mSizeScale.Length() > 0.05f)
     {
         if (mMainRenderTarget)
@@ -378,13 +387,14 @@ void Camera::ExcuteDrawList()
     }
     // 조명 리스트를 초기화한다.
     mSceneLights.clear();
+    mLightCBuffer.NumLight = 0;
 }
 
 void Camera::EditorRendering()
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-    if (ImGui::TreeNodeEx(("Camera" + uid).c_str(), EDITOR_FLAG_COMPONENT))
+    if (ImGui::TreeNodeEx(("Camera" + uid).c_str(), EDITOR_FLAG_MAIN))
     {
         const char* renderMode[] = { "Forward", "Deferred"};
         int SelectIndex = (int)mCameraRenderType; // 현재 선택된 항목 (인덱스)

@@ -185,7 +185,6 @@
     <ClInclude Include="Component\EditorUI\Contents\EditorOptional.h" />
     <ClInclude Include="Component\EditorUI\Contents\EditorUID.h" />
     <ClInclude Include="Component\Light\Light.h" />
-    <ClInclude Include="Component\EditorUI\Contents\GameEditor\GameEditor.h" />
     <ClInclude Include="Graphics\Core\D3DGraphicsDevice.h" />
     <ClInclude Include="Graphics\Core\D3DGraphicsRenderer.h" />
     <ClInclude Include="Graphics\Core\D3DGraphicsRenderTarget.h" />
@@ -290,7 +289,6 @@
     <ClCompile Include="Component\EditorUI\Contents\EditorOptional.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\EditorUID.cpp" />
     <ClCompile Include="Component\Light\Light.cpp" />
-    <ClCompile Include="Component\EditorUI\Contents\GameEditor\GameEditor.cpp" />
     <ClCompile Include="Graphics\Core\D3DGraphicsDevice.cpp" />
     <ClCompile Include="Graphics\Core\D3DGraphicsRenderer.cpp" />
     <ClCompile Include="Graphics\Core\D3DGraphicsRenderTarget.cpp" />

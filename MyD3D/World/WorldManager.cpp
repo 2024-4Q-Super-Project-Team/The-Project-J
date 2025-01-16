@@ -243,6 +243,7 @@ void WorldManager::LoadWorlds()
 		unsigned int id = componentJson["id"].get<unsigned int>();
 		Component* component = static_cast<Component*>(Engine::SaveBase::mMap[id]);
 		component->Deserialize(componentJson);
+		component->UnWake();
 	}
 
 }

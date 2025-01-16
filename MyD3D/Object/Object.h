@@ -104,6 +104,7 @@ T* Object::AddComponent(Args&&... args)
     static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
     T* component = new T(this, std::forward<Args>(args)...);
     mComponentsToWake.push_back(component);
+    component->Wake();
     return component;
 }
 

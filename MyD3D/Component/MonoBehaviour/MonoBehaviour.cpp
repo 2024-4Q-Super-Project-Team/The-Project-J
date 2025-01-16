@@ -159,5 +159,8 @@ void MonoBehaviour::Deserialize( json& j)
 
 void MonoBehaviour::EditorRendering()
 {
-
+	for (auto serial : mSerials)
+	{
+		serial->widget->Render();
+	}
 }

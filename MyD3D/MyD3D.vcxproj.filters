@@ -219,9 +219,6 @@
     <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\GameEditor\GameEditor.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsBuffer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -519,9 +516,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\GameEditor\GameEditor.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsBuffer.cpp">

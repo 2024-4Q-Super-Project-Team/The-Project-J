@@ -177,39 +177,6 @@ void Light::Deserialize(json& j)
             }
         }
 
-        // Deserialize diffuse
-        if (prop.contains("diffuse")) {
-            auto diff = prop["diffuse"];
-            if (diff.is_array() && diff.size() == 4) {
-                mLightProp.DiffuseRGB.r = diff[0].get<float>();
-                mLightProp.DiffuseRGB.g = diff[1].get<float>();
-                mLightProp.DiffuseRGB.b = diff[2].get<float>();
-                mLightProp.DiffuseRGB.a = diff[3].get<float>();
-            }
-        }
-
-        // Deserialize ambient
-        if (prop.contains("ambient")) {
-            auto amb = prop["ambient"];
-            if (amb.is_array() && amb.size() == 4) {
-                mLightProp.AmbientRGB.r = amb[0].get<float>();
-                mLightProp.AmbientRGB.g = amb[1].get<float>();
-                mLightProp.AmbientRGB.b = amb[2].get<float>();
-                mLightProp.AmbientRGB.a = amb[3].get<float>();
-            }
-        }
-
-        // Deserialize specular
-        if (prop.contains("specular")) {
-            auto spec = prop["specular"];
-            if (spec.is_array() && spec.size() == 4) {
-                mLightProp.SpecularRGB.r = spec[0].get<float>();
-                mLightProp.SpecularRGB.g = spec[1].get<float>();
-                mLightProp.SpecularRGB.b = spec[2].get<float>();
-                mLightProp.SpecularRGB.a = spec[3].get<float>();
-            }
-        }
-
         // Deserialize type
         if (prop.contains("type")) {
             mLightProp.LightType = prop["type"].get<int>();

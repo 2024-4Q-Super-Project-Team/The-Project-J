@@ -21,21 +21,80 @@ namespace Editor
             World* pCurWorld = mRefWorldManager->GetActiveWorld();
             if (pCurWorld)
             {
+                bool saveClicked = ImGui::Button("Save");
+                if (saveClicked)
+                {
+                    SaveWorld();
+                }
+
                 {   // 월드 이름 출력
                     std::string worldName;
                     worldName.assign(pCurWorld->GetName().begin(), pCurWorld->GetName().end());
                     ImGui::Text(worldName.c_str());
                 }
-                auto groups = pCurWorld->GetObjectGroups();
-                for (auto& group : groups)
+
+                //오브젝트 그룹 추가 버튼
                 {
+                    ImGui::SameLine();
+                    bool buttonClicked = ImGui::Button("AddObjectGroup");
+
+                    if (buttonClicked)
+                        mbAddingGroup = true;
+                    if (mbAddingGroup)
+                    {
+                        ImGui::SameLine();
+                        char nameBuffer[20] = ""; //오브젝트 그룹 이름 입력
+                        if (ImGui::InputText("GroupName", nameBuffer, 20, ImGuiInputTextFlags_EnterReturnsTrue))
+                        {
+                            mbAddingGroup = false;
+
+                            wchar_t wcNameBuffer[20] = L"";
+                            MultiByteToWideChar(CP_UTF8, 0, nameBuffer, -1, wcNameBuffer, 20);
+
+                            //오브젝트 그룹 생성
+                            AddObjectGroup(wcNameBuffer);
+                        }
+                    }
+                }
+
+                auto groups = pCurWorld->GetObjectGroups();
+                for (int i =0 ; i<groups.size(); i++)
+                {
+                    auto group = groups[i];
+
                     std::string name;
                     {   // 그룹 이름 변환
                         name.assign(group->GetName().begin(), group->GetName().end());
                         name += "##" + std::to_string(reinterpret_cast<uintptr_t>(group));
                     }
+
                     if (ImGui::TreeNodeEx(name.c_str(), ImGuiTreeNodeFlags_OpenOnArrow))
                     {
+                        //오브젝트 추가 버튼
+                        {
+                            ImGui::SameLine();
+                            std::string objBtnName = "AddObject##" + std::to_string(reinterpret_cast<uintptr_t>(group));
+                            bool buttonClicked = ImGui::Button(objBtnName.c_str());
+
+                            if (buttonClicked)
+                                mbAddingObjIndex = i;
+
+                            if (mbAddingObjIndex == i)
+                            {
+                                ImGui::SameLine();
+                                char nameBuffer[20] = ""; //오브젝트 이름 입력
+                                if (ImGui::InputText(("##" + objBtnName).c_str(), nameBuffer, 10, ImGuiInputTextFlags_EnterReturnsTrue))
+                                {
+                                    mbAddingObjIndex = -1;
+
+                                    wchar_t wcNameBuffer[20] = L"";
+                                    MultiByteToWideChar(CP_UTF8, 0, nameBuffer, -1, wcNameBuffer, 20);
+
+                                    //오브젝트 그룹 생성
+                                    AddObject(wcNameBuffer, group);
+                                }
+                            }
+                        }
                         RenderObjectGroup(group);
                         ImGui::TreePop();
                     }
@@ -105,6 +164,18 @@ namespace Editor
             }
             ImGui::TreePop();
         }
+    }
+    void Hierarchy::AddObjectGroup(const std::wstring _name)
+    {
+        mRefWorldManager->GetActiveWorld()->CreateObjectGroup(std::wstring_view(_name));
+    }
+    void Hierarchy::AddObject(const std::wstring _name, ObjectGroup* _group)
+    {
+        _group->CreateObject(_name, L"");
+    }
+    void Hierarchy::SaveWorld()
+    {
+        mRefWorldManager->SaveWorlds();
     }
     void Hierarchy::SetFocusInspector(Inspector* _pInspector)
     {

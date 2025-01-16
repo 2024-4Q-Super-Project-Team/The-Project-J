@@ -13,8 +13,5 @@ Component::~Component()
 
 void Component::EditorRendering()
 {
-	for (auto serial : mSerials)
-	{
-		serial->widget->Render();
-	}
+
 }

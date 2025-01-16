@@ -44,11 +44,15 @@ protected: // MonoBehaviour메소드==================
     Object* CreateObject(std::wstring_view _name, std::wstring_view _tag);
 	void    Destroy(Object* _object);
 
-	void	SetInitialActive(bool _active) { mInitialActive = _active; }
 	//직렬화
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;
+
+	void AddField(Serial* _serial)
+	{
+		mSerials.push_back(_serial);
+	}
 	// ===========================================
 	// 
 	// CallBack함수===============================
@@ -69,9 +73,42 @@ public:
 	virtual void _CALLBACK OnAnimationStop() {};
 	virtual void _CALLBACK OnAnimationStart() {};
 	virtual void _CALLBACK OnAnimationEnd() {};
-protected:
-	bool	mInitialActive = true; //게임을 시작할때 활성화할 것인지를 나타냅니다.
+
+	std::vector<Serial*> mSerials;
 public:
 	virtual void EditorRendering() override;
 
 };
+
+
+struct Serial {
+	Serial(std::string_view _key)
+		: key(_key) {
+	}
+	std::string key;
+	Editor::Widget* widget = nullptr;
+};
+
+template <typename T>
+struct SerialData : public Serial
+{
+	T val;
+
+	SerialData(std::string_view _name, MonoBehaviour* mono)
+		: Serial(_name)
+	{
+		mono->AddField(this);
+		if (std::is_same<T, Vector3>::value)
+			widget = new Editor::InputVector3(_name.data(), &val);
+
+	}
+};
+
+#ifdef _DEBUG
+#define SerializeField(Type, Name)\
+	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
+	Type Name
+#else
+#define SerializeField(Type, Name)\
+	Type Name
+#endif

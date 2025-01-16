@@ -1,6 +1,6 @@
 #pragma once
 #include "Interface/ICycleHandler.h"
-#include "Interface/IGUID.h"
+#include "Interface/SaveBase.h"
 #include "Helper/Entity/Entity.h"
 
 #include <nlohmann/json.hpp>
@@ -13,7 +13,7 @@ class Camera;
 class ObjectGroup
 	: public Engine::ICycleHandler
 	, public Engine::Entity
-	, public Engine::IGUID
+	, public Engine::SaveBase
 {
 public:
     explicit ObjectGroup(std::wstring_view _name, std::wstring_view _tag);

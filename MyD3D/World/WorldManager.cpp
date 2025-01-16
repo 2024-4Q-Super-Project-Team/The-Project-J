@@ -153,59 +153,96 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
     return FALSE;
 }
 
-void WorldManager::SaveWorld(std::wstring worldName)
+void WorldManager::SaveWorlds()
 {
-	World* world;
-	if (worldName == L"default")
+	json worldsJson, groupsJson, objectsJson, componentsJson;
+
+	for (const auto& world : mWorlds)
 	{
-		if (mCurrActiveWorld == nullptr)
-			return;
-		world = mCurrActiveWorld;
-	}	
-	else
-		world = mWorlds[worldName];
+		worldsJson += world.second->Serialize();
 
+		auto objectGroups = world.second->GetObjectGroups();
+		for (const auto& group : objectGroups)
+		{
+			groupsJson += group->Serialize();
 
-	//(1) 월드 - 오브젝트  그룹 - 오브젝트 -컴포넌트 id 까지 직렬화
-	json data = world->Serialize();
-	std::wstring name = world->GetName();
-	std::ofstream file(name + L".json");
-	if (file.is_open())
-		file << data.dump(4);
+			for (const auto& object : group->GetObjects())
+			{
+				objectsJson += object->Serialize();
+
+				for (const auto& component : object->GetComponents<Component>())
+					componentsJson += component->Serialize();
+			}
+		}
+	}
+
+	std::ofstream file("save_worlds.json");
+	file << worldsJson.dump(4);
 	file.close();
 
-
-	//(2) 각 컴포넌트 직렬화 
-	json cmpData = json::array();
-	for (const auto& group : world->GetObjectGroups())
-		for (const auto& object : group->GetObjects())
-			cmpData.push_back(object->SerializeComponents());
-
-	std::ofstream file2(name + L"Cmps.json");
-	if (file2.is_open())
-		file2 << cmpData.dump(4);
+	std::ofstream file2("save_objectGroups.json");
+	file2 << groupsJson.dump(4);
 	file2.close();
-	
+
+	std::ofstream file3("save_objects.json");
+	file3 << objectsJson.dump(4);
+	file3.close();
+
+	std::ofstream file4("save_components.json");
+	file4 << componentsJson.dump(4);
+	file4.close();
+
 }
 
-void WorldManager::LoadWorld(std::wstring worldName)
+void WorldManager::LoadWorlds()
 {
-	World* world;
-	if (worldName == L"default")
+	json worldsJson, groupsJson, objectsJson, componentsJson;
+
+	std::ifstream worldsFile("save_worlds.json");
+	worldsFile >> worldsJson;
+	worldsFile.close();
+
+	std::ifstream groupsFile("save_objectGroups.json");
+	groupsFile >> groupsJson;
+	groupsFile.close();
+
+	std::ifstream objectsFile("save_objects.json");
+	objectsFile >> objectsJson;
+	objectsFile.close();
+
+	std::ifstream componentsFile("save_components.json");
+	componentsFile >> componentsJson;
+	componentsFile.close();
+
+
+	for (auto& worldJson : worldsJson)
 	{
-		if (mCurrActiveWorld == nullptr)
-			return;
-		world = mCurrActiveWorld;
+		//월드 생성 
+		std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
+		World* world = CreateWorld<World>(worldName);
+		world->SetId(worldJson["id"].get<unsigned int>());
+		world->Deserialize(worldJson); //이 안에서 속한 그룹 생성 (id, 이름 설정)
 	}
-	else
-		world = mWorlds[worldName];
 
-	std::wstring name = world->GetName();
-	std::ifstream file(name + L".json");
-	json j;
-	file >> j;
+	for (auto& groupJson : groupsJson)
+	{
+		unsigned int id = groupJson["id"].get<unsigned int>();
+		ObjectGroup* group = static_cast<ObjectGroup*>(Engine::SaveBase::mMap[id]);
+		group->Deserialize(groupJson); 
+	}
 
-	world->Deserialize(j);
+	for (auto& objectJson : objectsJson)
+	{
+		unsigned int id = objectJson["id"].get<unsigned int>();
+		Object* group = static_cast<Object*>(Engine::SaveBase::mMap[id]);
+		group->Deserialize(objectJson);
+	}
 
-	file.close();
+	for (auto& componentJson : componentsJson)
+	{
+		unsigned int id = componentJson["id"].get<unsigned int>();
+		Component* group = static_cast<Component*>(Engine::SaveBase::mMap[id]);
+		group->Deserialize(componentJson);
+	}
+
 }

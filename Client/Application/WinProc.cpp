@@ -88,15 +88,3 @@ LRESULT EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
     }
     return 0;
 }
-
-BOOL WindowReposition()
-{
-    if (GameApp::mMainScene && GameApp::mEditorScene)
-    {
-        auto EditorWindow = GameApp::mEditorScene->GetIWindow();
-        RECT rect = GameApp::mMainScene->GetIWindow()->GetRect();
-        POINT offset = GameApp::mMainScene->GetIWindow()->GetOffset();
-        return EditorWindow->SetPosition({ rect.right, rect.top + offset.y });
-    }
-    return FALSE;
-}

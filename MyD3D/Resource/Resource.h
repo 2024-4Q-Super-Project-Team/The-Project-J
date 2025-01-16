@@ -28,7 +28,7 @@ public:
 public:
     inline const std::wstring& GetName() { return mName; }
 protected:
-    std::wstring    mName;
+    std::wstring mName;
 };
 
 #define RESOURCE_TYPE_TO_STR_DEF(type) \

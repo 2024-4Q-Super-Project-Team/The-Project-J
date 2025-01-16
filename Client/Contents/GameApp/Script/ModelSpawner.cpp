@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ModelSpawner.h"
-#include "Contents/EditorApp/Script/EditorManager.h"
 
 ModelSpawner::~ModelSpawner()
 {
@@ -34,8 +33,6 @@ void ModelSpawner::Start()
         Instance->transform->position = Vector3(0, 45, 0);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Cerberus00_Fixed")->GetComponent<MeshRenderer>();
-        if(EditorManager::mDebugEditor)
-        EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Sphere
         auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Sphere/sphere.fbx");
@@ -103,12 +100,6 @@ void ModelSpawner::Start()
     dirLight->SetActive(false); // 초기 비활성화
 
     mMainCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
-    if (EditorManager::mDebugEditor)
-    {
-        EditorManager::mDebugEditor->SetCamera(mMainCamera);
-        EditorManager::mDebugEditor->AddLight(pDirLight1);
-        EditorManager::mDebugEditor->AddLight(pDirLight2);
-    }
 }
 
 void ModelSpawner::Tick()

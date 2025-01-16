@@ -6,6 +6,7 @@
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "ViewportScene/ViewportManager.h"
+#include "Editor/EditorManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
@@ -33,6 +34,7 @@ BOOL GameManager::Initialize()
     GraphicsManager::Initialize();
     ResourceManager::Initialize();
     ViewportManager::Initialize();
+	EditorManager::Initialize();
 	mComponentManager->Initialize();
 	return TRUE;
 }
@@ -51,7 +53,9 @@ void GameManager::Run()
 		Time::Update();
 		AudioHub::Update();
 
+		EditorManager::RenderEditor();
 		ViewportManager::Run();
+		
 
         Input::Update();
 	}
@@ -63,6 +67,7 @@ void GameManager::Finalization()
     GraphicsManager::Finalization();
     ResourceManager::Finalization();
     ViewportManager::Finalization();
+	EditorManager::Finalization();
 	mComponentManager->Finalization();
     SAFE_DELETE(mPhysicsManager);
 }

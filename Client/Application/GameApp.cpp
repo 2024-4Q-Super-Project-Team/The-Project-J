@@ -1,9 +1,7 @@
 #include "pch.h"
 #include "GameApp.h"
 #include "WinProc.h"
-
 #include "Contents/GameApp/World/TestWorld.h"
-#include "Contents/EditorApp/World/EditorWorld.h"
 #include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene      = nullptr;
@@ -43,24 +41,7 @@ BOOL GameApp::OnPostInitialize()
         /////////////////////////////////////////////////////
         // ¿¡µðÅÍ
         /////////////////////////////////////////////////////
-        {
-            {
-                Display::WindowDesc winDecs;
-                winDecs.Size = { 800, WINDOW_HEIGHT + mMainScene->GetIWindow()->GetOffset().y };
-                winDecs.Position = { 0,0 };
-                winDecs.WndStyle = WS_POPUP | WS_VISIBLE;
-                winDecs.WndClass.lpszClassName = EDITOR_TITLE;
-                winDecs.WndClass.lpfnWndProc = EditorWinProc;
-                winDecs.WndParent = mMainScene->GetIWindow();
-                mEditorScene = ViewportManager::CreateViewportScene(&winDecs);
-            }
-            WorldManager* wrdMng = mEditorScene->GetWorldManager();
-            if (nullptr == wrdMng) return FALSE;
-
-            World* wolrd = wrdMng->CreateWorld<EditorWorld>(L"EditorWorld", L"");
-            wrdMng->SetActiveWorld(L"EditorWorld");  
-        }
-        GameApp::EditorRePosition();
+		EditorManager::ShowEditorWindow(mMainScene);
 #endif // DEBUG
     }
     return TRUE;

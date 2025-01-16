@@ -24,10 +24,10 @@ private:
     friend class ResourceManager;
     friend class MonoBehaviour;
 private:
-    void    AddObject(Object* _pObject);
-    void    AddObjectFromNode(Object* _pObject, ModelNode* _pNode);
-    void    SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel);
-    void    SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel);
+    void AddObject(Object* _pObject);
+    void AddObjectFromNode(Object* _pObject, ModelNode* _pNode);
+    void SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel);
+    void SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel);
 public:
 	virtual void EditorRendering() override;
 };

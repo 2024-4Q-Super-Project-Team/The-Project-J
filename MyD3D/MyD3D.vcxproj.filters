@@ -132,46 +132,28 @@
     <ClInclude Include="Helper\Input\InputDevice\Mouse.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\EditorUI.h">
+    <ClInclude Include="Editor\Widgets\Core\EditorMenu.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Menu\EditorMenuBar.h">
+    <ClInclude Include="Editor\Widgets\Core\EditorWindow.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\EditorWidget.h">
+    <ClInclude Include="Editor\Viewer\InspectorViewer\Inspector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Window\EditorWindow.h">
+    <ClInclude Include="Editor\Widgets\Core\EditorTab.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Inspector\Inspector.h">
+    <ClInclude Include="Editor\Widgets\Extra\EditorCheckBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Tab\EditorTab.h">
+    <ClInclude Include="Editor\Widgets\Extra\EditorInputVector.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Widget\EditorCheckBox.h">
+    <ClInclude Include="Editor\Widgets\Extra\EditorStaticText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Widget\EditorInputVector.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Widget\EditorStaticText.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\CollapsingHeader\EditorCollapsingHeader.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\EditorOptional.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Hierarchy\Hierarchy.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\Widget\EditorEmpty.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\EditorUID.h">
+    <ClInclude Include="Editor\Viewer\HierarchyViewer\Hierarchy.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Release_Bilder.h">
@@ -211,9 +193,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\Renderer\MeshRenderer\MeshRenderer.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\EditorUI\Contents\TestTab\TestEditorTab.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h">
@@ -318,7 +297,10 @@
     <ClInclude Include="Editor\Interface\IEditorObject.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\ResourceTab\EditorResourceView.h">
+    <ClInclude Include="Editor\Viewer\ResourceViewer\EditorResourceView.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -437,46 +419,28 @@
     <ClCompile Include="Helper\Input\InputDevice\Mouse.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\EditorUI.cpp">
+    <ClCompile Include="Editor\Widgets\Core\EditorMenu.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Menu\EditorMenuBar.cpp">
+    <ClCompile Include="Editor\Widgets\Core\EditorWindow.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\EditorWidget.cpp">
+    <ClCompile Include="Editor\Viewer\InspectorViewer\Inspector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Window\EditorWindow.cpp">
+    <ClCompile Include="Editor\Widgets\Core\EditorTab.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Inspector\Inspector.cpp">
+    <ClCompile Include="Editor\Widgets\Extra\EditorCheckBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Tab\EditorTab.cpp">
+    <ClCompile Include="Editor\Widgets\Extra\EditorInputVector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Widget\EditorCheckBox.cpp">
+    <ClCompile Include="Editor\Widgets\Extra\EditorStaticText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Widget\EditorInputVector.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Widget\EditorStaticText.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\CollapsingHeader\EditorCollapsingHeader.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\EditorOptional.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Hierarchy\Hierarchy.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\Widget\EditorEmpty.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\EditorUID.cpp">
+    <ClCompile Include="Editor\Viewer\HierarchyViewer\Hierarchy.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\MeshFilter\MeshFilter.cpp">
@@ -510,9 +474,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\Renderer\MeshRenderer\MeshRenderer.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\EditorUI\Contents\TestTab\TestEditorTab.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp">
@@ -614,7 +575,10 @@
     <ClCompile Include="Editor\Interface\IEditorObject.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\ResourceTab\EditorResourceView.cpp">
+    <ClCompile Include="Editor\Viewer\ResourceViewer\EditorResourceView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

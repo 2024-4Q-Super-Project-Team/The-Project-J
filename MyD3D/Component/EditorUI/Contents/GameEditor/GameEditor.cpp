@@ -182,7 +182,7 @@ namespace Editor
 
     void GameEditor::SaveWorld()
     {
-        mRefWorldManager->SaveWorld();
+        mRefWorldManager->SaveWorlds();
     }
  
     void GameEditor::SetFocusInspector(Inspector* _pInspector)

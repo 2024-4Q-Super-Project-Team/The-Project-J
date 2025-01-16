@@ -1,6 +1,6 @@
 #pragma once
 #include "Interface/ICycleHandler.h"
-#include "Interface/IGUID.h"
+#include "Interface/SaveBase.h"
 
 
 class World;
@@ -38,7 +38,7 @@ constexpr static UINT ComponentSize = static_cast<UINT>(eComponentType::SIZE);
 
 class Component
 	: public Engine::ICycleHandler
-	, public Engine::IGUID
+	, public Engine::SaveBase
 {
 public:
 	explicit Component(Object* _owner);

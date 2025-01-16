@@ -132,14 +132,14 @@ void Transform::SetParent(Transform* _parent)
 json Transform::Serialize()
 {
     json ret;
-    ret["id"] = mId;
+    ret["id"] = GetId();
     ret["name"] = "Transform";
  
     ret["position"] = { position.x, position.y, position.z };
     ret["rotation"] = { rotation.x, rotation.y, rotation.z, rotation.w };
     ret["scale"] = { scale.x, scale.y, scale.z };
-    ret["root parent"] = mRootParent ? mRootParent->mId : NULLID;
-    ret["parent"] = mParent ? mParent->mId : NULLID;
+    ret["root parent"] = mRootParent ? mRootParent->GetId() : NULLID;
+    ret["parent"] = mParent ? mParent->GetId() : NULLID;
     //mchildren은 deserialize 할 때 parent 정보 이용해서 넣어주기 (SetParent())
 
     //컴포넌트의 id를 들고 있기 때문에, 컴포넌트를 모두 생성만 한 다음 
@@ -151,8 +151,6 @@ json Transform::Serialize()
 
 void Transform::Deserialize(json& j)
 {
-    mId = j["id"].get<unsigned int>();
-
     position.x = j["position"][0].get<float>();
     position.y = j["position"][1].get<float>();
     position.z = j["position"][2].get<float>();

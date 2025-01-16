@@ -73,7 +73,7 @@ void Animator::SetAnimation(std::shared_ptr<AnimationResource> _pAnim)
 json Animator::Serialize()
 {
     json ret;
-    ret["id"] = mId;
+    ret["id"] = GetId();
     ret["name"] = "Animator";
 
     ret["active animation"] = mActiveAnimation->GetName();

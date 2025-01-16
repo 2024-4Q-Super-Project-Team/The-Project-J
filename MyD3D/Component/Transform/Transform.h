@@ -28,6 +28,9 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
+    void UpdatePxTransform();
+    void UpdateFromPxTransform(PxTransform pxTransform);
+public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
 public:
     // Radian으로 받는 Vector3
@@ -56,6 +59,7 @@ public:
     inline const Vector3  Up() { return GetWorldMatrix().Up(); }
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
+    inline const PxTransform  GetPxTransform() { return mPxTransform; }
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();
@@ -85,6 +89,7 @@ private:
     std::vector<Transform*> mChildren;
     //UINT mHierarchyLevel; // 계층 깊이
     // ====================================
+    PxTransform mPxTransform{};
 
 public:
     void EditorRendering();

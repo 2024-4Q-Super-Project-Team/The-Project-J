@@ -321,6 +321,18 @@
     <ClInclude Include="Editor\ResourceTab\EditorResourceView.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Collider\Rigidbody.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collider\Collider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collider\BoxCollider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Controller\PlayerController.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -615,6 +627,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\ResourceTab\EditorResourceView.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collider\Rigidbody.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collider\Collider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collider\BoxCollider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Controller\PlayerController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

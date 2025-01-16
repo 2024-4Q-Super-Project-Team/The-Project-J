@@ -31,9 +31,10 @@ void Object::Tick()
     for (auto it = mComponentsToWake.begin(); it != mComponentsToWake.end(); )
     {
         Component* component = *it;
-        if (component->IsActive() && component->IsAwake())
+        if (component->IsActive())
         {
             component->Start();
+            component->Wake();
             int index = static_cast<UINT>(component->GetType());
             mComponentArray[index].push_back(component);
     

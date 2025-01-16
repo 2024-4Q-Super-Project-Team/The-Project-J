@@ -76,6 +76,26 @@ void Transform::PostRender()
 {
 }
 
+void Transform::UpdatePxTransform()
+{
+    memcpy_s(&mPxTransform.p, 3, &position, 3);
+    memcpy_s(&mPxTransform.q, 4, &rotation, 4);
+}
+
+void Transform::UpdateFromPxTransform(PxTransform pxTransform)
+{
+    mPxTransform = pxTransform;
+    PxTransform localTransform = mPxTransform;
+    if (mParent)
+    {
+        PxTransform parentInverse = mParent->mPxTransform.getInverse();
+        localTransform = parentInverse.transform(mPxTransform);
+    }
+
+    memcpy_s(&position, 3, &mPxTransform.p, 3);
+    memcpy_s(&position, 4, &mPxTransform.q, 4);
+}
+
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
 {
     Transform* clone = _owner->transform;
@@ -113,6 +133,7 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
+
 }
 
 void Transform::SetParent(Transform* _parent)

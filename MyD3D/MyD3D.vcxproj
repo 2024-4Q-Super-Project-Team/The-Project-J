@@ -153,6 +153,8 @@
     <ClInclude Include="AudioSystem\AudioObject\AudioGroup.h" />
     <ClInclude Include="AudioSystem\Core\AudioController.h" />
     <ClInclude Include="AudioSystem\Core\AudioHub.h" />
+    <ClInclude Include="Component\Collider\BoxCollider.h" />
+    <ClInclude Include="Component\Collider\Collider.h" />
     <ClInclude Include="Component\Audio\AudioListener.h" />
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
@@ -160,6 +162,7 @@
     <ClInclude Include="Editor\ResourceTab\EditorResourceView.h" />
     <ClInclude Include="Editor\Interface\IEditorObject.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
+    <ClInclude Include="Component\Controller\PlayerController.h" />
     <ClInclude Include="Resource\AudioResource\AudioResource.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDefault.h" />
@@ -229,6 +232,7 @@
     <ClInclude Include="Resource\Graphics\Mesh\Vertex.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\EditorUI\Contents\TestTab\TestEditorTab.h" />
+    <ClInclude Include="Component\Collider\Rigidbody.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
@@ -257,6 +261,8 @@
     <ClCompile Include="AudioSystem\AudioObject\AudioGroup.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioController.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioHub.cpp" />
+    <ClCompile Include="Component\Collider\BoxCollider.cpp" />
+    <ClCompile Include="Component\Collider\Collider.cpp" />
     <ClCompile Include="Component\Audio\AudioListener.cpp" />
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
@@ -264,6 +270,7 @@
     <ClCompile Include="Editor\ResourceTab\EditorResourceView.cpp" />
     <ClCompile Include="Editor\Interface\IEditorObject.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
+    <ClCompile Include="Component\Controller\PlayerController.cpp" />
     <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDefault.cpp" />
@@ -331,6 +338,7 @@
     <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\TestTab\TestEditorTab.cpp" />
+    <ClCompile Include="Component\Collider\Rigidbody.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />

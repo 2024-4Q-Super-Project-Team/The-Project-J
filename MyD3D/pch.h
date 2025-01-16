@@ -76,6 +76,6 @@ using json = nlohmann::json;
 #include "AudioSystem/AudioFramework.h"
 
 #include "Component/ComponentFactory/ComponentFactory.h"
-
+#include "Manager/GameManager.h"
 
 #define NULLID 99999999999

@@ -68,10 +68,10 @@
     <ClInclude Include="Contents\GameApp\World\TestWorld.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Config.h">
+    <ClInclude Include="pch.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="pch.h">
+    <ClInclude Include="Config.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ScriptRegister.h">

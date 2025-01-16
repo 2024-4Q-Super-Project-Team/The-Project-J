@@ -103,12 +103,23 @@ void ModelSpawner::Start()
     pDirLight2->SetLightDirection(Vector4(0.3, -1, 0.15, 0));
     dirLight->SetActive(false); // 초기 비활성화
 
+    dirLight = pGroup->CreateObject(L"Point_Light1", L"Default");
+    Light* pPointLight1 = dirLight->AddComponent<Light>();
+    dirLight->SetActive(false); // 초기 비활성화
+    pPointLight1->SetLightType(eLightType::Point);
+    pPointLight1->SetLightColor(ColorF::Blue());
+    pPointLight1->gameObject->transform->position = Vector3(0, 50, 0);
+    pPointLight1->SetLightRange(100.f);
+    pPointLight1->SetLightCutOff(0.001f);
+
+
     mMainCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
     if (EditorManager::mDebugEditor)
     {
         EditorManager::mDebugEditor->SetCamera(mMainCamera);
         EditorManager::mDebugEditor->AddLight(pDirLight1);
         EditorManager::mDebugEditor->AddLight(pDirLight2);
+        EditorManager::mDebugEditor->AddLight(pPointLight1);
     }
 }
 
@@ -132,6 +143,7 @@ void ModelSpawner::PreUpdate()
 
 void ModelSpawner::Update()
 {
+    
 }
 
 void ModelSpawner::PostUpdate()

@@ -25,10 +25,11 @@ struct LightProperty
     INT     LightType = 0;
     FLOAT   LightRange = 1.0f; // Point and Spot lights only
     FLOAT   LightStrengh = 1.0f; 
+    FLOAT   LightCutOff;
     // ==== Shadow ====
 	BOOL    UseShadow = TRUE;
     FLOAT   ShadowStrengh = 1.0f;
-	Vector3 Padding;
+	Vector2 Padding;
 
     Matrix  ShadowView = Matrix::Identity;
     Matrix  ShadowProjection = Matrix::Identity;

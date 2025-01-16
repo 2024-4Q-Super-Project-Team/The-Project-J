@@ -59,9 +59,10 @@ public:
 
 public:
 	inline eComponentType	GetType()				{ return mType; }
-	inline void				SetActive(bool _active) { isActive = _active; 
-														if (!mIsAwake && _active) { mIsAwake = true; Start(); }}
+	inline void				SetActive(bool _active) { isActive = _active;}
 	inline bool				IsActive()				{ return isActive; }
+	bool					IsAwake()				{ return mIsAwake; }
+	void					Wake()					{ mIsAwake = true; }
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) {};
 

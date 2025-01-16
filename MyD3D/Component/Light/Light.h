@@ -38,7 +38,7 @@ public:
     inline auto GetProperty() { return mLightProp; }
 public:
     virtual json Serialize() override;
-    virtual void Deserialize(json& j) override {}
+    virtual void Deserialize(json& j) override;
 private:
     LightProperty           mLightProp;
     D3DBitmapRenderTarget*  mShadowRenderTarget;

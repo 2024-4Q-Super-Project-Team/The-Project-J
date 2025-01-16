@@ -234,15 +234,15 @@ void WorldManager::LoadWorlds()
 	for (auto& objectJson : objectsJson)
 	{
 		unsigned int id = objectJson["id"].get<unsigned int>();
-		Object* group = static_cast<Object*>(Engine::SaveBase::mMap[id]);
-		group->Deserialize(objectJson);
+		Object* object = static_cast<Object*>(Engine::SaveBase::mMap[id]);
+		object->Deserialize(objectJson);
 	}
 
 	for (auto& componentJson : componentsJson)
 	{
 		unsigned int id = componentJson["id"].get<unsigned int>();
-		Component* group = static_cast<Component*>(Engine::SaveBase::mMap[id]);
-		group->Deserialize(componentJson);
+		Component* component = static_cast<Component*>(Engine::SaveBase::mMap[id]);
+		component->Deserialize(componentJson);
 	}
 
 }

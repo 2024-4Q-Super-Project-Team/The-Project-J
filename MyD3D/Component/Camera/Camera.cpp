@@ -282,6 +282,7 @@ json Camera::Serialize()
 {
     json ret;
 
+    ret["id"] = GetId();
     ret["fov angle"] = mFovAngle.GetAngle();
     ret["near"] = mProjectionNear;
     ret["far"] = mProjectionFar;
@@ -290,6 +291,17 @@ json Camera::Serialize()
     ret["ortho height"] = mOrthoHeight;
 
     return ret;
+}
+
+void Camera::Deserialize(json& j)
+{
+    SetId(j["id"].get<unsigned int>());
+    mFovAngle = Degree(j["fov angle"].get<float>());
+    mProjectionNear = j["near"].get<float>();
+    mProjectionFar = j["far"].get<float>();
+    mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
+    mOrthoWidth = j["ortho width"].get<float>();
+    mOrthoHeight = j["ortho height"].get<float>();
 }
 
 D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()

@@ -122,7 +122,8 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 json Light::Serialize()
 {
     json ret;
-
+    
+    ret["id"] = GetId();
     json prop = json::object();
     prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
@@ -135,6 +136,87 @@ json Light::Serialize()
     ret["property"] = prop;
 
     return ret;
+}
+
+void Light::Deserialize(json& j)
+{
+    SetId(j["id"].get<unsigned int>());
+
+    // Ensure the "property" key exists
+    if (j.contains("property")) {
+        const auto& prop = j["property"];
+
+        // Deserialize position
+        if (prop.contains("position")) {
+            auto pos = prop["position"];
+            if (pos.is_array() && pos.size() == 4) {
+                mLightProp.Position.x = pos[0].get<float>();
+                mLightProp.Position.y = pos[1].get<float>();
+                mLightProp.Position.z = pos[2].get<float>();
+                mLightProp.Position.w = pos[3].get<float>();
+            }
+        }
+
+        // Deserialize direction
+        if (prop.contains("direction")) {
+            auto dir = prop["direction"];
+            if (dir.is_array() && dir.size() == 4) {
+                mLightProp.Direction.x = dir[0].get<float>();
+                mLightProp.Direction.y = dir[1].get<float>();
+                mLightProp.Direction.z = dir[2].get<float>();
+                mLightProp.Direction.w = dir[3].get<float>();
+            }
+        }
+
+        // Deserialize radiance
+        if (prop.contains("radiance")) {
+            auto rad = prop["radiance"];
+            if (rad.is_array() && rad.size() == 4) {
+                mLightProp.Radiance.r = rad[0].get<float>();
+                mLightProp.Radiance.g = rad[1].get<float>();
+                mLightProp.Radiance.b = rad[2].get<float>();
+                mLightProp.Radiance.a = rad[3].get<float>();
+            }
+        }
+
+        // Deserialize diffuse
+        if (prop.contains("diffuse")) {
+            auto diff = prop["diffuse"];
+            if (diff.is_array() && diff.size() == 4) {
+                mLightProp.DiffuseRGB.r = diff[0].get<float>();
+                mLightProp.DiffuseRGB.g = diff[1].get<float>();
+                mLightProp.DiffuseRGB.b = diff[2].get<float>();
+                mLightProp.DiffuseRGB.a = diff[3].get<float>();
+            }
+        }
+
+        // Deserialize ambient
+        if (prop.contains("ambient")) {
+            auto amb = prop["ambient"];
+            if (amb.is_array() && amb.size() == 4) {
+                mLightProp.AmbientRGB.r = amb[0].get<float>();
+                mLightProp.AmbientRGB.g = amb[1].get<float>();
+                mLightProp.AmbientRGB.b = amb[2].get<float>();
+                mLightProp.AmbientRGB.a = amb[3].get<float>();
+            }
+        }
+
+        // Deserialize specular
+        if (prop.contains("specular")) {
+            auto spec = prop["specular"];
+            if (spec.is_array() && spec.size() == 4) {
+                mLightProp.SpecularRGB.r = spec[0].get<float>();
+                mLightProp.SpecularRGB.g = spec[1].get<float>();
+                mLightProp.SpecularRGB.b = spec[2].get<float>();
+                mLightProp.SpecularRGB.a = spec[3].get<float>();
+            }
+        }
+
+        // Deserialize type
+        if (prop.contains("type")) {
+            mLightProp.LightType = prop["type"].get<int>();
+        }
+    }
 }
 
 void Light::EditorRendering()

@@ -136,8 +136,15 @@ json MeshRenderer::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = "MeshRenderer";
-    ret["mesh"] = mMesh->GetName();
-    ret["material"] = mMateiral->mMaterialResource->GetName();
+    if (mMesh) 
+        ret["mesh"] = Helper::ToString(mMesh->GetName());
+    else 
+        ret["mesh"] = nullptr;
+
+    if (mMateiral && mMateiral->mMaterialResource) 
+        ret["material"] = mMateiral->mMaterialResource->GetName();
+    else  
+        ret["material"] = nullptr;
     return ret;
 }
 

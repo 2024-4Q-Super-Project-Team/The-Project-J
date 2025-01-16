@@ -28,11 +28,25 @@ Object::Object(const Object& _other)
 
 void Object::Tick()
 {
+    for (auto it = mComponentsToWake.begin(); it != mComponentsToWake.end(); )
+    {
+        Component* component = *it;
+        if (component->IsActive())
+        {
+            component->Start();
+            int index = static_cast<UINT>(component->GetType());
+            mComponentArray[index].push_back(component);
+    
+            it = mComponentsToWake.erase(it);
+        }
+        else ++it;
+    }
+    
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
         {
-            if (comp->IsActive())
+            if (comp->IsActive() && comp->IsAwake())
                 comp->Tick();
         }
     }
@@ -243,7 +257,7 @@ void Object::Deserialize(json& j)
 {
     for (auto& componentJson : j["components"])
     {
-        std::string name = componentJson["type"].get<std::string>();
+        std::string name = componentJson["name"].get<std::string>();
         Component* component;
         if (name == "Transform") //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
             component = transform;

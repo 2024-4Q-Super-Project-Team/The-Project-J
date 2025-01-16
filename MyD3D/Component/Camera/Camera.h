@@ -76,7 +76,7 @@ public:
     D3DBitmapRenderTarget* GetCurrentRenderTarget();
 public:
     virtual json Serialize() override;
-    virtual void Deserialize(json& j) override {}
+    virtual void Deserialize(json& j) override;
 private:
     /////////////////////////////////////////////
     // 뷰포트의 자원을 공유받는다.

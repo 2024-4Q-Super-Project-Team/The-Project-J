@@ -144,7 +144,7 @@ json World::Serialize()
     {
         json groupJson;
         groupJson["id"] = group->GetId();
-        groupJson["name"] = group->GetName();
+        groupJson["name"] = Helper::ToString(group->GetName());
         objGroups += groupJson;
     }
     ret["object groups"] = objGroups;

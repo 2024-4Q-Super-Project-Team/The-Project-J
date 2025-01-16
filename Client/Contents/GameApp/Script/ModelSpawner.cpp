@@ -48,11 +48,11 @@ void ModelSpawner::Start()
         //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
         Instance->transform->position = Vector3(100, 50, 50);
 
-        MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
-        pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
-        pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
-        pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
-        EditorManager::mDebugEditor->AddRenderModel(pRenderer);
+        //MeshRenderer* pRenderer = FindObjectWithName(L"Sphere")->GetComponent<MeshRenderer>();
+        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
+        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
+        //pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
+        //EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Mixamo
         auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Mixamo/SkinningTest.fbx");

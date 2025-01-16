@@ -64,7 +64,7 @@ void ViewportManager::FixedUpdate()
 
 void ViewportManager::PreUpdate()
 {
-    mActiveViewport->FixedUpdate();
+    mActiveViewport->PreUpdate();
 }
 
 void ViewportManager::Update()

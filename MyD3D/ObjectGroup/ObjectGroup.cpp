@@ -107,14 +107,14 @@ json ObjectGroup::Serialize()
 {
     json ret;
     ret["id"] = GetId();
-    ret["name"] = Helper::to_utf8(mName);
+    ret["name"] = Helper::ToString(mName);
 
     json objs = json::array();
     for (auto obj : mObjects)
     {
         json objectJson;
         objectJson["id"] = obj->GetId();
-        objectJson["name"] = obj->GetName();
+        objectJson["name"] = Helper::ToString(obj->GetName());
         objs += objectJson;
     }
     ret["objects"] = objs;

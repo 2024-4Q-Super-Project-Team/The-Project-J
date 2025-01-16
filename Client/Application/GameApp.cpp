@@ -4,12 +4,15 @@
 
 #include "Contents/GameApp/World/TestWorld.h"
 #include "Contents/EditorApp/World/EditorWorld.h"
+#include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene      = nullptr;
 ViewportScene* GameApp::mEditorScene    = nullptr;
 
 BOOL GameApp::OnPreInitialize()
 {
+    ScriptRegister sr;
+    sr.Register();
     return TRUE;
 }
 
@@ -32,7 +35,8 @@ BOOL GameApp::OnPostInitialize()
         WorldManager* wrdMng = mMainScene->GetWorldManager();
         if (nullptr == wrdMng) return FALSE;
 
-        World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
+        //World* wolrd = wrdMng->CreateWorld<World>(L"TestWorld", L"Deafult");
+        wrdMng->LoadWorlds();
         wrdMng->SetActiveWorld(L"TestWorld");
         //wrdMng->LoadWorld(L"TestWorld");
 #ifdef _DEBUG

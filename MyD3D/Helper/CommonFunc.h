@@ -52,7 +52,4 @@ namespace Helper
     HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size);
 
 
-    std::string to_utf8(std::wstring& wide_string);
-
-    std::wstring to_wstr(const std::string& utf8_string);
 }

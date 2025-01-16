@@ -207,8 +207,15 @@ json SkinnedMeshRenderer::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = "SkinnedMeshRenderer";
-    ret["mesh"] = mMesh->GetName();
-    ret["material"] = mMateiral->mMaterialResource->GetName();
+    if (mMesh) 
+        ret["mesh"] = Helper::ToString(mMesh->GetName());
+    else 
+        ret["mesh"] = nullptr;
+
+    if (mMateiral && mMateiral->mMaterialResource) 
+        ret["material"] = mMateiral->mMaterialResource->GetName();
+    else  
+        ret["material"] = nullptr;
     ret["root bone"] = mRootBone ? mRootBone->GetId() : NULLID;
     return ret;
 }

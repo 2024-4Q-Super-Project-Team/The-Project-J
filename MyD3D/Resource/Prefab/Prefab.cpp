@@ -132,9 +132,17 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
 
 void Prefab::EditorRendering()
 {
-	for (auto& object : mObjectList)
-	{
-		object->EditorRendering();
-	}
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string name = Helper::ToString(GetName());
+    EDITOR_COLOR_RESOURCE;
+    if (ImGui::TreeNodeEx(("Prefab : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
+    {
+        for (auto& object : mObjectList)
+        {
+            object->EditorRendering();
+        }
+        ImGui::TreePop();
+    }
+    EDITOR_COLOR_POP(1);
 }
 

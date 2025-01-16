@@ -33,18 +33,33 @@ float4 main(QUAD_VS_OUTPUT input) : SV_TARGET
     //float3 WorldPosition = ReconstructWorldPosition(input.uv, Depth, ivCameraView, ivCameraProjection);
     float3 V = normalize(CameraPosition.xyz - WorldPosition.xyz); // ViewDirection (World To Eye)
     float  NdotV = saturate(dot(Normal, V));
+    float att = 0.0f; // 감쇠 값
+    float3 L = float3(0.f, 0.f, 0.f);
     
     // =====    조명 계산   =====
     float4 DirectLight  = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 AmbientLight = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float3 F0 = lerp(Fdielectric, Albedo, Metalness);
     float3 VrefN = reflect(-V, Normal); // 반사 벡터
+    
     // ===== 직접 조명 계산 =====
     [unroll]
     for (int i = 0; i < NumLights; i++)
     {
-        // LightDirection
-        float3 L    = -normalize(LightProp[i].Direction.xyz);
+        if (LightProp[i].LightType == 0)
+        {
+            L = -normalize(LightProp[i].Direction.xyz);
+        }
+        else if (LightProp[i].LightType == 1)
+        {
+            L = -normalize(LightProp[i].Position.xyz - WorldPosition.xyz);
+            att = CaclulatePointLight(L, LightProp[i].LightRange, 10.f);
+        }
+        else if (LightProp[i].LightType == 2)
+        {
+            // L = -normalize(LightProp[i].Direction.xyz);
+            // CaclulateSpotLight(L,);
+        }
         // HalfVector
         float3 H    = normalize(L + V);
         float NdotL = saturate(dot(Normal, L));

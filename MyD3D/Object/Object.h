@@ -12,7 +12,7 @@
 #include "Component/Audio/AudioSource.h"
 #include "Component/Audio/AudioListener.h"
 
-#include "Interface/IGUID.h"
+#include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
 
 class Component;
@@ -21,7 +21,7 @@ class ObjectGroup;
 class Object
     : public Engine::Entity
     , public Engine::ICycleHandler
-    , public Engine::IGUID
+    , public Engine::SaveBase
 	, public IEditorObject  
 {
 public:

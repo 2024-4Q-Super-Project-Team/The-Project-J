@@ -205,8 +205,8 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
 json Object::Serialize()
 {
     json ret;
-    ret["id"] = mId;
-    ret["name"] = Helper::to_utf8(mName);
+    ret["id"] = GetId();
+    ret["name"] = Helper::ToString(mName);
 
     json cmps = json::array();
     for (auto& cmpArr : mComponentArray)
@@ -214,9 +214,9 @@ json Object::Serialize()
         for (auto& cmp : cmpArr)
         {
             json j;
-            j["id"] = cmp->mId;
-            j["type"] = typeid(*cmp).name() + sizeof("Class");
-            cmps.push_back(j); //오브젝트는 컴포넌트의 ID와 타입만 저장해둡니다. 
+            j["id"] = cmp->GetId();
+            j["name"] = typeid(*cmp).name() + sizeof("Class");
+            cmps.push_back(j);
         }
     }
     ret["components"] = cmps;
@@ -232,7 +232,7 @@ json Object::SerializeComponents()
     {
         for (auto& cmp : cmpArr)
         {
-            ret["id"] = cmp->mId;
+            ret["id"] = cmp->GetId();
             ret["data"] = cmp->Serialize();
         }
     }
@@ -241,10 +241,6 @@ json Object::SerializeComponents()
 
 void Object::Deserialize(json& j)
 {
-    mId = j["id"].get<unsigned int>();
-    std::string str = j["name"].get<std::string>();
-    mName = Helper::to_wstr(str);
-
     for (auto& componentJson : j["components"])
     {
         std::string name = componentJson["type"].get<std::string>();
@@ -253,8 +249,7 @@ void Object::Deserialize(json& j)
             component = transform;
         else
             component = static_cast<Component*>(CREATE_COMPONENT(name, this));
-        if(component)
-            component->mId = componentJson["id"].get<unsigned int>();
-        //컴포넌트의 Deserialize는 별도로 해줍니다. 
+        if (component)
+            component->SetId(componentJson["id"].get<unsigned int>());
     }
 }

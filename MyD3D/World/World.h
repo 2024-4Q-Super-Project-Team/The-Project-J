@@ -2,6 +2,7 @@
 #include "Interface/ICycleHandler.h"
 #include "Interface/ICycleEventHandler.h"
 #include "Helper/Entity/Entity.h"
+#include "Interface/SaveBase.h"
 
 class LightSystem;
 class ViewportScene;
@@ -9,10 +10,11 @@ class ObjectGroup;
 class SkyBox;
 class Camera;
 
-class World 
+class World
 	: public Engine::ICycleHandler
 	, public Engine::ICycleEventHandler
 	, public Engine::Entity
+	, public Engine::SaveBase
 {
 public:
 	explicit World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty = false);

@@ -162,7 +162,7 @@
     <ClInclude Include="Resource\AudioResource\AudioResource.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDefault.h" />
-    <ClInclude Include="Interface\IGUID.h" />
+    <ClInclude Include="Interface\SaveBase.h" />
     <ClInclude Include="Manager\ComponentManager.h" />
     <ClInclude Include="Component\ComponentFactory\ComponentFactory.h" />
     <ClInclude Include="Component\Camera\Camera.h" />
@@ -266,7 +266,7 @@
     <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDefault.cpp" />
-    <ClCompile Include="Interface\IGUID.cpp" />
+    <ClCompile Include="Interface\SaveBase.cpp" />
     <ClCompile Include="Manager\ComponentManager.cpp" />
     <ClCompile Include="Component\ComponentFactory\ComponentFactory.cpp" />
     <ClCompile Include="Component\Camera\Camera.cpp" />

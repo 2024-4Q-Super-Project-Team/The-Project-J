@@ -136,12 +136,16 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
 json World::Serialize()
 {
     json ret;
-    ret["name"] = Helper::to_utf8(mName);
+    ret["id"] = GetId();
+    ret["name"] = Helper::ToString(mName);
 
     json objGroups = json::array();
     for (auto group : mObjectGroups)
     {
-        objGroups.push_back(group->Serialize());
+        json groupJson;
+        groupJson["id"] = group->GetId();
+        groupJson["name"] = group->GetName();
+        objGroups += groupJson;
     }
     ret["object groups"] = objGroups;
 
@@ -150,12 +154,11 @@ json World::Serialize()
 
 void World::Deserialize(json& j)
 {
-    std::string str = j["name"].get<std::string>();
-    mName = Helper::to_wstr(str);
     for (auto& groupJson : j["object groups"])
     {
-        ObjectGroup* group = CreateObjectGroup(L"");
-        group->Deserialize(groupJson);
+        std::wstring name = Helper::ToWString(groupJson["name"].get<std::string>());
+        ObjectGroup* group = CreateObjectGroup(name);
+        group->SetId(groupJson["id"].get<unsigned int>());
     }
 }
 

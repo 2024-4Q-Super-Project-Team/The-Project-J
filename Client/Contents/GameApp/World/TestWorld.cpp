@@ -3,6 +3,7 @@
 #include "../Script/ModelSpawner.h"
 #include "../Script/CameraController.h"
 
+
 void _CALLBACK TestWorld::OnCreate()
 {
     CreateObjectGroup(L"Default", L"");

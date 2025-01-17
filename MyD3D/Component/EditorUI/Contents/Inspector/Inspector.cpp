@@ -7,6 +7,8 @@
 #include "Component/EditorUI/Contents/Widget/EditorInputVector.h"
 #include "Component/EditorUI/Contents/Widget/EditorStaticText.h"
 
+#include "imguizmo\ImGuizmo.h"
+
 namespace Editor
 {
     Inspector::Inspector()

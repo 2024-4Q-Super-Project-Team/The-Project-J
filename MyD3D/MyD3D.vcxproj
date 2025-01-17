@@ -117,6 +117,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>$(SolutionDir)MyD3D\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -211,6 +212,13 @@
     <ClInclude Include="Resource\Graphics\Mesh\Vertex.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\EditorUI\Contents\TestTab\TestEditorTab.h" />
+    <ClInclude Include="ThirdParty\imguizmo\GraphEditor.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImCurveEdit.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGradient.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGuizmo.h" />
+    <ClInclude Include="ThirdParty\imguizmo\imguizmo_pch.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImSequencer.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImZoomSlider.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="World\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
@@ -297,6 +305,11 @@
     <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\EditorUI\Contents\TestTab\TestEditorTab.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\GraphEditor.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGradient.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGuizmo.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImSequencer.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="World\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />

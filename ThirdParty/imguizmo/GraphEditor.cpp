@@ -23,8 +23,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-#include "pch.h"
-#include "imguizmo_pch.h"
 #include "imgui.h"
 #define IMGUI_DEFINE_MATH_OPERATORS
 #include "imgui_internal.h"

@@ -323,6 +323,7 @@ void Camera::PushDrawList(RendererComponent* _renderComponent)
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
     if (pMaterial)
     {
+        if(pMaterial->mMaterialResource)
         blendMode = pMaterial->mMaterialResource->mBlendMode;
     }
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);

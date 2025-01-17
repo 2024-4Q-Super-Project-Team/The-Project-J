@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "EditorResourceView.h"
 #include "Resource/ResourceManager.h"
+// Editor
+#include "Editor/Handler/EditorDragNDrop.h"
 
 Editor::EditorResourceView::EditorResourceView()
 {

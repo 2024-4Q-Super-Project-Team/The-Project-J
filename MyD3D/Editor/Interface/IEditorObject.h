@@ -3,7 +3,17 @@
 class IEditorObject
 {
 public:
-	virtual void EditorRendering() = 0;
+    virtual void EditorRendering() = 0;
+protected:
+    inline void SetID(const std::string& _label) {
+        uid = _label;
+    }
+public:
+    inline const char* GetID() {
+        return uid.c_str();
+    }
+protected:
+    std::string uid;
 };
 
 namespace Editor

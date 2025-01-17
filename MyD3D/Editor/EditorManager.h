@@ -11,6 +11,8 @@
 #include "Widgets/Extra/EditorInputVector.h"
 #include "Widgets/Extra/EditorStaticText.h"
 
+#include "Editor/Handler/EditorDragNDrop.h"
+
 #define EDITOR_WIDTH 800
 #define EDITOR_OFFSET 10
 
@@ -34,10 +36,10 @@ private:
     static void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 public:
-
+    void UpdateIO();
 private:
-    static ViewportScene*               mForcusViewport;
-    static ViewportScene*               mEditorViewport;
+    static ViewportScene*                mForcusViewport;
+    static ViewportScene*                mEditorViewport;
     static std::vector<Editor::IWidget*> mWidgetArray;
 
     static Editor::EditorResourceView*  mResourceViewer;
@@ -57,6 +59,9 @@ private:
 	static ImGuiContext* mContext;
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
+
+public:
+    static void ShowPopUp();
 };
 
 struct Serial {

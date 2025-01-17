@@ -13,11 +13,10 @@ namespace Editor
     public:
         virtual void Render() override;
     public:
-        void SetFocusObject(Object* _object);
-        Object* GetFocusObject();
-        void ShowComponentList();
+        void SetFocusObject(IEditorObject* _object);
+        IEditorObject* GetFocusObject();
     private:
-        Object* mFocusObject;
+        IEditorObject* mFocusObject;
         bool mbComponentChoosing = false;
 
     };

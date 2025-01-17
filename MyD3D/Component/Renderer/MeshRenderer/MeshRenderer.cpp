@@ -7,6 +7,8 @@
 #include "Resource/Graphics/Mesh/Mesh.h"
 #include "Resource/Graphics/Material/Material.h"
 #include "Resource/Graphics/Texture/Texture.h"
+// Editor
+#include "Editor/Handler/EditorDragNDrop.h"
 
 MeshRenderer::MeshRenderer(Object* _owner)
     : RendererComponent(_owner)
@@ -161,11 +163,18 @@ void MeshRenderer::EditorRendering()
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Mesh Renderer##" + uid).c_str(), EDITOR_FLAG_MAIN))
     {
-        if (mMesh)
         {
-            mMesh->EditorRendering();
+            std::string uid = "NULL Mesh";
+            std::string name = "NULL Mesh";
+            if (mMesh)
+            {
+                mMesh->EditorRendering();
+                name = Helper::ToString(mMesh->GetName());
+                uid = mMesh->GetID();
+            }
+            else ImGui::BulletText(uid.c_str());
+            EditorDragNDrop::ReceiveDragAndDropResourceData(uid.c_str(), mMesh);
         }
-        else ImGui::Text("NULL Mesh");
 
         ImGui::Separator();
 

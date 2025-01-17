@@ -41,9 +41,9 @@ namespace Editor
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
         if (ImGui::BeginMenu(uid.c_str(), isActive))
         {
-            for (auto& item : mContainer)
+            for (auto& pWidget : mContainer)
             {
-                item->Render();
+                pWidget->Render();
             }
             ImGui::EndMenu();
         }

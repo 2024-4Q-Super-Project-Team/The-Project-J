@@ -125,40 +125,34 @@ namespace Editor
 
     void Hierarchy::RenderObject(Object* _pObject)
     {
-        std::string name;
-        name.assign(_pObject->GetName().begin(), _pObject->GetName().end());
+        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+        std::string name = Helper::ToString(_pObject->GetName());
 
-        // 고유 ID 추가 (Object의 포인터 사용)
-        name += "##" + std::to_string(reinterpret_cast<uintptr_t>(_pObject));
-
-        // 현재 포커스된 객체인지 확인
+        // 현재 포커스된 객체인지
         bool isFocused = false;
-        if (mRefInspector)
-        isFocused = (mRefInspector->GetFocusObject() == _pObject);
-
+        // 트리 노드가 열려있는지
+        bool isOpened = false;
         // TreeNode 플래그 설정
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-        if (isFocused)
+
+        if (mRefInspector && mRefInspector->GetFocusObject() == _pObject)
         {
             flags |= ImGuiTreeNodeFlags_Selected; // 선택 상태 플래그 추가
         }
 
         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-        bool isOpened = ImGui::TreeNodeEx(name.c_str(), flags);
+        isOpened = ImGui::TreeNodeEx(name.c_str(), flags);
         ImGui::PopStyleColor(2);
 
         // 클릭 이벤트 감지
-        if (ImGui::IsItemClicked())
+        if (mRefInspector && ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
-            if (mRefInspector)
-                mRefInspector->SetFocusObject(_pObject);
+            mRefInspector->SetFocusObject(_pObject);
         }
-
-        // TreeNode가 열렸을 경우 자식 노드 순회
         if (isOpened)
         {
-            auto children = _pObject->transform->GetChildren();
+            const std::vector<Transform*>& children = _pObject->transform->GetChildren();
             for (auto child : children)
             {
                 RenderObject(child->gameObject);

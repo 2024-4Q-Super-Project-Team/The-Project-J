@@ -2,7 +2,10 @@
 #include "Mesh.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
+#include "Resource/ResourceManager.h"
 #include "Resource/Graphics/Material/Material.h"
+// Editor
+#include "Editor/Handler/EditorDragNDrop.h"
 
 // 府家胶概聪历俊辑 积己
 std::shared_ptr<MeshResource> MeshResource::SkyCubeMesh;
@@ -12,8 +15,10 @@ std::shared_ptr<MeshResource> MeshResource::PlainMesh;
 MeshResource::MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
     : Resource(_name)
 {
+    SetID("Mesh : " + Helper::ToString(_name.data()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
+    
 }
 
 MeshResource::~MeshResource()
@@ -205,16 +210,17 @@ void MeshResource::InitPlainMesh()
 
 void MeshResource::EditorRendering()
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(GetName());
 
     EDITOR_COLOR_RESOURCE;
-    if (ImGui::TreeNodeEx(("Mesh : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
+    if (ImGui::TreeNodeEx(uid.c_str(), EDITOR_FLAG_RESOURCE))
     {
 		ImGui::Text("Vertex Count : %d", mVertices.size());
 		ImGui::Text("Index Count  : %d", mIndices.size());
 		ImGui::Text("Bone Count  : %d", mBoneArray.size());
 		ImGui::TreePop();
     }
+    EditorItemState state = { nullptr , name };
+    EditorDragNDrop::SendDragAndDropData(state);
     EDITOR_COLOR_POP(1);
 }

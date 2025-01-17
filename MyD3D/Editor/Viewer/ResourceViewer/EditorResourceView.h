@@ -3,6 +3,8 @@
 
 namespace Editor
 {
+	class IWidget;
+
 	class EditorResourceView
 		: public IWidget
 	{

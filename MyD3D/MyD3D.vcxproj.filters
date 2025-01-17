@@ -315,7 +315,7 @@
     <ClInclude Include="Editor\EditorManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\ResourceTab\EditorResourceView.h">
+    <ClInclude Include="Editor\Handler\EditorDragNDrop.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -608,7 +608,7 @@
     <ClCompile Include="Editor\EditorManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\ResourceTab\EditorResourceView.cpp">
+    <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

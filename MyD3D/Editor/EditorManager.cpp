@@ -55,8 +55,8 @@ void EditorManager::RenderEditor()
             widget->Render();
         }
 
-        // ImGui 렌더링 종료
-        ImGui::EndFrame();
+        EditorDragNDrop::Render();
+
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
@@ -218,6 +218,18 @@ void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
     }
 }
 
+void EditorManager::UpdateIO()
+{
+    HWND editorHwnd = mEditorViewport->GetIWindow()->GetHandle();
+    ImGuiIO& io = ImGui::GetIO();
+    {   // 에디터 윈도우의 마우스 좌표로 변환
+        POINT mousePos;
+        GetCursorPos(&mousePos);
+        ScreenToClient(editorHwnd, &mousePos);
+        io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+    }
+}
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam)
@@ -251,6 +263,29 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
     }
     return 0;
 }
+
+void EditorManager::ShowPopUp()
+{
+    // 이전 위젯을 호버링중일 때 && 마우스 좌클릭을 했을 때
+    if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
+        ImGui::SetNextWindowPos(ImGui::GetMousePos());
+        ImGui::OpenPopup("WidgetClickMenu"); // 이름을 통일시킴
+    }
+    // 팝업 메뉴 정의
+    if (ImGui::BeginPopup("WidgetClickMenu")) { // OpenPopup의 이름과 일치해야 함
+        if (ImGui::MenuItem("Option 1")) {
+            // Option 1 선택 시 동작
+        }
+        if (ImGui::MenuItem("Option 2")) {
+            // Option 2 선택 시 동작
+        }
+        if (ImGui::MenuItem("Option 3")) {
+            // Option 3 선택 시 동작
+        }
+        ImGui::EndPopup();
+    }
+}
+
 
 BOOL EditorManager::EditorReposition()
 {

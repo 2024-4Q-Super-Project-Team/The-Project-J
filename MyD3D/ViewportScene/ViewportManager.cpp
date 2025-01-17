@@ -3,11 +3,12 @@
 #include "Application/Application.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
+#include "Editor/EditorManager.h"
 #include "ViewportScene/ViewportScene.h"
 
 
-ViewportScene*              ViewportManager::mActiveViewport = nullptr;
-Display::IDisplayDevice*    ViewportManager::mDisplayDevice = nullptr;
+ViewportScene* ViewportManager::mActiveViewport = nullptr;
+Display::IDisplayDevice* ViewportManager::mDisplayDevice = nullptr;
 std::vector<ViewportScene*> ViewportManager::mViewportScenes;
 
 BOOL ViewportManager::Initialize()
@@ -96,8 +97,8 @@ ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDe
 {
     _pWinDesc->WndClass.lpfnWndProc = ViewportManager::WinProc;
 
-    Display::IWindow*       pWindow = nullptr;
-    D3DHwndRenderTarget*    pSwapChain = nullptr;
+    Display::IWindow* pWindow = nullptr;
+    D3DHwndRenderTarget* pSwapChain = nullptr;
     if (FAILED(mDisplayDevice->CreateWindowDisplay(_pWinDesc, &pWindow)))
     {
         throw std::runtime_error("Hresult Failed to ViewportScene::CreateViewport...CreateWindowDisplay()");
@@ -156,7 +157,7 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
     {
         return true;
     }
-    
+
     auto pViewport = GetViewportSceneFromHwnd(_hwnd);
 
     switch (_msg)
@@ -170,6 +171,11 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
         }
         break;
     case WM_MOVE:
+        if (pViewport)
+        {
+            if (EditorManager::IsForcusView(pViewport))
+                EditorManager::EditorReposition();
+        }
         break;
         // 시스템 키 눌르고 뗏을 때일걸..요?
     case WM_SYSKEYDOWN:

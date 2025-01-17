@@ -138,9 +138,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
-    <ClCompile Include="Application\WinProc.cpp" />
-    <ClCompile Include="Contents\EditorApp\Script\EditorManager.cpp" />
-    <ClCompile Include="Contents\EditorApp\World\EditorWorld.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
     <ClCompile Include="Contents\GameApp\Script\ModelSpawner.cpp" />
     <ClCompile Include="Contents\GameApp\World\TestWorld.cpp" />
@@ -153,10 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
-    <ClInclude Include="Application\WinProc.h" />
     <ClInclude Include="Config.h" />
-    <ClInclude Include="Contents\EditorApp\Script\EditorManager.h" />
-    <ClInclude Include="Contents\EditorApp\World\EditorWorld.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
     <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />

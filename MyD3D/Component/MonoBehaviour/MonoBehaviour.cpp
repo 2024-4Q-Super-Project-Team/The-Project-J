@@ -3,6 +3,7 @@
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportManager.h"
 #include "World/WorldManager.h"
+#include "Editor/EditorManager.h"
 #include "ViewportScene/ViewportScene.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"

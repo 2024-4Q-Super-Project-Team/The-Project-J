@@ -1,13 +1,10 @@
 #include "pch.h"
 #include "GameApp.h"
-#include "WinProc.h"
-
 #include "Contents/GameApp/World/TestWorld.h"
-#include "Contents/EditorApp/World/EditorWorld.h"
 #include "ScriptRegister.h"
 
-ViewportScene* GameApp::mMainScene      = nullptr;
-ViewportScene* GameApp::mEditorScene    = nullptr;
+ViewportScene* GameApp::mMainScene = nullptr;
+ViewportScene* GameApp::mEditorScene = nullptr;
 
 BOOL GameApp::OnPreInitialize()
 {
@@ -28,7 +25,6 @@ BOOL GameApp::OnPostInitialize()
             winDecs.Size = { WINDOW_WIDTH, WINDOW_HEIGHT };
             winDecs.WndStyle = WS_OVERLAPPEDWINDOW;
             winDecs.WndClass.lpszClassName = WINDOW_TITLE;
-            winDecs.WndClass.lpfnWndProc = WinProc;
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
@@ -42,24 +38,7 @@ BOOL GameApp::OnPostInitialize()
         /////////////////////////////////////////////////////
         // ¿¡µðÅÍ
         /////////////////////////////////////////////////////
-        {
-            {
-                Display::WindowDesc winDecs;
-                winDecs.Size = { 800, WINDOW_HEIGHT + mMainScene->GetIWindow()->GetOffset().y };
-                winDecs.Position = { 0,0 };
-                winDecs.WndStyle = WS_POPUP | WS_VISIBLE;
-                winDecs.WndClass.lpszClassName = EDITOR_TITLE;
-                winDecs.WndClass.lpfnWndProc = EditorWinProc;
-                winDecs.WndParent = mMainScene->GetIWindow();
-                mEditorScene = ViewportManager::CreateViewportScene(&winDecs);
-            }
-            WorldManager* wrdMng = mEditorScene->GetWorldManager();
-            if (nullptr == wrdMng) return FALSE;
-
-            World* wolrd = wrdMng->CreateWorld<EditorWorld>(L"EditorWorld", L"");
-            wrdMng->SetActiveWorld(L"EditorWorld");  
-        }
-        GameApp::EditorRePosition();
+        EditorManager::ShowEditorWindow(mMainScene);
 #endif // DEBUG
     }
     return TRUE;
@@ -79,25 +58,11 @@ void _CALLBACK GameApp::OnWindowMessage(ViewportScene* _pViewport, UINT _msg, WP
     switch (_msg)
     {
     case WM_SIZE:
-        EditorRePosition();
         break;
     case WM_MOVE:
-        EditorRePosition();
         break;
     default:
         break;
     }
     return void _CALLBACK();
-}
-
-void GameApp::EditorRePosition()
-{
-    if (mMainScene && mEditorScene)
-    {
-        auto EditorWindow = mEditorScene->GetIWindow();
-        POINT pos = mMainScene->GetIWindow()->GetPosition();
-        POINT size = mMainScene->GetIWindow()->GetSize();
-        POINT resPos = { pos.x + size.x + 10 , pos.y};
-        EditorWindow->SetPosition(resPos);
-    }
 }

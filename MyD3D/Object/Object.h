@@ -8,7 +8,6 @@
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Animator/Animator.h"
-#include "Component/EditorUI/EditorUI.h"
 #include "Component/Audio/AudioSource.h"
 #include "Component/Audio/AudioListener.h"
 
@@ -95,7 +94,6 @@ public:
             }
         }
     }
-    friend class Editor::Inspector;
 };
 
 template <class T, typename... Args>

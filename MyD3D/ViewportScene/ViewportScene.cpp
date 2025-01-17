@@ -2,6 +2,7 @@
 #include "ViewportScene.h"
 #include "Graphics/GraphicsManager.h"
 #include "World/WorldManager.h"
+#include "Editor/EditorManager.h"
 
 ViewportScene::ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow, D3DHwndRenderTarget* _pSwapChain)
     : Entity(_name, L"")
@@ -71,8 +72,11 @@ void ViewportScene::Render()
         mSwapChain->BeginDraw();
 
         mSwapChain->Clear();
-       
+
         mWorldManager->Render();
+
+        if (EditorManager::IsRenderView(this))
+            EditorManager::RenderEditor();
 
         mSwapChain->EndDraw();
     }

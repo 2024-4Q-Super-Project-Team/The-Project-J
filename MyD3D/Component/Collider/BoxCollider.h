@@ -1,5 +1,6 @@
 #pragma once
 #include "Collider.h"
+
 class BoxCollider : public Collider
 {
 public:
@@ -31,6 +32,6 @@ private:
     PxBoxGeometry mGeometry;
     Vector3 mExtents;
 public:
-    virtual void EditorRendering() override;
+    virtual void EditorRendering(EditorViewerType _type) override;
 };
 

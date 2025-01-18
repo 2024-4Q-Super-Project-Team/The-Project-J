@@ -95,7 +95,7 @@ void BoxCollider::UpdateOBB()
 #endif
 }
 
-void BoxCollider::EditorRendering()
+void BoxCollider::EditorRendering(EditorViewerType _type)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("BoxComponent" + uid).c_str(), EDITOR_FLAG_MAIN))

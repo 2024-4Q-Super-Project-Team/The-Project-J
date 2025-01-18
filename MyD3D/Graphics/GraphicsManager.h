@@ -20,12 +20,14 @@ public:
     ~GraphicsManager() = default;
 public:
     static BOOL Initialize();
+
     static void Finalization();
 private:
     static void InitConstantBuffer();
     static void InitShader();
     static void InitSamplerState();
     static void InitBlendState();
+    static void InitDebugDraw();
 public:
     static inline auto GetConstantBuffer(eCBufferType _type) { return mCBufferArray[(UINT)_type]; }
     static inline auto GetSamplerState(eSamplerStateType _type) { return mSamplerStateArray[(UINT)_type]; }
@@ -46,4 +48,17 @@ private:
     static D3DGraphicsPixelShader*      mPixelShaderArray[PS_TYPE_COUNT];
     static D3DGraphicsSamplerState*     mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
     static D3DGraphicsBlendState*       mBlendStateArray[BLEND_TYPE_COUNT];
+
+    //Debug Draw
+#ifdef _DEBUG
+public:
+    static void SetDebugViewProjection(Matrix _view, Matrix _projection);
+    static void DebugDrawBegin();
+    static void DebugDrawEnd();
+private:
+    static std::unique_ptr<class CommonStates> mStates;
+    static std::unique_ptr<class PrimitiveBatch<VertexPositionColor>> mBatch;
+    static std::unique_ptr<class BasicEffect> mEffect;
+    static ID3D11InputLayout* mLayout;
+#endif
 };

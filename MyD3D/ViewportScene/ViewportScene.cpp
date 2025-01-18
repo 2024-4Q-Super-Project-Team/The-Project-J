@@ -86,7 +86,9 @@ void ViewportScene::PostRender()
 {
     if (mWorldManager)
     {
+        GraphicsManager::DebugDrawBegin();
         mWorldManager->PostRender();
+        GraphicsManager::DebugDrawEnd();
     }
 }
 

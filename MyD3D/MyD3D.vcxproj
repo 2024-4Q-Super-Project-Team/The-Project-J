@@ -164,6 +164,7 @@
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h" />
     <ClInclude Include="Editor\Handler\EditorCustumWidget.h" />
     <ClInclude Include="Editor\Handler\EditorDragNDrop.h" />
+    <ClInclude Include="Graphics\Extra\DebugDraw.h" />
     <ClInclude Include="Editor\EditorManager.h" />
     <ClInclude Include="Editor\Interface\IEditorObject.h" />
     <ClInclude Include="Editor\CumstomWidget\TabItem\Viewer\HierarchyViewer\EditorHierarchyViewer.h" />

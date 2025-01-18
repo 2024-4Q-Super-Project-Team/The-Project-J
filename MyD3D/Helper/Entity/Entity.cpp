@@ -25,7 +25,8 @@ void Engine::Entity::SetActive(bool _isActive)
 
 void Engine::Entity::SetDestroy()
 {
-	if (mState != EntityState::Create)
+	// 여러번 OnDestory를 호출하면 안되니까
+	if (mState != EntityState::Destroy)
 	{
 		mState = EntityState::Destroy;
 		OnDestroy();

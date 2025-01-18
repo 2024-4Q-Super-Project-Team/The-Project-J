@@ -30,7 +30,7 @@ public:
     // 기본 머티리얼
     static std::shared_ptr<MaterialResource> DefaultMaterial;
 public: 
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
 // MaterialData를 참조하며, 독립적인 머티리얼 상수버퍼 값을 가지는 머티리얼 
@@ -62,5 +62,5 @@ public:
     // 머티리얼이 사용할 픽셀 셰이더
     D3DGraphicsPixelShader* mPixelShader;
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

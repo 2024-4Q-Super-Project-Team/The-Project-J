@@ -36,7 +36,7 @@ FBXModelResource::~FBXModelResource()
     SAFE_DELETE_ARRAY(mModelNodeArray);
 }
 
-void FBXModelResource::EditorRendering()
+void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(GetName());
@@ -48,7 +48,7 @@ void FBXModelResource::EditorRendering()
 			for (auto& rsc : mMaterialArray)
 			{
 				if (rsc)
-					rsc->EditorRendering();
+					rsc->EditorRendering(EditorViewerType::DEFAULT);
 			}
 			ImGui::TreePop();
 		}
@@ -57,7 +57,7 @@ void FBXModelResource::EditorRendering()
 			for (auto& rsc : mMeshArray)
 			{
 				if (rsc)
-					rsc->EditorRendering();
+					rsc->EditorRendering(EditorViewerType::DEFAULT);
 			}
 			ImGui::TreePop();
 		}
@@ -66,7 +66,7 @@ void FBXModelResource::EditorRendering()
 			for (auto& rsc : mAnimationArray)
 			{
 				if (rsc)
-					rsc->EditorRendering();
+					rsc->EditorRendering(EditorViewerType::DEFAULT);
 			}
 			ImGui::TreePop();
 		}
@@ -75,7 +75,7 @@ void FBXModelResource::EditorRendering()
 			for (auto& rsc : mBoneArray)
 			{
 				if (rsc)
-					rsc->EditorRendering();
+					rsc->EditorRendering(EditorViewerType::DEFAULT);
 			}
 			ImGui::TreePop();
 		}

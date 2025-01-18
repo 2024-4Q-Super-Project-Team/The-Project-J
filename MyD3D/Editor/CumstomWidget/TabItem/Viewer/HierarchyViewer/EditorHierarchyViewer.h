@@ -7,17 +7,17 @@ class ObjectGroup;
 
 namespace Editor
 {
-    class Inspector;
+    class InspectorViewer;
 
-    class Hierarchy : public IWidget
+    class HierarchyViewer : public IWidget
     {
     public:
-        explicit Hierarchy();
-        virtual ~Hierarchy() = default;
+        explicit HierarchyViewer();
+        virtual ~HierarchyViewer() = default;
     public:
         virtual void Render() override;
     public:
-        void SetFocusInspector(Inspector* _pInspector);
+        void SetFocusInspector(InspectorViewer* _pInspector);
         void SetFocusWorldManager(WorldManager* _pWorldManager);
     private:
         void RenderObjectGroup(ObjectGroup* _pObjectGroup);
@@ -27,10 +27,13 @@ namespace Editor
         void AddObject(const std::wstring _name, ObjectGroup* _group);
 
         void SaveWorld();
+    public:
+        inline auto GetFocusInpectorViwer() { return mRefInspector; }
+        inline auto GetFocusWorldManager()  { return mRefWorldManager; }
     private:
         // 참조하는 인스펙터 창.
         // 활성화 오브젝트를 변경해주기 위함.
-        Inspector* mRefInspector;
+        InspectorViewer* mRefInspector;
         // 참조할 월드매니저
         // 해당 월드매니저에 있는 오브젝트를 나열함.
         WorldManager* mRefWorldManager;

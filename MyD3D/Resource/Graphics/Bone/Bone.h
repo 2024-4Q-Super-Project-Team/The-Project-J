@@ -12,6 +12,6 @@ public:
 public:
     const Matrix  mOffsetMatrix;      // 해당 본의 옵셋
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

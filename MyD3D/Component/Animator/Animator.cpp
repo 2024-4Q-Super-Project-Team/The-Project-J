@@ -164,7 +164,7 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
     return Scaling;
 }
 
-void Animator::EditorRendering()
+void Animator::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	if (ImGui::TreeNodeEx(("Animator" + uid).c_str(), EDITOR_FLAG_MAIN))
@@ -177,7 +177,7 @@ void Animator::EditorRendering()
 		{
 			
             ImGui::Separator();
-            mActiveAnimation->EditorRendering();
+            mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
 		}
 		
 		ImGui::TreePop();

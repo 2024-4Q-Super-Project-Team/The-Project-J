@@ -47,5 +47,5 @@ private:
     // 현재 등록된 오디오을 관리하는 테이블
     std::unordered_map<std::wstring, std::shared_ptr<AudioResource>> mAudioTable;
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

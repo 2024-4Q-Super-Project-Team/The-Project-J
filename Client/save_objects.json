@@ -2,6 +2,20 @@
     {
         "components": [
             {
+                "id": 8,
+                "name": "Transform"
+            },
+            {
+                "id": 9,
+                "name": "Camera"
+            }
+        ],
+        "id": 7,
+        "name": "Main_Camera"
+    },
+    {
+        "components": [
+            {
                 "id": 3,
                 "name": "Transform"
             },
@@ -16,31 +30,25 @@
     {
         "components": [
             {
+                "id": 13,
+                "name": "Transform"
+            },
+            {
+                "id": 14,
+                "name": "Camera"
+            }
+        ],
+        "id": 12,
+        "name": "Main_Camera"
+    },
+    {
+        "components": [
+            {
                 "id": 17,
                 "name": "Transform"
             }
         ],
         "id": 16,
-        "name": "ModelController"
-    },
-    {
-        "components": [
-            {
-                "id": 20,
-                "name": "Transform"
-            }
-        ],
-        "id": 19,
-        "name": "CameraController"
-    },
-    {
-        "components": [
-            {
-                "id": 24,
-                "name": "Transform"
-            }
-        ],
-        "id": 23,
-        "name": "ds"
+        "name": "asd"
     }
 ]

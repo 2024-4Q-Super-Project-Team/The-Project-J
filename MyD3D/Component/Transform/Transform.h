@@ -92,5 +92,5 @@ private:
     PxTransform mPxTransform{};
 
 public:
-    void EditorRendering();
+    void EditorRendering(EditorViewerType _viewerType);
 };

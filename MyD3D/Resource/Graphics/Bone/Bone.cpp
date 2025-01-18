@@ -11,7 +11,7 @@ Bone::~Bone()
 {
 }
 
-void Bone::EditorRendering()
+void Bone::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(mName);

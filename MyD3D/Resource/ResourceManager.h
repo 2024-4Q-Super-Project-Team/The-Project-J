@@ -1,4 +1,6 @@
 #pragma once
+#include "Resource/ResourceHandle.h"
+
 #include "Resource/Graphics/Texture/Texture.h"
 #include "Resource/Graphics/FBXModel/FBXModel.h"
 #include "Resource/Graphics/Mesh/Mesh.h"
@@ -29,6 +31,14 @@ public:
     static BOOL Initialize();
     static void Finalization();
 public:
+    //// 리소스를 요청합니다. 참조카운트가 증가.
+    //template <typename T>
+    //static T* RequestResource(ResourceHandle _handle);
+    //// 리소스 핸들을 등록합니다.
+    //static void RegisterResourceHandle(ResourceHandle _handle);
+    //// 리소스 핸들을 삭제합니다.
+    //static void UnregisterResourceHandle(ResourceHandle _handle);
+
     // 리소스를 가져온다.
     template <typename TYPE>
     static std::shared_ptr<TYPE> GetResource(const std::wstring& _key);

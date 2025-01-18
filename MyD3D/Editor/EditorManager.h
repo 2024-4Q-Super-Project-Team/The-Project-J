@@ -1,7 +1,11 @@
 #pragma once
-#include "Editor/Viewer/HierarchyViewer/Hierarchy.h"
-#include "Editor/Viewer/InspectorViewer/Inspector.h"
-#include "Editor/Viewer/ResourceViewer/EditorResourceView.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/HierarchyViewer/EditorHierarchyViewer.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/ResourceViewer/EditorResourceViewer.h"
+
+#include "Editor/CumstomWidget/MenuItem/World/EditorWorldChanger.h"
+#include "Editor/CumstomWidget/MenuItem/World/EditorWorldCreator.h"
+#include "Editor/CumstomWidget/MenuItem/World/EditorWorldRemover.h"
 
 #include "Widgets/Core/EditorTab.h"
 #include "Widgets/Core/EditorWindow.h"
@@ -10,6 +14,8 @@
 #include "Widgets/Extra/EditorCheckBox.h"
 #include "Widgets/Extra/EditorInputVector.h"
 #include "Widgets/Extra/EditorStaticText.h"
+
+#include "Editor/Handler/EditorDragNDrop.h"
 
 #define EDITOR_WIDTH 800
 #define EDITOR_OFFSET 10
@@ -23,7 +29,7 @@ public:
 public:
     static BOOL ShowEditorWindow(ViewportScene* _targetViewport);
     static BOOL IsRenderView(ViewportScene* _targetViewport);
-    static BOOL IsForcusView(ViewportScene* _targetViewport);
+    static BOOL IsFocusView(ViewportScene* _targetViewport);
     static BOOL EditorReposition();
 private:
     static void InitImGui();
@@ -34,22 +40,26 @@ private:
     static void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 public:
-
+    void UpdateIO();
+public:
+    static inline auto GetResourceViewer() { return mResourceViewer; }
+    static inline auto GetHierarchyViewer() { return mHierarchyViewer; }
+    static inline auto GetInspectorViewer() { return mInspectorViewer; }
 private:
-    static ViewportScene*               mForcusViewport;
-    static ViewportScene*               mEditorViewport;
-    static std::vector<Editor::IWidget*> mWidgetArray;
+    static ViewportScene*                   mFocusViewport;
+    static ViewportScene*                   mEditorViewport;
+    static std::vector<Editor::IWidget*>    mWidgetArray;
 
-    static Editor::EditorResourceView*  mResourceViewer;
-    static Editor::Hierarchy*           mHierarchyViewer;
-    static Editor::Inspector*           mInspectorViewer;
+    static Editor::ResourceViewer*          mResourceViewer;
+    static Editor::HierarchyViewer*         mHierarchyViewer;
+    static Editor::InspectorViewer*         mInspectorViewer;
 
     /////////////////////////////////////////////////////
     //  Widget Object
     /////////////////////////////////////////////////////
-	static Editor::MenuBar*     mMainMenuBar;
-	static Editor::WindowBar*   mMainWindowBar_01;
-	static Editor::WindowBar*   mMainWindowBar_02;
+	static Editor::MenuBar*                 mMainMenuBar;
+	static Editor::WindowBar*               mMainWindowBar_01;
+	static Editor::WindowBar*               mMainWindowBar_02;
 
     /////////////////////////////////////////////////////
 	//  ImGui Object
@@ -57,6 +67,9 @@ private:
 	static ImGuiContext* mContext;
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
+
+public:
+    static void ShowPopUp();
 };
 
 struct Serial {

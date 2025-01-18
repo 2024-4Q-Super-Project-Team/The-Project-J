@@ -86,16 +86,29 @@ void WorldManager::UpdateWorld()
 {
 	for (auto itr = mWorlds.begin(); itr != mWorlds.end();)
 	{
-		// 삭제
-		if (ENTITY_IS_DESTROY((*itr).second))
+		World* pWorld = (*itr).second;
+		if (ENTITY_IS_DESTROY(pWorld))
 		{
+			if (mCurrActiveWorld == pWorld)
+			{
+				mCurrActiveWorld = nullptr;
+			}
+			if (mNextActiveWorld == pWorld)
+			{
+				mNextActiveWorld = nullptr;
+			}
+			if(pWorld)
+				delete pWorld;
 			itr = mWorlds.erase(itr);
 			continue;
 		}
 		// 생성
-		if (ENTITY_IS_CREATE((*itr).second))
+		if (ENTITY_IS_CREATE(pWorld))
 		{
-			(*itr).second->SetActive(true);
+			if (pWorld)
+				pWorld->SetActive(true);
+			++itr;
+			continue;
 		}
 		++itr;
 	}
@@ -109,6 +122,22 @@ void WorldManager::UpdateWorld()
 			mCurrActiveWorld->OnEnable();
 			mNextActiveWorld = nullptr;
 		}
+	}
+}
+
+World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _tag, bool isEmpty)
+{
+	auto itr = Helper::FindMap(_name, mWorlds);
+	if (itr != nullptr)
+	{
+		return *itr;
+	}
+	else
+	{
+		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
+		mWorlds[_name] = instance;
+		instance->OnCreate();
+		return instance;
 	}
 }
 
@@ -219,7 +248,7 @@ void WorldManager::LoadWorlds()
 	{
 		//월드 생성 
 		std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
-		World* world = CreateWorld<World>(worldName);
+		World* world = CreateWorld(worldName);
 		world->SetId(worldJson["id"].get<unsigned int>());
 		world->Deserialize(worldJson); //이 안에서 속한 그룹 생성 (id, 이름 설정)
 	}

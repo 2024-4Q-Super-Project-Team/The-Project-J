@@ -12,11 +12,11 @@ namespace Editor
         explicit MenuBar() = default;
         virtual ~MenuBar() = default;
     public:
-        MenuNode* AddMenuNode(const char* _mainLabel);
+        void AddMenuNode(IWidget* _pWidget);
     public:
         virtual void Render() override;
     private:
-        std::vector<MenuNode*> mContainer;
+        std::vector<IWidget*> mContainer;
     };
 
 
@@ -26,15 +26,12 @@ namespace Editor
         explicit MenuNode(const char* _label);
         virtual ~MenuNode() = default;
     public:
-        MenuItem* AddMenuItem(const char* _label, std::function<void()> action = nullptr);
-    public:
-        inline void SetActive(bool _bActive) { isActive = _bActive; }
+        void AddMenuItem(IWidget* _pWidget);
     public:
         virtual void Render() override;
     private:
         const char* mLabel;
-        bool        isActive;
-        std::vector<MenuItem*>  mContainer;
+        std::vector<IWidget*>  mContainer;
     };
 
 
@@ -44,6 +41,7 @@ namespace Editor
         explicit MenuItem(const char* _mainLabel, std::function<void()> action = nullptr);
         virtual ~MenuItem() = default;
     public:
+        void AddSubMenuItem(IWidget* _pWidget);
         inline void SetActive(bool _bActive) { isActive = _bActive; }
         inline void SetAction(std::function<void()> _func) { mAction = _func; }
     public:
@@ -52,6 +50,7 @@ namespace Editor
         const char* mLabel;
         bool        isActive;
         std::function<void()> mAction;
+        std::vector<IWidget*>  mContainer;
     };
 }
 

@@ -1,5 +1,36 @@
 [
     {
+        "id": 8,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "far": 30000.0,
+        "fov angle": 1.5707963705062866,
+        "id": 9,
+        "near": 1.0,
+        "ortho height": 10.0,
+        "ortho width": 10.0,
+        "type": 0
+    },
+    {
         "id": 3,
         "name": "Transform",
         "parent": 99999999999,
@@ -31,51 +62,38 @@
         "type": 0
     },
     {
+        "id": 13,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "far": 30000.0,
+        "fov angle": 1.5707963705062866,
+        "id": 14,
+        "near": 1.0,
+        "ortho height": 10.0,
+        "ortho width": 10.0,
+        "type": 0
+    },
+    {
         "id": 17,
-        "name": "Transform",
-        "parent": 99999999999,
-        "position": [
-            0.0,
-            0.0,
-            0.0
-        ],
-        "root parent": 99999999999,
-        "rotation": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
-    },
-    {
-        "id": 20,
-        "name": "Transform",
-        "parent": 99999999999,
-        "position": [
-            0.0,
-            0.0,
-            0.0
-        ],
-        "root parent": 99999999999,
-        "rotation": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
-    },
-    {
-        "id": 24,
         "name": "Transform",
         "parent": 99999999999,
         "position": [

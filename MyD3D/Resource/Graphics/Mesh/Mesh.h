@@ -37,5 +37,5 @@ public:
     static void InitCubeMesh();
     static void InitPlainMesh();
 public: 
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

@@ -285,13 +285,13 @@
     <ClInclude Include="Component\Controller\PlayerController.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\Viewer\HierarchyViewer\Hierarchy.h">
+    <ClInclude Include="Editor\CumstomWidget\TabItem\Viewer\HierarchyViewer\EditorHierarchyViewer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\Viewer\InspectorViewer\Inspector.h">
+    <ClInclude Include="Editor\CumstomWidget\TabItem\Viewer\InspectorViewer\EditorInspectorViewer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\Viewer\ResourceViewer\EditorResourceView.h">
+    <ClInclude Include="Editor\CumstomWidget\TabItem\Viewer\ResourceViewer\EditorResourceViewer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Editor\Widgets\Core\EditorMenu.h">
@@ -315,6 +315,24 @@
     <ClInclude Include="Editor\EditorManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\Handler\EditorDragNDrop.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\Handler\EditorCustumWidget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource\ResourceHandle.h">
+	  <Filter>헤더 파일</Filter>
+	</ClInclude>
     <ClInclude Include="Graphics\Extra\DebugDraw.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -578,13 +596,13 @@
     <ClCompile Include="Component\Controller\PlayerController.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\Viewer\HierarchyViewer\Hierarchy.cpp">
+    <ClCompile Include="Editor\CumstomWidget\TabItem\Viewer\HierarchyViewer\EditorHierarchyViewer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\Viewer\InspectorViewer\Inspector.cpp">
+    <ClCompile Include="Editor\CumstomWidget\TabItem\Viewer\InspectorViewer\EditorInspectorViewer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\Viewer\ResourceViewer\EditorResourceView.cpp">
+    <ClCompile Include="Editor\CumstomWidget\TabItem\Viewer\ResourceViewer\EditorResourceViewer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Widgets\Core\EditorMenu.cpp">
@@ -607,7 +625,25 @@
     </ClCompile>
     <ClCompile Include="Editor\EditorManager.cpp">
       <Filter>소스 파일</Filter>
+	</ClCompile>
+    <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp">
+      <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\ResourceHandle.cpp">
+	  <Filter>소스 파일</Filter>
+	</ClCompile>
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

@@ -3,12 +3,14 @@
 
 namespace Editor
 {
-	class EditorResourceView
+	class IWidget;
+
+	class ResourceViewer
 		: public IWidget
 	{
 	public:
-		explicit EditorResourceView();
-		virtual ~EditorResourceView();
+		explicit ResourceViewer();
+		virtual ~ResourceViewer();
 	public:
 		virtual void Render() override;
 	};

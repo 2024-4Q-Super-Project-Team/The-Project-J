@@ -83,7 +83,7 @@ protected:
 private:
 	bool			mIsAwake = false; //깨어났는지를 나타냅니다. Start함수 호출 여부와 같습니다. 
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
 class DynamicComponent

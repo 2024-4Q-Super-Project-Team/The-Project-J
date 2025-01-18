@@ -145,7 +145,7 @@ void AudioSource::SetSurround(bool _isSuround)
 	mAudioChannel->SetSurround(_isSuround);
 }
 
-void AudioSource::EditorRendering()
+void AudioSource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	if (ImGui::TreeNodeEx(("AudioSource" + uid).c_str(), EDITOR_FLAG_MAIN))

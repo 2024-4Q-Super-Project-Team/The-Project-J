@@ -28,12 +28,12 @@ BOOL GameApp::OnPostInitialize()
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
-        WorldManager* wrdMng = mMainScene->GetWorldManager();
-        if (nullptr == wrdMng) return FALSE;
-
-        World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
-        //wrdMng->LoadWorlds();
-        wrdMng->SetActiveWorld(L"TestWorld");
+        //WorldManager* wrdMng = mMainScene->GetWorldManager();
+        //if (nullptr == wrdMng) return FALSE;
+        //
+        //World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
+        ////wrdMng->LoadWorlds();
+        //wrdMng->SetActiveWorld(L"TestWorld");
 #ifdef _DEBUG
         /////////////////////////////////////////////////////
         // ฟกต๐ลอ

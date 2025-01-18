@@ -158,7 +158,7 @@ void MeshRenderer::Deserialize(json& j)
 }
 
 
-void MeshRenderer::EditorRendering()
+void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Mesh Renderer##" + uid).c_str(), EDITOR_FLAG_MAIN))
@@ -168,11 +168,16 @@ void MeshRenderer::EditorRendering()
             std::string name = "NULL Mesh";
             if (mMesh)
             {
-                mMesh->EditorRendering();
+                mMesh->EditorRendering(EditorViewerType::DEFAULT);
                 name = Helper::ToString(mMesh->GetName());
                 uid = mMesh->GetID();
             }
-            else ImGui::BulletText(uid.c_str());
+            else
+            {
+                EDITOR_COLOR_NULL;
+                ImGui::Selectable(uid.c_str() , false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
             EditorDragNDrop::ReceiveDragAndDropResourceData(uid.c_str(), mMesh);
         }
 
@@ -182,7 +187,7 @@ void MeshRenderer::EditorRendering()
         {
             if (mMateiral->mMaterialResource)
             {
-                mMateiral->EditorRendering();
+                mMateiral->EditorRendering(EditorViewerType::DEFAULT);
             }
             else ImGui::Text("NULL Material");
         }

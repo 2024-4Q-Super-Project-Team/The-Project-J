@@ -4,6 +4,8 @@
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "Resource/Graphics/Texture/Texture.h"
+// Editor
+#include "Editor/EditorManager.h"
 
 #define SetMaterialEditor(typeEnum, label) \
 if (mMaterialMaps[(UINT)typeEnum]) \
@@ -12,7 +14,7 @@ if (mMaterialMaps[(UINT)typeEnum]) \
     if (ImGui::TreeNodeEx((label + uid).c_str(), ImGuiTreeNodeFlags_Selected)){ \
         ImGui::Checkbox(("Using " + std::string(label) + uid).c_str(), (bool*)&UseMap); \
         mMatCBuffer.SetUsingMap(typeEnum, UseMap); \
-        mMaterialMaps[(UINT)typeEnum]->EditorRendering(); \
+        mMaterialMaps[(UINT)typeEnum]->EditorRendering(EditorViewerType::DEFAULT); \
         ImGui::TreePop(); \
     }\
 }\
@@ -51,7 +53,7 @@ const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapTy
     return  mMaterialMapPath[static_cast<UINT>(_mapType)];
 }
 
-void MaterialResource::EditorRendering()
+void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {
     std::string name = Helper::ToString(mName);
     ImGui::Text(name.c_str());
@@ -137,14 +139,34 @@ void Material::Bind()
     }
 }
 
-void Material::EditorRendering()
+void Material::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(mMaterialResource->GetName());
 
-    EDITOR_COLOR_RESOURCE;
-    if (ImGui::TreeNodeEx(("Material" + uid).c_str(), EDITOR_FLAG_RESOURCE))
+    switch (_viewerType)
     {
+    case EditorViewerType::DEFAULT:
+    {
+        EDITOR_COLOR_RESOURCE;
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(uid.c_str(), false, flags))
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
+        }
+        EditorItemState state = { nullptr , name };
+        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        EDITOR_COLOR_POP(1);
+        break;
+    }
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+    {
+        EDITOR_COLOR_RESOURCE;
         ImGui::Text(("Material : " + name).c_str());
         ImGui::Text("Diffuse : ");
         ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
@@ -196,7 +218,11 @@ void Material::EditorRendering()
             }
         }
         EDITOR_COLOR_POP(1);
-        ImGui::TreePop();
+        break;
     }
+    default:
+        break;
+    }
+    
     EDITOR_COLOR_POP(1);
 }

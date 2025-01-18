@@ -184,7 +184,7 @@ void Light::Deserialize(json& j)
     }
 }
 
-void Light::EditorRendering()
+void Light::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Light" + uid).c_str(), EDITOR_FLAG_MAIN))

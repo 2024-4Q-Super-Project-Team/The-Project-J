@@ -1,7 +1,7 @@
 #include "pch.h"
-#include "Hierarchy.h"
-#include "Editor/Viewer/InspectorViewer/Inspector.h"
-#include "Editor/Viewer/ResourceViewer/EditorResourceView.h"
+#include "EditorHierarchyViewer.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/ResourceViewer/EditorResourceViewer.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
@@ -9,13 +9,13 @@
 
 namespace Editor
 {
-    Hierarchy::Hierarchy()
+    HierarchyViewer::HierarchyViewer()
         : mRefInspector(nullptr)
         , mRefWorldManager(nullptr)
     {
     }
 
-    void Hierarchy::Render()
+    void HierarchyViewer::Render()
     {
         if (mRefWorldManager)
         {
@@ -112,7 +112,7 @@ namespace Editor
         }
     }
 
-    void Hierarchy::RenderObjectGroup(ObjectGroup* _pObjectGroup)
+    void HierarchyViewer::RenderObjectGroup(ObjectGroup* _pObjectGroup)
     {
         auto& list = _pObjectGroup->GetObjects();
         for (auto& obj : list)
@@ -123,7 +123,7 @@ namespace Editor
         }
     }
 
-    void Hierarchy::RenderObject(Object* _pObject)
+    void HierarchyViewer::RenderObject(Object* _pObject)
     {
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
         std::string name = Helper::ToString(_pObject->GetName());
@@ -160,23 +160,23 @@ namespace Editor
             ImGui::TreePop();
         }
     }
-    void Hierarchy::AddObjectGroup(const std::wstring _name)
+    void HierarchyViewer::AddObjectGroup(const std::wstring _name)
     {
         mRefWorldManager->GetActiveWorld()->CreateObjectGroup(std::wstring_view(_name));
     }
-    void Hierarchy::AddObject(const std::wstring _name, ObjectGroup* _group)
+    void HierarchyViewer::AddObject(const std::wstring _name, ObjectGroup* _group)
     {
         _group->CreateObject(_name, L"");
     }
-    void Hierarchy::SaveWorld()
+    void HierarchyViewer::SaveWorld()
     {
         mRefWorldManager->SaveWorlds();
     }
-    void Hierarchy::SetFocusInspector(Inspector* _pInspector)
+    void HierarchyViewer::SetFocusInspector(InspectorViewer* _pInspector)
     {
         mRefInspector = _pInspector;
     }
-    void Hierarchy::SetFocusWorldManager(WorldManager* _pWorldManager)
+    void HierarchyViewer::SetFocusWorldManager(WorldManager* _pWorldManager)
     {
         mRefWorldManager = _pWorldManager;
     }

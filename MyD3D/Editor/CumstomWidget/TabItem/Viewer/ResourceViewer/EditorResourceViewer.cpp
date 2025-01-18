@@ -1,18 +1,18 @@
 #include "pch.h"
-#include "EditorResourceView.h"
+#include "EditorResourceViewer.h"
 #include "Resource/ResourceManager.h"
 // Editor
 #include "Editor/Handler/EditorDragNDrop.h"
 
-Editor::EditorResourceView::EditorResourceView()
+Editor::ResourceViewer::ResourceViewer()
 {
 }
 
-Editor::EditorResourceView::~EditorResourceView()
+Editor::ResourceViewer::~ResourceViewer()
 {
 }
 
-void Editor::EditorResourceView::Render()
+void Editor::ResourceViewer::Render()
 {
 	for (size_t i = 0; i < (size_t)eResourceType::SIZE; ++i)
 	{

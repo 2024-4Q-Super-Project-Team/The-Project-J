@@ -42,5 +42,5 @@ private:
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
 public:
-    virtual void EditorRendering() override;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

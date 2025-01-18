@@ -11,7 +11,7 @@ Component::~Component()
 {
 }
 
-void Component::EditorRendering()
+void Component::EditorRendering(EditorViewerType _viewerType)
 {
 
 }

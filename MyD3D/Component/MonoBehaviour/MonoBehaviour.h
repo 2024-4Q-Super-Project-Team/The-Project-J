@@ -76,6 +76,6 @@ public:
 
 	std::vector<Serial*> mSerials;
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 
 };

@@ -5,13 +5,13 @@
 #include "ViewportScene/ViewportScene.h"
 
 
-ViewportScene*                  EditorManager::mForcusViewport = nullptr;
+ViewportScene*                  EditorManager::mFocusViewport = nullptr;
 ViewportScene*                  EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
-Editor::EditorResourceView*     EditorManager::mResourceViewer = nullptr;
-Editor::Hierarchy*              EditorManager::mHierarchyViewer = nullptr;
-Editor::Inspector*              EditorManager::mInspectorViewer = nullptr;
+Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
+Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
+Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
 
 Editor::MenuBar*                EditorManager::mMainMenuBar = nullptr;
 Editor::WindowBar*              EditorManager::mMainWindowBar_01 = nullptr;
@@ -21,9 +21,9 @@ ImGuiContext*                   EditorManager::mContext;
 
 void EditorManager::Initialize()
 {
-	mResourceViewer = new Editor::EditorResourceView();
-	mHierarchyViewer = new Editor::Hierarchy();
-	mInspectorViewer = new Editor::Inspector();
+	mResourceViewer = new Editor::ResourceViewer();
+	mHierarchyViewer = new Editor::HierarchyViewer();
+	mInspectorViewer = new Editor::InspectorViewer();
     
     InitMainMenuBar();
     InitMainWindow();
@@ -38,7 +38,7 @@ void EditorManager::Finalization()
 
 void EditorManager::RenderEditor()
 {
-    if (mForcusViewport && mEditorViewport)
+    if (mFocusViewport && mEditorViewport)
     {  
         // 컨텍스트 활성화
         ImGui::SetCurrentContext(mContext);
@@ -66,10 +66,10 @@ BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
 {
     if (_targetViewport)
     {
-        mForcusViewport = _targetViewport;
-		Display::IWindow* mDestWindow = mForcusViewport->GetIWindow();
-        POINT Destsize = mForcusViewport->GetIWindow()->GetSize();
-        POINT Destpos = mForcusViewport->GetIWindow()->GetPosition();
+        mFocusViewport = _targetViewport;
+		Display::IWindow* mDestWindow = mFocusViewport->GetIWindow();
+        POINT Destsize = mFocusViewport->GetIWindow()->GetSize();
+        POINT Destpos = mFocusViewport->GetIWindow()->GetPosition();
         
 		mMainWindowBar_01->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
 		mMainWindowBar_02->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
@@ -102,9 +102,9 @@ BOOL EditorManager::IsRenderView(ViewportScene* _targetViewport)
     return mEditorViewport == _targetViewport;
 }
 
-BOOL EditorManager::IsForcusView(ViewportScene* _targetViewport)
+BOOL EditorManager::IsFocusView(ViewportScene* _targetViewport)
 {
-    return mForcusViewport == _targetViewport;
+    return mFocusViewport == _targetViewport;
 }
 
 void EditorManager::InitImGui()
@@ -129,22 +129,24 @@ void EditorManager::InitMainMenuBar()
 {
     // 메뉴바 및 메뉴, 메뉴아이템 생성
     mMainMenuBar = new Editor::MenuBar();
+    mWidgetArray.push_back(mMainMenuBar);
 
-    Editor::MenuNode* pMenu_01 = mMainMenuBar->AddMenuNode("Menu");
-    Editor::MenuNode* pMenu_02 = mMainMenuBar->AddMenuNode("System");
-    Editor::MenuNode* pMenu_03 = mMainMenuBar->AddMenuNode("Option");
+    {   // File MenuTab
+        Editor::MenuNode* pMenu_01 = new Editor::MenuNode("File");
+        mMainMenuBar->AddMenuNode(pMenu_01);
+    }
+    {   // World MenuTab
+        Editor::MenuNode* pMenu_02 = new Editor::MenuNode("World");
+        pMenu_02->AddMenuItem(new Editor::WorldChanger());
+        pMenu_02->AddMenuItem(new Editor::WorldCreator());
+        pMenu_02->AddMenuItem(new Editor::WorldRemover());
+        mMainMenuBar->AddMenuNode(pMenu_02);
+    }
+    {
+        Editor::MenuNode* pMenu_03 = new Editor::MenuNode("Option");
+        mMainMenuBar->AddMenuNode(pMenu_03);
+    }
 
-    pMenu_01->AddMenuItem("Ctrl + 1", []() {Display::Console::Log("click!");});
-    pMenu_01->AddMenuItem("Ctrl + 2", []() {Display::Console::Log("click!");});
-    pMenu_01->AddMenuItem("Ctrl + 3", []() {Display::Console::Log("click!");});
-    pMenu_01->AddMenuItem("Ctrl + 4", []() {Display::Console::Log("click!");});
-
-    pMenu_02->AddMenuItem("Ctrl + 1", []() {Display::Console::Log("click!");});
-    pMenu_02->AddMenuItem("Ctrl + 2");
-    pMenu_02->AddMenuItem("Ctrl + 3");
-    pMenu_02->AddMenuItem("Ctrl + 4");
-
-	mWidgetArray.push_back(mMainMenuBar);
 }
 
 void EditorManager::InitMainWindow()
@@ -191,7 +193,7 @@ void EditorManager::CreateTestTab(Editor::TabBar* _pSrcTabBar)
 void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
 {
     {   // 인스펙터 탭
-        mInspectorViewer = new Editor::Inspector();
+        mInspectorViewer = new Editor::InspectorViewer();
         Editor::TabNode* pInspectorBar = new Editor::TabNode("Inspector");
         pInspectorBar->AddWidget(mInspectorViewer);
         _pSrcTabBar->AddTab(pInspectorBar);
@@ -201,7 +203,7 @@ void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
 void EditorManager::CreateHierarchy(Editor::TabBar* _pSrcTabBar)
 {
     {   // 하이라키 탭
-        mHierarchyViewer = new Editor::Hierarchy();
+        mHierarchyViewer = new Editor::HierarchyViewer();
         Editor::TabNode* pInspectorBar = new Editor::TabNode("Hierarchy");
         pInspectorBar->AddWidget(mHierarchyViewer);
         _pSrcTabBar->AddTab(pInspectorBar);
@@ -211,12 +213,14 @@ void EditorManager::CreateHierarchy(Editor::TabBar* _pSrcTabBar)
 void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
 {
     {   // 리소스 뷰어 탭
-        mResourceViewer = new Editor::EditorResourceView();
+        mResourceViewer = new Editor::ResourceViewer();
         Editor::TabNode* pBar = new Editor::TabNode("Resource Viewer");
         pBar->AddWidget(mResourceViewer);
         _pSrcTabBar->AddTab(pBar);
     }
 }
+
+
 
 void EditorManager::UpdateIO()
 {
@@ -245,7 +249,7 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
     case WM_SIZE:
         break;
     case WM_MOVE:
-		if (mForcusViewport) EditorReposition();
+		if (mFocusViewport) EditorReposition();
         break;
     case WM_SYSKEYDOWN:
     case WM_SYSKEYUP:
@@ -290,11 +294,11 @@ void EditorManager::ShowPopUp()
 BOOL EditorManager::EditorReposition()
 {
 	// 에디터 윈도우 위치 조정
-    if (mForcusViewport)
+    if (mFocusViewport)
     {
         // 대상 윈도우의 위치 및 사이즈를 가져와서 에디터 윈도우를 리포지션한다.
-        POINT size = mForcusViewport->GetIWindow()->GetSize();
-        POINT pos = mForcusViewport->GetIWindow()->GetPosition();
+        POINT size = mFocusViewport->GetIWindow()->GetSize();
+        POINT pos = mFocusViewport->GetIWindow()->GetPosition();
         POINT resPos = { pos.x + size.x + EDITOR_OFFSET , pos.y };
         return mEditorViewport->GetIWindow()->SetPosition(resPos);
     }

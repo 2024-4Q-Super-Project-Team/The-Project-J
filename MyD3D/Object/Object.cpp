@@ -266,64 +266,76 @@ void Object::Deserialize(json& j)
     }
 }
 
-void Object::EditorRendering()
+void Object::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    std::string name = Helper::ToString(GetName());
-    {   // 활성화 / 비활성화
-        bool preState = mState == EntityState::Active ? true : false;
-        bool isActive = preState;
-        ImGui::Checkbox((uid + "IsActive").c_str(), &isActive);
-        if (isActive != preState)
-        {
-            isActive == true ? OnEnable() : OnDisable();
-            mState = isActive == true ? EntityState::Active : EntityState::Passive;
-        }
-        ImGui::SameLine();
-        static char buffer[128] = "";
-        strcpy_s(buffer, Helper::ToString(GetName()).c_str());
-        if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
-            std::wstring newName = Helper::ToWString(std::string(buffer));
-            SetName(newName);
-        }
-    }
-    ImGui::Separator();
-    {   // 컴포넌트 렌더링
-        for (auto& componentVec : mComponentArray)
-        {
-            for (auto& component : componentVec)
+    switch (_viewerType)
+    {
+    case EditorViewerType::DEFAULT:
+        break;
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+    {
+        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+        std::string name = Helper::ToString(GetName());
+        {   // 활성화 / 비활성화
+            bool preState = mState == EntityState::Active ? true : false;
+            bool isActive = preState;
+            ImGui::Checkbox((uid + "IsActive").c_str(), &isActive);
+            if (isActive != preState)
             {
-                component->EditorRendering();
+                isActive == true ? OnEnable() : OnDisable();
+                mState = isActive == true ? EntityState::Active : EntityState::Passive;
+            }
+            ImGui::SameLine();
+            static char buffer[128] = "";
+            strcpy_s(buffer, Helper::ToString(GetName()).c_str());
+            if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
+                std::wstring newName = Helper::ToWString(std::string(buffer));
+                SetName(newName);
             }
         }
-    }
-    ImGui::Separator();
-    {   // 컴포넌트 추가
-        ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
-        if (ImGui::Button(("Add Component" + uid).c_str(), buttonSize))
-        {
-            ImGui::OpenPopup("Component List"); // 버튼 클릭 시 팝업 열기
-        }
-        if (ImGui::BeginPopup("Component List"))
-        {
-            const std::vector<std::string_view>& names = ComponentFactory::GetComopnentNames();
-
-            for (const std::string_view& name : names)
+        ImGui::Separator();
+        {   // 컴포넌트 렌더링
+            for (auto& componentVec : mComponentArray)
             {
-                if (ImGui::Selectable(name.data()))
+                for (auto& component : componentVec)
                 {
-                    CREATE_EDITOR_COMPONENT(name, this);
-                    ImGui::CloseCurrentPopup();         // 팝업 닫기
+                    component->EditorRendering(EditorViewerType::DEFAULT);
                 }
             }
-
-            // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
-            if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                ImGui::CloseCurrentPopup();
-            }
-
-            ImGui::EndPopup();
         }
-        
+        ImGui::Separator();
+        {   // 컴포넌트 추가
+            ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
+            if (ImGui::Button(("Add Component" + uid).c_str(), buttonSize))
+            {
+                ImGui::OpenPopup("Component List"); // 버튼 클릭 시 팝업 열기
+            }
+            if (ImGui::BeginPopup("Component List"))
+            {
+                const std::vector<std::string_view>& names = ComponentFactory::GetComopnentNames();
+
+                for (const std::string_view& name : names)
+                {
+                    if (ImGui::Selectable(name.data()))
+                    {
+                        CREATE_EDITOR_COMPONENT(name, this);
+                        ImGui::CloseCurrentPopup();         // 팝업 닫기
+                    }
+                }
+
+                // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+                if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+                    ImGui::CloseCurrentPopup();
+                }
+
+                ImGui::EndPopup();
+            }
+        }
+    }
+        break;
+    default:
+        break;
     }
 }

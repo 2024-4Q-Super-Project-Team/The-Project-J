@@ -72,7 +72,7 @@ protected:
     std::vector<Component*> mComponentArray[ComponentSize];
     std::list<Component*> mComponentsToWake;
 public:
-    virtual void EditorRendering() override;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
 template <class T, typename... Args>

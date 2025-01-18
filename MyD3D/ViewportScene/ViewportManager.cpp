@@ -173,7 +173,7 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
     case WM_MOVE:
         if (pViewport)
         {
-            if (EditorManager::IsForcusView(pViewport))
+            if (EditorManager::IsFocusView(pViewport))
                 EditorManager::EditorReposition();
         }
         break;

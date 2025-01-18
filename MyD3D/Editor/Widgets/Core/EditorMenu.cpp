@@ -4,7 +4,7 @@
 namespace Editor
 {
     MenuNode::MenuNode(const char* _label)
-        : mLabel(_label), isActive(false)
+        : mLabel(_label)
     {
     }
     MenuItem::MenuItem(const char* _label, std::function<void()> _action)
@@ -12,17 +12,18 @@ namespace Editor
     {
     }
 
-    MenuNode* MenuBar::AddMenuNode(const char* _label)
+    void MenuItem::AddSubMenuItem(IWidget* _pWidget)
     {
-        MenuNode* pWidget = new MenuNode(_label);
-        mContainer.push_back(pWidget);
-        return pWidget;
+        mContainer.push_back(_pWidget);
     }
-    MenuItem* MenuNode::AddMenuItem(const char* _label, std::function<void()> _action)
+
+    void MenuBar::AddMenuNode(IWidget* _pWidget)
     {
-        MenuItem* pWidget = new MenuItem(_label, _action);
-        mContainer.push_back(pWidget);
-        return nullptr;
+        mContainer.push_back(_pWidget);
+    }
+    void MenuNode::AddMenuItem(IWidget* _pWidget)
+    {
+        mContainer.push_back(_pWidget);
     }
 
     void MenuBar::Render()
@@ -39,7 +40,7 @@ namespace Editor
     void MenuNode::Render()
     {
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-        if (ImGui::BeginMenu(uid.c_str(), isActive))
+        if (ImGui::BeginMenu((mLabel + uid).c_str()))
         {
             for (auto& pWidget : mContainer)
             {
@@ -51,7 +52,7 @@ namespace Editor
     void MenuItem::Render()
     {
         std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-        if (ImGui::MenuItem(uid.c_str(), mLabel, isActive)) 
+        if (ImGui::MenuItem((mLabel + uid).c_str(), mLabel))
         {
             if (mAction)
             {

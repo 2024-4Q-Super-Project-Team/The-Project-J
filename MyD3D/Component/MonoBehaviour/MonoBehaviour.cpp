@@ -158,7 +158,7 @@ void MonoBehaviour::Deserialize( json& j)
 {
 }
 
-void MonoBehaviour::EditorRendering()
+void MonoBehaviour::EditorRendering(EditorViewerType _viewerType)
 {
 	for (auto serial : mSerials)
 	{

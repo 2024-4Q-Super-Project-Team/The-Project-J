@@ -53,9 +53,7 @@ void GameManager::Run()
 		Time::Update();
 		AudioHub::Update();
 
-		EditorManager::RenderEditor();
 		ViewportManager::Run();
-
 
 		Input::Update();
 	}

@@ -16,13 +16,15 @@ private:
 	static BOOL isDragging;
 	static EditorItemState mItemState;
 public:
-	static void SendDragAndDropData(IN EditorItemState _itemState)
+	static void SendDragAndDropData(const char* _uid, IN EditorItemState _itemState)
 	{
+		ImGui::PushID(_uid);
 		if (isDragging == FALSE && ImGui::IsItemClicked(ImGuiMouseButton_Left))
 		{
 			mItemState = _itemState;
 			isDragging = true;
 		}
+		ImGui::PopID();
 	}
     template <typename T>
     static void ReceiveDragAndDropResourceData(const char* _uid, OUT std::shared_ptr<T>& _data)

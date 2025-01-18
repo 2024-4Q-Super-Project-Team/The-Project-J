@@ -28,6 +28,6 @@ private:
     std::shared_ptr<Texture2D>  mIBLSpecularTex;
     std::shared_ptr<Texture2D>  mBLDFLookUpTableTex;
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

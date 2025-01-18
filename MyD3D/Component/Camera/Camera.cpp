@@ -391,7 +391,7 @@ void Camera::ExcuteDrawList()
     mLightCBuffer.NumLight = 0;
 }
 
-void Camera::EditorRendering()
+void Camera::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 

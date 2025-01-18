@@ -130,7 +130,7 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
     }
 }
 
-void Prefab::EditorRendering()
+void Prefab::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(GetName());
@@ -139,7 +139,7 @@ void Prefab::EditorRendering()
     {
         for (auto& object : mObjectList)
         {
-            object->EditorRendering();
+            object->EditorRendering(EditorViewerType::DEFAULT);
         }
         ImGui::TreePop();
     }

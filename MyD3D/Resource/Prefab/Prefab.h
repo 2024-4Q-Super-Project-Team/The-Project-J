@@ -29,5 +29,5 @@ private:
     void    SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel);
     void    SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel);
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

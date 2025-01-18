@@ -79,7 +79,7 @@ void AudioListener::PostRender()
 	mMainListener = nullptr;
 }
 
-void AudioListener::EditorRendering()
+void AudioListener::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	if (ImGui::TreeNodeEx(("AudioListener" + uid).c_str(), EDITOR_FLAG_MAIN))

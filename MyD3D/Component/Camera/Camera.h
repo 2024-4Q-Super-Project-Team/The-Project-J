@@ -119,5 +119,5 @@ private:
     // 카메라 라이트 정보
 	LightCBuffer			mLightCBuffer;
 public:
-    virtual void EditorRendering() override;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

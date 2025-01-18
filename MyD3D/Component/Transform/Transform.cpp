@@ -198,7 +198,7 @@ void Transform::Deserialize(json& j)
         //TODO: id로 Transform 찾아서 넣는다. 
 }
 
-void Transform::EditorRendering()
+void Transform::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Transform" + uid).c_str(), EDITOR_FLAG_MAIN))

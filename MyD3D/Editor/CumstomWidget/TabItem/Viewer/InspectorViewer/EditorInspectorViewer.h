@@ -5,11 +5,11 @@ class Object;
 
 namespace Editor
 {
-    class Inspector : public IWidget
+    class InspectorViewer : public IWidget
     {
     public:
-        explicit Inspector();
-        virtual ~Inspector() = default;
+        explicit InspectorViewer();
+        virtual ~InspectorViewer() = default;
     public:
         virtual void Render() override;
     public:

@@ -13,7 +13,7 @@ AudioResource::~AudioResource()
 	SAFE_RELEASE(mAudioClip);
 }
 
-void AudioResource::EditorRendering()
+void AudioResource::EditorRendering(EditorViewerType _viewerType)
 {
 
 }

@@ -25,7 +25,16 @@ void PhysicsManager::Initialize()
 
     mDefaultMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
 
-    PxCudaContextManagerDesc cudaContextManagerDesc;
-    mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
-    mCudaContext = mCudaContextManager->getCudaContext();
+    //PxCudaContextManagerDesc cudaContextManagerDesc;
+    //mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
+    //mCudaContext = mCudaContextManager->getCudaContext();
+}
+
+void PhysicsManager::Finalization()
+{
+    mFoundation->release();
+    mPvd->release();
+    mPhysics->release();
+    mDefaultMaterial->release();
+    //mCudaContextManager->release();
 }

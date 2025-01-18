@@ -3,10 +3,22 @@
 #include "Physics/PhysicsManager.h"
 #include "World/World.h"
 
+Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
+{
+	mType = eComponentType::RIGIDBODY;
+	_owner->transform->UpdateMatrix();
+	_owner->transform->UpdatePxTransform();
+	mRigidActor = nullptr;
+}
+
+Rigidbody::~Rigidbody()
+{
+	mRigidActor->release();
+}
+
 void Rigidbody::Start()
 {
-	gameObject->transform->UpdateMatrix();
-
+	//TODO : Rigibody 상속받아서 dynamic이랑 아닌거 클래스 따로 만들어서 생성때부터 정해지게 합시다. 
 	if (mIsDynamic == false)
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()

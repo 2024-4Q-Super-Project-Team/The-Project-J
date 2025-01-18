@@ -36,6 +36,7 @@ BOOL GameManager::Initialize()
 	ViewportManager::Initialize();
 	EditorManager::Initialize();
 	mComponentManager->Initialize();
+	mPhysicsManager->Initialize();
 	return TRUE;
 }
 
@@ -67,6 +68,7 @@ void GameManager::Finalization()
 	ViewportManager::Finalization();
 	EditorManager::Finalization();
 	mComponentManager->Finalization();
+	mPhysicsManager->Finalization();
 	SAFE_DELETE(mPhysicsManager);
 }
 

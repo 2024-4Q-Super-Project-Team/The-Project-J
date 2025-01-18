@@ -10,6 +10,9 @@
 #include "Component/Animator/Animator.h"
 #include "Component/Audio/AudioSource.h"
 #include "Component/Audio/AudioListener.h"
+#include "Component/Collider/Rigidbody.h"
+#include "Component/Collider/BoxCollider.h"
+#include "Component/Controller/PlayerController.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"

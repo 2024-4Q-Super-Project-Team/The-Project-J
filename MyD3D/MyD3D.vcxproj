@@ -272,6 +272,7 @@
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp" />
     <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp" />
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp" />
+    <ClCompile Include="Graphics\Extra\DebugDraw.cpp" />
     <ClCompile Include="Editor\EditorManager.cpp" />
     <ClCompile Include="Editor\Interface\IEditorObject.cpp" />
     <ClCompile Include="Editor\CumstomWidget\TabItem\Viewer\HierarchyViewer\EditorHierarchyViewer.cpp" />

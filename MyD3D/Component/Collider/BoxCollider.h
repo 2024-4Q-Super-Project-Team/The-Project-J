@@ -3,6 +3,9 @@
 class BoxCollider : public Collider
 {
 public:
+    explicit BoxCollider(Object* _owner);
+    virtual ~BoxCollider() {}
+public:
     virtual void Start() override;
     virtual void Tick() override;
     virtual void FixedUpdate() override;
@@ -13,12 +16,21 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
-
 public:
-    void SetSize(Vector3 _size) { mSize = _size; }
-
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
+public:
+    void SetExtents();
 
 private:
-    Vector3 mSize = { 1, 1, 1 };
+    void UpdateOBB();
+private:
+    const Vector3 mInitialSize = { 1, 1, 1 };
+
+    DirectX::BoundingOrientedBox mOBB;
+    PxBoxGeometry mGeometry;
+    Vector3 mExtents;
+public:
+    virtual void EditorRendering() override;
 };
 

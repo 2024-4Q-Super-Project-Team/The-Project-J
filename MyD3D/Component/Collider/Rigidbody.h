@@ -4,6 +4,9 @@
 class Rigidbody : public Component
 {
 public:
+    explicit Rigidbody(Object* _owner);
+    virtual ~Rigidbody();
+public:
     virtual void Start() override;
     virtual void Tick() override;
     virtual void FixedUpdate() override;

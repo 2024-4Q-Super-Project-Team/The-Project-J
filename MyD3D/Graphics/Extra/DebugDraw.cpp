@@ -78,7 +78,7 @@ namespace Debug
 
         DrawCube(batch, matWorld, color);
     }
-
+    
 
     void XM_CALLCONV Draw(PrimitiveBatch<VertexPositionColor>* batch,
         const BoundingOrientedBox& obb,

@@ -10,9 +10,9 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(SkinnedMeshRenderer);
 	REGISTER_COMPONENT(AudioSource);
 	REGISTER_COMPONENT(AudioListener);
-	//REGISTER_COMPONENT(Rigidbody);
-	//REGISTER_COMPONENT(BoxCollider);
-	//REGISTER_COMPONENT(PlayerController);
+	REGISTER_COMPONENT(Rigidbody);
+	REGISTER_COMPONENT(BoxCollider);
+	REGISTER_COMPONENT(PlayerController);
 
 
 	return true;

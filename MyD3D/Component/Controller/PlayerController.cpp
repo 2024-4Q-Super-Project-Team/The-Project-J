@@ -3,8 +3,12 @@
 #include "Physics/PhysicsManager.h"
 #include "World/World.h"
 
-void PlayerController::Start()
+PxControllerManager* PlayerController::ControllerManager = nullptr;
+
+PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
+	mType = eComponentType::CONTROLLER;
+
 	if (ControllerManager == nullptr)
 		ControllerManager = PxCreateControllerManager(*GameManager::GetCurrentWorld()->GetPxScene());
 
@@ -20,9 +24,19 @@ void PlayerController::Start()
 
 	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
 
-
 	Vector3 pos = gameObject->transform->position;
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
+}
+
+PlayerController::~PlayerController()
+{
+	ControllerManager->release();
+	mCapsuleController->release();
+}
+
+void PlayerController::Start()
+{
+
 }
 
 void PlayerController::Tick()
@@ -65,5 +79,14 @@ void PlayerController::Draw(Camera* _camera)
 }
 
 void PlayerController::PostRender()
+{
+}
+
+json PlayerController::Serialize()
+{
+	return json();
+}
+
+void PlayerController::Deserialize(json& j)
 {
 }

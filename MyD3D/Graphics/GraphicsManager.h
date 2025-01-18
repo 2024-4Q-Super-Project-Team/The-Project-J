@@ -55,6 +55,7 @@ public:
     static void SetDebugViewProjection(Matrix _view, Matrix _projection);
     static void DebugDrawBegin();
     static void DebugDrawEnd();
+    static class PrimitiveBatch<VertexPositionColor>* GetBatch() { return mBatch.get(); }
 private:
     static std::unique_ptr<class CommonStates> mStates;
     static std::unique_ptr<class PrimitiveBatch<VertexPositionColor>> mBatch;

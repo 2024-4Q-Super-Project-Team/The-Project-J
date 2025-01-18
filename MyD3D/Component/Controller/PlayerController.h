@@ -4,6 +4,9 @@
 class PlayerController : public Component
 {
 public:
+    explicit PlayerController(Object* _owner);
+    virtual ~PlayerController();
+public:
     virtual void Start() override;
     virtual void Tick() override;
     virtual void FixedUpdate() override;
@@ -14,6 +17,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
 
 private:
 	static PxControllerManager* ControllerManager;

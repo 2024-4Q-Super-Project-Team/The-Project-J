@@ -2,11 +2,28 @@
 #include "Collider.h"
 #include "Component/Collider/Rigidbody.h"
 
+Collider::Collider(Object* _owner) : Component(_owner)
+{
+	mType = eComponentType::COLLDIER;
+
+	mIsTrigger = false;
+}
+
+Collider::~Collider()
+{
+	mShape->release();
+}
+
 void Collider::Start()
 {
 	Rigidbody* rigidbody = gameObject->GetComponent<Rigidbody>();
 	if (rigidbody)
 		rigidbody->AddShape(mShape);
+
+	SetIsTrigger();
+	SetLocalPosition();
+	SetRotation();
+
 }
 
 void Collider::Tick()
@@ -45,24 +62,24 @@ void Collider::PostRender()
 {
 }
 
-void Collider::SetLocalPosition(Vector3 pos)
+void Collider::SetLocalPosition()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	mShape->setLocalPose(PxTransform(PxVec3(pos.x, pos.y, pos.z), currentTransform.q));
+	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z)));
 }
 
-void Collider::SetRotation(Vector3 rotation)
+void Collider::SetRotation()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	Quaternion rotQuat = Quaternion::CreateFromYawPitchRoll(rotation.y, rotation.x, rotation.z);
+	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
 	PxQuat pxRot;
-	memcpy_s(&pxRot, 4, &rotQuat, 4);
+	memcpy_s(&pxRot, 4, &mQuatRotation, 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
 
-void Collider::SetIsTrigger(bool isTrigger)
+void Collider::SetIsTrigger()
 {
-	if (isTrigger == true)
+	if (mIsTrigger == true)
 	{
 		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false); //충돌 반응 비활성화 
 		mShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, true); // 트리거 설정
@@ -72,14 +89,7 @@ void Collider::SetIsTrigger(bool isTrigger)
 		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true); //충돌 반응 활성화 
 		mShape->setFlag(PxShapeFlag::eTRIGGER_SHAPE, false); // 트리거 설정
 	}
-	mIsTrigger = isTrigger;
 }
 
-json Collider::Serialize()
-{
-	return json();
-}
 
-void Collider::Deserialize(json& j)
-{
-}
+

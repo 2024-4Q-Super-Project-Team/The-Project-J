@@ -10,7 +10,7 @@ Transform::Transform(Object* _owner)
     , mLocalMatrix(Matrix::Identity)
     , mWorldMatrix(Matrix::Identity)
     , position(Vector3::Zero)
-    , rotation(Vector3::Zero)
+    , rotation(Quaternion::Identity)
     , scale(Vector3::One)
 {
 }
@@ -38,6 +38,7 @@ Transform::~Transform()
 
 void Transform::Start()
 {
+
 }
 
 void Transform::Tick()
@@ -78,8 +79,8 @@ void Transform::PostRender()
 
 void Transform::UpdatePxTransform()
 {
-    memcpy_s(&mPxTransform.p, 3, &position, 3);
-    memcpy_s(&mPxTransform.q, 4, &rotation, 4);
+    memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);
+    memcpy_s(&mPxTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform pxTransform)
@@ -92,8 +93,8 @@ void Transform::UpdateFromPxTransform(PxTransform pxTransform)
         localTransform = parentInverse.transform(mPxTransform);
     }
 
-    memcpy_s(&position, 3, &mPxTransform.p, 3);
-    memcpy_s(&position, 4, &mPxTransform.q, 4);
+    memcpy_s(&position, sizeof(float) * 3, &mPxTransform.p, sizeof(float) * 3);
+    memcpy_s(&position, sizeof(float) * 4, &mPxTransform.q, sizeof(float) * 4);
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
@@ -133,7 +134,6 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
-
 }
 
 void Transform::SetParent(Transform* _parent)

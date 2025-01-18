@@ -5,6 +5,9 @@
 class Collider : public Component
 {
 public:
+    explicit Collider(Object* _owner);
+    virtual ~Collider();
+public:
     virtual void Start() override;
     virtual void Tick() override;
     virtual void FixedUpdate() override;
@@ -16,20 +19,23 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 
-	void SetLocalPosition(Vector3 pos);
-	void SetRotation(Vector3 rotation);
-
-	void SetIsTrigger(bool isTrigger);
-	bool GetIsTrigger() { return mIsTrigger; }
-
 public:
-    virtual json Serialize() override;
-    virtual void Deserialize(json& j) override;
-private:
-	bool mIsTrigger = false;
+    virtual json Serialize()  = 0;
+    virtual void Deserialize(json& j)  = 0;
 
 protected:
+    void SetIsTrigger();
+    virtual void SetLocalPosition();
+    virtual void SetRotation();
+protected:
 	PxShape* mShape = nullptr;
+    bool mIsTrigger;
+    Vector3 mPosition;
+    Vector3 mRotation;
+    Quaternion mQuatRotation;
+protected:
+    const Color mBaseColor = Color(0, 1, 0, 1);
+    const Color mIntersectColor = Color(1, 0, 0, 1);
 
 	friend class Rigidbody;
 };

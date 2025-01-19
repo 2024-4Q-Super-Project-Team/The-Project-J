@@ -47,7 +47,7 @@ private:
 public:
     // 오브젝트 그룹을 만듭니다.
     ObjectGroup*    CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
-	// 
+	// Rigidbody을 PxScene에 추가합니다. 
 	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
     // 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
     void		    ReceiveObjectGroup(ObjectGroup* _recvGroup);
@@ -62,11 +62,13 @@ public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }
 	PxScene* GetPxScene() { return mPxScene; }
+	class PickingRay* GetPickingRay() { return mPickingRay; }
 protected:
     ViewportScene* const mOwnerScene;
 private:
     std::vector<ObjectGroup*> mObjectGroups;
     LightSystem* mLightSystem;
+	class PickingRay* mPickingRay;
 
 	PxScene* mPxScene;
 	class PhysicsEvent* mEventCallback;

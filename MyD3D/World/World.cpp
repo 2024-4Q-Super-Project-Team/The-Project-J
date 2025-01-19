@@ -32,7 +32,10 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     {
         ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
         Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
-        mainCamera->AddComponent<Camera>();
+        Camera* cameraComp = mainCamera->AddComponent<Camera>();
+
+        mPickingRay = new PickingRay;
+        mPickingRay->SetMainCamera(cameraComp);
         
         PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
         sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
@@ -48,6 +51,7 @@ World::~World()
 {
     SAFE_DELETE_VECTOR(mObjectGroups);
     SAFE_DELETE(mLightSystem);
+    SAFE_DELETE(mPickingRay);
 }
 
 void World::Tick()

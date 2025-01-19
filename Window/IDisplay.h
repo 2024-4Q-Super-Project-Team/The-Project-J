@@ -63,6 +63,7 @@ namespace Display
 		virtual void SetFocus() = 0;
 		virtual BOOL IsFocusing() = 0;
 		virtual BOOL Show(BOOL _bShow) = 0;
+		virtual void GetNDCCoord(float screenX, float screenY, OUT float ndcX, OUT float ndcY) = 0;
 	};
 }
 

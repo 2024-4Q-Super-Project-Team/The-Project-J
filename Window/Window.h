@@ -31,6 +31,9 @@ namespace Display
 		virtual HWND			GetParentHandle() override;
 		virtual void			SetFocus() override;
 		virtual BOOL			IsFocusing() override;
+
+		virtual void			GetNDCCoord(float screenX, float screenY, 
+											OUT float ndcX, OUT float ndcY);
 	private:
 		HWND  mHwnd;
 		HWND  mHParent;

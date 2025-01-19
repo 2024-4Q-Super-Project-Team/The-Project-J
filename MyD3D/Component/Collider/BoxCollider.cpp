@@ -38,6 +38,7 @@ void BoxCollider::PreUpdate()
 
 void BoxCollider::Update()
 {
+
 }
 
 void BoxCollider::PostUpdate()
@@ -83,15 +84,6 @@ void BoxCollider::Deserialize(json& j)
 	mExtents.x = j["extents"][0].get<float>();
 	mExtents.y = j["extents"][1].get<float>();
 	mExtents.z = j["extents"][2].get<float>();
-}
-
-void BoxCollider::DrawMesh(Camera* _camera)
-{
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
 }
 
 void BoxCollider::DrawMesh(Camera* _camera)

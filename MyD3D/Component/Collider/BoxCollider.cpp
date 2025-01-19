@@ -11,6 +11,8 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	UpdateOBB();
+
+	mExtents = mInitialSize;
 }
 
 void BoxCollider::Start()
@@ -108,21 +110,21 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
         ImGui::Separator();
 
         ImGui::Text("Position : ");
-		if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.f, 0.f, 0.f))
+		if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
 		{
 			SetLocalPosition();
 			UpdateOBB();
 		}
 
         ImGui::Text("Rotation : ");
-		if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.f, 0.f, 0.f))
+		if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f))
 		{
 			SetRotation();
 			UpdateOBB();
 		}
 
         ImGui::Text("Extents : ");
-		if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.f, 0.f, 0.f))
+		if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f))
 		{
 			SetExtents();
 			UpdateOBB();

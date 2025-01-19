@@ -81,7 +81,8 @@ void Rigidbody::SetMass(float mass)
 	if (!mIsDynamic) return;
 
 	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
-	rigid->setMass(mass);
+	rigid->setMass(mass); 
+	mMass = mass;
 }
 
 json Rigidbody::Serialize()
@@ -94,4 +95,30 @@ json Rigidbody::Serialize()
 
 void Rigidbody::Deserialize(json& j)
 {
+}
+
+void Rigidbody::EditorRendering(EditorViewerType _type)
+{
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	if (ImGui::TreeNodeEx(("Rigidbody" + uid).c_str(), EDITOR_FLAG_MAIN))
+	{
+		ImGui::Separator();
+
+		ImGui::Text("Mass : "); ImGui::SameLine;
+		if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 0.f))
+		{
+			SetMass(mMass);
+		}
+
+		ImGui::Separator();
+
+		ImGui::Text("isTrigger : "); ImGui::SameLine;
+		if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic))
+		{
+			//TODO
+		}
+		
+
+		ImGui::TreePop();
+	}
 }

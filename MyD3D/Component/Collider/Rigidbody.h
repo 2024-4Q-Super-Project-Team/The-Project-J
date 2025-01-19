@@ -32,6 +32,9 @@ public:
 private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
+    float mMass = 1.f;
+public:
+    virtual void EditorRendering(EditorViewerType _type) override;
 
 	friend class Collider;
 };

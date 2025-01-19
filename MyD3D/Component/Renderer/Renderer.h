@@ -7,8 +7,16 @@ class Material;
 class Light;
 class Camera;
 
+class IRenderContext
+{
+public:
+    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawShadow(Light* _pLight) = 0;
+};
+
 class RendererComponent
     : public Component
+    , public IRenderContext
 {
 public:
     explicit RendererComponent(Object* _owner);
@@ -30,10 +38,11 @@ public:
     virtual std::shared_ptr<MeshResource> GetMesh() = 0;
     virtual Material* GetMaterial() = 0;
 public:
-    virtual json Serialize() = 0;
-    virtual void Deserialize(json& j) = 0;
-public:
     virtual void DrawMesh(Camera* _camera) = 0;
     virtual void DrawShadow(Light* _pLight) = 0;
+public:
+    virtual json Serialize() = 0;
+    virtual void Deserialize(json& j) = 0;
+
 };
 

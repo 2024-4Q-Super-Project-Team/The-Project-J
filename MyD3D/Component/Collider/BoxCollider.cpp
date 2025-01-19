@@ -47,11 +47,7 @@ void BoxCollider::Render()
 
 void BoxCollider::Draw(Camera* _camera)
 {
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
+	_camera->PushDrawList(this);
 }
 
 void BoxCollider::PostRender()
@@ -72,6 +68,15 @@ json BoxCollider::Serialize()
 
 void BoxCollider::Deserialize(json& j)
 {
+}
+
+void BoxCollider::DrawMesh(Camera* _camera)
+{
+#ifdef _DEBUG
+	GraphicsManager::DebugDrawBegin();
+	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
+	GraphicsManager::DebugDrawEnd();
+#endif
 }
 
 void BoxCollider::SetExtents()

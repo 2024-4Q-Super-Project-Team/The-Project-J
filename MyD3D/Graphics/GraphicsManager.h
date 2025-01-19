@@ -61,5 +61,7 @@ private:
     static std::unique_ptr<class PrimitiveBatch<VertexPositionColor>> mBatch;
     static std::unique_ptr<class BasicEffect> mEffect;
     static ID3D11InputLayout* mLayout;
+    static ID3D11DepthStencilState* originalDepthState;
+    static UINT stencilRef;
 #endif
 };

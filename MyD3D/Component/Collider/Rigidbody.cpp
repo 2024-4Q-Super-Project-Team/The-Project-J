@@ -86,7 +86,10 @@ void Rigidbody::SetMass(float mass)
 
 json Rigidbody::Serialize()
 {
-	return json();
+	json ret;
+
+
+	return ret;
 }
 
 void Rigidbody::Deserialize(json& j)

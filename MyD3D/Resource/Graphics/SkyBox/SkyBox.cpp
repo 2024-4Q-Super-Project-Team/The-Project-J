@@ -4,8 +4,8 @@
 #include "Graphics/GraphicsManager.h"
 #include "Resource/ResourceManager.h"
 
-SkyBox::SkyBox(std::wstring_view _name)
-    : Resource(_name)
+SkyBox::SkyBox(ResourceHandle _handle)
+    : Resource(_handle)
 {
 }
 
@@ -75,7 +75,7 @@ void SkyBox::SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex)
 void SkyBox::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    std::string name = Helper::ToString(GetName());
+    std::string name = Helper::ToString(GetKey());
 	if (ImGui::TreeNodeEx(("SkyBox : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
 	{
 		if (mIBLEnvironmentTex)

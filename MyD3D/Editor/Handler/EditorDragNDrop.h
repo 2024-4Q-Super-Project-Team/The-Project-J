@@ -33,7 +33,7 @@ public:
         if ( isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) )
         {
             std::wstring resourceName = Helper::ToWString(EditorDragNDrop::mItemState.mName);
-            _data = ResourceManager::GetResource<T>(resourceName);
+            //_data = ResourceManager::RequestResource<T>(resourceName);
             isDragging = false;
         }
         ImGui::PopID();

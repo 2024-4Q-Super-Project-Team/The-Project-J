@@ -95,7 +95,8 @@ void ViewportManager::PostRender()
 
 ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDesc)
 {
-    _pWinDesc->WndClass.lpfnWndProc = ViewportManager::WinProc;
+    if(_pWinDesc->WndClass.lpfnWndProc == nullptr)
+        _pWinDesc->WndClass.lpfnWndProc = ViewportManager::WinProc;
 
     Display::IWindow* pWindow = nullptr;
     D3DHwndRenderTarget* pSwapChain = nullptr;

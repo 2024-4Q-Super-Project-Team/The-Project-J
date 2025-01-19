@@ -15,7 +15,7 @@ class FBXModelResource
 {
 public:
     RESOURCE_TYPE(FBXModel);
-    explicit FBXModelResource(std::wstring_view _name);
+    explicit FBXModelResource(ResourceHandle _handle);
     virtual ~FBXModelResource();
 public:
     bool isEmpty() { return !(mRootNode == nullptr); }

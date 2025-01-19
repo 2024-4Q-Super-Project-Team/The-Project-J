@@ -22,7 +22,7 @@ public:
 public:
     static inline FBXResource* GetFBDXResource() { return mFBXResource; }
 public:
-    static FBXResource* ImportFBXModel_All(const std::wstring _path);
+    static FBXResource* ImportFBXModel_All(const ResourceHandle& _handle);
     static FBXResource* ImportFBXModel_Mesh(const std::wstring _path);
     static FBXResource* ImportFBXModel_Material(const std::wstring _path);
     static FBXResource* ImportFBXModel_Animation(const std::wstring _path);
@@ -44,7 +44,7 @@ private:
 struct FBXResource
 {
     void Clear() {
-        mPath.clear();
+        Handle = {};
         MaterialArray.clear();  MaterialTable.clear();
         MeshArray.clear();      MeshTable.clear();
         BoneArray.clear();      BoneTable.clear();
@@ -53,7 +53,7 @@ struct FBXResource
         MaterialIndexTable.clear();
         RootNode = nullptr;
     }
-    std::wstring mPath;
+    ResourceHandle Handle;
     // Material
     std::vector<std::shared_ptr<MaterialResource>> MaterialArray;
     std::unordered_map<std::wstring, std::shared_ptr<MaterialResource>> MaterialTable;

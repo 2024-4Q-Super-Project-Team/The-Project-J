@@ -54,6 +54,8 @@ private:
     static Editor::HierarchyViewer*         mHierarchyViewer;
     static Editor::InspectorViewer*         mInspectorViewer;
 
+    static std::vector<std::shared_ptr<Resource>> mResourceContainor;
+
     /////////////////////////////////////////////////////
     //  Widget Object
     /////////////////////////////////////////////////////

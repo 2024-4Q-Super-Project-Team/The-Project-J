@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GameApp.h"
-#include "Contents/GameApp/World/TestWorld.h"
+//#include "Contents/GameApp/World/TestWorld.h"
 #include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene = nullptr;

@@ -5,17 +5,17 @@
 #include "Resource/Graphics/Mesh/Mesh.h"
 #include "Resource/Graphics/Material/Material.h"
 
-Prefab::Prefab(std::wstring_view _name)
-    : Resource(_name)
+Prefab::Prefab(ResourceHandle _handle)
+    : Resource(_handle)
 {
-    Object* mainObject = new Object(_name.data(), L"");
+    Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
 }
 
-Prefab::Prefab(std::wstring_view _name, std::shared_ptr<FBXModelResource> _pModel)
-    : Resource(_name)
+Prefab::Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel)
+    : Resource(_handle)
 {
-    Object* mainObject = new Object(_name.data(), L"");
+    Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
     ModelNode* rootNode = _pModel->mRootNode;
     AddObjectFromNode(mainObject, rootNode);
@@ -133,8 +133,8 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
 void Prefab::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    std::string name = Helper::ToString(GetName());
-    EDITOR_COLOR_RESOURCE;
+    std::string name = Helper::ToString(GetKey());
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
     if (ImGui::TreeNodeEx(("Prefab : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
     {
         for (auto& object : mObjectList)

@@ -13,22 +13,25 @@ class MaterialResource
 {
 public: _READ_ONLY
     RESOURCE_TYPE(Material);
-      explicit MaterialResource(std::wstring_view _name);
+      explicit MaterialResource(ResourceHandle _handle);
       virtual ~MaterialResource();
 public:
-    void SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath);
+    //void SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath);
     void SetMaterialProperty(MaterialProperty* _pProp);
     void SetBlendingMode(eBlendType _type);
-    const std::wstring& GetMaterialMapPath(eMaterialMapType _mapType);
+    //const std::wstring& GetMaterialMapPath(eMaterialMapType _mapType);
+    void SetMateirlaMapHandle(eMaterialMapType _mapType, const ResourceHandle& _handle);
 public:
-    // 머티리얼이 사용할 각 맵 텍스쳐 경로
-    std::wstring mMaterialMapPath[MATERIAL_MAP_SIZE];
+    // 머티리얼이 사용할 각 맵 텍스쳐 핸들
+    ResourceHandle      mMaterialMapPath[MATERIAL_MAP_SIZE];
     // 머티리얼 고유 속성
-    MaterialProperty mMaterialProperty;
+    MaterialProperty    mMaterialProperty;
     // 블렌드 타입
-    eBlendType mBlendMode = eBlendType::OPAQUE_BLEND;
+    eBlendType          mBlendMode = eBlendType::OPAQUE_BLEND;
     // 기본 머티리얼
     static std::shared_ptr<MaterialResource> DefaultMaterial;
+public:
+    static void InitDefaultMaterial();
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

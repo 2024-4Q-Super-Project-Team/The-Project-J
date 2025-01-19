@@ -142,12 +142,12 @@ json MeshRenderer::Serialize()
     ret["id"] = GetId();
     ret["name"] = "MeshRenderer";
     if (mMesh) 
-        ret["mesh"] = Helper::ToString(mMesh->GetName());
+        ret["mesh"] = Helper::ToString(mMesh->GetKey());
     else 
         ret["mesh"] = nullptr;
 
     if (mMateiral && mMateiral->mMaterialResource) 
-        ret["material"] = mMateiral->mMaterialResource->GetName();
+        ret["material"] = mMateiral->mMaterialResource->GetKey();
     else  
         ret["material"] = nullptr;
     return ret;
@@ -169,7 +169,7 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
             if (mMesh)
             {
                 mMesh->EditorRendering(EditorViewerType::DEFAULT);
-                name = Helper::ToString(mMesh->GetName());
+                name = Helper::ToString(mMesh->GetKey());
                 uid = mMesh->GetID();
             }
             else

@@ -19,6 +19,9 @@ BOOL ResourceManager::Initialize()
     MeshResource::InitPlainMesh();
     PushResource<MeshResource>(MeshResource::PlainMesh);
 
+    MaterialResource::InitDefaultMaterial();
+    PushResource<MaterialResource>(MaterialResource::DefaultMaterial);
+
     return FBXImporter::Initialize();
 }
 
@@ -26,3 +29,18 @@ void ResourceManager::Finalization()
 {
     FBXImporter::Finalizaiton();
 }
+
+void ResourceManager::RegisterResourceHandle(ResourceHandle _handle)
+{
+    UINT slot = static_cast<UINT>(_handle.GetResourceType());
+    auto itr = mResourceTables[slot].find(_handle);
+    if (FIND_FAILED(itr, mResourceTables[slot]))
+    {
+        mResourceTables[slot][_handle] = std::make_shared<Resource>();
+    }
+}
+
+void ResourceManager::UnregisterResourceHandle(ResourceHandle _handle)
+{
+}
+

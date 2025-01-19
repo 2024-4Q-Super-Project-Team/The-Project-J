@@ -152,7 +152,7 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 	{
 		if (mActiveAudio)
 		{
-			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetName()).c_str());
+			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetKey()).c_str());
 		}
 		else
 		{

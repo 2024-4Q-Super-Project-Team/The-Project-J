@@ -76,7 +76,7 @@ json Animator::Serialize()
     ret["id"] = GetId();
     ret["name"] = "Animator";
 
-    ret["active animation"] = mActiveAnimation->GetName();
+    ret["active animation"] = mActiveAnimation->GetKey();
 
     return ret;
 }

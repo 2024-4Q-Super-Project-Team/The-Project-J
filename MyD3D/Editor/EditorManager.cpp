@@ -19,6 +19,8 @@ Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
 
 ImGuiContext*                   EditorManager::mContext;
 
+std::vector<std::shared_ptr<Resource>> EditorManager::mResourceContainor;
+
 void EditorManager::Initialize()
 {
 	mResourceViewer = new Editor::ResourceViewer();
@@ -84,7 +86,7 @@ BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
         winDecs.Position = { Destpos.x + Destsize.x , Destpos.y };
         winDecs.WndStyle = WS_POPUP | WS_VISIBLE;
         winDecs.WndClass.lpszClassName = L"EditorWindow";
-        winDecs.WndClass.lpfnWndProc = EditorWinProc;
+        winDecs.WndClass.lpfnWndProc = EditorManager::EditorWinProc;
         winDecs.WndParent = mDestWindow;
         mEditorViewport = ViewportManager::CreateViewportScene(&winDecs);
 
@@ -245,11 +247,31 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
     switch (_msg)
     {
     case WM_CREATE:
+        DragAcceptFiles(_hwnd, TRUE);
         break;
+    case WM_DROPFILES:  // File Drag&Drop
+    {
+        // 드롭된 파일들에 대한 처리
+        HDROP hDrop = (HDROP)_wParam;
+
+        // 드롭된 파일의 개수
+        UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+        for (UINT i = 0; i < numFiles; ++i) {
+            // 각 파일의 경로를 얻음
+            wchar_t filePath[MAX_PATH];
+            DragQueryFile(hDrop, i, filePath, MAX_PATH);
+            Display::Console::Log(filePath);
+            ResourceHandle handle = { eResourceType::FBXModel, filePath, L"", filePath };
+            mResourceContainor.push_back(ResourceManager::RegisterResource<FBXModelResource>(handle));
+        }
+
+        // 메모리 해제
+        DragFinish(hDrop);
+        break;
+    }
     case WM_SIZE:
         break;
     case WM_MOVE:
-		if (mFocusViewport) EditorReposition();
         break;
     case WM_SYSKEYDOWN:
     case WM_SYSKEYUP:
@@ -293,8 +315,8 @@ void EditorManager::ShowPopUp()
 
 BOOL EditorManager::EditorReposition()
 {
-	// 에디터 윈도우 위치 조정
-    if (mFocusViewport)
+    // 에디터 윈도우 위치 조정
+    if (mFocusViewport && mEditorViewport)
     {
         // 대상 윈도우의 위치 및 사이즈를 가져와서 에디터 윈도우를 리포지션한다.
         POINT size = mFocusViewport->GetIWindow()->GetSize();

@@ -13,7 +13,7 @@ class MeshResource
 {
 public:
     RESOURCE_TYPE(Mesh);
-    explicit MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices);
+    explicit MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices);
     virtual ~MeshResource();
 public:
     HRESULT Create();

@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Animation.h"
 
-AnimationResource::AnimationResource(std::wstring_view _name)
-    : Resource(_name)
+AnimationResource::AnimationResource(ResourceHandle _handle)
+    : Resource(_handle)
     , mTotalFrame(0.0f)
     , mFramePerSecond(0.0f)
 {
@@ -33,9 +33,9 @@ BOOL AnimationResource::AddChannel(AnimationNode* _pChannel)
 void AnimationResource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	std::string name = Helper::ToString(mName);
+	std::string name = Helper::ToString(GetKey());
 
-    EDITOR_COLOR_RESOURCE;
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
 	if (ImGui::TreeNodeEx(("Animation : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
 	{
 		ImGui::Text("Total Frame : %f", mTotalFrame);

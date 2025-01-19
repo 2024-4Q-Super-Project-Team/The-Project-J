@@ -12,10 +12,10 @@ std::shared_ptr<MeshResource> MeshResource::SkyCubeMesh;
 std::shared_ptr<MeshResource> MeshResource::CubeMesh;
 std::shared_ptr<MeshResource> MeshResource::PlainMesh;
 
-MeshResource::MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
-    : Resource(_name)
+MeshResource::MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
+    : Resource(_handle)
 {
-    SetID("Mesh : " + Helper::ToString(_name.data()));
+    SetID("Mesh : " + Helper::ToString(_handle.GetKey()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
     
@@ -110,7 +110,8 @@ void MeshResource::InitSkyCubeMesh()
 
 
     // 스카이 큐브 메쉬 생성
-    SkyCubeMesh = std::make_shared<MeshResource>(L"Default_SkyCube_Mesh", vertices, indices);
+    ResourceHandle handle = { eResourceType::Mesh, L"Default_SkyCube_Mesh", L"", L""};
+    SkyCubeMesh = std::make_shared<MeshResource>(handle, vertices, indices);
     SkyCubeMesh->Create();
 }
 
@@ -172,7 +173,8 @@ void MeshResource::InitCubeMesh()
         20, 21, 22, 20, 22, 23
     };
 
-    CubeMesh = std::make_shared<MeshResource>(L"Default_Cube_Mesh", vertices, indices);
+    ResourceHandle handle = { eResourceType::Mesh, L"Default_Cube_Mesh", L"", L"" };
+    CubeMesh = std::make_shared<MeshResource>(handle, vertices, indices);
     CubeMesh->Create();
 }
 
@@ -204,19 +206,20 @@ void MeshResource::InitPlainMesh()
     };
 
     // 평면 메쉬 생성
-    PlainMesh = std::make_shared<MeshResource>(L"Default_Plain_Mesh", vertices, indices);
+    ResourceHandle handle = { eResourceType::Mesh, L"Default_Plain_Mesh", L"", L"" };
+    PlainMesh = std::make_shared<MeshResource>(handle, vertices, indices);
     PlainMesh->Create();
 }
 
 void MeshResource::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string name = Helper::ToString(GetName());
+    std::string name = Helper::ToString(GetKey());
 
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
     {
-        EDITOR_COLOR_RESOURCE;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
         if (ImGui::Selectable(uid.c_str(), false, flags))
         {
@@ -234,11 +237,9 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
-        EDITOR_COLOR_RESOURCE;
         ImGui::Text("Vertex Count : %d", mVertices.size());
         ImGui::Text("Index Count  : %d", mIndices.size());
         ImGui::Text("Bone Count  : %d", mBoneArray.size());
-        EDITOR_COLOR_POP(1);
     }
         break;
     default:

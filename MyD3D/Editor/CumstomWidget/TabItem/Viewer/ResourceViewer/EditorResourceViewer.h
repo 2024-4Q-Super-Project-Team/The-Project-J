@@ -13,5 +13,7 @@ namespace Editor
 		virtual ~ResourceViewer();
 	public:
 		virtual void Render() override;
+	private:
+		std::vector<const char*> mResourceStringArray;
 	};
 }

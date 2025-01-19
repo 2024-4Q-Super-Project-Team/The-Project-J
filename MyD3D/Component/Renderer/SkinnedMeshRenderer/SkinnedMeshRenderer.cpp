@@ -197,7 +197,7 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     {
         Bone* const bone = mMesh->mBoneArray[i];
         // 메쉬의 본 이름을 통해 해당 본의 트랜스폼을 가져온다.
-        Transform** ppboneTransform = Helper::FindMap(bone->GetName(), mBoneMappingTable);
+        Transform** ppboneTransform = Helper::FindMap(bone->GetKey(), mBoneMappingTable);
         if (ppboneTransform == nullptr)
             continue;
         // 최종 본 매트릭스 계산 (본의 오프셋 매트릭스 * 본의 월드 매트릭스)
@@ -211,12 +211,12 @@ json SkinnedMeshRenderer::Serialize()
     ret["id"] = GetId();
     ret["name"] = "SkinnedMeshRenderer";
     if (mMesh) 
-        ret["mesh"] = Helper::ToString(mMesh->GetName());
+        ret["mesh"] = Helper::ToString(mMesh->GetKey());
     else 
         ret["mesh"] = nullptr;
 
     if (mMateiral && mMateiral->mMaterialResource) 
-        ret["material"] = mMateiral->mMaterialResource->GetName();
+        ret["material"] = mMateiral->mMaterialResource->GetKey();
     else  
         ret["material"] = nullptr;
     ret["root bone"] = mRootBone ? mRootBone->GetId() : NULLID;

@@ -13,7 +13,7 @@ class SkyBox
 {
 public:
     RESOURCE_TYPE(SkyBox);
-    explicit SkyBox(std::wstring_view _name);
+    explicit SkyBox(ResourceHandle _handle);
     virtual ~SkyBox() = default;
 public:
     void Draw(Camera* _camera);

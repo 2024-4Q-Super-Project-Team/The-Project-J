@@ -9,7 +9,7 @@ class AnimationResource
 {
 public:
     RESOURCE_TYPE(Animation);
-    explicit AnimationResource(std::wstring_view _name);
+    explicit AnimationResource(ResourceHandle _handle);
     virtual ~AnimationResource();
 public:
     inline void     SetFramePerSecond(float _fps) { mFramePerSecond = _fps; }

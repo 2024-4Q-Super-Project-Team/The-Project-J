@@ -4,11 +4,11 @@
 #include "Resource/ResourceManager.h"
 #include "Resource/FBXImporter/FBXImporter.h"
 
-FBXModelResource::FBXModelResource(std::wstring_view _name)
-    : Resource(_name)
+FBXModelResource::FBXModelResource(ResourceHandle _handle)
+    : Resource(_handle)
     , mRootNode(nullptr)
 {
-    auto pModel = FBXImporter::ImportFBXModel_All(_name.data());
+    auto pModel = FBXImporter::ImportFBXModel_All(_handle);
     mMaterialArray   = std::move(pModel->MaterialArray);
     mMaterialTable   = std::move(pModel->MaterialTable);
     mMeshArray       = std::move(pModel->MeshArray);
@@ -39,7 +39,7 @@ FBXModelResource::~FBXModelResource()
 void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	std::string name = Helper::ToString(GetName());
+	std::string name = Helper::ToString(GetKey());
 
 	if (ImGui::TreeNodeEx(("FBXModel" + uid).c_str(), EDITOR_FLAG_RESOURCE))
 	{

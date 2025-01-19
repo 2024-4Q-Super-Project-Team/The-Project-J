@@ -2,20 +2,6 @@
     {
         "components": [
             {
-                "id": 8,
-                "name": "Transform"
-            },
-            {
-                "id": 9,
-                "name": "Camera"
-            }
-        ],
-        "id": 7,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
                 "id": 3,
                 "name": "Transform"
             },
@@ -30,25 +16,21 @@
     {
         "components": [
             {
-                "id": 13,
-                "name": "Transform"
-            },
-            {
                 "id": 14,
-                "name": "Camera"
+                "name": "Transform"
             }
         ],
-        "id": 12,
+        "id": 13,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 17,
+                "id": 18,
                 "name": "Transform"
             }
         ],
-        "id": 16,
-        "name": "asd"
+        "id": 17,
+        "name": "box1"
     }
 ]

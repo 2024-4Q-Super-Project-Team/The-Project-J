@@ -1,41 +1,25 @@
 [
     {
-        "id": 6,
-        "name": "Default",
-        "objects": [
-            {
-                "id": 7,
-                "name": "Main_Camera"
-            }
-        ]
-    },
-    {
-        "id": 1,
+        "id": 12,
         "name": "Default",
         "objects": [
             {
                 "id": 2,
                 "name": "Main_Camera"
-            }
-        ]
-    },
-    {
-        "id": 11,
-        "name": "Default",
-        "objects": [
+            },
             {
-                "id": 12,
+                "id": 13,
                 "name": "Main_Camera"
             }
         ]
     },
     {
-        "id": 15,
-        "name": "asd",
+        "id": 16,
+        "name": "ColliderTest",
         "objects": [
             {
-                "id": 16,
-                "name": "asd"
+                "id": 17,
+                "name": "box1"
             }
         ]
     }

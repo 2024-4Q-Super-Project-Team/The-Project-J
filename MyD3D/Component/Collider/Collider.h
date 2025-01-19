@@ -30,6 +30,10 @@ protected:
     void SetIsTrigger();
     virtual void SetLocalPosition();
     virtual void SetRotation();
+
+public:
+    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawShadow(Light* _pLight) = 0;
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;

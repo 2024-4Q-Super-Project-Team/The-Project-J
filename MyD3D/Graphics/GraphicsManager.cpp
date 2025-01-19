@@ -564,4 +564,5 @@ void GraphicsManager::DebugDrawEnd()
 {
     D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(originalDepthState, stencilRef);
     mBatch->End();
+    D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(originalDepthState, stencilRef);
 }

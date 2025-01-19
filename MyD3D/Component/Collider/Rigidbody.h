@@ -36,6 +36,6 @@ private:
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 
-	friend class Collider;
+    friend class Collider;
 };
 

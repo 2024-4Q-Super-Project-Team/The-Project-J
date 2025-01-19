@@ -10,6 +10,11 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial());
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+
+	mOBB.Center = gameObject->transform->position;
+	mOBB.Extents = mInitialSize;
+	mOBB.Orientation = Quaternion::Identity;
+
 	UpdateOBB();
 
 	mExtents = mInitialSize;
@@ -59,17 +64,34 @@ void BoxCollider::PostRender()
 json BoxCollider::Serialize()
 {
 	json ret;
-
+	ret["isTrigger"] = mIsTrigger;
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["extents"] = { mExtents.x, mExtents.y, mExtents.z };
-
-
 	return ret;
 }
 
 void BoxCollider::Deserialize(json& j)
 {
+	mIsTrigger = j["isTrigger"].get<bool>();
+	mPosition.x = j["position"][0].get<float>();
+	mPosition.y = j["position"][1].get<float>();
+	mPosition.z = j["position"][2].get<float>();
+	mRotation.x = j["rotation"][0].get<float>();
+	mRotation.y = j["rotation"][1].get<float>();
+	mRotation.z = j["rotation"][2].get<float>();
+	mExtents.x = j["extents"][0].get<float>();
+	mExtents.y = j["extents"][1].get<float>();
+	mExtents.z = j["extents"][2].get<float>();
+}
+
+void BoxCollider::DrawMesh(Camera* _camera)
+{
+#ifdef _DEBUG
+	GraphicsManager::DebugDrawBegin();
+	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
+	GraphicsManager::DebugDrawEnd();
+#endif
 }
 
 void BoxCollider::DrawMesh(Camera* _camera)
@@ -94,10 +116,6 @@ void BoxCollider::UpdateOBB()
 	Matrix localTransform = XMMatrixScaling(mOBB.Extents.x, mOBB.Extents.y, mOBB.Extents.z)
 		* XMMatrixRotationQuaternion(mQuatRotation)
 		* XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z);
-
-	Matrix objectTransform = gameObject->transform->GetWorldMatrix();
-
-	mOBB.Transform(mOBB, objectTransform * localTransform);
 
 #endif
 }
@@ -132,12 +150,12 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 
         ImGui::Separator();
 
-		if (ImGui::Checkbox(("isTrigger" + uid).c_str(), (bool*)&mIsTrigger))
+		ImGui::Text("isTrigger : "); ImGui::SameLine();
+		if (ImGui::Checkbox(("##isTrigger" + uid).c_str(), (bool*)&mIsTrigger))
 		{
 			SetIsTrigger();
 		}
-        ImGui::Text("isTrigger : ");
-
+        
         ImGui::TreePop();
     }
 }

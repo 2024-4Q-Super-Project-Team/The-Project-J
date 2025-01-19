@@ -86,6 +86,7 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
+        GraphicsManager::SetDebugViewProjection(mViewMatrix, mProjectionMatrix);
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }

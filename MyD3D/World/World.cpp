@@ -30,10 +30,6 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 {
     if (!isEmpty)
     {
-        ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
-        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
-        mainCamera->AddComponent<Camera>();
-        
         PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
         sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
         sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);

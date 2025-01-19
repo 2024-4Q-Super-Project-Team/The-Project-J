@@ -83,8 +83,6 @@ void SkinnedMeshRenderer::Draw(Camera* _camera)
 void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
 {
     auto clone = _owner->AddComponent<SkinnedMeshRenderer>();
-    // 메쉬는 그대로 리소스 참조하면 되니까 포인터복사
-    clone->mMesh = this->mMesh;
     // 루트 본 생성
     std::wstring rootBoneName = this->mRootBone->gameObject->GetName();
     auto ppRootBone = Helper::FindMap(rootBoneName, _objTable);
@@ -92,8 +90,8 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     {
         clone->mRootBone = (*ppRootBone)->transform;
     }
-    // 머티리얼 생성
-    clone->SetMaterial(this->mMateiral->mMaterialResource);
+    clone->SetMesh(this->mMeshHandle);
+    clone->SetMaterial(this->mMaterialaHandle);
 }
 
 void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
@@ -145,10 +143,14 @@ Material* SkinnedMeshRenderer::GetMaterial()
     return mMateiral;
 }
 
-void SkinnedMeshRenderer::SetMesh(std::shared_ptr<MeshResource> _mesh)
+void SkinnedMeshRenderer::SetMesh(ResourceHandle _handle)
 {
-    mMesh = _mesh;
-    isDirty = true;
+    if (_handle.GetResourceType() == eResourceType::Mesh)
+    {
+        mMeshHandle = _handle;
+        mMesh = ResourceManager::RequestResource<MeshResource>(_handle);
+        isDirty = true;
+    }
 }
 
 void SkinnedMeshRenderer::SetRootBone(Transform* _rootBone)
@@ -157,9 +159,17 @@ void SkinnedMeshRenderer::SetRootBone(Transform* _rootBone)
     isDirty = true;
 }
 
-void SkinnedMeshRenderer::SetMaterial(std::shared_ptr<MaterialResource> _material)
+void SkinnedMeshRenderer::SetMaterial(ResourceHandle _handle)
 {
-    mMateiral->SetMaterial(_material);
+    if (_handle.GetResourceType() == eResourceType::Material)
+    {
+        mMaterialaHandle = _handle;
+        auto MatResource = ResourceManager::RequestResource<MaterialResource>(_handle);
+        if (MatResource)
+        {
+            mMateiral->SetMaterial(MatResource);
+        }
+    }
 }
 
 void SkinnedMeshRenderer::UpdateTable()
@@ -259,7 +269,7 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 
         ImGui::Separator();
 
-        EDITOR_COLOR_EXTRA;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
         {
             ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);

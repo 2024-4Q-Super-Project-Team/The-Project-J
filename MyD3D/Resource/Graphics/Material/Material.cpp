@@ -24,6 +24,7 @@ std::shared_ptr<MaterialResource> MaterialResource::DefaultMaterial;
 MaterialResource::MaterialResource(ResourceHandle _handle)
     : Resource(_handle)
 {
+    SetID("Mateiral : " + Helper::ToString(_handle.GetKey()));
 }
 
 MaterialResource::~MaterialResource()
@@ -66,9 +67,33 @@ void MaterialResource::InitDefaultMaterial()
 
 void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string name = Helper::ToString(GetKey());
-    ImGui::Text(name.c_str());
-
+    switch (_viewerType)
+    {
+    case EditorViewerType::DEFAULT:
+    {
+        std::string name = Helper::ToString(GetKey());
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(uid.c_str(), false, flags))
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
+        }
+        EditorItemState state;
+        state.mResourcePtr = this;
+        state.mName = Helper::ToString(mHandle.GetKey());
+        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        EDITOR_COLOR_POP(1);
+    }
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+        break;
+    default:
+        break;
+    }
 }
 
 Material::Material()
@@ -151,7 +176,7 @@ void Material::Bind()
 }
 
 void Material::EditorRendering(EditorViewerType _viewerType)
-{
+{ 
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(mMaterialResource->GetKey());
 
@@ -168,8 +193,6 @@ void Material::EditorRendering(EditorViewerType _viewerType)
                 EditorManager::GetInspectorViewer()->SetFocusObject(this);
             }
         }
-        EditorItemState state = { nullptr , name };
-        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
         EDITOR_COLOR_POP(1);
         break;
     }
@@ -191,7 +214,8 @@ void Material::EditorRendering(EditorViewerType _viewerType)
         ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
         ImGui::Text("AmbienOcclusion Scale : ");
         ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
-        EDITOR_COLOR_EXTRA;
+        EDITOR_COLOR_POP(1);
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
         {
             BOOL UseMap = mMatCBuffer.GetUsingMap((eMaterialMapType)type);
@@ -234,6 +258,4 @@ void Material::EditorRendering(EditorViewerType _viewerType)
     default:
         break;
     }
-    
-    EDITOR_COLOR_POP(1);
 }

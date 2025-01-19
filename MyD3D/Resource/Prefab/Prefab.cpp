@@ -97,11 +97,11 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                 {
                     MeshRenderer* pRenderer = (*ppObject)->AddComponent<MeshRenderer>();
                     // 메쉬를 넣어준다.
-                    pRenderer->SetMesh((*ppMesh));
+                    //pRenderer->SetMesh((*ppMesh));
                     // 머티리얼은 없을 가능성이 있다. 따라서 비어있는지 확인
                     if (ppMaterial)
                     {
-                        pRenderer->SetMaterial(*ppMaterial);
+                        //pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
                 // 본이 있으면 SkinnedMeshRenderer컴포넌트
@@ -110,14 +110,14 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                     SkinnedMeshRenderer* pRenderer = (*ppObject)->AddComponent<SkinnedMeshRenderer>();
                     // 스킨드 메쉬 렌더러의 루트 본으로 사용할 오브젝트
                     auto** ppRootBone = Helper::FindMap(_pModel->mRootNode->mNodeName, mObjectTable);
-                    pRenderer->SetMesh((*ppMesh));
+                    //pRenderer->SetMesh((*ppMesh));
                     if (ppRootBone)
                     {
                         pRenderer->SetRootBone((*ppRootBone)->transform);
                     }
                     if(ppMaterial)
                     {
-                        pRenderer->SetMaterial(*ppMaterial);
+                        //pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
             }

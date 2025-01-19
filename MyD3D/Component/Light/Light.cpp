@@ -227,7 +227,7 @@ void Light::EditorRendering(EditorViewerType _viewerType)
         ImGui::DragFloat((uid + "LightFar").c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
 
         ImGui::Separator();
-        EDITOR_COLOR_EXTRA;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
         {
             ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));

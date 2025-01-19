@@ -29,7 +29,6 @@ public:
     static BOOL Initialize();
     static void Finalization();
 public:
-    // 리소스를 요청합니다. 참조카운트가 증가.
     template <typename TYPE>
     static std::shared_ptr<TYPE>    RequestResource(ResourceHandle _handle);
     // 리소스 핸들을 등록합니다.
@@ -57,12 +56,10 @@ inline std::shared_ptr<TYPE> ResourceManager::RequestResource(ResourceHandle _ha
     if (FIND_SUCCESS(itr, mResourceTables[slot]))
     {
         pResource = std::dynamic_pointer_cast<TYPE>(itr->second.lock());
-        if (pResource == nullptr)
+        if (pResource)
         {
-            pResource = std::make_shared<TYPE>(_handle);
-            mResourceTables[slot][_handle] = pResource;
+            return pResource;
         }
-        return pResource;
     }
     return std::shared_ptr<TYPE>();
 }

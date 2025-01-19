@@ -1,6 +1,7 @@
 #pragma once
 #include "Component/Renderer/Renderer.h"
 
+
 class Object;
 class Transform;
 class MeshResource;
@@ -30,8 +31,8 @@ public:
 public:
     virtual std::shared_ptr<MeshResource> GetMesh() override;
     virtual Material* GetMaterial() override;
-    virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) override;
-    virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) override;
+    virtual void SetMesh(ResourceHandle _handle) override;
+    virtual void SetMaterial(ResourceHandle _handle) override;
     void         SetRootBone(Transform* _rootBone);
 private:
     void UpdateTable();
@@ -44,9 +45,11 @@ private:
     // 본이나 메쉬 등이 수정되었는가
     bool isDirty = true;
 
-    std::shared_ptr<MeshResource>   mMesh; // 스킨드 메쉬
-    Material*                       mMateiral; // 사용할 머티리얼
-    Transform*                      mRootBone; // 루트 본 트랜스폼
+    ResourceHandle                  mMeshHandle;
+    std::shared_ptr<MeshResource>   mMesh;  
+    ResourceHandle                  mMaterialaHandle;
+    Material*                       mMateiral;   
+    Transform*                      mRootBone; 
 
     std::unordered_map<std::wstring, Transform*> mBoneMappingTable; // 본 이름과 트랜스폼 매칭
     BoneMatrixCBuffer mFinalBoneMatrices; // 최종 본 매트릭스 (셰이더로 전달)

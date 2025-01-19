@@ -477,7 +477,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
         {
             ImGui::Separator();
 
-            EDITOR_COLOR_EXTRA;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
             if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
             {
                 auto CameraRTV = mMainRenderTarget->GetRTV();

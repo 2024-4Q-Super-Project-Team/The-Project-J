@@ -3,8 +3,14 @@
 
 struct EditorItemState
 {
-	void* mItemPtr = nullptr;
-	std::string mName = "";
+	Resource*	mResourcePtr = nullptr;
+	Component*	mComponentPtr = nullptr;
+	std::string mName = "";	// popup에 보일 이름
+	void Clear() {
+		mResourcePtr = nullptr;
+		mComponentPtr = nullptr;
+		mName = "";
+	}
 };
 
 // 에디터 드래그 앤 드롭 핸들러
@@ -27,15 +33,24 @@ public:
 		ImGui::PopID();
 	}
     template <typename T>
-    static void ReceiveDragAndDropResourceData(const char* _uid, OUT std::shared_ptr<T>& _data)
+    static BOOL ReceiveDragAndDropResourceData(const char* _uid, ResourceHandle* _handle)
     {
+		BOOL isOk = FALSE;
         ImGui::PushID(_uid);
         if ( isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) )
         {
-            std::wstring resourceName = Helper::ToWString(EditorDragNDrop::mItemState.mName);
-            //_data = ResourceManager::RequestResource<T>(resourceName);
+			T* pData = dynamic_cast<T*>(EditorDragNDrop::mItemState.mResourcePtr);
+			if (pData)
+			{
+				(*_handle) = EditorDragNDrop::mItemState.mResourcePtr->GetHandle();
+				EditorDragNDrop::mItemState.Clear();
+				isDragging = false;
+				isOk = TRUE;
+			}
             isDragging = false;
         }
         ImGui::PopID();
+
+		return isOk;
     }
 };

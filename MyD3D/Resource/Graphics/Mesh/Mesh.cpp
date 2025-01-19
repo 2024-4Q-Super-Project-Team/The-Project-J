@@ -228,7 +228,9 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
                 EditorManager::GetInspectorViewer()->SetFocusObject(this);
             }
         }
-        EditorItemState state = { nullptr , name };
+        EditorItemState state;
+        state.mResourcePtr = this;
+        state.mName = Helper::ToString(mHandle.GetKey());
         EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
         EDITOR_COLOR_POP(1);
         break;
@@ -245,7 +247,4 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
     default:
         break;
     }
-   
-
-    
 }

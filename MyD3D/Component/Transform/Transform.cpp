@@ -77,6 +77,14 @@ void Transform::PostRender()
 {
 }
 
+void Transform::EditorUpdate()
+{
+}
+
+void Transform::EditorRender()
+{
+}
+
 void Transform::UpdatePxTransform()
 {
     memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);

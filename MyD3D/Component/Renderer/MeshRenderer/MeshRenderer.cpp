@@ -59,6 +59,18 @@ void MeshRenderer::PostRender()
 {
 }
 
+void MeshRenderer::EditorUpdate()
+{
+}
+
+void MeshRenderer::EditorRender()
+{
+    if (mMesh)
+    {
+        EditorManager::mEditorCamera.PushDrawList(this);
+    }
+}
+
 void MeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh)
@@ -78,7 +90,7 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
     clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void MeshRenderer::DrawMesh(Camera* _camera)
+void MeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
 {
     // 머티리얼 바인딩
     if (mMateiral)
@@ -91,8 +103,8 @@ void MeshRenderer::DrawMesh(Camera* _camera)
         mMesh->Bind();
     }
     mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-    mTransformMatrices.View         = XMMatrixTranspose(_camera->GetView());
-    mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
+    mTransformMatrices.View         = XMMatrixTranspose(_view);
+    mTransformMatrices.Projection   = XMMatrixTranspose(_projection);
     // 트랜스폼 상수 버퍼 바인딩
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);

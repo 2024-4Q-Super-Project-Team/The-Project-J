@@ -4,11 +4,14 @@
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportScene.h"
 
+EditorCamera                    EditorManager::mEditorCamera;
 
 ViewportScene*                  EditorManager::mFocusViewport = nullptr;
 ViewportScene*                  EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
+
+Editor::EditorDebugger*         EditorManager::mDebbugerTab = nullptr;
 Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
 Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
 Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
@@ -38,7 +41,7 @@ void EditorManager::Finalization()
 {
 }
 
-void EditorManager::RenderEditor()
+void EditorManager::RenderEditorWindow()
 {
     if (mFocusViewport && mEditorViewport)
     {  
@@ -62,6 +65,16 @@ void EditorManager::RenderEditor()
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
+}
+
+void EditorManager::EditorUpdate()
+{
+    mEditorCamera.EditorUpdate();
+}
+
+void EditorManager::EditorRender()
+{
+    mEditorCamera.EditorRender();
 }
 
 BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
@@ -161,7 +174,7 @@ void EditorManager::InitMainWindow()
             Editor::TabBar* pTabBar = new Editor::TabBar("TabBar_01");
             mMainWindowBar_01->AddWidget(pTabBar);
 
-            CreateTestTab(pTabBar);
+            CreateDebuggerTab(pTabBar);
             CreateHierarchy(pTabBar);
             CreateResourceViewer(pTabBar);
         }
@@ -182,14 +195,14 @@ void EditorManager::InitMainWindow()
 	mWidgetArray.push_back(mMainWindowBar_02);
 
 }
-void EditorManager::CreateTestTab(Editor::TabBar* _pSrcTabBar)
+void EditorManager::CreateDebuggerTab(Editor::TabBar* _pSrcTabBar)
 {
-    //{   // Å×½ºÆ®¿ë ÅÇ
-    //    mDebugEditor = new Editor::TestEditorTab();
-    //    Editor::Tab* pInspectorBar = new Editor::Tab("Debug");
-    //    pInspectorBar->AddWidget(mDebugEditor);
-    //    _pSrcTabBar->AddTab(pInspectorBar);
-    //}
+    {   // ÀÎ½ºÆåÅÍ ÅÇ
+        mDebbugerTab = new Editor::EditorDebugger();
+        Editor::TabNode* pDebuggerTab = new Editor::TabNode("Debug");
+        pDebuggerTab->AddWidget(mDebbugerTab);
+        _pSrcTabBar->AddTab(pDebuggerTab);
+    }
 }
 
 void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
@@ -221,8 +234,6 @@ void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
         _pSrcTabBar->AddTab(pBar);
     }
 }
-
-
 
 void EditorManager::UpdateIO()
 {
@@ -264,7 +275,6 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             ResourceHandle handle = { eResourceType::FBXModel, filePath, L"", filePath };
             mResourceContainor.push_back(ResourceManager::RegisterResource<FBXModelResource>(handle));
         }
-
         // ¸Þ¸ð¸® ÇØÁ¦
         DragFinish(hDrop);
         break;

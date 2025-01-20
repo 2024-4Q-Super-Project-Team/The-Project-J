@@ -23,7 +23,7 @@ BOOL ViewportManager::Initialize()
     return TRUE;
 }
 
-void ViewportManager::Run()
+void ViewportManager::GameRun()
 {
     for (auto& vp : mViewportScenes)
     {
@@ -40,10 +40,29 @@ void ViewportManager::Run()
     mActiveViewport = nullptr;
 }
 
+void ViewportManager::EditorRun()
+{
+    for (auto& vp : mViewportScenes)
+    {
+        mActiveViewport = vp;
+        EditorUpdate();
+        EditorRender();
+    }
+    mActiveViewport = nullptr;
+}
+
 void ViewportManager::Finalization()
 {
     SAFE_DELETE_ARRAY(mViewportScenes);
     mDisplayDevice->Release();
+}
+
+void ViewportManager::Start()
+{
+    for (auto& vp : mViewportScenes)
+    {
+        vp->Start();
+    }
 }
 
 void ViewportManager::Tick()
@@ -91,6 +110,16 @@ void ViewportManager::Render()
 void ViewportManager::PostRender()
 {
     mActiveViewport->PostRender();
+}
+
+void ViewportManager::EditorUpdate()
+{
+    mActiveViewport->EditorUpdate();
+}
+
+void ViewportManager::EditorRender()
+{
+    mActiveViewport->EditorRender();
 }
 
 ViewportScene* ViewportManager::CreateViewportScene(Display::WindowDesc* _pWinDesc)

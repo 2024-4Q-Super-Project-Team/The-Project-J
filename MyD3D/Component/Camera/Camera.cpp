@@ -99,6 +99,14 @@ void Camera::PostRender()
 {
 }
 
+void Camera::EditorUpdate()
+{
+}
+
+void Camera::EditorRender()
+{
+}
+
 void Camera::SetCameraSize(Vector2 _sizeScale)
 {
     mSizeScale = _sizeScale;
@@ -203,7 +211,7 @@ void Camera::DrawForward()
         //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
         for (auto& drawInfo : mDrawQueue[i])
         {
-            drawInfo->DrawMesh(this);
+            drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
         }
         // 그리기 큐를 초기화한다.
         mDrawQueue[i].clear();
@@ -226,7 +234,7 @@ void Camera::DrawDeferred()
         {
             for (auto& drawInfo : mDrawQueue[i])
             {
-                drawInfo->DrawMesh(this);
+                drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
             }
             // 그리기 큐를 초기화한다.
             mDrawQueue[i].clear();

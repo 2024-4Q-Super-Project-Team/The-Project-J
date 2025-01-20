@@ -40,6 +40,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     void SetCameraSize(Vector2 _sizeScale);
     void SetCameraOffset(Vector2 _offsetScale);
@@ -88,19 +91,8 @@ private:
     std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
     std::shared_ptr<D3DBitmapRenderTarget>      mDeferredRenderTarget;
 private:
-    D3DGraphicsViewport*    mLocalViewport;
-
-    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
-    LightQueue              mSceneLights;
-
-    CameraCBuffer           mCameraCBuffer;
-    ProjectionType          mProjectionType;
-    CameraRenderType        mCameraRenderType;
-
     Matrix                  mViewMatrix;
     Matrix                  mProjectionMatrix;
-
-    //float mAspectRatio 종횡비
 
     Degree                  mFovAngle;
     float                   mProjectionNear;
@@ -110,14 +102,21 @@ private:
     float                   mOrthoWidth;
     float                   mOrthoHeight;
 
-    Vector2 mSizeScale;
-    Vector2 mOffsetScale;
+    Vector2                 mSizeScale;
+    Vector2                 mOffsetScale;
+
+    D3DGraphicsViewport*    mLocalViewport;
+    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
+    LightQueue              mSceneLights;
+
+    ProjectionType          mProjectionType;
+    CameraRenderType        mCameraRenderType;
+
+    CameraCBuffer           mCameraCBuffer;
+	LightCBuffer			mLightCBuffer;
 
     // 카메라 스카이박스
     std::shared_ptr<SkyBox> mSkyBox;
-
-    // 카메라 라이트 정보
-	LightCBuffer			mLightCBuffer;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

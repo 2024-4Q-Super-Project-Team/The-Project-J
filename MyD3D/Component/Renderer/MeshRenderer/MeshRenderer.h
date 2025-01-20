@@ -22,10 +22,13 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawMesh(Camera* _camera) override;
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
 public:
     virtual void SetMesh(ResourceHandle _handle) override;

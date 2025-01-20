@@ -58,6 +58,14 @@ void BoxCollider::PostRender()
 {
 }
 
+void BoxCollider::EditorUpdate()
+{
+}
+
+void BoxCollider::EditorRender()
+{
+}
+
 json BoxCollider::Serialize()
 {
 	json ret;

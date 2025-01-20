@@ -20,6 +20,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     // ∞≈∏Æ ∞®ºË¿≤
     inline void SetDistanceAttenuationScale(float _val) { mDistanceAttenuationScale = Clamp(_val, 0.0f, 1.0f); }

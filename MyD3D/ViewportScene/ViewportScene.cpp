@@ -17,6 +17,14 @@ ViewportScene::~ViewportScene()
     SAFE_DELETE(mWorldManager)
 }
 
+void ViewportScene::Start()
+{
+    if (mWorldManager)
+    {
+        mWorldManager->Start();
+    }
+}
+
 void ViewportScene::Tick()
 {
     if (mWorldManager)
@@ -76,7 +84,7 @@ void ViewportScene::Render()
         mWorldManager->Render();
 
         if (EditorManager::IsRenderView(this))
-            EditorManager::RenderEditor();
+            EditorManager::RenderEditorWindow();
 
         mSwapChain->EndDraw();
     }
@@ -87,6 +95,43 @@ void ViewportScene::PostRender()
     if (mWorldManager)
     {
         mWorldManager->PostRender();
+    }
+}
+
+void ViewportScene::EditorUpdate()
+{
+    if (mWorldManager)
+    {
+        mWorldManager->EditorUpdate();
+
+        if (EditorManager::IsFocusView(this))
+        {
+            EditorManager::EditorUpdate();
+        }
+    }
+}
+
+void ViewportScene::EditorRender()
+{
+    if (mWorldManager)
+    {
+        mSwapChain->BeginDraw();
+
+        mSwapChain->Clear();
+
+        mWorldManager->EditorRender();
+
+        if (EditorManager::IsFocusView(this))
+        {
+            EditorManager::EditorRender();
+        }
+
+        if (EditorManager::IsRenderView(this))
+        {
+            EditorManager::RenderEditorWindow();
+        }
+
+        mSwapChain->EndDraw();
     }
 }
 

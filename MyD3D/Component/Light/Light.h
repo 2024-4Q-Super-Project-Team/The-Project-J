@@ -25,6 +25,11 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
+public:
+    void UpdateLightProperty();
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
 public:

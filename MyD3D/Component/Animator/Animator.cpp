@@ -65,6 +65,14 @@ void Animator::PostRender()
 {
 }
 
+void Animator::EditorUpdate()
+{
+}
+
+void Animator::EditorRender()
+{
+}
+
 void Animator::SetAnimation(std::shared_ptr<AnimationResource> _pAnim)
 {
     mActiveAnimation = _pAnim;

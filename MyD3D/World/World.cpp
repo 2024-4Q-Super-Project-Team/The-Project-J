@@ -46,6 +46,11 @@ World::~World()
     SAFE_DELETE(mLightSystem);
 }
 
+void World::Start()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Start())
+}
+
 void World::Tick()
 {
     UpdateGroup();
@@ -100,6 +105,17 @@ void World::PostRender()
 {
     OnPostRender();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostRender())
+}
+
+void World::EditorUpdate()
+{
+    UpdateGroup();
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorUpdate())
+}
+
+void World::EditorRender()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorRender())
 }
 
 ObjectGroup* World::CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag)

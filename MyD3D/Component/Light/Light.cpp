@@ -90,7 +90,7 @@ void Light::Draw(Camera* _camera)
 {
     // 그림자 계산 수행
 	// 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
-    if (mShadowViewport && mShadowRenderTarget)
+    if (mLightProp.UseShadow == TRUE && mShadowViewport && mShadowRenderTarget)
     {
         mShadowViewport->Bind();
 
@@ -113,6 +113,40 @@ void Light::Draw(Camera* _camera)
 }
 
 void Light::PostRender()
+{
+}
+
+void Light::EditorUpdate()
+{
+    // 그림자 계산 수행
+    // 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
+    if (mLightProp.UseShadow == TRUE && mShadowViewport && mShadowRenderTarget)
+    {
+        mShadowViewport->Bind();
+
+        Vector3 eye = EditorManager::mEditorCamera.mPosition;
+        Vector3 forward = EditorManager::mEditorCamera.mDirection;
+
+        // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
+        Vector3 shadowPos = eye + forward * mCameradDist;
+        // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
+        Vector3 lightPos = shadowPos - (mLightProp.Direction * mUpDist);
+
+        // Eye = 광원의 위치 LookAt = 그림자의 위치
+        // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
+        mLightProp.ShadowView = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
+        mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
+    }
+    Vector3 WolrdPos = gameObject->transform->GetWorldPosition();
+    memcpy(&mLightProp.Position, &WolrdPos, sizeof(Vector3)); // 3원소만 복사
+    EditorManager::mEditorCamera.PushLightList(this);
+}
+
+void Light::EditorRender()
+{
+}
+
+void Light::UpdateLightProperty()
 {
 }
 

@@ -17,6 +17,14 @@ WorldManager::~WorldManager()
     SAFE_DELETE_MAP(mWorlds);
 }
 
+void WorldManager::Start()
+{
+	if (mCurrActiveWorld) {
+		mCurrActiveWorld->OnTick();
+		UPDATE_ENTITY(mCurrActiveWorld, Start())
+	}
+}
+
 void WorldManager::Tick()
 {
 	UpdateWorld();
@@ -79,6 +87,21 @@ void WorldManager::PostRender()
 	if (mCurrActiveWorld) {
 		mCurrActiveWorld->OnPostRender();
 		UPDATE_ENTITY(mCurrActiveWorld, PostRender())
+	}
+}
+
+void WorldManager::EditorUpdate()
+{
+	UpdateWorld();
+	if (mCurrActiveWorld) {
+		UPDATE_ENTITY(mCurrActiveWorld, EditorUpdate())
+	}
+}
+
+void WorldManager::EditorRender()
+{
+	if (mCurrActiveWorld) {
+		UPDATE_ENTITY(mCurrActiveWorld, EditorRender())
 	}
 }
 

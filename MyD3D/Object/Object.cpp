@@ -26,22 +26,19 @@ Object::Object(const Object& _other)
     mComponentArray[static_cast<UINT>(eComponentType::Transform)][0] = transform;
 }
 
-void Object::Tick()
+void Object::Start()
 {
-    for (auto it = mComponentsToWake.begin(); it != mComponentsToWake.end(); )
+    for (int i = 0; i < (UINT)eComponentType::SIZE; ++i)
     {
-        Component* component = *it;
-        if (component->IsActive() && component->IsAwake())
+        for (auto& comp : mComponentArray[i])
         {
-            component->Start();
-            int index = static_cast<UINT>(component->GetType());
-            mComponentArray[index].push_back(component);
-    
-            it = mComponentsToWake.erase(it);
+            comp->Start();
         }
-        else ++it;
     }
-    
+}
+
+void Object::Tick()
+{    
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
@@ -150,21 +147,49 @@ void Object::PostRender()
     }
 }
 
+// 에디터 업데이트는 활성화 여부와 관계없이 업데이트 되어야 한다
+void Object::EditorUpdate()
+{
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
+    {
+        for (auto& comp : mComponentArray[i])
+        {
+            comp->EditorUpdate();
+        }
+    }
+    if (!transform->GetParent())
+        transform->UpdateMatrix();
+}
+
+void Object::EditorRender()
+{
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
+    {
+        for (auto& comp : mComponentArray[i])
+        {
+            comp->EditorRender();
+        }
+    }
+}
+
 void _CALLBACK Object::OnEnable()
 {
-    for (auto child : transform->GetChildren())
+    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
     {
-        child->gameObject->SetActive(true);
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnEnable();
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnEnable();
+        for (auto child : transform->GetChildren())
+        {
+            child->gameObject->SetActive(true);
+        }
+        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
+        {
+            if (comp->IsActive())
+                static_cast<MonoBehaviour*>(comp)->OnEnable();
+        }
+        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
+        {
+            if (comp->IsActive())
+                static_cast<MonoBehaviour*>(comp)->OnEnable();
+        }
     }
     return void _CALLBACK();
 }
@@ -207,11 +232,13 @@ void _CALLBACK Object::OnDestroy()
 
 void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _objTable)
 {
-    for (auto& comp : mComponentsToWake)
+    for (auto& compArr : mComponentArray)
     {
-        comp->Clone(_pDest, _objTable);
+        for (auto& comp : compArr)
+        {
+            comp->Clone(_pDest, _objTable);
+        }
     }
-
 }
 
 json Object::Serialize()
@@ -324,7 +351,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                         ImGui::CloseCurrentPopup();         // 팝업 닫기
                     }
                 }
-
                 // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
                 if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
                     ImGui::CloseCurrentPopup();
@@ -333,6 +359,8 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 ImGui::EndPopup();
             }
         }
+        // ImGimozzi 
+        
     }
         break;
     default:

@@ -57,6 +57,14 @@ void AudioSource::PostRender()
 {
 }
 
+void AudioSource::EditorUpdate()
+{
+}
+
+void AudioSource::EditorRender()
+{
+}
+
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
 	std::shared_ptr<AudioResource> pAudio = GetAudioFromTable(_key);

@@ -13,6 +13,8 @@ public:
 	WorldManager(ViewportScene* _pViewport);
 	~WorldManager();
 public:
+	void Start();
+public:
 	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
@@ -21,6 +23,9 @@ public:
 	virtual void PreRender() override;
 	virtual void Render() override;
 	virtual void PostRender() override;
+
+	virtual void EditorUpdate()	override;
+	virtual void EditorRender()	override;
 public:
 	// 월드의 생성, 삭제, 전환을 해준다.
 	void UpdateWorld();

@@ -61,6 +61,25 @@ void SkinnedMeshRenderer::PostRender()
 {
 }
 
+void SkinnedMeshRenderer::EditorUpdate()
+{
+}
+
+void SkinnedMeshRenderer::EditorRender()
+{
+    if (mMesh && mRootBone)
+    {
+        // 메쉬나 루트 본이 바뀐부분이 있으면 갱신
+        if (isDirty)
+        {
+            UpdateTable();
+        }
+        // 본 트랜스폼 계산
+        CalculateBoneTransform();
+        EditorManager::mEditorCamera.PushDrawList(this);
+    }
+}
+
 void SkinnedMeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh && mRootBone)
@@ -94,7 +113,7 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
+void SkinnedMeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
 {
     // 머티리얼 바인딩
     if (mMateiral)
@@ -107,8 +126,8 @@ void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
         mMesh->Bind();
     }
     mTransformMatrices.World = XMMatrixTranspose(mRootBone->GetWorldMatrix());
-    mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
-    mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
+    mTransformMatrices.View = XMMatrixTranspose(_view);
+    mTransformMatrices.Projection = XMMatrixTranspose(_projection);
     GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);

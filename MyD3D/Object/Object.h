@@ -31,6 +31,8 @@ public:
     virtual ~Object();
     Object(const Object& _other);
 public:
+    void Start();
+public:
     virtual void Tick()			override;
     virtual void FixedUpdate()	override;
     virtual void PreUpdate()	override;
@@ -40,6 +42,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera);
     virtual void PostRender()	override;
+
+    virtual void EditorUpdate()	override;
+    virtual void EditorRender()	override;
 private:
     virtual void _CALLBACK OnEnable()  override;
     virtual void _CALLBACK OnDisable() override;
@@ -73,7 +78,6 @@ public:
 protected:
     ObjectGroup* mOwnerGroup;
     std::vector<Component*> mComponentArray[ComponentSize];
-    std::list<Component*> mComponentsToWake;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
@@ -83,12 +87,10 @@ T* Object::AddComponent(Args&&... args)
 {
     static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
     T* component = new T(this, std::forward<Args>(args)...);
-    mComponentsToWake.push_back(component);
-
-    if(component->GetType() != eComponentType::SCRIPT)
-        component->Wake();
-
-    //에디터일때는 wake를 안한상태. 실행했을때 wake 해야한다. 
+    eComponentType type = component->GetType();
+    int index = static_cast<UINT>(type);
+    mComponentArray[index].push_back(component);
+    // Start는 나중에 호출
     return component;
 }
 
@@ -102,12 +104,6 @@ T* Object::GetComponent()
             T* temp = dynamic_cast<T*>(comp);
             if (temp) return temp;
         }
-    }
-
-    for (auto& comp : mComponentsToWake)
-    {
-        T* temp = dynamic_cast<T*>(comp);
-        if (temp) return temp;
     }
     return nullptr;
 }

@@ -93,8 +93,8 @@ void Transform::UpdateFromPxTransform(PxTransform pxTransform)
         localTransform = parentInverse.transform(mPxTransform);
     }
 
-    memcpy_s(&position, sizeof(float) * 3, &mPxTransform.p, sizeof(float) * 3);
-    memcpy_s(&position, sizeof(float) * 4, &mPxTransform.q, sizeof(float) * 4);
+    memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
+    memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)

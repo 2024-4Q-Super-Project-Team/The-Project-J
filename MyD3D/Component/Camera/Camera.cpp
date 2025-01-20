@@ -261,15 +261,6 @@ void Camera::DrawSwapChain()
 
     D3DGraphicsRenderer::DrawCall(6, 0, 0);
 
-    BoundingOrientedBox mOBB;
-    mOBB.Extents = { 5.f, 5.f, 5.f};
-    mOBB.Center = { 0,0,-10 };
-    Quaternion q = XMQuaternionRotationRollPitchYaw(2, 2, 2);
-    mOBB.Orientation = q;
-    GraphicsManager::DebugDrawBegin();
-    Debug::Draw(GraphicsManager::GetBatch(), mOBB, DirectX::Colors::Green);
-    GraphicsManager::DebugDrawEnd();
-
     mMainRenderTarget->ResetAllSRV();
 }
 

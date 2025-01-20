@@ -64,12 +64,13 @@ void PlayerController::Update()
 
 void PlayerController::PostUpdate()
 {
-	PxExtendedVec3 pos = mCapsuleController->getPosition();
-	gameObject->transform->position = Vector3(pos.x, pos.y, pos.z);
+
 }
 
 void PlayerController::PreRender()
 {
+	//PxExtendedVec3 pos = mCapsuleController->getPosition();
+	//gameObject->transform->position = Vector3(pos.x, pos.y, pos.z);
 }
 
 void PlayerController::Render()
@@ -87,6 +88,10 @@ void PlayerController::PostRender()
 json PlayerController::Serialize()
 {
 	json ret;
+
+	ret["id"] = GetId();
+	ret["name"] = "PlayerController";
+
 	ret["height"] = mHeight;
 	ret["radius"] = mRadius;
 	ret["contactOffset"] = mContactOffset;
@@ -101,6 +106,8 @@ json PlayerController::Serialize()
 
 void PlayerController::Deserialize(json& j)
 {
+	SetId(j["id"].get<unsigned int>());
+
 	mHeight = j["height"].get<float>();
 	mRadius = j["radius"][0].get<float>();
 	mContactOffset = j["contactOffset"][1].get<float>();
@@ -115,7 +122,7 @@ void PlayerController::Deserialize(json& j)
 void PlayerController::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("Rigidbody" + uid).c_str(), EDITOR_FLAG_MAIN))
+	if (ImGui::TreeNodeEx(("PlayerController" + uid).c_str(), EDITOR_FLAG_MAIN))
 	{
 		ImGui::Separator();
 		ImGui::Text("Capsule Controller"); ImGui::SameLine;

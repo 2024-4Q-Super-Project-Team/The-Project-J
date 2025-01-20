@@ -59,7 +59,7 @@ public:
     inline const Vector3  Up() { return GetWorldMatrix().Up(); }
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
-    inline const PxTransform&  GetPxTransform() { return mPxTransform; }
+    inline const PxTransform  GetPxTransform() { return mPxTransform; }
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();

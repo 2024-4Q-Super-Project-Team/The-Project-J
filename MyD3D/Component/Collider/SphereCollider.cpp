@@ -64,6 +64,9 @@ void SphereCollider::PostRender()
 json SphereCollider::Serialize()
 {
 	json ret;
+	ret["id"] = GetId();
+	ret["name"] = "Transform";
+
 	ret["isTrigger"] = mIsTrigger;
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
@@ -73,6 +76,8 @@ json SphereCollider::Serialize()
 
 void SphereCollider::Deserialize(json& j)
 {
+	SetId(j["id"].get<unsigned int>());
+
 	mIsTrigger = j["isTrigger"].get<bool>();
 	mPosition.x = j["position"][0].get<float>();
 	mPosition.y = j["position"][1].get<float>();

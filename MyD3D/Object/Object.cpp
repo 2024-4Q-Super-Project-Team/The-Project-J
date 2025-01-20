@@ -110,8 +110,6 @@ void Object::PreRender()
                 comp->PreRender();
         }
     }
-    if (!transform->GetParent())
-        transform->UpdateMatrix();
 }
 
 void Object::Render()
@@ -148,6 +146,11 @@ void Object::PostRender()
                 comp->PostRender();
         }
     }
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
+        
 }
 
 void _CALLBACK Object::OnEnable()

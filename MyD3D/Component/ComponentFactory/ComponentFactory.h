@@ -2,7 +2,7 @@
 
 class Component;
 
-#include "Object/Object.h"
+#include "../../Object/Object.h"
 
 class ICreator
 {

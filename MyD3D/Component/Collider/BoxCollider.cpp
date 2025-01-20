@@ -7,7 +7,7 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 {
 	mGeometry = PxBoxGeometry(PxVec3(mInitialSize.x, mInitialSize.y, mInitialSize.z));
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
-		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial());
+		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 
@@ -20,39 +20,47 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 
 void BoxCollider::Start()
 {
+	Collider::Start();
 }
 
 void BoxCollider::Tick()
 {
+	Collider::Tick();
 }
 
 void BoxCollider::FixedUpdate()
 {
+	Collider::FixedUpdate();
 }
 
 void BoxCollider::PreUpdate()
 {
+	Collider::PreUpdate();
 }
 
 void BoxCollider::Update()
 {
-
+	Collider::Update();
 }
 
 void BoxCollider::PostUpdate()
 {
+	Collider::PostUpdate();
 }
 
 void BoxCollider::PreRender()
 {
+	Collider::PreRender();
 }
 
 void BoxCollider::Render()
 {
+	Collider::Render();
 }
 
 void BoxCollider::Draw(Camera* _camera)
 {
+	Collider::Draw(_camera);
 #ifdef _DEBUG
 	_camera->PushDrawList(this);
 #endif
@@ -60,11 +68,17 @@ void BoxCollider::Draw(Camera* _camera)
 
 void BoxCollider::PostRender()
 {
+	Collider::PostRender();
 }
 
 json BoxCollider::Serialize()
 {
 	json ret;
+
+	ret["id"] = GetId();
+	ret["name"] = "BoxCollider";
+
+
 	ret["isTrigger"] = mIsTrigger;
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
@@ -74,6 +88,8 @@ json BoxCollider::Serialize()
 
 void BoxCollider::Deserialize(json& j)
 {
+	SetId(j["id"].get<unsigned int>());
+
 	mIsTrigger = j["isTrigger"].get<bool>();
 	mPosition.x = j["position"][0].get<float>();
 	mPosition.y = j["position"][1].get<float>();
@@ -97,7 +113,8 @@ void BoxCollider::DrawMesh(Camera* _camera)
 
 void BoxCollider::SetExtents()
 {
-	mGeometry.halfExtents = PxVec3(mExtents.x / 2.f, mExtents.y / 2.f, mExtents.z / 2.f );
+	mGeometry = (PxVec3(mExtents.x / 2.f, mExtents.y / 2.f, mExtents.z / 2.f));
+	mShape->setGeometry(mGeometry);
 }
 
 void BoxCollider::EditorRendering(EditorViewerType _type)

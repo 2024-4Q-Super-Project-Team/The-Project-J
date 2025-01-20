@@ -4,6 +4,7 @@
 #include "Manager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "ViewportScene/ViewportManager.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 
@@ -18,6 +19,13 @@ PxFilterFlags CustomFilterShader(
     pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND; // 충돌 시작 이벤트
     pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;  // 충돌 종료 이벤트
     pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS; // 접촉 지점 정보 요청
+
+    // PVD에서 디버깅을 위한 추가 플래그
+    pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT; // 이산 충돌 디버깅
+    pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;     // 연속 충돌 디버깅
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_FOUND; // 힘 임계치 초과 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_PERSISTS; // 힘 지속 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_LOST; // 힘 상실 이벤트
 
     return PxFilterFlag::eDEFAULT;
 }
@@ -36,14 +44,22 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 
         mPickingRay = new PickingRay;
         mPickingRay->SetMainCamera(cameraComp);
-        
+
         PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
-        sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
+        sceneDesc.gravity = PxVec3(0.f, -0.f, 0.f);
         sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
         sceneDesc.filterShader = CustomFilterShader;
         //sceneDesc.simulationEventCallback = mEventCallback;
-        // GPU 가속 설정 (필수)
+
         mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+
+        PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
+        if (pvdClient) {
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+        }
+
     }
 }
 
@@ -83,6 +99,13 @@ void World::PostUpdate()
 {
     OnPostUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostUpdate())
+
+
+    if (mPxScene)
+    {
+        mPxScene->simulate(Time::GetUnScaledDeltaTime());
+        mPxScene->fetchResults(true);
+    }
 }
 
 void World::PreRender()

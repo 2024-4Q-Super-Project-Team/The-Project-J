@@ -235,6 +235,7 @@
     <ClInclude Include="Resource\Graphics\Mesh\Vertex.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\Collider\Rigidbody.h" />
+    <ClInclude Include="Component\Collider\SphereCollider.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\Collider\Rigidbody.cpp" />
+    <ClCompile Include="Component\Collider\SphereCollider.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />

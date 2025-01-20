@@ -15,8 +15,6 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	mOBB.Extents = mInitialSize;
 	mOBB.Orientation = Quaternion::Identity;
 
-	UpdateOBB();
-
 	mExtents = mInitialSize;
 }
 
@@ -55,7 +53,9 @@ void BoxCollider::Render()
 
 void BoxCollider::Draw(Camera* _camera)
 {
+#ifdef _DEBUG
 	_camera->PushDrawList(this);
+#endif
 }
 
 void BoxCollider::PostRender()
@@ -98,18 +98,6 @@ void BoxCollider::DrawMesh(Camera* _camera)
 void BoxCollider::SetExtents()
 {
 	mGeometry.halfExtents = PxVec3(mExtents.x / 2.f, mExtents.y / 2.f, mExtents.z / 2.f );
-	mOBB.Extents = mExtents;
-}
-
-void BoxCollider::UpdateOBB()
-{
-#ifdef _DEBUG
-
-	Matrix localTransform = XMMatrixScaling(mOBB.Extents.x, mOBB.Extents.y, mOBB.Extents.z)
-		* XMMatrixRotationQuaternion(mQuatRotation)
-		* XMMatrixTranslation(mPosition.x, mPosition.y, mPosition.z);
-
-#endif
 }
 
 void BoxCollider::EditorRendering(EditorViewerType _type)
@@ -123,21 +111,21 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 		if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
 		{
 			SetLocalPosition();
-			UpdateOBB();
+			mOBB.Center = mPosition;
 		}
 
         ImGui::Text("Rotation : ");
 		if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f))
 		{
 			SetRotation();
-			UpdateOBB();
+			mOBB.Orientation = mQuatRotation;
 		}
 
         ImGui::Text("Extents : ");
 		if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f))
 		{
 			SetExtents();
-			UpdateOBB();
+			mOBB.Extents = mExtents;
 		}
 
         ImGui::Separator();

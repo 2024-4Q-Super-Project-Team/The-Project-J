@@ -339,6 +339,9 @@
     <ClInclude Include="Physics\PickingRay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Collider\SphereCollider.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -651,6 +654,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Physics\PickingRay.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collider\SphereCollider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

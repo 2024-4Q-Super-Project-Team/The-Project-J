@@ -1,11 +1,10 @@
 #pragma once
 #include "Collider.h"
-
-class BoxCollider : public Collider
+class SphereCollider : public Collider
 {
 public:
-    explicit BoxCollider(Object* _owner);
-    virtual ~BoxCollider() {}
+    explicit SphereCollider(Object* _owner);
+    virtual ~SphereCollider() {}
 public:
     virtual void Start() override;
     virtual void Tick() override;
@@ -23,14 +22,14 @@ public:
 public:
     virtual void DrawMesh(Camera* _camera) override;
     virtual void DrawShadow(Light* _pLight) override {}
-public:
-    void SetExtents();
-private:
-    const Vector3 mInitialSize = { 1, 1, 1 };
 
-    DirectX::BoundingOrientedBox mOBB;
-    PxBoxGeometry mGeometry;
-    Vector3 mExtents;
+    void SetRadius();
+private:
+    const float mInitialRadius = 1.f;
+
+    DirectX::BoundingSphere mBS;
+    PxSphereGeometry mGeometry;
+    float mRadius;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 };

@@ -12,6 +12,7 @@
 #include "Component/Audio/AudioListener.h"
 #include "Component/Collider/Rigidbody.h"
 #include "Component/Collider/BoxCollider.h"
+#include "Component/Collider/SphereCollider.h"
 #include "Component/Controller/PlayerController.h"
 
 #include "Interface/SaveBase.h"

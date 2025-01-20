@@ -384,7 +384,7 @@ void Camera::ExcuteDrawList()
                 // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
                 if (mSkyBox)
                 {
-                    mSkyBox->Draw(this);
+                    mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
                 }
 
                 mMainRenderTarget->EndDraw();

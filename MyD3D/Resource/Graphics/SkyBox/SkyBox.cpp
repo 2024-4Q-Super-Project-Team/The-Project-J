@@ -4,12 +4,14 @@
 #include "Graphics/GraphicsManager.h"
 #include "Resource/ResourceManager.h"
 
+std::shared_ptr<SkyBox> SkyBox::DefaultSkyBox;
+
 SkyBox::SkyBox(ResourceHandle _handle)
     : Resource(_handle)
 {
 }
 
-void SkyBox::Draw(Camera* _camera)
+void SkyBox::Draw(Matrix& _view, Matrix& _projection, FLOAT _far)
 {
     if (mIBLEnvironmentTex && mIBLDiffuseTex &&
         mIBLSpecularTex && mBLDFLookUpTableTex)
@@ -24,10 +26,10 @@ void SkyBox::Draw(Camera* _camera)
 
         // 속한 월드의 매트릭스가 있으면 나중에 그걸 가져오자
         TransformCBuffer cb;
-        float ScaleValue = _camera->GetProjectionFar() / 2.0f;
+        float ScaleValue = _far / 2.0f;
         cb.World = Matrix::CreateScale(Vector3(ScaleValue, ScaleValue, ScaleValue));
-        cb.View = XMMatrixTranspose(_camera->GetView());
-        cb.Projection = XMMatrixTranspose(_camera->GetProjection());
+        cb.View = XMMatrixTranspose(_view);
+        cb.Projection = XMMatrixTranspose(_projection);
 
         GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&cb);
 
@@ -70,6 +72,48 @@ void SkyBox::SetLookUpTableTexture(std::shared_ptr<Texture2D> _tex)
     mBLDFLookUpTableTex->Texture->SetBindStage(eShaderStage::PS);
     mBLDFLookUpTableTex->Texture->SetBindSlot(23);
     mBLDFLookUpTableTex->Texture->Bind();
+}
+
+void SkyBox::InitSkyBoxResource()
+{
+    ResourceHandle handle = { eResourceType::SkyBox, L"Default_SkyBox", L"", L"" };
+    DefaultSkyBox = std::make_shared<SkyBox>(handle);
+    {
+        ResourceHandle texHandle = {
+            eResourceType::Texture2D,
+            L"Default_SkyBox_Environment_Texture",
+            L"",
+            L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds" 
+        };
+        DefaultSkyBox->SetEnvironmentTexture(std::make_shared<Texture2D>(texHandle));
+    }
+    {
+        ResourceHandle texHandle = {
+            eResourceType::Texture2D,
+            L"Default_SkyBox_Diffuse_Texture",
+            L"",
+            L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"
+        };
+        DefaultSkyBox->SetDiffuseTexture(std::make_shared<Texture2D>(texHandle));
+    }
+    {
+        ResourceHandle texHandle = {
+            eResourceType::Texture2D,
+            L"Default_SkyBox_Specular_Texture",
+            L"",
+            L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"
+        };
+        DefaultSkyBox->SetSpecularture(std::make_shared<Texture2D>(texHandle));
+    }
+    {
+        ResourceHandle texHandle = {
+            eResourceType::Texture2D,
+            L"Default_SkyBox_LUT_Texture",
+            L"",
+            L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"
+        };
+        DefaultSkyBox->SetLookUpTableTexture(std::make_shared<Texture2D>(texHandle));
+    }
 }
 
 void SkyBox::EditorRendering(EditorViewerType _viewerType)

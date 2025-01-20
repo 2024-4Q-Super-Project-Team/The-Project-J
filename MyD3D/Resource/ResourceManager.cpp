@@ -18,10 +18,12 @@ BOOL ResourceManager::Initialize()
     // 플레인 메쉬
     MeshResource::InitPlainMesh();
     PushResource<MeshResource>(MeshResource::PlainMesh);
-
+    // 기본 머티리얼
     MaterialResource::InitDefaultMaterial();
     PushResource<MaterialResource>(MaterialResource::DefaultMaterial);
-
+    // 기본 스카이박스
+    SkyBox::InitSkyBoxResource();
+    PushResource<SkyBox>(SkyBox::DefaultSkyBox);
     return FBXImporter::Initialize();
 }
 

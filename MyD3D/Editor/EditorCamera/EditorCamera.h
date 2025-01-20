@@ -20,9 +20,11 @@ public:
 public:
     void DrawShadow();
     void DrawMesh();
+    void DrawSwapChain();
 public:
     // 현재 카메라가 쓰고 있는 리소스 뷰
-    std::shared_ptr<D3DGraphicsViewport> mMainViewport;
+    std::shared_ptr<D3DGraphicsViewport>        mMainViewport;
+    std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
 
     FLOAT                   mCameraMoveSpeed = 10.0f;
     FLOAT                   mCameraRotateSpeed = 10.0f;
@@ -47,6 +49,7 @@ public:
 
     UINT                    mDrawedMeshCount;
     UINT                    mDrawedLightCount;
+    bool                    mIsSkyBoxRendering = TRUE;
 public:
     void EditorRendering(EditorViewerType _viewerType);
 };

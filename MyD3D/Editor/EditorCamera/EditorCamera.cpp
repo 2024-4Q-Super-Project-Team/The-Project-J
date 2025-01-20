@@ -65,7 +65,7 @@ void EditorCamera::UpdateRotation()
             Input::ShowMouseCursor(false);
             // 마우스 이동량 가져오기
             float deltaX = Input::GetDeltaMousePos().x * Time::GetUnScaledDeltaTime();
-            float deltaY = Input::GetDeltaMousePos().y * Time::GetUnScaledDeltaTime();
+            float deltaY = -Input::GetDeltaMousePos().y * Time::GetUnScaledDeltaTime();
 
             // 카메라 회전 속도에 따라 스케일 조정
             deltaX *= mCameraRotateSpeed;
@@ -139,6 +139,10 @@ void EditorCamera::UpdateCamera()
     {
         mMainViewport = EditorManager::GetFocusViewport()->GetMainViewport();
     }
+    if (mMainRenderTarget == nullptr)
+    {
+        mMainRenderTarget = EditorManager::GetFocusViewport()->GetMainRenderTarget();
+    }
 }
 
 void EditorCamera::PushDrawList(RendererComponent* _renderComponent)
@@ -168,15 +172,28 @@ void EditorCamera::PushLightList(Light* _lightComponent)
 void EditorCamera::ExcuteDrawList()
 {
     GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
-    if (mMainViewport)
+    if (mMainViewport && mMainRenderTarget)
     {
         if (mSize.Length() > 0.05f)
         {
+            mMainRenderTarget->BeginDraw();
+            mMainRenderTarget->Clear();
+
             DrawShadow();
 
             mMainViewport->Bind();
 
             DrawMesh();
+
+            if (mIsSkyBoxRendering)
+            {
+                SkyBox::DefaultSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
+            }
+
+            mMainRenderTarget->EndDraw();
+
+
+            DrawSwapChain();
         }
     }
     // 조명 리스트를 초기화한다.
@@ -233,6 +250,21 @@ void EditorCamera::DrawMesh()
     }
 }
 
+void EditorCamera::DrawSwapChain()
+{
+    // QuadFrame Pass
+    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
+    D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
+
+    mMainRenderTarget->BindAllSRV();
+
+    D3DGraphicsRenderer::DrawCall(6, 0, 0);
+
+    mMainRenderTarget->ResetAllSRV();
+}
+
 void EditorCamera::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
@@ -258,8 +290,10 @@ void EditorCamera::EditorRendering(EditorViewerType _viewerType)
     ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
     ImGui::Text("Far : ");
     ImGui::SliderFloat((uid + "Far").c_str(), &mProjectionFar, 1.0f, 100000.0f);
-
+    ImGui::NewLine();
     ImGui::Text(("DrawedMeshCount : " + std::to_string(mDrawedMeshCount)).c_str());
     ImGui::Text(("DrawedLightCount : " + std::to_string(mDrawedLightCount)).c_str());
+    ImGui::NewLine();
+    ImGui::Checkbox(("Rendering SkyBox" + uid).c_str(), &mIsSkyBoxRendering);
 }
 

@@ -31,6 +31,28 @@
         "type": 0
     },
     {
+        "id": 3,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            0.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
         "id": 14,
         "name": "Transform",
         "parent": 99999999999,

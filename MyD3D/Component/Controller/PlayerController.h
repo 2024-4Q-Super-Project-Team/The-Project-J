@@ -26,9 +26,23 @@ private:
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
 
-	float mSpeed = 0.5f;
+    //Capsule Controller
+    float mHeight = 4;
+    float mRadius = 2;
+    float mContactOffset = 0.1f;
+    float mSlopeLimit = 0.707f;
+    float mStepOffset = 0.5f;
+
+    //Movement
+	float mMoveSpeed = 0.5f;
 	float mJumpSpeed = 30.f;
 	float mGravity = 9.8f;
 	PxVec3 mMoveDirection = PxVec3(0.f, 0.f, 0.f);
+
+    //DebugDraw
+    
+public:
+    virtual void EditorRendering(EditorViewerType _type) override;
+
 };
 

@@ -16,6 +16,16 @@
     {
         "components": [
             {
+                "id": 3,
+                "name": "Transform"
+            }
+        ],
+        "id": 2,
+        "name": "Main_Camera"
+    },
+    {
+        "components": [
+            {
                 "id": 14,
                 "name": "Transform"
             }
@@ -28,6 +38,10 @@
             {
                 "id": 18,
                 "name": "Transform"
+            },
+            {
+                "id": 13,
+                "name": "PlayerController"
             }
         ],
         "id": 17,

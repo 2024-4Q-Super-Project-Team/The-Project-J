@@ -28,11 +28,7 @@ BOOL GameApp::OnPostInitialize()
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
-        WorldManager* wrdMng = mMainScene->GetWorldManager();
-        //if (nullptr == wrdMng) return FALSE;
-        //
-        //World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
-        wrdMng->LoadWorlds();
+       
 #ifdef _DEBUG
         /////////////////////////////////////////////////////
         // ¿¡µðÅÍ
@@ -40,6 +36,10 @@ BOOL GameApp::OnPostInitialize()
         EditorManager::ShowEditorWindow(mMainScene);
 #endif // DEBUG
     }
+
+    WorldManager* wrdMng = mMainScene->GetWorldManager();
+    wrdMng->LoadWorlds();
+
     return TRUE;
 }
 

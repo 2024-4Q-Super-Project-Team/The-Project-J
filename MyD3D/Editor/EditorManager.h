@@ -45,7 +45,7 @@ public:
     static inline auto GetResourceViewer() { return mResourceViewer; }
     static inline auto GetHierarchyViewer() { return mHierarchyViewer; }
     static inline auto GetInspectorViewer() { return mInspectorViewer; }
-private:
+public:
     static ViewportScene*                   mFocusViewport;
     static ViewportScene*                   mEditorViewport;
     static std::vector<Editor::IWidget*>    mWidgetArray;

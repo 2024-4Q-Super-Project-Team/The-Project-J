@@ -8,6 +8,10 @@
                 "name": "Main_Camera"
             },
             {
+                "id": 2,
+                "name": "Main_Camera"
+            },
+            {
                 "id": 13,
                 "name": "Main_Camera"
             }

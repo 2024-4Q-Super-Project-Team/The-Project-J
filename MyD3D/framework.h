@@ -37,13 +37,21 @@ using namespace DirectX;
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
-// SimpleMath
-#include <directxtk/SimpleMath.h>
-using namespace DirectX::SimpleMath;
+#define IMGUI_DEFINE_MATH_OPERATORS
 //ImgUI
 #include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
+//Imguizmo
+#include "imguizmo\ImGuizmo.h"
+#include "imguizmo\ImSequencer.h"
+#include "imguizmo\ImZoomSlider.h"
+#include "imguizmo\ImCurveEdit.h"
+#include "imguizmo\GraphEditor.h"
+#include "imguizmo\ImGradient.h"
+// SimpleMath
+#include <directxtk/SimpleMath.h>
+using namespace DirectX::SimpleMath;
 //Assimp
 #include <assimp\Importer.hpp>
 #include <assimp\scene.h>

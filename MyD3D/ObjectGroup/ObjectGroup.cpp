@@ -113,7 +113,7 @@ json ObjectGroup::Serialize()
     for (auto obj : mObjects)
     {
         json objectJson;
-        objectJson["id"] = obj->GetId();
+        objectJson["id"] = obj->GiveId();
         objectJson["name"] = Helper::ToString(obj->GetName());
         objs += objectJson;
     }
@@ -126,7 +126,7 @@ void ObjectGroup::Deserialize(json& j)
     for (auto& objectJson : j["objects"])
     {
         std::wstring name = Helper::ToWString(objectJson["name"].get<std::string>());
-        Object* group = CreateObject(name);
-        group->SetId(objectJson["id"].get<unsigned int>());
+        Object* object = CreateObject(name);
+        object->SetId(objectJson["id"].get<unsigned int>());
     }
 }

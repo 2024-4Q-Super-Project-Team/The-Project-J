@@ -228,21 +228,32 @@ void WorldManager::LoadWorlds()
 	json worldsJson, groupsJson, objectsJson, componentsJson;
 
 	std::ifstream worldsFile("save_worlds.json");
-	worldsFile >> worldsJson;
-	worldsFile.close();
+	if (worldsFile.is_open())
+	{
+		worldsFile >> worldsJson;
+		worldsFile.close();
+	}
 
 	std::ifstream groupsFile("save_objectGroups.json");
-	groupsFile >> groupsJson;
-	groupsFile.close();
+	if (groupsFile.is_open())
+	{
+		groupsFile >> groupsJson;
+		groupsFile.close();
+	}
 
 	std::ifstream objectsFile("save_objects.json");
-	objectsFile >> objectsJson;
-	objectsFile.close();
+	if (objectsFile.is_open())
+	{
+		objectsFile >> objectsJson;
+		objectsFile.close();
+	}
 
 	std::ifstream componentsFile("save_components.json");
-	componentsFile >> componentsJson;
-	componentsFile.close();
-
+	if (componentsFile.is_open())
+	{
+		componentsFile >> componentsJson;
+		componentsFile.close();
+	}
 
 	for (auto& worldJson : worldsJson)
 	{

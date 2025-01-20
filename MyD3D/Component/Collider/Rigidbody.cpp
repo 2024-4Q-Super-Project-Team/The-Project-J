@@ -58,6 +58,7 @@ void Rigidbody::PostUpdate()
 {	
 	//오브젝트 -> 리지드액터 동기화 
 	gameObject->transform->UpdatePxTransform();
+
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
 
 
@@ -107,8 +108,9 @@ void Rigidbody::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
+	bool why = j.contains("isDynamic");
 	mIsDynamic = j["isDynamic"].get<bool>();
-	mMass = j["mMass"][0].get<float>();
+	mMass = j["mass"].get<float>();
 }
 
 void Rigidbody::EditorRendering(EditorViewerType _type)
@@ -126,11 +128,9 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 
 		ImGui::Separator();
 
-		ImGui::Text("isTrigger : "); ImGui::SameLine;
-		if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic))
-		{
-			//TODO
-		}
+		ImGui::Text("isDynamic : "); ImGui::SameLine;
+		ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+
 		
 
 		ImGui::TreePop();

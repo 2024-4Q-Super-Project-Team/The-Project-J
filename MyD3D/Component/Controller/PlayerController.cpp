@@ -64,13 +64,14 @@ void PlayerController::Update()
 
 void PlayerController::PostUpdate()
 {
+	gameObject->transform->UpdatePxTransform();
 
 }
 
 void PlayerController::PreRender()
 {
-	//PxExtendedVec3 pos = mCapsuleController->getPosition();
-	//gameObject->transform->position = Vector3(pos.x, pos.y, pos.z);
+	PxExtendedVec3 pos = mCapsuleController->getPosition();
+	gameObject->transform->position = Vector3(pos.x, pos.y, pos.z);
 }
 
 void PlayerController::Render()

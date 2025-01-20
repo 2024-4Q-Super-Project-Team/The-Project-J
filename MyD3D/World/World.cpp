@@ -185,14 +185,14 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
 json World::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
     ret["name"] = Helper::ToString(mName);
 
     json objGroups = json::array();
     for (auto group : mObjectGroups)
     {
         json groupJson;
-        groupJson["id"] = group->GetId();
+        groupJson["id"] = group->GiveId();
         groupJson["name"] = Helper::ToString(group->GetName());
         objGroups += groupJson;
     }

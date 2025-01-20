@@ -1,6 +1,6 @@
 [
     {
-        "id": 3,
+        "id": 4,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -24,14 +24,14 @@
     {
         "far": 30000.0,
         "fov angle": 1.5707963705062866,
-        "id": 4,
+        "id": 5,
         "near": 1.0,
         "ortho height": 10.0,
         "ortho width": 10.0,
         "type": 0
     },
     {
-        "id": 3,
+        "id": 7,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -44,7 +44,7 @@
             0.0,
             0.0,
             0.0,
-            0.0
+            1.0
         ],
         "scale": [
             1.0,
@@ -53,47 +53,29 @@
         ]
     },
     {
-        "id": 14,
-        "name": "Transform",
-        "parent": 99999999999,
-        "position": [
-            0.0,
-            0.0,
-            0.0
-        ],
-        "root parent": 99999999999,
-        "rotation": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
+        "id": 8,
+        "isDynamic": false,
+        "mass": 1.0,
+        "name": "Rigidbody"
     },
     {
-        "id": 18,
-        "name": "Transform",
-        "parent": 99999999999,
+        "extents": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "id": 9,
+        "isTrigger": false,
+        "name": "BoxCollider",
         "position": [
             0.0,
             0.0,
             0.0
         ],
-        "root parent": 99999999999,
         "rotation": [
             0.0,
             0.0,
-            0.0,
             0.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
         ]
     }
 ]

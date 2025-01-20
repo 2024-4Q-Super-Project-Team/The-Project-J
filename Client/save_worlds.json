@@ -1,15 +1,15 @@
 [
     {
-        "id": 11,
+        "id": 0,
         "name": "TestWorld",
         "object groups": [
             {
-                "id": 12,
+                "id": 1,
                 "name": "Default"
             },
             {
-                "id": 16,
-                "name": "ColliderTest"
+                "id": 2,
+                "name": "TestCollision"
             }
         ]
     }

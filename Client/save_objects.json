@@ -2,49 +2,33 @@
     {
         "components": [
             {
-                "id": 3,
+                "id": 4,
                 "name": "Transform"
             },
             {
-                "id": 4,
+                "id": 5,
                 "name": "Camera"
             }
         ],
-        "id": 2,
+        "id": 3,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 3,
-                "name": "Transform"
-            }
-        ],
-        "id": 2,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 14,
-                "name": "Transform"
-            }
-        ],
-        "id": 13,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 18,
+                "id": 7,
                 "name": "Transform"
             },
             {
-                "id": 13,
-                "name": "PlayerController"
+                "id": 8,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 9,
+                "name": "BoxCollider"
             }
         ],
-        "id": 17,
-        "name": "box1"
+        "id": 6,
+        "name": "Box"
     }
 ]

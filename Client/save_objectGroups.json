@@ -1,29 +1,21 @@
 [
     {
-        "id": 12,
+        "id": 1,
         "name": "Default",
         "objects": [
             {
-                "id": 2,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 2,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 13,
+                "id": 3,
                 "name": "Main_Camera"
             }
         ]
     },
     {
-        "id": 16,
-        "name": "ColliderTest",
+        "id": 2,
+        "name": "TestCollision",
         "objects": [
             {
-                "id": 17,
-                "name": "box1"
+                "id": 6,
+                "name": "Box"
             }
         ]
     }

@@ -229,7 +229,7 @@ json Object::Serialize()
         for (auto& cmp : cmpArr)
         {
             json j;
-            j["id"] = cmp->GetId();
+            j["id"] = cmp->GiveId();
             j["name"] = typeid(*cmp).name() + sizeof("Class");
             cmps.push_back(j);
         }

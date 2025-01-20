@@ -42,7 +42,8 @@ public:
 	virtual void _CALLBACK OnPreRender()	override {};
 	virtual void _CALLBACK OnRender()		override {};
 	virtual void _CALLBACK OnPostRender()	override {};
-private:
+public:
+	void InitWorldObject();
     void UpdateGroup();
 public:
     // 오브젝트 그룹을 만듭니다.

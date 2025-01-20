@@ -137,6 +137,10 @@ World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _t
 		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
 		mWorlds[_name] = instance;
 		instance->OnCreate();
+		if (isEmpty == false)
+		{
+			instance->InitWorldObject();
+		}
 		return instance;
 	}
 }

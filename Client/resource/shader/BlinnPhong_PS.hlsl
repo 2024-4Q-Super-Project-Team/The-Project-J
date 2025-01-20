@@ -23,7 +23,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     }
     
     // NormalMap
-    float N = input.normal;
+    float3 N = input.normal;
     if (USE_MAP(NORMAL_MAP) == TRUE)
     {
         float3 tangentSpace = MapColor[NORMAL_MAP].rgb * 2.0f - 1.0f;

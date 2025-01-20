@@ -31,6 +31,7 @@ BOOL GameManager::Initialize()
 	Time::Initialize();
 	Input::Initialize();
 	AudioHub::Initialize();
+
 	GraphicsManager::Initialize();
 	ResourceManager::Initialize();
 	ViewportManager::Initialize();

@@ -180,11 +180,29 @@ void World::Deserialize(json& j)
     }
 }
 
+void World::InitWorldObject()
+{
+    // 월드 초기 생성시 기본적으로 제공하는 그룹과 오브젝트를 만들어준다.
+    ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
+    {
+        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
+        Camera* cameraComponent = mainCamera->AddComponent<Camera>();
+    }
+    {
+        Object* mainLight = defaultGroup->CreateObject(L"Direction_Light", L"Default");
+        Light* lightComponent = mainLight->AddComponent<Light>();
+        Vector4 defaultDirection = Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+        defaultDirection.Normalize();
+        lightComponent->GetProperty().Direction = defaultDirection;
+    }
+}
+
 void World::UpdateGroup()
 {
     // 삭제 및 생성 처리
     for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end();)
     {
+
         // 삭제
         if ((*itr)->GetState() == EntityState::Destroy)
         {

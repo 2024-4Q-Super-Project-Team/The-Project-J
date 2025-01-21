@@ -347,7 +347,7 @@
     </ClInclude>
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h">
       <Filter>헤더 파일</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Physics\PickingRay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -367,6 +367,9 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UISystem\Widget\WidgetText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -690,8 +693,8 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp">
-	<Filter>소스 파일</Filter>
-	</ClCompile>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Physics\PickingRay.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -711,6 +714,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem\Widget\WidgetText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

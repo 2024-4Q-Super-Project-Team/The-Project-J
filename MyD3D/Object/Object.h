@@ -12,7 +12,9 @@
 #include "Component/Audio/AudioListener.h"
 #include "Component/Collider/Rigidbody.h"
 #include "Component/Collider/BoxCollider.h"
+#include "Component/Collider/SphereCollider.h"
 #include "Component/Controller/PlayerController.h"
+#include "Component/ParticleSystem/ParticleSystem.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
@@ -62,13 +64,14 @@ public:
     // 특정 타입 컴포넌트를 배열로 전부 반환. 없으면 빈 배열이 반환됨.
     template <class T>
     std::vector<T*>& GetComponents();
+    //가지고 있는 모든 컴포넌트를 반환합니다.
+    std::vector<Component*> GetAllComponents();
     // 해당 컴포넌트의 속성 값을 복사하여 추가합니다. 해당 컴포넌트의 복사 생성자가 정의되어 있어야 함.
     template <class T>
     T* CloneComponent(T* _pSrc);
 
 public:
   	json Serialize();
-    json SerializeComponents();
     void Deserialize(json& j);
 public:
     Transform* const transform;

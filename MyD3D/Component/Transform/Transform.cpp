@@ -101,8 +101,8 @@ void Transform::UpdateFromPxTransform(PxTransform pxTransform)
         localTransform = parentInverse.transform(mPxTransform);
     }
 
-    memcpy_s(&position, sizeof(float) * 3, &mPxTransform.p, sizeof(float) * 3);
-    memcpy_s(&position, sizeof(float) * 4, &mPxTransform.q, sizeof(float) * 4);
+    memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
+    memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
@@ -161,7 +161,7 @@ void Transform::SetParent(Transform* _parent)
 json Transform::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
     ret["name"] = "Transform";
  
     ret["position"] = { position.x, position.y, position.z };
@@ -187,7 +187,7 @@ void Transform::Deserialize(json& j)
     rotation.x = j["rotation"][0].get<float>();
     rotation.y = j["rotation"][1].get<float>();
     rotation.z = j["rotation"][2].get<float>();
-    rotation.w = j["rotation"][2].get<float>();
+    rotation.w = j["rotation"][3].get<float>();
 
     scale.x = j["scale"][0].get<float>();
     scale.y = j["scale"][1].get<float>();

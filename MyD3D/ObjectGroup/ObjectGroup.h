@@ -45,6 +45,7 @@ public:
 	void		    SetWorld(World* _world);
     // 오브젝트 컨테이너를 반환
     inline auto&    GetObjects() const { return mObjects; }
+	Object*			GetObject(std::wstring name) const;
 	inline World*	GetWorld() const { return mOwnerWorld; }
 	inline INT		GetOrder() const { return mGroupOrder; }
 

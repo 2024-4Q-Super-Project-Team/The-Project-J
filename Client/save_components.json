@@ -1,37 +1,38 @@
 [
     {
+        "id": 7,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "far": 30000.0,
+        "fov angle": 1.5707963705062866,
         "id": 8,
-        "name": "Transform",
-        "parent": 99999999999,
-        "position": [
-            0.0,
-            0.0,
-            0.0
-        ],
-        "root parent": 99999999999,
-        "rotation": [
-            0.0,
-            0.0,
-            0.0,
-            0.0
-        ],
-        "scale": [
-            1.0,
-            1.0,
-            1.0
-        ]
-    },
-    {
-        "far": 30000.0,
-        "fov angle": 1.5707963705062866,
-        "id": 9,
+        "name": "Camera",
         "near": 1.0,
         "ortho height": 10.0,
         "ortho width": 10.0,
         "type": 0
     },
     {
-        "id": 3,
+        "id": 11,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -44,7 +45,7 @@
             0.0,
             0.0,
             0.0,
-            0.0
+            1.0
         ],
         "scale": [
             1.0,
@@ -53,16 +54,32 @@
         ]
     },
     {
-        "far": 30000.0,
-        "fov angle": 1.5707963705062866,
-        "id": 4,
-        "near": 1.0,
-        "ortho height": 10.0,
-        "ortho width": 10.0,
-        "type": 0
+        "id": 10,
+        "name": "Light",
+        "property": {
+            "direction": [
+                0.0,
+                0.0,
+                1.0,
+                0.0
+            ],
+            "position": [
+                0.0,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "radiance": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": 0
+        }
     },
     {
-        "id": 13,
+        "id": 16,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -75,7 +92,7 @@
             0.0,
             0.0,
             0.0,
-            0.0
+            1.0
         ],
         "scale": [
             1.0,
@@ -84,16 +101,33 @@
         ]
     },
     {
-        "far": 30000.0,
-        "fov angle": 1.5707963705062866,
         "id": 14,
-        "near": 1.0,
-        "ortho height": 10.0,
-        "ortho width": 10.0,
-        "type": 0
+        "isDynamic": false,
+        "mass": 1.0,
+        "name": "Rigidbody"
     },
     {
-        "id": 17,
+        "extents": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "id": 15,
+        "isTrigger": false,
+        "name": "BoxCollider",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "rotation": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "id": 23,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -106,12 +140,69 @@
             0.0,
             0.0,
             0.0,
-            0.0
+            1.0
         ],
         "scale": [
             1.0,
             1.0,
             1.0
         ]
+    },
+    {
+        "far": 30000.0,
+        "fov angle": 1.5707963705062866,
+        "id": 24,
+        "name": "Camera",
+        "near": 1.0,
+        "ortho height": 10.0,
+        "ortho width": 10.0,
+        "type": 0
+    },
+    {
+        "id": 27,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            -7.900000095367432,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 26,
+        "name": "Light",
+        "property": {
+            "direction": [
+                -0.07376895099878311,
+                0.5276045799255371,
+                0.8462810516357422,
+                0.0
+            ],
+            "position": [
+                -7.900000095367432,
+                0.0,
+                0.0,
+                1.0
+            ],
+            "radiance": [
+                1.0,
+                1.0,
+                1.0,
+                1.0
+            ],
+            "type": 0
+        }
     }
 ]

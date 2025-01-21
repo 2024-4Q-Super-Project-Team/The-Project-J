@@ -82,6 +82,7 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
+        GraphicsManager::SetDebugViewProjection(mViewMatrix, mProjectionMatrix);
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
@@ -298,7 +299,8 @@ json Camera::Serialize()
 {
     json ret;
 
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
+    ret["name"] = "Camera";
     ret["fov angle"] = mFovAngle.GetAngle();
     ret["near"] = mProjectionNear;
     ret["far"] = mProjectionFar;
@@ -329,16 +331,16 @@ D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
     return nullptr;
 }
 
-void Camera::PushDrawList(RendererComponent* _renderComponent)
+void Camera::PushDrawList(IRenderContext* _renderContext)
 {
-    if (_renderComponent == nullptr) return;
-    auto pMaterial = _renderComponent->GetMaterial();
+    if (_renderContext == nullptr) return;
+    auto pMaterial = _renderContext->GetMaterial();
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
     if (pMaterial)
     {
         blendMode = pMaterial->mBlendMode;
     }
-    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
 void Camera::PushLight(Light* _pLight)

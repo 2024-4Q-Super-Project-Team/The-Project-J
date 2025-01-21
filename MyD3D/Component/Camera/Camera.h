@@ -3,12 +3,12 @@
 
 class D3DBitmapRenderTarget;
 class D3DGraphicsViewport;
-class RendererComponent;
+class IRenderContext;
 class Light;
 class SkyBox;
 class ViewportScene;
 
-using DrawQueue = std::vector<RendererComponent*>;
+using DrawQueue = std::vector<IRenderContext*>;
 using LightQueue = std::vector<Light*>;
 
 enum class ProjectionType
@@ -47,7 +47,7 @@ public:
     void SetCameraSize(Vector2 _sizeScale);
     void SetCameraOffset(Vector2 _offsetScale);
     // 카메라에 Draw할 컴포넌트를 Push합니다.
-    void PushDrawList(RendererComponent* _renderComponent);
+    void PushDrawList(IRenderContext* _renderContext);
     // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
     void PushLight(Light* _pLight);
     // 렌더 큐의 Draw 작업 수행

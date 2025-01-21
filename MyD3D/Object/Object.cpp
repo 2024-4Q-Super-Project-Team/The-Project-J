@@ -107,8 +107,6 @@ void Object::PreRender()
                 comp->PreRender();
         }
     }
-    if (!transform->GetParent())
-        transform->UpdateMatrix();
 }
 
 void Object::Render()
@@ -145,6 +143,11 @@ void Object::PostRender()
                 comp->PostRender();
         }
     }
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
+        
 }
 
 // 에디터 업데이트는 활성화 여부와 관계없이 업데이트 되어야 한다
@@ -241,6 +244,19 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
     }
 }
 
+std::vector<Component*> Object::GetAllComponents()
+{
+    std::vector<Component*> ret;
+    for (auto& typeComps : mComponentArray)
+    {
+        for (auto& comp : typeComps)
+        {
+            ret.push_back(comp);
+        }
+    }
+    return ret;
+}
+
 json Object::Serialize()
 {
     json ret;
@@ -253,7 +269,7 @@ json Object::Serialize()
         for (auto& cmp : cmpArr)
         {
             json j;
-            j["id"] = cmp->GetId();
+            j["id"] = cmp->GiveId();
             j["name"] = typeid(*cmp).name() + sizeof("Class");
             cmps.push_back(j);
         }
@@ -263,28 +279,13 @@ json Object::Serialize()
     return ret;
 }
 
-json Object::SerializeComponents()
-{
-    json ret;
-
-    for (auto& cmpArr : mComponentArray)
-    {
-        for (auto& cmp : cmpArr)
-        {
-            ret["id"] = cmp->GetId();
-            ret["data"] = cmp->Serialize();
-        }
-    }
-    return ret;
-}
-
 void Object::Deserialize(json& j)
 {
     for (auto& componentJson : j["components"])
     {
         std::string name = componentJson["name"].get<std::string>();
         Component* component;
-        if (name == "Transform") //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
+        if (name == "Transform" ) //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
             component = transform;
         else
             component = static_cast<Component*>(CREATE_COMPONENT(name, this));

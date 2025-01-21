@@ -1,35 +1,25 @@
 [
     {
-        "id": 5,
-        "name": "Test",
-        "object groups": [
-            {
-                "id": 6,
-                "name": "Default"
-            }
-        ]
-    },
-    {
         "id": 0,
-        "name": "asd",
+        "name": "sad",
         "object groups": [
             {
                 "id": 1,
                 "name": "Default"
+            },
+            {
+                "id": 2,
+                "name": "aa"
             }
         ]
     },
     {
-        "id": 10,
-        "name": "Test_World1",
+        "id": 17,
+        "name": "rr",
         "object groups": [
             {
-                "id": 11,
+                "id": 18,
                 "name": "Default"
-            },
-            {
-                "id": 15,
-                "name": "asd"
             }
         ]
     }

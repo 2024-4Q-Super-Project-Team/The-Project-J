@@ -24,10 +24,10 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 public:
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
+    virtual void DrawShadow(Light* _pLight) override {}
+public:
     void SetExtents();
-
-private:
-    void UpdateOBB();
 private:
     const Vector3 mInitialSize = { 1, 1, 1 };
 

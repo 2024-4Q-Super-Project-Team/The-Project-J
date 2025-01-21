@@ -15,7 +15,7 @@ void PhysicsManager::Initialize()
     assert(mFoundation, "PxCreateFoundation failed");
 
     mPvd = PxCreatePvd(*mFoundation);
-    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("localhost", 5425, 10);
+    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
     mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation,
@@ -25,9 +25,9 @@ void PhysicsManager::Initialize()
 
     mDefaultMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
 
-    //PxCudaContextManagerDesc cudaContextManagerDesc;
-    //mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
-    //mCudaContext = mCudaContextManager->getCudaContext();
+    PxCudaContextManagerDesc cudaContextManagerDesc;
+    mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
+    mCudaContext = mCudaContextManager->getCudaContext();
 }
 
 void PhysicsManager::Finalization()
@@ -36,5 +36,5 @@ void PhysicsManager::Finalization()
     mPvd->release();
     mPhysics->release();
     mDefaultMaterial->release();
-    //mCudaContextManager->release();
+    mCudaContextManager->release();
 }

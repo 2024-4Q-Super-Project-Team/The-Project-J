@@ -8,8 +8,19 @@ class Material;
 class Light;
 class Camera;
 
+class IRenderContext
+{
+public:
+    virtual MeshResource* GetMesh() = 0;
+    virtual MaterialResource* GetMaterial() = 0;
+public:
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
+    virtual void DrawShadow(Light* _pLight) = 0;
+};
+
 class RendererComponent
     : public Component
+    , public IRenderContext
 {
 public:
     explicit RendererComponent(Object* _owner);
@@ -30,8 +41,6 @@ public:
     virtual void SetMesh(MeshResource* _pResource) = 0;
     virtual void SetMaterial(ResourceHandle _handle) = 0;
     virtual void SetMaterial(MaterialResource* _pResource) = 0;
-    virtual MeshResource* GetMesh() = 0;
-    virtual MaterialResource* GetMaterial() = 0;
 public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;

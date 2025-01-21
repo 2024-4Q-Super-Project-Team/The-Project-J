@@ -159,6 +159,7 @@ json Light::Serialize()
     json ret;
     
     ret["id"] = GetId();
+    ret["name"] = "Light";
     json prop = json::object();
     prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };

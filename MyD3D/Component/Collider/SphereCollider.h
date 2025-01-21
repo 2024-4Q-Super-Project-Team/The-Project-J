@@ -1,11 +1,10 @@
 #pragma once
-#include "Component/Component.h"
-
-class Rigidbody : public Component
+#include "Collider.h"
+class SphereCollider : public Collider
 {
 public:
-    explicit Rigidbody(Object* _owner);
-    virtual ~Rigidbody();
+    explicit SphereCollider(Object* _owner);
+    virtual ~SphereCollider() {}
 public:
     virtual void Start() override;
     virtual void Tick() override;
@@ -20,25 +19,21 @@ public:
     // Editor Only
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
-
-public:
-    //PxRigidActor 설정하는 함수들
-    void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
-
-public:
-    void SetIsDynamic(bool _isDynamic) { mIsDynamic = _isDynamic; }
-    void SetMass(float mass);
-
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
+public:
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
+    virtual void DrawShadow(Light* _pLight) override {}
+
+    void SetRadius();
 private:
-	PxRigidActor* mRigidActor;
-	bool mIsDynamic = false;
-    float mMass = 1.f;
+    const float mInitialRadius = 1.f;
+
+    DirectX::BoundingSphere mBS;
+    PxSphereGeometry mGeometry;
+    float mRadius;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
-
-    friend class Collider;
 };
 

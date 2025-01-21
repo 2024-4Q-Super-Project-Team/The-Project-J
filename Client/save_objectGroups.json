@@ -1,41 +1,39 @@
 [
     {
-        "id": 6,
-        "name": "Default",
-        "objects": [
-            {
-                "id": 7,
-                "name": "Main_Camera"
-            }
-        ]
-    },
-    {
         "id": 1,
         "name": "Default",
         "objects": [
             {
-                "id": 2,
+                "id": 3,
                 "name": "Main_Camera"
+            },
+            {
+                "id": 4,
+                "name": "Direction_Light"
             }
         ]
     },
     {
-        "id": 11,
-        "name": "Default",
+        "id": 2,
+        "name": "aa",
         "objects": [
             {
                 "id": 12,
-                "name": "Main_Camera"
+                "name": "nn"
             }
         ]
     },
     {
-        "id": 15,
-        "name": "asd",
+        "id": 18,
+        "name": "Default",
         "objects": [
             {
-                "id": 16,
-                "name": "asd"
+                "id": 19,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 20,
+                "name": "Direction_Light"
             }
         ]
     }

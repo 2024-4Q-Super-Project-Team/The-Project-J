@@ -2,30 +2,30 @@
     {
         "components": [
             {
-                "id": 8,
+                "id": 5,
                 "name": "Transform"
             },
             {
-                "id": 9,
+                "id": 6,
                 "name": "Camera"
             }
         ],
-        "id": 7,
+        "id": 3,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 3,
+                "id": 9,
                 "name": "Transform"
             },
             {
-                "id": 4,
-                "name": "Camera"
+                "id": 10,
+                "name": "Light"
             }
         ],
-        "id": 2,
-        "name": "Main_Camera"
+        "id": 4,
+        "name": "Direction_Light"
     },
     {
         "components": [
@@ -35,20 +35,42 @@
             },
             {
                 "id": 14,
-                "name": "Camera"
+                "name": "Rigidbody"
+            },
+            {
+                "id": 15,
+                "name": "BoxCollider"
             }
         ],
         "id": 12,
+        "name": "nn"
+    },
+    {
+        "components": [
+            {
+                "id": 21,
+                "name": "Transform"
+            },
+            {
+                "id": 22,
+                "name": "Camera"
+            }
+        ],
+        "id": 19,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 17,
+                "id": 25,
                 "name": "Transform"
+            },
+            {
+                "id": 26,
+                "name": "Light"
             }
         ],
-        "id": 16,
-        "name": "asd"
+        "id": 20,
+        "name": "Direction_Light"
     }
 ]

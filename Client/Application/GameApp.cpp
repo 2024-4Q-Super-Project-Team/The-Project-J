@@ -35,6 +35,10 @@ BOOL GameApp::OnPostInitialize()
         GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG
     }
+
+    WorldManager* wrdMng = mMainScene->GetWorldManager();
+    wrdMng->LoadWorlds();
+
     return TRUE;
 }
 

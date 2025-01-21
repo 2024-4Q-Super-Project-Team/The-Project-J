@@ -116,7 +116,19 @@ void ObjectGroup::SetWorld(World* _world)
 {
 	if (mOwnerWorld == _world)
 		return;
-    _world->ReceiveObjectGroup(this);
+    
+    mOwnerWorld = _world;
+    
+    //_world->ReceiveObjectGroup(this); //?무슨 코드인지 모르겠음. 일단 호출하는데 없어서 주석처리했습니다
+}
+
+Object* ObjectGroup::GetObject(std::wstring name) const
+{
+    auto found = std::find_if(mObjects.begin(), mObjects.end(), [&name](Object* obj) {return obj->GetName() == name;});
+
+    if (found != mObjects.end())
+        return *found;
+    return nullptr;
 }
 
 json ObjectGroup::Serialize()
@@ -129,7 +141,7 @@ json ObjectGroup::Serialize()
     for (auto obj : mObjects)
     {
         json objectJson;
-        objectJson["id"] = obj->GetId();
+        objectJson["id"] = obj->GiveId();
         objectJson["name"] = Helper::ToString(obj->GetName());
         objs += objectJson;
     }
@@ -142,7 +154,7 @@ void ObjectGroup::Deserialize(json& j)
     for (auto& objectJson : j["objects"])
     {
         std::wstring name = Helper::ToWString(objectJson["name"].get<std::string>());
-        Object* group = CreateObject(name);
-        group->SetId(objectJson["id"].get<unsigned int>());
+        Object* object = CreateObject(name);
+        object->SetId(objectJson["id"].get<unsigned int>());
     }
 }

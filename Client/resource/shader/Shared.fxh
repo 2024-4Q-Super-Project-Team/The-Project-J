@@ -56,7 +56,7 @@ struct DEFERRED_PS_OUT
 #define PI 3.141592
 #define GAMMA 2.2
 #define Fdielectric 0.04
-#define Epsilon 0.001
+#define Epsilon 0.0005
 
 #define TRUE    1
 #define FALSE   0
@@ -80,10 +80,11 @@ struct LightProperty
     int    LightType;
     float  LightRange;
     float  LightStrengh;
+    float  LightCutOff;
     // ==== Shadow ====
     int    UseShadow;
     float  ShadowStrengh;
-    float3 Padding;
+    float2 Padding;
     Matrix ShadowViewMatrix;
     Matrix ShadowProjectionMatrix;
 };

@@ -21,9 +21,6 @@ BOOL ResourceManager::Initialize()
     // 기본 머티리얼
     MaterialResource::InitDefaultMaterial();
     PushResource<MaterialResource>(MaterialResource::DefaultMaterial);
-    // 기본 스카이박스
-    SkyBox::InitSkyBoxResource();
-    PushResource<SkyBox>(SkyBox::DefaultSkyBox);
     return FBXImporter::Initialize();
 }
 
@@ -32,17 +29,22 @@ void ResourceManager::Finalization()
     FBXImporter::Finalizaiton();
 }
 
+BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
+{
+    return 0;
+}
+
 void ResourceManager::RegisterResourceHandle(ResourceHandle _handle)
 {
-    UINT slot = static_cast<UINT>(_handle.GetResourceType());
-    auto itr = mResourceTables[slot].find(_handle);
-    if (FIND_FAILED(itr, mResourceTables[slot]))
+    ResourceTable& table = GetResourceTable(_handle.GetResourceType());
+    auto itr = table.find(_handle);
+    if (FIND_FAILED(itr, table))
     {
-        mResourceTables[slot][_handle] = std::make_shared<Resource>();
+        table[_handle] = nullptr;
     }
 }
 
-void ResourceManager::UnregisterResourceHandle(ResourceHandle _handle)
+void ResourceManager::UnRegisterResourceHandle(ResourceHandle _handle)
 {
 }
 

@@ -3,7 +3,6 @@
 #include "Resource/Graphics/FBXModel/FBXModel.h"
 #include "Resource/Graphics/Mesh/Mesh.h"
 #include "Resource/Graphics/Material/Material.h"
-#include "Resource/Graphics/Bone/Bone.h"
 #include "Resource/Graphics/Animation/Animation.h"
 #include "Resource/Prefab/Prefab.h"
 
@@ -67,63 +66,74 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
         std::filesystem::path FBXPath = mFBXResource->Handle.GetPath();
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
         FBXPath = FBXPath.parent_path();
-        ResourceHandle handle = { eResourceType::Material, MainKey, Name, mFBXResource->Handle.GetPath() };
-        std::shared_ptr<MaterialResource> pMaterial = std::make_shared<MaterialResource>(handle);
+
+        ResourceHandle handle = { eResourceType::MaterialResource, MainKey, Name, mFBXResource->Handle.GetPath() };
+        MaterialResource* pMaterial = new MaterialResource(handle);
+
         aiString aiPath;
         // GetTexturePath
         {
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::DIFFUSE, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::SPECULAR, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::AMBIENT, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::EMISSIVE, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::NORMAL, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::ROUGHNESS, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_OPACITY, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::OPACITY, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::METALNESS, handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
-                ResourceHandle handle = { eResourceType::Texture2D, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
+                ResourceManager::RegisterResourceHandle(handle);
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::AMBIENT_OCCLUSION, handle);
             }
         }
@@ -176,6 +186,7 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 }
             }
         }
+        pMaterial->Create();
         mFBXResource->MaterialArray.push_back(pMaterial);
         mFBXResource->MaterialTable[Name] = pMaterial;
     }
@@ -228,8 +239,10 @@ void FBXImporter::ProcessMesh(const aiScene* _pAiScene)
                 indices.push_back(face.mIndices[j]);
             }
         }
-        ResourceHandle handle = { eResourceType::Mesh, MainKey, Name, mFBXResource->Handle.GetPath() };
-        std::shared_ptr<MeshResource> pMesh = std::make_shared<MeshResource>(handle, vertexs, indices);
+
+        ResourceHandle handle = { eResourceType::MeshResource, MainKey, Name, mFBXResource->Handle.GetPath() };
+        MeshResource* pMesh = new MeshResource(handle, vertexs, indices);
+
         mFBXResource->MeshArray.push_back(pMesh);
         mFBXResource->MeshTable[Name] = pMesh;
         mFBXResource->MaterialIndexTable.push_back(MaterialIndex);
@@ -243,7 +256,7 @@ void FBXImporter::ProcessBone(const aiMesh* _pAiMesh)
 {
     mFBXResource->BoneArray.reserve(_pAiMesh->mNumBones);
     mFBXResource->BoneTable.reserve(_pAiMesh->mNumBones);
-    MeshResource* pMesh = mFBXResource->MeshArray.back().get();
+    MeshResource* pMesh = mFBXResource->MeshArray.back();
     for (UINT bIdx = 0; bIdx < _pAiMesh->mNumBones; ++bIdx)
     {
         Bone* pBone;
@@ -261,8 +274,7 @@ void FBXImporter::ProcessBone(const aiMesh* _pAiMesh)
         else
         {   // 모델리소스에서 해당 이름의 본이 없으면 만들고 그것을 참조
             Matrix boneMatrix = XMMatrixTranspose(Matrix(&pAibone->mOffsetMatrix.a1));
-            ResourceHandle handle = { eResourceType::Bone, MainKey, Name, mFBXResource->Handle.GetPath() };
-            pBone = new Bone(handle, boneMatrix);
+            pBone = new Bone(Name, boneMatrix);
             mFBXResource->BoneArray.push_back(pBone);
             mFBXResource->BoneTable[Name] = pBone;
         }
@@ -289,8 +301,8 @@ void FBXImporter::ProcessAnimation(const aiScene* _pAiScene)
         std::filesystem::path FBXPath = mFBXResource->Handle.GetPath();
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
 
-        ResourceHandle handle = { eResourceType::Animation, MainKey, Name, mFBXResource->Handle.GetPath() };
-        std::shared_ptr<AnimationResource> pAnim = std::make_shared<AnimationResource>(handle);
+        ResourceHandle handle = { eResourceType::AnimationResource, MainKey, Name, mFBXResource->Handle.GetPath() };
+        AnimationResource* pAnim = new AnimationResource(handle);
         pAnim->SetFramePerSecond((float)pAiAnim->mTicksPerSecond);
         pAnim->SetTotalFrame((float)pAiAnim->mDuration);
         mFBXResource->AnimationArray.push_back(pAnim);
@@ -301,7 +313,7 @@ void FBXImporter::ProcessAnimation(const aiScene* _pAiScene)
 
 void FBXImporter::ProcessFrame(const aiAnimation* _pAiAnim)
 {
-    AnimationResource* pAnim = mFBXResource->AnimationArray.back().get();
+    AnimationResource* pAnim = mFBXResource->AnimationArray.back();
     for (UINT channelIndex = 0; channelIndex < _pAiAnim->mNumChannels; channelIndex++)
     {
         aiNodeAnim* animNode = _pAiAnim->mChannels[channelIndex];
@@ -346,8 +358,8 @@ void FBXImporter::ProcessModelNode(const aiNode* _pAiNode, ModelNode* _pNode)
         pNode->mOrginScale);
     for (UINT i = 0; i < _pAiNode->mNumMeshes; ++i)
     {
-        pNode->mMeshResources.push_back(mFBXResource->MeshArray[_pAiNode->mMeshes[i]]->GetKey());
-        pNode->mMatResources.push_back(mFBXResource->MaterialArray[mFBXResource->MaterialIndexTable[_pAiNode->mMeshes[i]]]->GetKey());
+        pNode->mMeshResources.push_back(mFBXResource->MeshArray[_pAiNode->mMeshes[i]]->GetSubKey());
+        pNode->mMatResources.push_back(mFBXResource->MaterialArray[mFBXResource->MaterialIndexTable[_pAiNode->mMeshes[i]]]->GetSubKey());
     }
     mFBXResource->ModelNodeArray.push_back(pNode);
     mFBXResource->ModelNodeTable[Name] = pNode;

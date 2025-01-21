@@ -338,13 +338,12 @@ HRESULT D3DGraphicsImg::Create()
     ID3D11Device* pDevice = D3DGraphicsDevice::GetDevice();
     if (pDevice)
     {
-        Helper::HRT(CreateShaderResourceView(
+        CreateShaderResourceView(
             pDevice
             , Image.GetImages()
             , Image.GetImageCount()
             , Image.GetMetadata()
-            , &mSRV),
-            "Hresult Failed to GraphicsTexture2D::CreateShaderResourceView.");
+            , &mSRV);
         return S_OK;
     }
     return E_FAIL;

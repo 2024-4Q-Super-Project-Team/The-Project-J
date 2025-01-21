@@ -12,7 +12,7 @@ std::queue<D3DBitmapRenderTarget*>  Light::mShadowRenderTargetPool;
 
 Light::Light(Object* _owner)
     : Component(_owner)
-	, mShadowResolution(1024.0f)
+	, mShadowResolution(4096.0f)
     , mShadowDistance(4096.0f)
 {
     mType = eComponentType::LIGHT;
@@ -100,7 +100,19 @@ void Light::Draw(Camera* _camera)
         // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
         Vector3 shadowPos = eye + forward * mCameradDist;
         // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
-        Vector3 lightPos = shadowPos - (mLightProp.Direction * mUpDist);
+        Vector3 lightPos = Vector3{};
+        if (mLightProp.LightType == 0)
+        {
+            lightPos = shadowPos - (mLightProp.Direction * mUpDist);
+        }
+        else if (mLightProp.LightType == 1)
+        {
+            lightPos = gameObject->transform->GetWorldPosition();
+        }
+        else if (mLightProp.LightType == 2)
+        {
+            // TODO : 스팟 라이트 그림자 처리?????
+        }
 
         // Eye = 광원의 위치 LookAt = 그림자의 위치
         // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
@@ -241,6 +253,15 @@ void Light::EditorRendering(EditorViewerType _viewerType)
             ImGui::DragFloat3((uid + "Direction").c_str(), &mLightProp.Direction.x, 0.05f, -1.0f, 1.0f);
             mLightProp.Direction.Normalize();
         }
+        
+        if (mLightProp.LightType == (UINT)eLightType::Point)
+        {
+            ImGui::Text("Light Range : ");
+            ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRange, 0.05f, 1.0f, 500.0f);
+            ImGui::Text("Light CutOff : ");
+            ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
+        }
+
         ImGui::Text("Light Strengh : ");
         ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
         ImGui::Text("Light Radiance : ");

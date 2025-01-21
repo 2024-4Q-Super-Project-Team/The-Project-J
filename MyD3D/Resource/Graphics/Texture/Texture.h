@@ -3,13 +3,13 @@
 
 class D3DGraphicsImg;
 
-class Texture2D
+class Texture2DResource
     : public Resource
 {
 public:
-    RESOURCE_TYPE(Texture2D);
-    explicit Texture2D(ResourceHandle _handle);
-    virtual ~Texture2D();
+    RESOURCE_TYPE(Texture2DResource);
+    explicit Texture2DResource(ResourceHandle _handle);
+    virtual ~Texture2DResource();
 public:
     D3DGraphicsImg* Texture;
 public:

@@ -2,16 +2,14 @@
 
 enum class eResourceType
 {
-    FBXModel,
-    Mesh,
-    Material,
-    Texture2D,
-    Animation,
-    Bone,
-    SkyBox,
-    Prefab,
+    FBXModelResource,
+    MeshResource,
+    MaterialResource,
+    Texture2DResource,
+    AnimationResource,
     AudioResource,
-    Font,
+    FontResource,
+    PrefabResource,
     SIZE,
 };
 
@@ -29,11 +27,11 @@ public:
     ResourceHandle(ResourceHandle&&) noexcept = default; // 이동 생성자
     ResourceHandle& operator=(const ResourceHandle&) = default;  // 복사 대입 연산자
     ResourceHandle& operator=(ResourceHandle&&) noexcept = default; // 이동 대입 연산자
-protected:
-    eResourceType       mResourceType = eResourceType::SIZE;
-    std::wstring	    mMainKey = L"";		// 리소스 매니저에서 쓸 키 값.
-    std::wstring	    mSubKey = L"";		// 메쉬의 경우, fbxModel내에서 사용하는 key값을 통해 불러와야 하므로, fbxModel내에서 사용하는 key값을 저장한다.
-    std::wstring	    mPath = L"";			// 리소스를 불러오기 위한 경로(FBX모델안에 있는 메쉬의 경우, 이 값은 fbx의 경로다.)
+public:
+    eResourceType   mResourceType = eResourceType::SIZE;    // 리소스 타입
+    std::wstring    mMainKey = L"";		                    // 리소스 매니저에서 쓸 키 값.
+    std::wstring    mSubKey = L"";		                    // 메쉬의 경우, fbxModel내에서 사용하는 key값을 통해 불러와야 하므로, fbxModel내에서 사용하는 key값을 저장한다.
+    std::wstring    mPath = L"";			                // 리소스를 불러오기 위한 경로(FBX모델안에 있는 메쉬의 경우, 이 값은 fbx의 경로다.)
 public:
     inline const auto& GetResourceType()    const { return mResourceType; }
     inline const auto& GetKey()             const { return mMainKey; }
@@ -62,7 +60,10 @@ public:
 public:
     inline const auto& GetHandle()  { return mHandle; }
     inline const auto& GetKey()     { return mHandle.GetKey(); }
+    inline const auto& GetSubKey()     { return mHandle.GetSubKey(); }
     inline const auto& GetPath()    { return mHandle.GetPath(); }
+public:
+    virtual void Create() {}
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override {};
 protected:

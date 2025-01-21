@@ -4,7 +4,7 @@ namespace Editor
 {
 	// MenuItem
 	class WorldChanger
-		: public Editor::IWidget
+		: public IWidget
 	{
 	public:
 		explicit WorldChanger();

@@ -8,9 +8,8 @@
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
-
-#include "Resource/Graphics/Material/Material.h"
-#include "Resource/Graphics/SkyBox/SkyBox.h"
+#include "Resource/ResourceManager.h"
+#include "SkyBox/SkyBox.h"
 
 Camera::Camera(Object* _owner, Vector2 _size)
     : Component(_owner)
@@ -25,10 +24,10 @@ Camera::Camera(Object* _owner, Vector2 _size)
     , mOrthoHeight(10.0f)
     , mLocalViewport(nullptr)
     , mCameraViewport(nullptr)
+    , mSkyBox(SkyBox::GetDefaultSkyBox())
 {
     mType = eComponentType::CAMERA;
     mLocalViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
-
 }
 
 Camera::~Camera()
@@ -117,8 +116,10 @@ void Camera::SetCameraOffset(Vector2 _offsetScale)
 
 void Camera::UpdateCamera()
 {
-    if(mCameraViewport == nullptr)
+    if (mCameraViewport == nullptr)
+    {
         mCameraViewport = ViewportManager::GetActiveViewport();
+    }
     if (mCameraViewport)
     {
         mMainViewport = mCameraViewport->GetMainViewport();
@@ -333,13 +334,12 @@ D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
 void Camera::PushDrawList(IRenderContext* _renderContext)
 {
     if (_renderContext == nullptr) return;
-    //auto pMaterial = _renderContext->GetMaterial();
+    auto pMaterial = _renderContext->GetMaterial();
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
-    //if (pMaterial)
-    //{
-    //    if(pMaterial->mMaterialResource)
-    //    blendMode = pMaterial->mMaterialResource->mBlendMode;
-    //}
+    if (pMaterial)
+    {
+        blendMode = pMaterial->mBlendMode;
+    }
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
@@ -455,7 +455,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
         {
             ImGui::Separator();
 
-            EDITOR_COLOR_EXTRA;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
             if (ImGui::TreeNodeEx(("Deferred View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
             {
                 //ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");

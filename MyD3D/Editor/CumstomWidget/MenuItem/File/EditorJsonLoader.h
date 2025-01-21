@@ -2,15 +2,18 @@
 
 namespace Editor
 {
-	class WorldRemover
+	// MenuItem
+	class JsonLoader
 		: public IWidget
 	{
 	public:
-		explicit WorldRemover();
-		virtual ~WorldRemover();
+		explicit JsonLoader();
+		virtual ~JsonLoader();
 	public:
 		virtual void Render() override;
 	private:
 		std::string mlabel;
 	};
 }
+
+

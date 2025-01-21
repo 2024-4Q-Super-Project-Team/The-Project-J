@@ -33,7 +33,7 @@ void Editor::ResourceViewer::Render()
 			{
 				std::string treeName = (ResourceName + " : " + Helper::ToString(resource.first.GetKey())).c_str();
 
-				if (resource.second.expired())
+				if (resource.second == nullptr)
 				{
 					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_NULL);
 				}
@@ -44,13 +44,13 @@ void Editor::ResourceViewer::Render()
 			
 				if (ImGui::TreeNodeEx((treeName + uid).c_str(), ImGuiTreeNodeFlags_Selected))
 				{
-					if (resource.second.expired())
+					if (resource.second == nullptr)
 					{
 						ImGui::Text("NULL Resource");
 					}
 					else
 					{
-						resource.second.lock()->EditorRendering(EditorViewerType::DEFAULT);
+						resource.second->EditorRendering(EditorViewerType::DEFAULT);
 					}
 					ImGui::TreePop();
 				}

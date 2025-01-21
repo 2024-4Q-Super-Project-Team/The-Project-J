@@ -160,6 +160,8 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h" />
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.h" />
     <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h" />
     <ClInclude Include="Editor\EditorCamera\EditorCamera.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.h" />
@@ -217,7 +219,7 @@
     <ClInclude Include="Helper\Input\InputDevice\Key.h" />
     <ClInclude Include="Helper\Input\InputDevice\Mouse.h" />
     <ClInclude Include="Component\MeshFilter\MeshFilter.h" />
-    <ClInclude Include="Resource\Graphics\Bone\Bone.h" />
+    <ClInclude Include="Resource\Graphics\Mesh\Bone.h" />
     <ClInclude Include="Resource\Graphics\Animation\Animation.h" />
     <ClInclude Include="Application\Application.h" />
     <ClInclude Include="Component\Component.h" />
@@ -245,7 +247,7 @@
     <ClInclude Include="UISystem\Widget\WidgetButton.h" />
     <ClInclude Include="UISystem\Widget\WidgetCheckBox.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
-    <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h" />
+    <ClInclude Include="Component\Camera\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
     <ClInclude Include="World\WorldManager.h" />
     <ClInclude Include="Resource\Graphics\FBXModel\FBXModel.h" />
@@ -278,6 +280,8 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.cpp" />
     <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp" />
     <ClCompile Include="Editor\EditorCamera\EditorCamera.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.cpp" />
@@ -334,7 +338,7 @@
     <ClCompile Include="Helper\Input\InputDevice\Key.cpp" />
     <ClCompile Include="Helper\Input\InputDevice\Mouse.cpp" />
     <ClCompile Include="Component\MeshFilter\MeshFilter.cpp" />
-    <ClCompile Include="Resource\Graphics\Bone\Bone.cpp" />
+    <ClCompile Include="Resource\Graphics\Mesh\Bone.cpp" />
     <ClCompile Include="Resource\Graphics\Animation\Animation.cpp" />
     <ClCompile Include="Application\Application.cpp" />
     <ClCompile Include="Component\Component.cpp" />
@@ -361,7 +365,7 @@
     <ClCompile Include="UISystem\Widget\WidgetButton.cpp" />
     <ClCompile Include="UISystem\Widget\WidgetCheckBox.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
-    <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />
     <ClCompile Include="World\WorldManager.cpp" />
     <ClCompile Include="Resource\Graphics\FBXModel\FBXModel.cpp" />

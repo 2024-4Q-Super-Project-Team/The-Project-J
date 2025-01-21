@@ -20,8 +20,8 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
-    std::vector<std::shared_ptr<FBXModelResource>>  mFBXModelResources;
-    std::vector<std::shared_ptr<Prefab>>            mModelPrefabs;
+    std::vector<FBXModelResource*>  mFBXModelResources;
+    std::vector<PrefabResource*>            mModelPrefabs;
     std::vector<RendererComponent*>                 mRenderComponents;
     Object* mObject;
 

@@ -4,6 +4,8 @@
 #include "Resource/ResourceManager.h"
 #include "Resource/FBXImporter/FBXImporter.h"
 
+#include "Resource/Graphics/Material/Material.h"
+
 FBXModelResource::FBXModelResource(ResourceHandle _handle)
     : Resource(_handle)
     , mRootNode(nullptr)
@@ -21,12 +23,24 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
     mModelNodeTable  = std::move(pModel->ModelNodeTable);
     mRootNode       = pModel->RootNode;
     pModel->Clear();
-    for (auto& rsc : mMaterialArray)
-        ResourceManager::PushResource(rsc);
-    for (auto& rsc : mMeshArray)
-        ResourceManager::PushResource(rsc);
-    for (auto& rsc : mAnimationArray)
-        ResourceManager::PushResource(rsc);
+
+	for (auto& resource : mMaterialArray)
+	{
+		ResourceManager::PushResource(resource);
+	}
+	for (auto& resource : mMeshArray)
+	{
+		ResourceManager::PushResource(resource);
+	}
+	for (auto& resource : mAnimationArray)
+	{
+		ResourceManager::PushResource(resource);
+	}
+
+	// Path 추가하기
+	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", L""};
+	mModelPrefab = new PrefabResource(handle, this);
+	ResourceManager::PushResource(mModelPrefab);
 }
 
 FBXModelResource::~FBXModelResource()
@@ -64,15 +78,6 @@ void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 		if (ImGui::TreeNodeEx("Animation", EDITOR_FLAG_RESOURCE))
 		{
 			for (auto& rsc : mAnimationArray)
-			{
-				if (rsc)
-					rsc->EditorRendering(EditorViewerType::DEFAULT);
-			}
-			ImGui::TreePop();
-		}
-		if (ImGui::TreeNodeEx("Bone", EDITOR_FLAG_RESOURCE))
-		{
-			for (auto& rsc : mBoneArray)
 			{
 				if (rsc)
 					rsc->EditorRendering(EditorViewerType::DEFAULT);

@@ -2,7 +2,7 @@
 #include "Resource/Resource.h"
 #include "Graphics/ConstantBuffer.h"
 
-class Texture2D;
+class Texture2DResource;
 class D3DGraphicsVertexShader;
 class D3DGraphicsPixelShader;
 struct MaterialCBuffer;
@@ -12,58 +12,57 @@ class MaterialResource
     : public Resource
 {
 public: _READ_ONLY
-    RESOURCE_TYPE(Material);
+    RESOURCE_TYPE(MaterialResource);
       explicit MaterialResource(ResourceHandle _handle);
       virtual ~MaterialResource();
 public:
-    //void SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath);
+    virtual void    Create() override;
+    void            Bind();
+public:
+    void SetMateirlaMapHandle(eMaterialMapType _type, ResourceHandle& _handle);
     void SetMaterialProperty(MaterialProperty* _pProp);
     void SetBlendingMode(eBlendType _type);
-    //const std::wstring& GetMaterialMapPath(eMaterialMapType _mapType);
-    void SetMateirlaMapHandle(eMaterialMapType _mapType, const ResourceHandle& _handle);
 public:
-    // 머티리얼이 사용할 각 맵 텍스쳐 핸들
-    ResourceHandle      mMaterialMapPath[MATERIAL_MAP_SIZE];
+    ResourceHandle      mMaterialMapTextureHandle[MATERIAL_MAP_SIZE];
+    Texture2DResource*  mMaterialMapTexture[MATERIAL_MAP_SIZE] = { nullptr, };
     // 머티리얼 고유 속성
     MaterialProperty    mMaterialProperty;
     // 블렌드 타입
     eBlendType          mBlendMode = eBlendType::OPAQUE_BLEND;
     // 기본 머티리얼
-    static std::shared_ptr<MaterialResource> DefaultMaterial;
+    static MaterialResource* DefaultMaterial;
 public:
     static void InitDefaultMaterial();
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
-// MaterialData를 참조하며, 독립적인 머티리얼 상수버퍼 값을 가지는 머티리얼 
-// 머티리얼의 색상 정보(디퓨즈, 앰비언트, 스페큘러 등)와 속성들을 개별적으로 관리.
-class Material
-    : public IEditorObject
-{
-public:
-    explicit Material();
-    explicit Material(std::shared_ptr<MaterialResource> _pMatResource);
-    virtual ~Material();
-public:
-    void SetVertexShader(D3DGraphicsVertexShader* _pVertexShader);
-    void SetPixelShader(D3DGraphicsPixelShader* _pVPixelShader);
-    void SetMaterial(std::shared_ptr<MaterialResource> _pMaterial);
-    void UseMaterialMapType(eMaterialMapType _type, BOOL _bUse);
-    std::shared_ptr<Texture2D> GetMapTexture(eMaterialMapType _type);
-public:
-    void Bind();
-public:
-    // 독립적인 머티리얼 상수 버퍼. 이건 누구와도 공유하지 않음.
-    MaterialCBuffer mMatCBuffer;
-    // 셰이더를 머티리얼 리소스에게 공유받는다.
-    std::shared_ptr<MaterialResource> mMaterialResource;
-    // 텍스쳐는 머티리얼 리소스의 경로를 참조해 만듬.
-    std::shared_ptr<Texture2D> mMaterialMaps[MATERIAL_MAP_SIZE];
-    // 머티리얼이 사용할 버텍스 셰이더
-    D3DGraphicsVertexShader* mVertexShader;
-    // 머티리얼이 사용할 픽셀 셰이더
-    D3DGraphicsPixelShader* mPixelShader;
-public:
-	virtual void EditorRendering(EditorViewerType _viewerType) override;
-};
+//// MaterialData를 참조하며, 독립적인 머티리얼 상수버퍼 값을 가지는 머티리얼 
+//// 머티리얼의 색상 정보(디퓨즈, 앰비언트, 스페큘러 등)와 속성들을 개별적으로 관리.
+//class Material
+//    : public IEditorObject
+//{
+//public:
+//    explicit Material();
+//    explicit Material(MaterialResource* _pMatResource);
+//    virtual ~Material();
+//public:
+//    void SetVertexShader(D3DGraphicsVertexShader* _pVertexShader);
+//    void SetPixelShader(D3DGraphicsPixelShader* _pVPixelShader);
+//    void SetMaterial(MaterialResource* _pMaterial);
+//    void UseMaterialMapType(eMaterialMapType _type, BOOL _bUse);
+//    Texture2DResource* GetMapTexture(eMaterialMapType _type);
+//public:
+//    void Bind();
+//public:
+//    // 독립적인 머티리얼 상수 버퍼. 이건 누구와도 공유하지 않음.
+//    MaterialCBuffer             mMatCBuffer;
+//    // 셰이더를 머티리얼 리소스에게 공유받는다.
+//    MaterialResource*           mMaterialResource;
+//    // 머티리얼이 사용할 버텍스 셰이더
+//    D3DGraphicsVertexShader*    mVertexShader;
+//    // 머티리얼이 사용할 픽셀 셰이더
+//    D3DGraphicsPixelShader*     mPixelShader;
+//public:
+//	virtual void EditorRendering(EditorViewerType _viewerType) override;
+//};

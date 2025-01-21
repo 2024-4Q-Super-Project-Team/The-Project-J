@@ -78,9 +78,6 @@
     <ClInclude Include="framework.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Prefab\Prefab.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Resource\Resource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -108,7 +105,7 @@
     <ClInclude Include="Resource\Graphics\Animation\Animation.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Graphics\Bone\Bone.h">
+    <ClInclude Include="Resource\Graphics\Mesh\Bone.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\Renderer\Renderer.h">
@@ -171,7 +168,7 @@
     <ClInclude Include="Component\Renderer\MeshRenderer\MeshRenderer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h">
+    <ClInclude Include="Component\Camera\SkyBox\SkyBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\GPUResource\D3DGraphicsBuffer.h">
@@ -342,6 +339,15 @@
     <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\Prefab\Prefab.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h">
+      <Filter>헤더 파일</Filter>
+	</ClInclude>
     <ClInclude Include="Physics\PickingRay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -425,9 +431,6 @@
     <ClCompile Include="Physics\PhysicsManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Prefab\Prefab.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Resource\Resource.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -455,7 +458,7 @@
     <ClCompile Include="Resource\Graphics\Animation\Animation.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Graphics\Bone\Bone.cpp">
+    <ClCompile Include="Resource\Graphics\Mesh\Bone.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\Renderer\Renderer.cpp">
@@ -512,7 +515,7 @@
     <ClCompile Include="Component\Renderer\MeshRenderer\MeshRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp">
+    <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\GPUResource\D3DGraphicsBuffer.cpp">
@@ -680,6 +683,15 @@
     <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
+    <ClCompile Include="Resource\Prefab\Prefab.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp">
+	<Filter>소스 파일</Filter>
+	</ClCompile>
     <ClCompile Include="Physics\PickingRay.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

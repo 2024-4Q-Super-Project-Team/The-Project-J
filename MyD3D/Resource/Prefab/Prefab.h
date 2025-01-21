@@ -4,18 +4,20 @@
 class Object;
 class FBXModelResource;
 class ModelNode;
+class ObjectGroup;
 
-class Prefab
-    : public Resource
+class PrefabResource : public Resource
 {
 public:
-    RESOURCE_TYPE(Prefab);
-    explicit Prefab(ResourceHandle _handle);
-    explicit Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel);
-    virtual ~Prefab();
+    RESOURCE_TYPE(PrefabResource);
+    explicit PrefabResource(ResourceHandle _handle);
+    explicit PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel);
+    virtual ~PrefabResource();
 public:
     Object* GetObjectFromName(const std::wstring& _name);
     void    SetGroupName(const std::wstring& _groupName);  
+public:
+    Object* InstantiateFromGroup(ObjectGroup* _group);
 private:
     // 그룹 이름. 나중에 클론 생성시 해당 그룹으로 복사함. 없으면 생성
     std::wstring mGroupName;
@@ -24,10 +26,10 @@ private:
     friend class ResourceManager;
     friend class MonoBehaviour;
 private:
-    void    AddObject(Object* _pObject);
-    void    AddObjectFromNode(Object* _pObject, ModelNode* _pNode);
-    void    SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel);
-    void    SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel);
+    void AddObject(Object* _pObject);
+    void AddObjectFromNode(Object* _pObject, ModelNode* _pNode);
+    void SetComponent(Object* _pObject, FBXModelResource* _pModel);
+    void SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pModel);
 public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

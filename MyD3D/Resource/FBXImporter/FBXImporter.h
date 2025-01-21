@@ -55,18 +55,18 @@ struct FBXResource
     }
     ResourceHandle Handle;
     // Material
-    std::vector<std::shared_ptr<MaterialResource>> MaterialArray;
-    std::unordered_map<std::wstring, std::shared_ptr<MaterialResource>> MaterialTable;
+    std::vector<MaterialResource*> MaterialArray;
+    std::unordered_map<std::wstring, MaterialResource*> MaterialTable;
     std::vector<UINT> MaterialIndexTable;
     // Mesh
-    std::vector<std::shared_ptr<MeshResource>> MeshArray;
-    std::unordered_map<std::wstring, std::shared_ptr<MeshResource>> MeshTable;
+    std::vector<MeshResource*> MeshArray;
+    std::unordered_map<std::wstring, MeshResource*> MeshTable;
     // Bone
     std::vector<Bone*> BoneArray;
     std::unordered_map<std::wstring, Bone*> BoneTable;
     // Animation
-    std::vector<std::shared_ptr<AnimationResource>> AnimationArray;
-    std::unordered_map<std::wstring, std::shared_ptr<AnimationResource>> AnimationTable;
+    std::vector<AnimationResource*> AnimationArray;
+    std::unordered_map<std::wstring, AnimationResource*> AnimationTable;
     // Node
     ModelNode* RootNode;
     std::vector<ModelNode*> ModelNodeArray;

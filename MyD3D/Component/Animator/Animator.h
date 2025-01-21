@@ -27,7 +27,8 @@ public:
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
 public:
-    void SetAnimation(std::shared_ptr<AnimationResource> _pAnim);
+    void SetAnimation(ResourceHandle _handle);
+    void SetAnimation(AnimationResource* _pAnim);
 
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
@@ -38,7 +39,8 @@ private:
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
 
 private:
-    std::shared_ptr<AnimationResource> mActiveAnimation;
+    ResourceHandle      mAnimationHandle;
+    AnimationResource*  mActiveAnimation;
     bool  isPlaying;
     float mDuration;
 public:

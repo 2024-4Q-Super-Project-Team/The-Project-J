@@ -8,9 +8,9 @@
 #include "Editor/EditorManager.h"
 
 // 리소스매니저에서 생성
-std::shared_ptr<MeshResource> MeshResource::SkyCubeMesh;
-std::shared_ptr<MeshResource> MeshResource::CubeMesh;
-std::shared_ptr<MeshResource> MeshResource::PlainMesh;
+MeshResource* MeshResource::SkyCubeMesh;
+MeshResource* MeshResource::CubeMesh;
+MeshResource* MeshResource::PlainMesh;
 
 MeshResource::MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
     : Resource(_handle)
@@ -18,7 +18,6 @@ MeshResource::MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertice
     SetID("Mesh : " + Helper::ToString(_handle.GetKey()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
-    
 }
 
 MeshResource::~MeshResource()
@@ -27,7 +26,7 @@ MeshResource::~MeshResource()
     SAFE_RELEASE(mIndexBuffer);
 }
 
-HRESULT MeshResource::Create()
+void MeshResource::Create()
 {
     D3D11_BUFFER_DESC bufDesc = {};
     {   // 버텍스 버퍼
@@ -52,7 +51,6 @@ HRESULT MeshResource::Create()
         mIndexBuffer->SetFormat(DXGI_FORMAT_R32_UINT);
         mIndexBuffer->SetOffset(0);
     }
-    return S_OK;
 }
 
 void MeshResource::Bind()
@@ -110,8 +108,8 @@ void MeshResource::InitSkyCubeMesh()
 
 
     // 스카이 큐브 메쉬 생성
-    ResourceHandle handle = { eResourceType::Mesh, L"Default_SkyCube_Mesh", L"", L""};
-    SkyCubeMesh = std::make_shared<MeshResource>(handle, vertices, indices);
+    ResourceHandle handle = { eResourceType::MeshResource, L"Default_SkyCube_Mesh", L"", L""};
+    SkyCubeMesh = new MeshResource(handle, vertices, indices);
     SkyCubeMesh->Create();
 }
 
@@ -173,8 +171,8 @@ void MeshResource::InitCubeMesh()
         20, 21, 22, 20, 22, 23
     };
 
-    ResourceHandle handle = { eResourceType::Mesh, L"Default_Cube_Mesh", L"", L"" };
-    CubeMesh = std::make_shared<MeshResource>(handle, vertices, indices);
+    ResourceHandle handle = { eResourceType::MeshResource, L"Default_Cube_Mesh", L"", L"" };
+    CubeMesh = new MeshResource(handle, vertices, indices);
     CubeMesh->Create();
 }
 
@@ -206,8 +204,8 @@ void MeshResource::InitPlainMesh()
     };
 
     // 평면 메쉬 생성
-    ResourceHandle handle = { eResourceType::Mesh, L"Default_Plain_Mesh", L"", L"" };
-    PlainMesh = std::make_shared<MeshResource>(handle, vertices, indices);
+    ResourceHandle handle = { eResourceType::MeshResource, L"Default_Plain_Mesh", L"", L"" };
+    PlainMesh = new MeshResource(handle, vertices, indices);
     PlainMesh->Create();
 }
 
@@ -221,7 +219,7 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
     {
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(uid.c_str(), false, flags))
+        if (ImGui::Selectable(GetID(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -230,8 +228,8 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
         }
         EditorItemState state;
         state.mResourcePtr = this;
-        state.mName = Helper::ToString(mHandle.GetKey());
-        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        state.mName = name;
+        EditorDragNDrop::SendDragAndDropData(GetID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }

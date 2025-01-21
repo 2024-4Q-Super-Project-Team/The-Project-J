@@ -331,9 +331,21 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource\ResourceHandle.h">
-	  <Filter>헤더 파일</Filter>
-	</ClInclude>
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Graphics\Extra\DebugDraw.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorCamera\EditorCamera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Physics\PickingRay.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Collider\SphereCollider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -625,7 +637,7 @@
     </ClCompile>
     <ClCompile Include="Editor\EditorManager.cpp">
       <Filter>소스 파일</Filter>
-	</ClCompile>
+    </ClCompile>
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -642,9 +654,21 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\ResourceHandle.cpp">
-	  <Filter>소스 파일</Filter>
-	</ClCompile>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorCamera\EditorCamera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Physics\PickingRay.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Collider\SphereCollider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

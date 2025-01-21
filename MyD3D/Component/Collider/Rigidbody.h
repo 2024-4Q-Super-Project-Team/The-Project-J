@@ -17,6 +17,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 
 public:
     //PxRigidActor 설정하는 함수들
@@ -32,7 +35,10 @@ public:
 private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
+    float mMass = 1.f;
+public:
+    virtual void EditorRendering(EditorViewerType _type) override;
 
-	friend class Collider;
+    friend class Collider;
 };
 

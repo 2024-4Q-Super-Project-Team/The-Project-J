@@ -10,8 +10,8 @@ class Prefab
 {
 public:
     RESOURCE_TYPE(Prefab);
-    explicit Prefab(std::wstring_view _name);
-    explicit Prefab(std::wstring_view _name, std::shared_ptr<FBXModelResource> _pModel);
+    explicit Prefab(ResourceHandle _handle);
+    explicit Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel);
     virtual ~Prefab();
 public:
     Object* GetObjectFromName(const std::wstring& _name);

@@ -2,19 +2,19 @@
 
 class Component;
 
-#include "Object/Object.h"
+#include "../../Object/Object.h"
 
 class ICreator
 {
 public:
 	virtual ~ICreator() = default;
-	virtual void* Create(Object* owner, bool isEditorMode, void* args = nullptr) const = 0;
+	virtual void* Create(Object* owner, void* args = nullptr) const = 0;
 };
 
 template <typename T, typename... Args>
 class Creator : public ICreator {
 public:
-    void* Create(Object* owner, bool isEditorMode, void* args = nullptr) const override {
+    void* Create(Object* owner, void* args = nullptr) const override {
         // args를 적절히 캐스팅하여 생성자에 전달
         if constexpr (sizeof...(Args) == 0) {
             return owner->AddComponent<T>(); // 인자가 없는 경우

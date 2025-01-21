@@ -3,6 +3,7 @@
 
 //반드시 Rigidbody가 있는 상태에서 추가해야 합니다.
 class Collider : public Component
+               , public IRenderContext
 {
 public:
     explicit Collider(Object* _owner);
@@ -18,7 +19,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
-
+public:
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
+    virtual void DrawShadow(Light* _pLight)  = 0;
 public:
     virtual json Serialize()  = 0;
     virtual void Deserialize(json& j)  = 0;

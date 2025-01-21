@@ -7,7 +7,7 @@ class Bone
 {
 public:
     RESOURCE_TYPE(Bone);
-    explicit Bone(std::wstring_view _name, Matrix _matrix);
+    explicit Bone(ResourceHandle _handle, Matrix _matrix);
     virtual ~Bone();
 public:
     const Matrix  mOffsetMatrix;      // 해당 본의 옵셋

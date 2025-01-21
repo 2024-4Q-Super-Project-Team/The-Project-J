@@ -1,41 +1,57 @@
 [
     {
-        "id": 6,
+        "id": 28,
         "name": "Default",
         "objects": [
             {
-                "id": 7,
+                "id": 30,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 31,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 32,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 33,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 34,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 35,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 36,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 37,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 38,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 39,
                 "name": "Main_Camera"
             }
         ]
     },
     {
-        "id": 1,
-        "name": "Default",
+        "id": 29,
+        "name": "rtrdtr",
         "objects": [
             {
-                "id": 2,
-                "name": "Main_Camera"
-            }
-        ]
-    },
-    {
-        "id": 11,
-        "name": "Default",
-        "objects": [
-            {
-                "id": 12,
-                "name": "Main_Camera"
-            }
-        ]
-    },
-    {
-        "id": 15,
-        "name": "asd",
-        "objects": [
-            {
-                "id": 16,
-                "name": "asd"
+                "id": 51,
+                "name": "drdt"
             }
         ]
     }

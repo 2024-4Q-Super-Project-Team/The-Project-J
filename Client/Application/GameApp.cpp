@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GameApp.h"
-#include "Contents/GameApp/World/TestWorld.h"
+//#include "Contents/GameApp/World/TestWorld.h"
 #include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene = nullptr;
@@ -28,19 +28,17 @@ BOOL GameApp::OnPostInitialize()
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
-        //WorldManager* wrdMng = mMainScene->GetWorldManager();
-        //if (nullptr == wrdMng) return FALSE;
-        //
-        //World* wolrd = wrdMng->CreateWorld<TestWorld>(L"TestWorld", L"Deafult");
-        ////wrdMng->LoadWorlds();
-        //wrdMng->SetActiveWorld(L"TestWorld");
 #ifdef _DEBUG
-        /////////////////////////////////////////////////////
-        // ¿¡µðÅÍ
-        /////////////////////////////////////////////////////
         EditorManager::ShowEditorWindow(mMainScene);
+        GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+#else
+        GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG
     }
+
+    WorldManager* wrdMng = mMainScene->GetWorldManager();
+    wrdMng->LoadWorlds();
+
     return TRUE;
 }
 

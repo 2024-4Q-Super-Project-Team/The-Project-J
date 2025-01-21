@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "ScriptRegister.h"
-#include "Component/ComponentFactory/ComponentFactory.h"
+#include "../MyD3D/Component/ComponentFactory/ComponentFactory.h"
 
 #include "Contents/GameApp/Script/CameraController.h"
 #include "Contents/GameApp/Script/ModelSpawner.h"

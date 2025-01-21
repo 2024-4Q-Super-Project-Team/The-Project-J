@@ -19,21 +19,22 @@ if (mMaterialMaps[(UINT)typeEnum]) \
     }\
 }\
 
-std::shared_ptr<MaterialResource> MaterialResource::DefaultMaterial = std::make_shared<MaterialResource>(L"Default_Material");
+std::shared_ptr<MaterialResource> MaterialResource::DefaultMaterial;
 
-MaterialResource::MaterialResource(std::wstring_view _name)
-    : Resource(_name)
+MaterialResource::MaterialResource(ResourceHandle _handle)
+    : Resource(_handle)
 {
+    SetID("Mateiral : " + Helper::ToString(_handle.GetKey()));
 }
 
 MaterialResource::~MaterialResource()
 {
 }
 
-void MaterialResource::SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath)
-{
-    mMaterialMapPath[static_cast<UINT>(_mapType)] = _pTexPath;
-}
+//void MaterialResource::SetMaterialMap(eMaterialMapType _mapType, const std::wstring& _pTexPath)
+//{
+//    mMaterialMapPath[static_cast<UINT>(_mapType)] = _pTexPath;
+//}
 
 void MaterialResource::SetMaterialProperty(MaterialProperty* _pProp)
 {
@@ -48,16 +49,51 @@ void MaterialResource::SetBlendingMode(eBlendType _type)
     mBlendMode = _type;
 }
 
-const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapType)
+void MaterialResource::SetMateirlaMapHandle(eMaterialMapType _mapType, const ResourceHandle& _handle)
 {
-    return  mMaterialMapPath[static_cast<UINT>(_mapType)];
+    mMaterialMapPath[static_cast<UINT>(_mapType)] = _handle;
+}
+
+//const std::wstring& MaterialResource::GetMaterialMapPath(eMaterialMapType _mapType)
+//{
+//    return  mMaterialMapPath[static_cast<UINT>(_mapType)];
+//}
+
+void MaterialResource::InitDefaultMaterial()
+{
+    ResourceHandle handle = { eResourceType::Material, L"Default_Materail", L"", L"" };
+    DefaultMaterial = std::make_shared<MaterialResource>(handle);
 }
 
 void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string name = Helper::ToString(mName);
-    ImGui::Text(name.c_str());
-
+    switch (_viewerType)
+    {
+    case EditorViewerType::DEFAULT:
+    {
+        std::string name = Helper::ToString(GetKey());
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(uid.c_str(), false, flags))
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
+        }
+        EditorItemState state;
+        state.mResourcePtr = this;
+        state.mName = Helper::ToString(mHandle.GetKey());
+        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        EDITOR_COLOR_POP(1);
+    }
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+        break;
+    default:
+        break;
+    }
 }
 
 Material::Material()
@@ -94,9 +130,9 @@ void Material::SetMaterial(std::shared_ptr<MaterialResource> _pMaterial)
     mMatCBuffer.MatProp = _pMaterial->mMaterialProperty;
     for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
     {
-        if (mMaterialResource->mMaterialMapPath[i] != L"")
+        if (mMaterialResource->mMaterialMapPath->GetPath() != L"")
         {
-            mMaterialMaps[i] = ResourceManager::AddResource<Texture2D>(mMaterialResource->mMaterialMapPath[i]);
+            mMaterialMaps[i] = ResourceManager::RequestResource<Texture2D>(mMaterialResource->mMaterialMapPath[i]);
             if (mMaterialMaps[i])
             {
                 mMaterialMaps[i]->Texture->SetBindStage(eShaderStage::PS);
@@ -140,15 +176,15 @@ void Material::Bind()
 }
 
 void Material::EditorRendering(EditorViewerType _viewerType)
-{
+{ 
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    std::string name = Helper::ToString(mMaterialResource->GetName());
+    std::string name = Helper::ToString(mMaterialResource->GetKey());
 
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
     {
-        EDITOR_COLOR_RESOURCE;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
         if (ImGui::Selectable(uid.c_str(), false, flags))
         {
@@ -157,8 +193,6 @@ void Material::EditorRendering(EditorViewerType _viewerType)
                 EditorManager::GetInspectorViewer()->SetFocusObject(this);
             }
         }
-        EditorItemState state = { nullptr , name };
-        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
         EDITOR_COLOR_POP(1);
         break;
     }
@@ -166,7 +200,7 @@ void Material::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
-        EDITOR_COLOR_RESOURCE;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         ImGui::Text(("Material : " + name).c_str());
         ImGui::Text("Diffuse : ");
         ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
@@ -180,7 +214,8 @@ void Material::EditorRendering(EditorViewerType _viewerType)
         ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
         ImGui::Text("AmbienOcclusion Scale : ");
         ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
-        EDITOR_COLOR_EXTRA;
+        EDITOR_COLOR_POP(1);
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
         {
             BOOL UseMap = mMatCBuffer.GetUsingMap((eMaterialMapType)type);
@@ -223,6 +258,4 @@ void Material::EditorRendering(EditorViewerType _viewerType)
     default:
         break;
     }
-    
-    EDITOR_COLOR_POP(1);
 }

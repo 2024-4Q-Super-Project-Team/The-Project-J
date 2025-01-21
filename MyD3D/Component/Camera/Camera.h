@@ -3,12 +3,12 @@
 
 class D3DBitmapRenderTarget;
 class D3DGraphicsViewport;
-class RendererComponent;
+class IRenderContext;
 class Light;
 class SkyBox;
 class ViewportScene;
 
-using DrawQueue = std::vector<RendererComponent*>;
+using DrawQueue = std::vector<IRenderContext*>;
 using LightQueue = std::vector<Light*>;
 
 enum class ProjectionType
@@ -40,11 +40,14 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     void SetCameraSize(Vector2 _sizeScale);
     void SetCameraOffset(Vector2 _offsetScale);
     // 카메라에 Draw할 컴포넌트를 Push합니다.
-    void PushDrawList(RendererComponent* _renderComponent);
+    void PushDrawList(IRenderContext* _renderContext);
     // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
     void PushLight(Light* _pLight);
     // 렌더 큐의 Draw 작업 수행
@@ -88,19 +91,8 @@ private:
     std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
     std::shared_ptr<D3DBitmapRenderTarget>      mDeferredRenderTarget;
 private:
-    D3DGraphicsViewport*    mLocalViewport;
-
-    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
-    LightQueue              mSceneLights;
-
-    CameraCBuffer           mCameraCBuffer;
-    ProjectionType          mProjectionType;
-    CameraRenderType        mCameraRenderType;
-
     Matrix                  mViewMatrix;
     Matrix                  mProjectionMatrix;
-
-    //float mAspectRatio 종횡비
 
     Degree                  mFovAngle;
     float                   mProjectionNear;
@@ -110,14 +102,21 @@ private:
     float                   mOrthoWidth;
     float                   mOrthoHeight;
 
-    Vector2 mSizeScale;
-    Vector2 mOffsetScale;
+    Vector2                 mSizeScale;
+    Vector2                 mOffsetScale;
+
+    D3DGraphicsViewport*    mLocalViewport;
+    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
+    LightQueue              mSceneLights;
+
+    ProjectionType          mProjectionType;
+    CameraRenderType        mCameraRenderType;
+
+    CameraCBuffer           mCameraCBuffer;
+	LightCBuffer			mLightCBuffer;
 
     // 카메라 스카이박스
     std::shared_ptr<SkyBox> mSkyBox;
-
-    // 카메라 라이트 정보
-	LightCBuffer			mLightCBuffer;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

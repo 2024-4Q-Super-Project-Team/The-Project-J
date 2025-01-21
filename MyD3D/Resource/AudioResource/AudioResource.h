@@ -8,7 +8,7 @@ class AudioResource
 {
 public:
 	RESOURCE_TYPE(AudioResource);
-	explicit AudioResource(std::wstring_view _path);
+	explicit AudioResource(ResourceHandle _handle);
 	virtual ~AudioResource();
 public:
 	inline AudioClip* GetAudioClip() { return mAudioClip; }

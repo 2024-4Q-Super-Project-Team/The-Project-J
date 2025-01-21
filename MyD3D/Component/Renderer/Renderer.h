@@ -1,5 +1,6 @@
 #pragma once
 #include "Component/Component.h"
+#include "Resource/Resource.h"
 
 class MeshResource;
 class MaterialResource;
@@ -7,8 +8,16 @@ class Material;
 class Light;
 class Camera;
 
+class IRenderContext
+{
+public:
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
+    virtual void DrawShadow(Light* _pLight) = 0;
+};
+
 class RendererComponent
     : public Component
+    , public IRenderContext
 {
 public:
     explicit RendererComponent(Object* _owner);
@@ -25,15 +34,17 @@ public:
     virtual void Draw(Camera* _camera) = 0;
     virtual void PostRender() = 0;
 public:
-    virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) = 0;
-    virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) = 0;
+    virtual void SetMesh(ResourceHandle _handle) = 0;
+    virtual void SetMaterial(ResourceHandle _handle) = 0;
     virtual std::shared_ptr<MeshResource> GetMesh() = 0;
     virtual Material* GetMaterial() = 0;
+
 public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;
+
 public:
-    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight) = 0;
 };
 

@@ -61,6 +61,25 @@ void SkinnedMeshRenderer::PostRender()
 {
 }
 
+void SkinnedMeshRenderer::EditorUpdate()
+{
+}
+
+void SkinnedMeshRenderer::EditorRender()
+{
+    if (mMesh && mRootBone)
+    {
+        // 메쉬나 루트 본이 바뀐부분이 있으면 갱신
+        if (isDirty)
+        {
+            UpdateTable();
+        }
+        // 본 트랜스폼 계산
+        CalculateBoneTransform();
+        EditorManager::mEditorCamera.PushDrawList(this);
+    }
+}
+
 void SkinnedMeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh && mRootBone)
@@ -83,8 +102,6 @@ void SkinnedMeshRenderer::Draw(Camera* _camera)
 void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
 {
     auto clone = _owner->AddComponent<SkinnedMeshRenderer>();
-    // 메쉬는 그대로 리소스 참조하면 되니까 포인터복사
-    clone->mMesh = this->mMesh;
     // 루트 본 생성
     std::wstring rootBoneName = this->mRootBone->gameObject->GetName();
     auto ppRootBone = Helper::FindMap(rootBoneName, _objTable);
@@ -92,11 +109,11 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     {
         clone->mRootBone = (*ppRootBone)->transform;
     }
-    // 머티리얼 생성
-    clone->SetMaterial(this->mMateiral->mMaterialResource);
+    clone->SetMesh(this->mMeshHandle);
+    clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
+void SkinnedMeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
 {
     // 머티리얼 바인딩
     if (mMateiral)
@@ -109,8 +126,8 @@ void SkinnedMeshRenderer::DrawMesh(Camera* _camera)
         mMesh->Bind();
     }
     mTransformMatrices.World = XMMatrixTranspose(mRootBone->GetWorldMatrix());
-    mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
-    mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
+    mTransformMatrices.View = XMMatrixTranspose(_view);
+    mTransformMatrices.Projection = XMMatrixTranspose(_projection);
     GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
@@ -145,10 +162,14 @@ Material* SkinnedMeshRenderer::GetMaterial()
     return mMateiral;
 }
 
-void SkinnedMeshRenderer::SetMesh(std::shared_ptr<MeshResource> _mesh)
+void SkinnedMeshRenderer::SetMesh(ResourceHandle _handle)
 {
-    mMesh = _mesh;
-    isDirty = true;
+    if (_handle.GetResourceType() == eResourceType::Mesh)
+    {
+        mMeshHandle = _handle;
+        mMesh = ResourceManager::RequestResource<MeshResource>(_handle);
+        isDirty = true;
+    }
 }
 
 void SkinnedMeshRenderer::SetRootBone(Transform* _rootBone)
@@ -157,9 +178,17 @@ void SkinnedMeshRenderer::SetRootBone(Transform* _rootBone)
     isDirty = true;
 }
 
-void SkinnedMeshRenderer::SetMaterial(std::shared_ptr<MaterialResource> _material)
+void SkinnedMeshRenderer::SetMaterial(ResourceHandle _handle)
 {
-    mMateiral->SetMaterial(_material);
+    if (_handle.GetResourceType() == eResourceType::Material)
+    {
+        mMaterialaHandle = _handle;
+        auto MatResource = ResourceManager::RequestResource<MaterialResource>(_handle);
+        if (MatResource)
+        {
+            mMateiral->SetMaterial(MatResource);
+        }
+    }
 }
 
 void SkinnedMeshRenderer::UpdateTable()
@@ -197,7 +226,7 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     {
         Bone* const bone = mMesh->mBoneArray[i];
         // 메쉬의 본 이름을 통해 해당 본의 트랜스폼을 가져온다.
-        Transform** ppboneTransform = Helper::FindMap(bone->GetName(), mBoneMappingTable);
+        Transform** ppboneTransform = Helper::FindMap(bone->GetKey(), mBoneMappingTable);
         if (ppboneTransform == nullptr)
             continue;
         // 최종 본 매트릭스 계산 (본의 오프셋 매트릭스 * 본의 월드 매트릭스)
@@ -211,12 +240,12 @@ json SkinnedMeshRenderer::Serialize()
     ret["id"] = GetId();
     ret["name"] = "SkinnedMeshRenderer";
     if (mMesh) 
-        ret["mesh"] = Helper::ToString(mMesh->GetName());
+        ret["mesh"] = Helper::ToString(mMesh->GetKey());
     else 
         ret["mesh"] = nullptr;
 
     if (mMateiral && mMateiral->mMaterialResource) 
-        ret["material"] = mMateiral->mMaterialResource->GetName();
+        ret["material"] = mMateiral->mMaterialResource->GetKey();
     else  
         ret["material"] = nullptr;
     ret["root bone"] = mRootBone ? mRootBone->GetId() : NULLID;
@@ -259,7 +288,7 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 
         ImGui::Separator();
 
-        EDITOR_COLOR_EXTRA;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
         {
             ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);

@@ -18,11 +18,6 @@ void _CALLBACK TestWorld::OnDestroy()
 
 void _CALLBACK TestWorld::OnEnable()
 {   
-    ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/gun.fbx");
-    ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Jinx Default.fbx");
-    ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/sphere.fbx");
-    ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/skyBox.obj");
-
     ObjectGroup* pGroup = GetObjectGroup(L"Test");
     if (pGroup)
     {

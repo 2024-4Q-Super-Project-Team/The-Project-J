@@ -10,10 +10,11 @@
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
+eEngineRunType		GameManager::mRunType = eEngineRunType::GAME_MODE;
 float				GameManager::mFixedUpdateTick = 0.02f;
-Application* GameManager::mApplication = nullptr;
-PhysicsManager* GameManager::mPhysicsManager = nullptr;
-ComponentManager* GameManager::mComponentManager = nullptr;
+Application*		GameManager::mApplication = nullptr;
+PhysicsManager*		GameManager::mPhysicsManager = nullptr;
+ComponentManager*	GameManager::mComponentManager = nullptr;
 
 GameManager::GameManager(Application* _pApplication)
 {
@@ -31,6 +32,7 @@ BOOL GameManager::Initialize()
 	Time::Initialize();
 	Input::Initialize();
 	AudioHub::Initialize();
+
 	GraphicsManager::Initialize();
 	ResourceManager::Initialize();
 	ViewportManager::Initialize();
@@ -54,7 +56,18 @@ void GameManager::Run()
 		Time::Update();
 		AudioHub::Update();
 
-		ViewportManager::Run();
+		switch (mRunType)
+		{
+		case eEngineRunType::GAME_MODE:
+			ViewportManager::GameRun();
+			break;
+		case eEngineRunType::EDITOR_MODE:
+			ViewportManager::EditorRun();
+			break;
+		default:
+			break;
+		}
+		
 
 		Input::Update();
 	}
@@ -72,7 +85,31 @@ void GameManager::Finalization()
 	SAFE_DELETE(mPhysicsManager);
 }
 
+void GameManager::SetRunType(eEngineRunType _runType)
+{
+	mRunType = _runType;
+
+	switch (_runType)
+	{
+	case eEngineRunType::GAME_MODE:
+	{
+		ViewportManager::Start();
+		ViewportManager::GameRun();
+		break;
+	}
+	case eEngineRunType::EDITOR_MODE:
+	{
+		ViewportManager::EditorRun();
+		break;
+	}
+	default:
+		break;
+	}
+}
+
 World* GameManager::GetCurrentWorld()
 {
+	if (!ViewportManager::GetActiveViewport()) return nullptr;
+	if (!ViewportManager::GetActiveViewport()->GetWorldManager()) return nullptr;
 	return ViewportManager::GetActiveViewport()->GetWorldManager()->GetActiveWorld();
 }

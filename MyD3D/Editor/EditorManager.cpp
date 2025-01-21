@@ -4,11 +4,14 @@
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportScene.h"
 
+EditorCamera                    EditorManager::mEditorCamera;
 
 ViewportScene*                  EditorManager::mFocusViewport = nullptr;
 ViewportScene*                  EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
+
+Editor::EditorDebugger*         EditorManager::mDebbugerTab = nullptr;
 Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
 Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
 Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
@@ -18,6 +21,8 @@ Editor::WindowBar*              EditorManager::mMainWindowBar_01 = nullptr;
 Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
 
 ImGuiContext*                   EditorManager::mContext;
+
+std::vector<std::shared_ptr<Resource>> EditorManager::mResourceContainor;
 
 void EditorManager::Initialize()
 {
@@ -36,7 +41,7 @@ void EditorManager::Finalization()
 {
 }
 
-void EditorManager::RenderEditor()
+void EditorManager::RenderEditorWindow()
 {
     if (mFocusViewport && mEditorViewport)
     {  
@@ -62,6 +67,16 @@ void EditorManager::RenderEditor()
     }
 }
 
+void EditorManager::EditorUpdate()
+{
+    mEditorCamera.EditorUpdate();
+}
+
+void EditorManager::EditorRender()
+{
+    mEditorCamera.EditorRender();
+}
+
 BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
 {
     if (_targetViewport)
@@ -84,7 +99,7 @@ BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
         winDecs.Position = { Destpos.x + Destsize.x , Destpos.y };
         winDecs.WndStyle = WS_POPUP | WS_VISIBLE;
         winDecs.WndClass.lpszClassName = L"EditorWindow";
-        winDecs.WndClass.lpfnWndProc = EditorWinProc;
+        winDecs.WndClass.lpfnWndProc = EditorManager::EditorWinProc;
         winDecs.WndParent = mDestWindow;
         mEditorViewport = ViewportManager::CreateViewportScene(&winDecs);
 
@@ -159,7 +174,7 @@ void EditorManager::InitMainWindow()
             Editor::TabBar* pTabBar = new Editor::TabBar("TabBar_01");
             mMainWindowBar_01->AddWidget(pTabBar);
 
-            CreateTestTab(pTabBar);
+            CreateDebuggerTab(pTabBar);
             CreateHierarchy(pTabBar);
             CreateResourceViewer(pTabBar);
         }
@@ -180,14 +195,14 @@ void EditorManager::InitMainWindow()
 	mWidgetArray.push_back(mMainWindowBar_02);
 
 }
-void EditorManager::CreateTestTab(Editor::TabBar* _pSrcTabBar)
+void EditorManager::CreateDebuggerTab(Editor::TabBar* _pSrcTabBar)
 {
-    //{   // 테스트용 탭
-    //    mDebugEditor = new Editor::TestEditorTab();
-    //    Editor::Tab* pInspectorBar = new Editor::Tab("Debug");
-    //    pInspectorBar->AddWidget(mDebugEditor);
-    //    _pSrcTabBar->AddTab(pInspectorBar);
-    //}
+    {   // 인스펙터 탭
+        mDebbugerTab = new Editor::EditorDebugger();
+        Editor::TabNode* pDebuggerTab = new Editor::TabNode("Debug");
+        pDebuggerTab->AddWidget(mDebbugerTab);
+        _pSrcTabBar->AddTab(pDebuggerTab);
+    }
 }
 
 void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
@@ -220,8 +235,6 @@ void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
     }
 }
 
-
-
 void EditorManager::UpdateIO()
 {
     HWND editorHwnd = mEditorViewport->GetIWindow()->GetHandle();
@@ -245,11 +258,30 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
     switch (_msg)
     {
     case WM_CREATE:
+        DragAcceptFiles(_hwnd, TRUE);
         break;
+    case WM_DROPFILES:  // File Drag&Drop
+    {
+        // 드롭된 파일들에 대한 처리
+        HDROP hDrop = (HDROP)_wParam;
+
+        // 드롭된 파일의 개수
+        UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
+        for (UINT i = 0; i < numFiles; ++i) {
+            // 각 파일의 경로를 얻음
+            wchar_t filePath[MAX_PATH];
+            DragQueryFile(hDrop, i, filePath, MAX_PATH);
+            Display::Console::Log(filePath);
+            ResourceHandle handle = { eResourceType::FBXModel, filePath, L"", filePath };
+            mResourceContainor.push_back(ResourceManager::RegisterResource<FBXModelResource>(handle));
+        }
+        // 메모리 해제
+        DragFinish(hDrop);
+        break;
+    }
     case WM_SIZE:
         break;
     case WM_MOVE:
-		if (mFocusViewport) EditorReposition();
         break;
     case WM_SYSKEYDOWN:
     case WM_SYSKEYUP:
@@ -293,8 +325,8 @@ void EditorManager::ShowPopUp()
 
 BOOL EditorManager::EditorReposition()
 {
-	// 에디터 윈도우 위치 조정
-    if (mFocusViewport)
+    // 에디터 윈도우 위치 조정
+    if (mFocusViewport && mEditorViewport)
     {
         // 대상 윈도우의 위치 및 사이즈를 가져와서 에디터 윈도우를 리포지션한다.
         POINT size = mFocusViewport->GetIWindow()->GetSize();

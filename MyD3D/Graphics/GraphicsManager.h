@@ -50,7 +50,7 @@ private:
     static D3DGraphicsBlendState*       mBlendStateArray[BLEND_TYPE_COUNT];
 
     //Debug Draw
-#ifdef _DEBUG
+
 public:
     static void SetDebugViewProjection(Matrix _view, Matrix _projection);
     static void DebugDrawBegin();
@@ -61,5 +61,7 @@ private:
     static std::unique_ptr<class PrimitiveBatch<VertexPositionColor>> mBatch;
     static std::unique_ptr<class BasicEffect> mEffect;
     static ID3D11InputLayout* mLayout;
-#endif
+    static ID3D11DepthStencilState* originalDepthState;
+    static UINT stencilRef;
+
 };

@@ -57,6 +57,14 @@ void AudioSource::PostRender()
 {
 }
 
+void AudioSource::EditorUpdate()
+{
+}
+
+void AudioSource::EditorRender()
+{
+}
+
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
 	std::shared_ptr<AudioResource> pAudio = GetAudioFromTable(_key);
@@ -152,7 +160,7 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 	{
 		if (mActiveAudio)
 		{
-			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetName()).c_str());
+			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetKey()).c_str());
 		}
 		else
 		{

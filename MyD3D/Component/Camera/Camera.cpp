@@ -29,9 +29,6 @@ Camera::Camera(Object* _owner, Vector2 _size)
     mType = eComponentType::CAMERA;
     mLocalViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mCameraViewport     = ViewportManager::GetActiveViewport();
-    mMainViewport       = mCameraViewport->GetMainViewport();
-    mMainRenderTarget   = mCameraViewport->GetMainRenderTarget();
 }
 
 Camera::~Camera()
@@ -86,6 +83,7 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
+        GraphicsManager::SetDebugViewProjection(mViewMatrix, mProjectionMatrix);
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
@@ -96,6 +94,14 @@ void Camera::Draw(Camera* _camera)
 }
 
 void Camera::PostRender()
+{
+}
+
+void Camera::EditorUpdate()
+{
+}
+
+void Camera::EditorRender()
 {
 }
 
@@ -111,6 +117,13 @@ void Camera::SetCameraOffset(Vector2 _offsetScale)
 
 void Camera::UpdateCamera()
 {
+    if(mCameraViewport == nullptr)
+        mCameraViewport = ViewportManager::GetActiveViewport();
+    if (mCameraViewport)
+    {
+        mMainViewport = mCameraViewport->GetMainViewport();
+        mMainRenderTarget = mCameraViewport->GetMainRenderTarget();
+    }
     UpdateMatrix();
     UpdateViewport();
 }
@@ -203,7 +216,7 @@ void Camera::DrawForward()
         //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
         for (auto& drawInfo : mDrawQueue[i])
         {
-            drawInfo->DrawMesh(this);
+            drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
         }
         // 그리기 큐를 초기화한다.
         mDrawQueue[i].clear();
@@ -226,7 +239,7 @@ void Camera::DrawDeferred()
         {
             for (auto& drawInfo : mDrawQueue[i])
             {
-                drawInfo->DrawMesh(this);
+                drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
             }
             // 그리기 큐를 초기화한다.
             mDrawQueue[i].clear();
@@ -316,17 +329,17 @@ D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
     return nullptr;
 }
 
-void Camera::PushDrawList(RendererComponent* _renderComponent)
+void Camera::PushDrawList(IRenderContext* _renderContext)
 {
-    if (_renderComponent == nullptr) return;
-    auto pMaterial = _renderComponent->GetMaterial();
+    if (_renderContext == nullptr) return;
+    //auto pMaterial = _renderContext->GetMaterial();
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
-    if (pMaterial)
-    {
-        if(pMaterial->mMaterialResource)
-        blendMode = pMaterial->mMaterialResource->mBlendMode;
-    }
-    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
+    //if (pMaterial)
+    //{
+    //    if(pMaterial->mMaterialResource)
+    //    blendMode = pMaterial->mMaterialResource->mBlendMode;
+    //}
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
 void Camera::PushLight(Light* _pLight)
@@ -376,7 +389,7 @@ void Camera::ExcuteDrawList()
                 // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
                 if (mSkyBox)
                 {
-                    mSkyBox->Draw(this);
+                    mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
                 }
 
                 mMainRenderTarget->EndDraw();
@@ -477,7 +490,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
         {
             ImGui::Separator();
 
-            EDITOR_COLOR_EXTRA;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
             if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
             {
                 auto CameraRTV = mMainRenderTarget->GetRTV();

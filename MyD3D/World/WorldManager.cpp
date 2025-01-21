@@ -17,6 +17,14 @@ WorldManager::~WorldManager()
     SAFE_DELETE_MAP(mWorlds);
 }
 
+void WorldManager::Start()
+{
+	if (mCurrActiveWorld) {
+		mCurrActiveWorld->OnTick();
+		UPDATE_ENTITY(mCurrActiveWorld, Start())
+	}
+}
+
 void WorldManager::Tick()
 {
 	UpdateWorld();
@@ -82,6 +90,21 @@ void WorldManager::PostRender()
 	}
 }
 
+void WorldManager::EditorUpdate()
+{
+	UpdateWorld();
+	if (mCurrActiveWorld) {
+		UPDATE_ENTITY(mCurrActiveWorld, EditorUpdate())
+	}
+}
+
+void WorldManager::EditorRender()
+{
+	if (mCurrActiveWorld) {
+		UPDATE_ENTITY(mCurrActiveWorld, EditorRender())
+	}
+}
+
 void WorldManager::UpdateWorld()
 {
 	for (auto itr = mWorlds.begin(); itr != mWorlds.end();)
@@ -137,6 +160,10 @@ World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _t
 		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
 		mWorlds[_name] = instance;
 		instance->OnCreate();
+		if (isEmpty == false)
+		{
+			instance->InitWorldObject();
+		}
 		return instance;
 	}
 }
@@ -228,21 +255,32 @@ void WorldManager::LoadWorlds()
 	json worldsJson, groupsJson, objectsJson, componentsJson;
 
 	std::ifstream worldsFile("save_worlds.json");
-	worldsFile >> worldsJson;
-	worldsFile.close();
+	if (worldsFile.is_open())
+	{
+		worldsFile >> worldsJson;
+		worldsFile.close();
+	}
 
 	std::ifstream groupsFile("save_objectGroups.json");
-	groupsFile >> groupsJson;
-	groupsFile.close();
+	if (groupsFile.is_open())
+	{
+		groupsFile >> groupsJson;
+		groupsFile.close();
+	}
 
 	std::ifstream objectsFile("save_objects.json");
-	objectsFile >> objectsJson;
-	objectsFile.close();
+	if (objectsFile.is_open())
+	{
+		objectsFile >> objectsJson;
+		objectsFile.close();
+	}
 
 	std::ifstream componentsFile("save_components.json");
-	componentsFile >> componentsJson;
-	componentsFile.close();
-
+	if (componentsFile.is_open())
+	{
+		componentsFile >> componentsJson;
+		componentsFile.close();
+	}
 
 	for (auto& worldJson : worldsJson)
 	{

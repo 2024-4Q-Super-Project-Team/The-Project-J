@@ -1,35 +1,15 @@
 [
     {
-        "id": 5,
-        "name": "Test",
+        "id": 27,
+        "name": "ww",
         "object groups": [
             {
-                "id": 6,
-                "name": "Default"
-            }
-        ]
-    },
-    {
-        "id": 0,
-        "name": "asd",
-        "object groups": [
-            {
-                "id": 1,
-                "name": "Default"
-            }
-        ]
-    },
-    {
-        "id": 10,
-        "name": "Test_World1",
-        "object groups": [
-            {
-                "id": 11,
+                "id": 28,
                 "name": "Default"
             },
             {
-                "id": 15,
-                "name": "asd"
+                "id": 29,
+                "name": "rtrdtr"
             }
         ]
     }

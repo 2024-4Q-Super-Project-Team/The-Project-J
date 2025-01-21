@@ -14,6 +14,11 @@ ObjectGroup::~ObjectGroup()
 {
 }
 
+void ObjectGroup::Start()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjects, Start())
+}
+
 void ObjectGroup::Tick()
 {
     UpdateObject();
@@ -58,6 +63,17 @@ void ObjectGroup::Draw(Camera* _camera)
 void ObjectGroup::PostRender()
 {
     FOR_LOOP_ARRAY_ENTITY(mObjects, PostRender())
+}
+
+void ObjectGroup::EditorUpdate()
+{
+    UpdateObject();
+    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorUpdate())
+}
+
+void ObjectGroup::EditorRender()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorRender())
 }
 
 Object* ObjectGroup::CreateObject(std::wstring_view _name, std::wstring_view _tag)
@@ -113,7 +129,7 @@ json ObjectGroup::Serialize()
     for (auto obj : mObjects)
     {
         json objectJson;
-        objectJson["id"] = obj->GetId();
+        objectJson["id"] = obj->GiveId();
         objectJson["name"] = Helper::ToString(obj->GetName());
         objs += objectJson;
     }
@@ -126,7 +142,7 @@ void ObjectGroup::Deserialize(json& j)
     for (auto& objectJson : j["objects"])
     {
         std::wstring name = Helper::ToWString(objectJson["name"].get<std::string>());
-        Object* group = CreateObject(name);
-        group->SetId(objectJson["id"].get<unsigned int>());
+        Object* object = CreateObject(name);
+        object->SetId(objectJson["id"].get<unsigned int>());
     }
 }

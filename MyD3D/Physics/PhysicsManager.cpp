@@ -15,7 +15,7 @@ void PhysicsManager::Initialize()
     assert(mFoundation, "PxCreateFoundation failed");
 
     mPvd = PxCreatePvd(*mFoundation);
-    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("localhost", 5425, 10);
+    PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("127.0.0.1", 5425, 10);
     mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation,

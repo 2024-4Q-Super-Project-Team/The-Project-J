@@ -5,17 +5,17 @@
 #include "Resource/Graphics/Mesh/Mesh.h"
 #include "Resource/Graphics/Material/Material.h"
 
-Prefab::Prefab(std::wstring_view _name)
-    : Resource(_name)
+Prefab::Prefab(ResourceHandle _handle)
+    : Resource(_handle)
 {
-    Object* mainObject = new Object(_name.data(), L"");
+    Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
 }
 
-Prefab::Prefab(std::wstring_view _name, std::shared_ptr<FBXModelResource> _pModel)
-    : Resource(_name)
+Prefab::Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel)
+    : Resource(_handle)
 {
-    Object* mainObject = new Object(_name.data(), L"");
+    Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
     ModelNode* rootNode = _pModel->mRootNode;
     AddObjectFromNode(mainObject, rootNode);
@@ -97,11 +97,11 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                 {
                     MeshRenderer* pRenderer = (*ppObject)->AddComponent<MeshRenderer>();
                     // 메쉬를 넣어준다.
-                    pRenderer->SetMesh((*ppMesh));
+                    //pRenderer->SetMesh((*ppMesh));
                     // 머티리얼은 없을 가능성이 있다. 따라서 비어있는지 확인
                     if (ppMaterial)
                     {
-                        pRenderer->SetMaterial(*ppMaterial);
+                        //pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
                 // 본이 있으면 SkinnedMeshRenderer컴포넌트
@@ -110,14 +110,14 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                     SkinnedMeshRenderer* pRenderer = (*ppObject)->AddComponent<SkinnedMeshRenderer>();
                     // 스킨드 메쉬 렌더러의 루트 본으로 사용할 오브젝트
                     auto** ppRootBone = Helper::FindMap(_pModel->mRootNode->mNodeName, mObjectTable);
-                    pRenderer->SetMesh((*ppMesh));
+                    //pRenderer->SetMesh((*ppMesh));
                     if (ppRootBone)
                     {
                         pRenderer->SetRootBone((*ppRootBone)->transform);
                     }
                     if(ppMaterial)
                     {
-                        pRenderer->SetMaterial(*ppMaterial);
+                        //pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
             }
@@ -133,8 +133,8 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
 void Prefab::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    std::string name = Helper::ToString(GetName());
-    EDITOR_COLOR_RESOURCE;
+    std::string name = Helper::ToString(GetKey());
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
     if (ImGui::TreeNodeEx(("Prefab : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
     {
         for (auto& object : mObjectList)

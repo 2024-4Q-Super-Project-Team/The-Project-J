@@ -18,6 +18,8 @@ std::unique_ptr<CommonStates> GraphicsManager::mStates;
 std::unique_ptr<PrimitiveBatch<VertexPositionColor>> GraphicsManager::mBatch;
 std::unique_ptr<BasicEffect> GraphicsManager::mEffect;
 ID3D11InputLayout* GraphicsManager::mLayout;
+ID3D11DepthStencilState* GraphicsManager::originalDepthState;
+UINT GraphicsManager::stencilRef;
 
 using namespace DirectX::DX11;
 
@@ -546,6 +548,13 @@ void GraphicsManager::SetDebugViewProjection(Matrix _view, Matrix _projection)
 
 void GraphicsManager::DebugDrawBegin()
 {
+    // 기존 깊이 상태를 저장
+    D3DGraphicsRenderer::GetDevicecontext()->OMGetDepthStencilState(&originalDepthState, &stencilRef);
+    //debug draw
+    D3DGraphicsRenderer::GetDevicecontext()->OMSetBlendState(mStates->Opaque(), nullptr, 0xFFFFFFFF);
+    D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(mStates->DepthNone(), 0);
+    D3DGraphicsRenderer::GetDevicecontext()->RSSetState(mStates->CullNone());
+
     mEffect->Apply(D3DGraphicsRenderer::GetDevicecontext());
     D3DGraphicsRenderer::GetDevicecontext()->IASetInputLayout(mLayout);
     mBatch->Begin();
@@ -553,5 +562,7 @@ void GraphicsManager::DebugDrawBegin()
 
 void GraphicsManager::DebugDrawEnd()
 {
+    D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(originalDepthState, stencilRef);
     mBatch->End();
+    D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(originalDepthState, stencilRef);
 }

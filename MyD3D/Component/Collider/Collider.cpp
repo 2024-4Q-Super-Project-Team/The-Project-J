@@ -65,7 +65,7 @@ void Collider::PostRender()
 void Collider::SetLocalPosition()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z)));
+	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
 }
 
 void Collider::SetRotation()
@@ -73,9 +73,10 @@ void Collider::SetRotation()
 	PxTransform currentTransform = mShape->getLocalPose();
 	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
 	PxQuat pxRot;
-	memcpy_s(&pxRot, 4, &mQuatRotation, 4);
+	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
+
 
 void Collider::SetIsTrigger()
 {

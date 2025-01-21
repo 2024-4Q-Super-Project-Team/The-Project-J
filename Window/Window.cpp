@@ -141,4 +141,10 @@ namespace Display
 	{
 		return (BOOL)(GetFocus() == mHwnd);
 	}
+
+    void Window::GetNDCCoord(float screenX, float screenY, OUT float ndcX, OUT float ndcY)
+    {
+        ndcX = (2.0f * screenX) / GetSize().x - 1.0f;
+        ndcY = 1.0f - (2.0f * screenY) / GetSize().y; // YÃà ¹ÝÀü
+    }
 }

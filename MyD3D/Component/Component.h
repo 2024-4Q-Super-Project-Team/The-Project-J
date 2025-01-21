@@ -55,12 +55,12 @@ public:
 	virtual void Update() = 0;
 	virtual void PostUpdate() = 0;
 	virtual void PreRender() = 0;
-    // 실질적인 DrawCall을 하는 곳
 	virtual void Render() = 0;
-    // Draw할 메쉬들을 커맨드로 모으는 과정
     virtual void Draw(Camera* _camera) = 0;
 	virtual void PostRender() = 0;
-
+	// Editor Only
+	virtual void EditorUpdate() = 0;
+	virtual void EditorRender() = 0;
 public:
 	inline eComponentType	GetType()				{ return mType; }
 	inline void				SetActive(bool _active) { isActive = _active;}

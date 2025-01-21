@@ -21,6 +21,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     void SetCurrentAudio(const std::wstring& _key);
     BOOL AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio);

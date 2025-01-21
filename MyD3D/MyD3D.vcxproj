@@ -118,6 +118,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)MyD3D\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +160,8 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h" />
+    <ClInclude Include="Editor\EditorCamera\EditorCamera.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h" />
@@ -178,6 +181,7 @@
     <ClInclude Include="Editor\Widgets\Extra\EditorStaticText.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Component\Controller\PlayerController.h" />
+    <ClInclude Include="Physics\PickingRay.h" />
     <ClInclude Include="Resource\ResourceHandle.h" />
     <ClInclude Include="Resource\AudioResource\AudioResource.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
@@ -234,6 +238,7 @@
     <ClInclude Include="Resource\Graphics\Mesh\Vertex.h" />
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\Collider\Rigidbody.h" />
+    <ClInclude Include="Component\Collider\SphereCollider.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="Resource\Graphics\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
@@ -268,6 +273,8 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp" />
+    <ClCompile Include="Editor\EditorCamera\EditorCamera.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp" />
@@ -287,6 +294,7 @@
     <ClCompile Include="Editor\Widgets\Extra\EditorStaticText.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Component\Controller\PlayerController.cpp" />
+    <ClCompile Include="Physics\PickingRay.cpp" />
     <ClCompile Include="Resource\ResourceHandle.cpp" />
     <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />
@@ -341,6 +349,7 @@
     <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp" />
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\Collider\Rigidbody.cpp" />
+    <ClCompile Include="Component\Collider\SphereCollider.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="Resource\Graphics\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />

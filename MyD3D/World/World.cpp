@@ -4,6 +4,7 @@
 #include "Manager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "ViewportScene/ViewportManager.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 
@@ -19,6 +20,13 @@ PxFilterFlags CustomFilterShader(
     pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;  // 충돌 종료 이벤트
     pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS; // 접촉 지점 정보 요청
 
+    // PVD에서 디버깅을 위한 추가 플래그
+    pairFlags |= PxPairFlag::eDETECT_DISCRETE_CONTACT; // 이산 충돌 디버깅
+    pairFlags |= PxPairFlag::eDETECT_CCD_CONTACT;     // 연속 충돌 디버깅
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_FOUND; // 힘 임계치 초과 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_PERSISTS; // 힘 지속 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_THRESHOLD_FORCE_LOST; // 힘 상실 이벤트
+
     return PxFilterFlag::eDEFAULT;
 }
 
@@ -30,13 +38,28 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 {
     if (!isEmpty)
     {
+        ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
+        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
+        Camera* cameraComp = mainCamera->AddComponent<Camera>();
+
+        mPickingRay = new PickingRay;
+        mPickingRay->SetMainCamera(cameraComp);
+
         PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
-        sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
+        sceneDesc.gravity = PxVec3(0.f, -0.f, 0.f);
         sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
         sceneDesc.filterShader = CustomFilterShader;
         //sceneDesc.simulationEventCallback = mEventCallback;
-        // GPU 가속 설정 (필수)
+
         mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+
+        PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
+        if (pvdClient) {
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
+        }
+
     }
 }
 
@@ -44,6 +67,12 @@ World::~World()
 {
     SAFE_DELETE_VECTOR(mObjectGroups);
     SAFE_DELETE(mLightSystem);
+    SAFE_DELETE(mPickingRay);
+}
+
+void World::Start()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Start())
 }
 
 void World::Tick()
@@ -75,6 +104,13 @@ void World::PostUpdate()
 {
     OnPostUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostUpdate())
+
+
+    if (mPxScene)
+    {
+        mPxScene->simulate(Time::GetUnScaledDeltaTime());
+        mPxScene->fetchResults(true);
+    }
 }
 
 void World::PreRender()
@@ -100,6 +136,17 @@ void World::PostRender()
 {
     OnPostRender();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostRender())
+}
+
+void World::EditorUpdate()
+{
+    UpdateGroup();
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorUpdate())
+}
+
+void World::EditorRender()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorRender())
 }
 
 ObjectGroup* World::CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag)
@@ -154,14 +201,14 @@ ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
 json World::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
     ret["name"] = Helper::ToString(mName);
 
     json objGroups = json::array();
     for (auto group : mObjectGroups)
     {
         json groupJson;
-        groupJson["id"] = group->GetId();
+        groupJson["id"] = group->GiveId();
         groupJson["name"] = Helper::ToString(group->GetName());
         objGroups += groupJson;
     }
@@ -180,11 +227,29 @@ void World::Deserialize(json& j)
     }
 }
 
+void World::InitWorldObject()
+{
+    // 월드 초기 생성시 기본적으로 제공하는 그룹과 오브젝트를 만들어준다.
+    ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
+    {
+        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
+        Camera* cameraComponent = mainCamera->AddComponent<Camera>();
+    }
+    {
+        Object* mainLight = defaultGroup->CreateObject(L"Direction_Light", L"Default");
+        Light* lightComponent = mainLight->AddComponent<Light>();
+        Vector4 defaultDirection = Vector4(0.0f, 1.0f, 1.0f, 1.0f);
+        defaultDirection.Normalize();
+        lightComponent->GetProperty().Direction = defaultDirection;
+    }
+}
+
 void World::UpdateGroup()
 {
     // 삭제 및 생성 처리
     for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end();)
     {
+
         // 삭제
         if ((*itr)->GetState() == EntityState::Destroy)
         {

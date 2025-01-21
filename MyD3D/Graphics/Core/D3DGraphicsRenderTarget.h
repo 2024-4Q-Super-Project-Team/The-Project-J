@@ -51,7 +51,7 @@ protected:
     static std::vector<D3DGraphicsRenderTarget*> mRenderTargetBindingStack;
 };
 
-// 이 렌더타겟은 메인 렌더타겟으로 윈도우에 스왑해주는 역할을 한다.
+// 이 렌더타겟은 메인 렌더타겟으로, 윈도우에 스왑해주는 역할을 한다.
 class D3DHwndRenderTarget : public D3DGraphicsRenderTarget
 {
 public:
@@ -66,6 +66,7 @@ private:
     const HWND      mHwnd;
     IDXGISwapChain* mSwapChain;
 };
+
 
 class D3DBitmapRenderTarget : public D3DGraphicsRenderTarget
 {

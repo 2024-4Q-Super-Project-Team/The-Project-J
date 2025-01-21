@@ -5,10 +5,19 @@
 #include "physx/cudamanager/PxCudaContext.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
+#include "Graphics/GraphicsManager.h"
 
 ParticleSystem::ParticleSystem(Object* _owner)
-    : Component(_owner)
+    : RendererComponent(_owner)
 {
+	ResourceHandle texHandle = {
+			eResourceType::Texture2D,
+			L"Test_Particle_Texture",
+			L"",
+			L"resource/texture/ParticleSample/fire_01.png"
+	};
+	mTexture = std::make_shared<Texture2D>(texHandle);
+
 	mParticleSystem = GameManager::GetPhysicsManager()->GetPhysics()
 		->createPBDParticleSystem(*GameManager::GetPhysicsManager()->GetCudaManager(), 96);
 
@@ -65,6 +74,7 @@ void ParticleSystem::Render()
 
 void ParticleSystem::Draw(Camera* _camera)
 {
+	_camera->PushDrawList(this);
 }
 
 void ParticleSystem::PostRender()
@@ -77,6 +87,8 @@ void ParticleSystem::EditorUpdate()
 
 void ParticleSystem::EditorRender()
 {
+	if(mTexture)
+		EditorManager::mEditorCamera.PushDrawList(this);
 }
 
 json ParticleSystem::Serialize()
@@ -139,6 +151,38 @@ void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
+void ParticleSystem::DrawMesh(Matrix& _view, Matrix& _projection)
+{
+	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+
+	//// 리소스 바인딩
+	GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+	GraphicsManager::GetPixelShader(ePixelShaderType::PARTICLE)->Bind();
+	mTexture->Texture->Bind();
+	
+	TransformCBuffer cb;
+	cb.World = gameObject->transform->GetWorldMatrix();
+	cb.View = XMMatrixTranspose(_view);
+	cb.Projection = XMMatrixTranspose(_projection);
+	
+	ParticleSizeCBuffer pcb;
+	pcb.particleSize = mTextureSize;
+	
+	mVertexBuffer->Bind();
+	GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&cb);
+	GraphicsManager::GetConstantBuffer(eCBufferType::ParticleSize)->UpdateGPUResoure(&pcb);
+	
+	D3DGraphicsRenderer::DrawVertexCall(mParticleCount, 0);
+	
+	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
+}
+
+void ParticleSystem::DrawShadow(Light* _pLight)
+{
+}
+
 void ParticleSystem::SetMaterial()
 {
 	if (mMaterial)
@@ -199,6 +243,9 @@ void ParticleSystem::SetBuffers()
 
 	mVertexBuffer = new D3DGraphicsVertexBuffer(&desc, &data);
 	mVertexBuffer->Create();
+
+	mVertexBuffer->SetStride(sizeof(PxVec4));
+	mVertexBuffer->SetOffset(0);
 }
 
 void ParticleSystem::DefaultFogMove()

@@ -29,6 +29,20 @@ private:
     ID3D11InputLayout*  mInputLayout;
 };
 
+class D3DGraphicsGeometryShader : public D3DGraphicShader
+{
+public:
+    explicit D3DGraphicsGeometryShader(std::wstring_view _path);
+    virtual ~D3DGraphicsGeometryShader() = default;
+public:
+    virtual HRESULT Create() override;
+    virtual HRESULT Bind() override;
+    virtual HRESULT Reset() override;
+private:
+    ID3D11GeometryShader* mGeometryShader;
+    ID3D11InputLayout* mInputLayout;
+};
+
 class D3DGraphicsPixelShader : public D3DGraphicShader
 {
 public:

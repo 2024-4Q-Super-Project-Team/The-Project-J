@@ -71,6 +71,9 @@
     <FxCompile Include="resource\shader\Standard_VS.hlsl" />
     <FxCompile Include="resource\shader\GBuffer_PS.hlsl" />
     <FxCompile Include="resource\shader\DeferredPBR_PS.hlsl" />
+    <FxCompile Include="resource\shader\Particle_GS.hlsl" />
+    <FxCompile Include="resource\shader\Particle_PS.hlsl" />
+    <FxCompile Include="resource\shader\Particle_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Shared.fxh" />

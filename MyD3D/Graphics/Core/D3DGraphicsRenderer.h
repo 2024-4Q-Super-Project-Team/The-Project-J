@@ -20,6 +20,9 @@ public:
 public:
     static void UseDepthTest(bool _bValue);
     static void DrawCall(IN UINT _numIndex, IN UINT _startIndex, IN INT _baseVertex);
+    static void DrawVertexCall(IN UINT _vertexCount, IN UINT _startVertexLocation);
+
+    static void SetTopology(D3D_PRIMITIVE_TOPOLOGY topology);
 public:
     static ID3D11DeviceContext* mDeviceContext;
 public:

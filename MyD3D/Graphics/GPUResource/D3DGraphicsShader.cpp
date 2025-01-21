@@ -165,3 +165,42 @@ HRESULT D3DGraphicsPixelShader::Reset()
     }
     return E_FAIL;
 }
+
+D3DGraphicsGeometryShader::D3DGraphicsGeometryShader(std::wstring_view _path)
+    : D3DGraphicShader(_path)
+{
+    Create();
+}
+
+HRESULT D3DGraphicsGeometryShader::Create()
+{
+    auto pDevice = D3DGraphicsDevice::GetDevice();
+    Helper::HRT(pDevice->CreateGeometryShader(mBlob->GetBufferPointer(),
+        mBlob->GetBufferSize(),
+        nullptr,
+        &mGeometryShader),
+        "Hresult Failed to Create GraphicsPixelShader::CreatePixelShader->CreatePixelShader()...");
+    return S_OK;
+}
+
+HRESULT D3DGraphicsGeometryShader::Bind()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
+    if (pDeviceContext)
+    {
+        pDeviceContext->GSSetShader(mGeometryShader, nullptr, 0);
+        return S_OK;
+    }
+    return E_FAIL;
+}
+
+HRESULT D3DGraphicsGeometryShader::Reset()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
+    if (pDeviceContext)
+    {
+        pDeviceContext->GSSetShader(nullptr, nullptr, 0);
+        return S_OK;
+    }
+    return E_FAIL;
+}

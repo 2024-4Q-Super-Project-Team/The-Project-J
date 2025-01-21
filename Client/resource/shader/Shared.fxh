@@ -52,6 +52,7 @@ struct DEFERRED_PS_OUT
     float4 worldpos : SV_Target4;
 };
 
+
 #define PI 3.141592
 #define GAMMA 2.2
 #define Fdielectric 0.04
@@ -121,6 +122,8 @@ Texture2D   BRDFLookUpTable                 : register(t23);
 #define SHADOW_SRV_OFFSET 24
 #define SHADOW_SRV_SIZE   4096.0f
 Texture2D ShadowTexture[MAX_LIGHT]          : register(t24);
+Texture2D particleTexture                   : register(t25);
+
 
 // =================================================
 // SamplerState=====================================
@@ -169,3 +172,9 @@ cbuffer LightBuffer : register(b4)
     uint ShadowFlags;
     float AmbientIntensity;
 }
+
+cbuffer ParticleSizeBuffer : register(b5)
+{
+    float particleSize;
+    float padding[3];
+};

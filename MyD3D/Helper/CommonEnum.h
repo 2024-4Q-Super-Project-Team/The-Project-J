@@ -8,6 +8,7 @@ enum class eCBufferType
     Camera,
     BoneMatrix,
     Light,
+    ParticleSize,
     SIZE
 };
 #define CBUFFER_TYPE_COUNT static_cast<UINT>(eCBufferType::SIZE)
@@ -42,9 +43,17 @@ enum class eVertexShaderType
     SKYBOX,
     SPRITE,
     SHADOW,
+    PARTICLE,
     SIZE,
 };
 #define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
+
+enum class eGeometryShaderType
+{
+    PARTICLE,
+    SIZE
+};
+#define GS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
 
 enum class ePixelShaderType
 {
@@ -54,6 +63,7 @@ enum class ePixelShaderType
     SKYBOX,
     SPRITE,
     G_BUFFER,
+    PARTICLE,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)

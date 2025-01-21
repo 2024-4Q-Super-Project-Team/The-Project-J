@@ -22,6 +22,9 @@ public:
 public:
     virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight)  = 0;
+
+    virtual MeshResource* GetMesh() = 0;
+    virtual MaterialResource* GetMaterial() = 0;
 public:
     virtual json Serialize()  = 0;
     virtual void Deserialize(json& j)  = 0;

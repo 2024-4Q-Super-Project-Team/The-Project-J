@@ -21,9 +21,21 @@ void D3DGraphicsRenderer::UseDepthTest(bool _bValue)
 {
 }
 
+void D3DGraphicsRenderer::SetTopology(D3D_PRIMITIVE_TOPOLOGY topology)
+{
+    mDeviceContext->IASetPrimitiveTopology(topology);
+}
+
 void D3DGraphicsRenderer::DrawCall(UINT _numIndex, UINT _startIndex, INT _baseVertex)
 {
     if (mDeviceContext)
         mDeviceContext->DrawIndexed(_numIndex, _startIndex, _baseVertex);
+    else throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
+}
+
+void D3DGraphicsRenderer::DrawVertexCall(IN UINT _vertexCount, IN UINT _startVertexLocation)
+{
+    if (mDeviceContext)
+        mDeviceContext->Draw(_vertexCount, _startVertexLocation);
     else throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
 }

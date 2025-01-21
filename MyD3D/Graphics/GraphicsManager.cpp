@@ -11,6 +11,7 @@
 D3DGraphicsConstantBuffer* GraphicsManager::mCBufferArray[CBUFFER_TYPE_COUNT];
 D3DGraphicsSamplerState* GraphicsManager::mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
 D3DGraphicsVertexShader* GraphicsManager::mVertexShaderArray[VS_TYPE_COUNT];
+D3DGraphicsGeometryShader* GraphicsManager::mGeometryShaderArray[VS_TYPE_COUNT];
 D3DGraphicsPixelShader* GraphicsManager::mPixelShaderArray[PS_TYPE_COUNT];
 D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_TYPE_COUNT];
 
@@ -64,6 +65,7 @@ void GraphicsManager::Finalization()
     SAFE_RELEASE_ARRAY(mCBufferArray);
     SAFE_RELEASE_ARRAY(mSamplerStateArray);
     SAFE_RELEASE_ARRAY(mVertexShaderArray);
+    SAFE_RELEASE_ARRAY(mGeometryShaderArray);
     SAFE_RELEASE_ARRAY(mPixelShaderArray);
     SAFE_RELEASE_ARRAY(mBlendStateArray);
     D3DGraphicsDevice::Finalization();
@@ -122,6 +124,14 @@ void GraphicsManager::InitConstantBuffer()
         mCBufferArray[slot]->SetBindStage(eShaderStage::PS);
         mCBufferArray[slot]->Bind();
     }
+    {
+        UINT slot = static_cast<UINT>(eCBufferType::ParticleSize);
+        bufDesc.ByteWidth = sizeof(ParticleSizeCBuffer);
+        mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
+        mCBufferArray[slot]->SetBindSlot(slot);
+        mCBufferArray[slot]->SetBindStage(eShaderStage::GS);
+        mCBufferArray[slot]->Bind();
+    }
 }
 
 void GraphicsManager::InitShader()
@@ -131,6 +141,11 @@ void GraphicsManager::InitShader()
         mVertexShaderArray[(UINT)eVertexShaderType::SKYBOX] = new D3DGraphicsVertexShader(L"resource/shader/SkyBox_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::SPRITE] = new D3DGraphicsVertexShader(L"resource/shader/Sprite_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::SHADOW] = new D3DGraphicsVertexShader(L"resource/shader/Shadow_VS.cso");
+        mVertexShaderArray[(UINT)eVertexShaderType::PARTICLE] = new D3DGraphicsVertexShader(L"resource/shader/Particle_VS.cso");
+
+    }
+    {
+        mGeometryShaderArray[(UINT)eGeometryShaderType::PARTICLE] = new D3DGraphicsGeometryShader(L"resource/shader/Particle_GS.cso");
     }
     {
         mPixelShaderArray[(UINT)ePixelShaderType::BLINN_PHONG] = new D3DGraphicsPixelShader(L"resource/shader/BlinnPhong_PS.cso");
@@ -139,6 +154,8 @@ void GraphicsManager::InitShader()
         mPixelShaderArray[(UINT)ePixelShaderType::SKYBOX] = new D3DGraphicsPixelShader(L"resource/shader/SkyBox_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::SPRITE] = new D3DGraphicsPixelShader(L"resource/shader/Sprite_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::G_BUFFER] = new D3DGraphicsPixelShader(L"resource/shader/GBuffer_PS.cso");
+        mPixelShaderArray[(UINT)ePixelShaderType::PARTICLE] = new D3DGraphicsPixelShader(L"resource/shader/Particle_PS.cso");
+
     }
 }
 

@@ -85,3 +85,10 @@ struct LightCBuffer
 };
 
 #define LIGHT_FLAG_SHADOW_USE_PCF 1
+
+
+struct ParticleSizeCBuffer
+{
+    float particleSize;
+    float padding[3];
+};

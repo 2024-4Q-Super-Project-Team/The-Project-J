@@ -14,6 +14,7 @@
 #include "Component/Collider/BoxCollider.h"
 #include "Component/Collider/SphereCollider.h"
 #include "Component/Controller/PlayerController.h"
+#include "Component/ParticleSystem/ParticleSystem.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"

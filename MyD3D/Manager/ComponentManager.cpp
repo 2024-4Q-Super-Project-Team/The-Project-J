@@ -14,6 +14,7 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(BoxCollider);
 	REGISTER_COMPONENT(SphereCollider);
 	REGISTER_COMPONENT(PlayerController);
+	REGISTER_COMPONENT(ParticleSystem);
 
 
 	return true;

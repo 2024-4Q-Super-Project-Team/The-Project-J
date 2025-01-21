@@ -94,12 +94,10 @@ void GameManager::SetRunType(eEngineRunType _runType)
 	case eEngineRunType::GAME_MODE:
 	{
 		ViewportManager::Start();
-		ViewportManager::GameRun();
 		break;
 	}
 	case eEngineRunType::EDITOR_MODE:
 	{
-		ViewportManager::EditorRun();
 		break;
 	}
 	default:

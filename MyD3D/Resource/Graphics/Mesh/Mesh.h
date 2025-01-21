@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource/Resource.h"
 #include "Vertex.h"
+#include "Bone.h"
 
 class D3DGraphicsVertexBuffer;
 class D3DGraphicsIndexBuffer;
@@ -12,12 +13,12 @@ class MeshResource
     : public Resource
 {
 public:
-    RESOURCE_TYPE(Mesh);
+    RESOURCE_TYPE(MeshResource);
     explicit MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices);
     virtual ~MeshResource();
 public:
-    HRESULT Create();
-    void    Bind();
+    virtual void    Create() override;
+    void            Bind();
 public:
     D3DGraphicsVertexBuffer* mVertexBuffer;
     D3DGraphicsIndexBuffer*  mIndexBuffer;
@@ -29,9 +30,9 @@ public:
     // 렌더러에서 트랜스폼을 등록할 때 찾기위한 본 매핑테이블
     std::unordered_map<std::wstring, Bone*> mBoneTable;
 
-    static std::shared_ptr<MeshResource> SkyCubeMesh;
-    static std::shared_ptr<MeshResource> CubeMesh;
-    static std::shared_ptr<MeshResource> PlainMesh;
+    static MeshResource* SkyCubeMesh;
+    static MeshResource* CubeMesh;
+    static MeshResource* PlainMesh;
 public:
     static void InitSkyCubeMesh();
     static void InitCubeMesh();

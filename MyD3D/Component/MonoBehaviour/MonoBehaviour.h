@@ -1,7 +1,7 @@
 #pragma once
 #include "Component/Component.h"
 
-class Prefab;
+class PrefabResource;
 class Collider;
 class Object;
 class MonoBehaviour;
@@ -41,9 +41,9 @@ protected: // MonoBehaviour메소드==================
 	// ===========================================
 	// ===========================================
 	// 오브젝트 생성 및 삭제========================
-    // Prefab의 오브젝트를 복사합니다.
-	Object* Instantiate(Prefab* _pInstant);
-	Object* Instantiate(Prefab* _pInstant, Vector3 _position);
+    // PrefabResource의 오브젝트를 복사합니다.
+	Object* Instantiate(PrefabResource* _pInstant);
+	Object* Instantiate(PrefabResource* _pInstant, Vector3 _position);
     Object* CreateObject(std::wstring_view _name, std::wstring_view _tag);
 	void    Destroy(Object* _object);
 

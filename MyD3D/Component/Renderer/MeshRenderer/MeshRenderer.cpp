@@ -13,7 +13,7 @@
 MeshRenderer::MeshRenderer(Object* _owner)
     : RendererComponent(_owner)
     , mMesh(nullptr)
-    , mMateiral(new Material)
+    , mMateiral(nullptr)
 {
     mType = eComponentType::MESH_RENDERER;
 }
@@ -75,9 +75,9 @@ void MeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh)
     {
-        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-        mTransformMatrices.View = XMMatrixTranspose(_camera->GetView());
-        mTransformMatrices.Projection = XMMatrixTranspose(_camera->GetProjection());
+        mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+        mTransformMatrices.View         = XMMatrixTranspose(_camera->GetView());
+        mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
 
         _camera->PushDrawList(this);
     }
@@ -92,22 +92,24 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
 
 void MeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
 {
+    
+    if (mMesh)
+    {
     // 머티리얼 바인딩
     if (mMateiral)
     {
         mMateiral->Bind();
+        GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
     }
     // 메쉬 바인딩
-    if (mMesh)
-    {
-        mMesh->Bind();
-    }
+    mMesh->Bind();
     mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
     mTransformMatrices.View         = XMMatrixTranspose(_view);
     mTransformMatrices.Projection   = XMMatrixTranspose(_projection);
     // 트랜스폼 상수 버퍼 바인딩
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
     D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+    }
 }
 
 void MeshRenderer::DrawShadow(Light* _pLight)
@@ -118,42 +120,62 @@ void MeshRenderer::DrawShadow(Light* _pLight)
         if (mMesh)
         {
             mMesh->Bind();
+            // View, Projection은 그림자의 V,P로 써야한다.
+            mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+            mTransformMatrices.View = _pLight->GetProperty().ShadowView;
+            mTransformMatrices.Projection = _pLight->GetProperty().ShadowProjection;
+            // 트랜스폼 상수 버퍼 바인딩
+            GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+            D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
         }
-        // View, Projection은 그림자의 V,P로 써야한다.
-        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-        mTransformMatrices.View = _pLight->GetProperty().ShadowView;
-        mTransformMatrices.Projection = _pLight->GetProperty().ShadowProjection;
-        // 트랜스폼 상수 버퍼 바인딩
-        GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
-        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
 
 void MeshRenderer::SetMesh(ResourceHandle _handle)
 {
-    if (_handle.GetResourceType() == eResourceType::Mesh)
+    if (_handle.GetResourceType() == eResourceType::MeshResource)
     {
         mMeshHandle = _handle;
-        mMesh = ResourceManager::RequestResource<MeshResource>(_handle);
+        mMesh = ResourceManager::GetResource<MeshResource>(_handle);
     }
 }
+void MeshRenderer::SetMesh(MeshResource* _pResource)
+{
+    if (_pResource)
+    {
+        mMeshHandle = _pResource->GetHandle();
+        mMesh = _pResource;
+    }
+}
+
 void MeshRenderer::SetMaterial(ResourceHandle _handle)
 {
-    if (_handle.GetResourceType() == eResourceType::Material)
+    if (_handle.GetResourceType() == eResourceType::MaterialResource)
     {
         mMaterialaHandle = _handle;
-        auto MatResource = ResourceManager::RequestResource<MaterialResource>(_handle);
+        auto MatResource = ResourceManager::GetResource<MaterialResource>(_handle);
         if (MatResource)
         {
-            mMateiral->SetMaterial(MatResource);
+            mMateiral = MatResource;
+            mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
         }
     }
 }
-std::shared_ptr<MeshResource> MeshRenderer::GetMesh()
+void MeshRenderer::SetMaterial(MaterialResource* _pResource)
+{
+    if (_pResource)
+    {
+        mMaterialaHandle = _pResource->GetHandle();
+        mMateiral = _pResource;
+        mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+    }
+}
+
+MeshResource* MeshRenderer::GetMesh()
 {
     return mMesh;
 }
-Material* MeshRenderer::GetMaterial()
+MaterialResource* MeshRenderer::GetMaterial()
 {
     return mMateiral;
 }
@@ -168,8 +190,8 @@ json MeshRenderer::Serialize()
     else 
         ret["mesh"] = nullptr;
 
-    if (mMateiral && mMateiral->mMaterialResource) 
-        ret["material"] = mMateiral->mMaterialResource->GetKey();
+    if (mMateiral && mMateiral) 
+        ret["material"] = mMateiral->GetKey();
     else  
         ret["material"] = nullptr;
     return ret;
@@ -185,48 +207,63 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Mesh Renderer##" + uid).c_str(), EDITOR_FLAG_MAIN))
     {
+        //////////////////////////////////////////////////////////////////////
+        // Mesh
+        //////////////////////////////////////////////////////////////////////
         {
-            std::string uid = "NULL Mesh";
+            std::string widgetID = "NULL Mesh";
             std::string name = "NULL Mesh";
             if (mMesh)
             {
                 mMesh->EditorRendering(EditorViewerType::DEFAULT);
                 name = Helper::ToString(mMesh->GetKey());
-                uid = mMesh->GetID();
+                widgetID = mMesh->GetID();
             }
             else
             {
                 ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-                ImGui::Selectable(uid.c_str() , false, ImGuiSelectableFlags_Highlight);
+                ImGui::Selectable(widgetID.c_str() , false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
             }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MeshResource>(uid.c_str(), &mMeshHandle))
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MeshResource>(widgetID.c_str(), &mMeshHandle))
             {
                 SetMesh(mMeshHandle);
             }
         }
-
         ImGui::Separator();
-
+        //////////////////////////////////////////////////////////////////////
+        // Material
+        //////////////////////////////////////////////////////////////////////
         {
-            std::string uid = "NULL Material";
+            std::string widgetID = "NULL Material";
             std::string name = "NULL Material";
             if (mMateiral)
             {
-                if (mMateiral->mMaterialResource)
+                mMateiral->EditorRendering(EditorViewerType::DEFAULT);
+                name = Helper::ToString(mMateiral->GetKey());
+                uid = mMateiral->GetID();
+                if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
                 {
-                    mMateiral->EditorRendering(EditorViewerType::DEFAULT);
-                    name = Helper::ToString(mMateiral->mMaterialResource->GetKey());
-                    uid = mMateiral->mMaterialResource->GetID();
-                }
-                else
-                {
-                    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-                    ImGui::Selectable(uid.c_str(), false, ImGuiSelectableFlags_Highlight);
-                    EDITOR_COLOR_POP(1);
+                    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+                    {
+                        bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
+                        if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
+                        {
+                            mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
+                        }
+                        mMateiral->EditorRendering(EditorViewerType::INSPECTOR);
+                        ImGui::Separator();
+                    }
+                    ImGui::TreePop();
                 }
             }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(uid.c_str(), &mMaterialaHandle))
+            else
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(widgetID.c_str(), &mMaterialaHandle))
             {
                 SetMaterial(mMaterialaHandle);
             }

@@ -7,6 +7,9 @@
 #include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/ResourceViewer/EditorResourceViewer.h"
 
+#include "Editor/CumstomWidget/MenuItem/File/EditorJsonLoader.h"
+#include "Editor/CumstomWidget/MenuItem/File/EditorJsonWriter.h"
+
 #include "Editor/CumstomWidget/MenuItem/World/EditorWorldChanger.h"
 #include "Editor/CumstomWidget/MenuItem/World/EditorWorldCreator.h"
 #include "Editor/CumstomWidget/MenuItem/World/EditorWorldRemover.h"

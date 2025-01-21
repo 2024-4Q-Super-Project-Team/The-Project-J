@@ -8,7 +8,7 @@ class AnimationResource
     : public Resource
 {
 public:
-    RESOURCE_TYPE(Animation);
+    RESOURCE_TYPE(AnimationResource);
     explicit AnimationResource(ResourceHandle _handle);
     virtual ~AnimationResource();
 public:

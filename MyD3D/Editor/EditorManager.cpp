@@ -22,8 +22,6 @@ Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
 
 ImGuiContext*                   EditorManager::mContext;
 
-std::vector<std::shared_ptr<Resource>> EditorManager::mResourceContainor;
-
 void EditorManager::Initialize()
 {
 	mResourceViewer = new Editor::ResourceViewer();
@@ -64,6 +62,7 @@ void EditorManager::RenderEditorWindow()
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+
     }
 }
 
@@ -146,22 +145,36 @@ void EditorManager::InitMainMenuBar()
     mMainMenuBar = new Editor::MenuBar();
     mWidgetArray.push_back(mMainMenuBar);
 
+
+    if (Input::IsMouseDown(Mouse::RIGHT))
+    {
+        if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+        {
+            GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+        }
+        else
+        {
+            GameManager::SetRunType(eEngineRunType::GAME_MODE);
+        }
+    }
+
     {   // File MenuTab
         Editor::MenuNode* pMenu_01 = new Editor::MenuNode("File");
         mMainMenuBar->AddMenuNode(pMenu_01);
+        pMenu_01->AddMenuItem(new Editor::JsonWriter());
+        pMenu_01->AddMenuItem(new Editor::JsonLoader());
     }
     {   // World MenuTab
         Editor::MenuNode* pMenu_02 = new Editor::MenuNode("World");
+        mMainMenuBar->AddMenuNode(pMenu_02);
         pMenu_02->AddMenuItem(new Editor::WorldChanger());
         pMenu_02->AddMenuItem(new Editor::WorldCreator());
         pMenu_02->AddMenuItem(new Editor::WorldRemover());
-        mMainMenuBar->AddMenuNode(pMenu_02);
     }
     {
         Editor::MenuNode* pMenu_03 = new Editor::MenuNode("Option");
         mMainMenuBar->AddMenuNode(pMenu_03);
     }
-
 }
 
 void EditorManager::InitMainWindow()
@@ -272,8 +285,9 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             wchar_t filePath[MAX_PATH];
             DragQueryFile(hDrop, i, filePath, MAX_PATH);
             Display::Console::Log(filePath);
-            ResourceHandle handle = { eResourceType::FBXModel, filePath, L"", filePath };
-            mResourceContainor.push_back(ResourceManager::RegisterResource<FBXModelResource>(handle));
+            ResourceHandle handle = { eResourceType::FBXModelResource, filePath, L"", filePath };
+            ResourceManager::RegisterResourceHandle(handle);
+            ResourceManager::Alloc_Resource<FBXModelResource>(handle);
         }
         // 메모리 해제
         DragFinish(hDrop);

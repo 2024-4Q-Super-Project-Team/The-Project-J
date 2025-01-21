@@ -27,9 +27,11 @@ public:
     virtual void PostRender() = 0;
 public:
     virtual void SetMesh(ResourceHandle _handle) = 0;
+    virtual void SetMesh(MeshResource* _pResource) = 0;
     virtual void SetMaterial(ResourceHandle _handle) = 0;
-    virtual std::shared_ptr<MeshResource> GetMesh() = 0;
-    virtual Material* GetMaterial() = 0;
+    virtual void SetMaterial(MaterialResource* _pResource) = 0;
+    virtual MeshResource* GetMesh() = 0;
+    virtual MaterialResource* GetMaterial() = 0;
 public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;

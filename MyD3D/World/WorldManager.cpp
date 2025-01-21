@@ -211,7 +211,7 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
 
 void WorldManager::SaveWorlds()
 {
-	json worldsJson, groupsJson, objectsJson, componentsJson;
+	json defaultJson, worldsJson, groupsJson, objectsJson, componentsJson;
 
 	for (const auto& world : mWorlds)
 	{
@@ -232,9 +232,9 @@ void WorldManager::SaveWorlds()
 		}
 	}
 
-	std::ofstream file("save_worlds.json");
-	file << worldsJson.dump(4);
-	file.close();
+	std::ofstream file1("save_worlds.json");
+	file1 << worldsJson.dump(4);
+	file1.close();
 
 	std::ofstream file2("save_objectGroups.json");
 	file2 << groupsJson.dump(4);
@@ -252,7 +252,7 @@ void WorldManager::SaveWorlds()
 
 void WorldManager::LoadWorlds()
 {
-	json worldsJson, groupsJson, objectsJson, componentsJson;
+	json defaultsJson, worldsJson, groupsJson, objectsJson, componentsJson;
 
 	std::ifstream worldsFile("save_worlds.json");
 	if (worldsFile.is_open())
@@ -286,16 +286,20 @@ void WorldManager::LoadWorlds()
 	{
 		//월드 생성 
 		std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
-		World* world = CreateWorld(worldName);
+		World* world = new World(mOwnerScene,worldName, L"", false);
+		mWorlds[worldName] = world;
+
 		world->SetId(worldJson["id"].get<unsigned int>());
 		world->Deserialize(worldJson); //이 안에서 속한 그룹 생성 (id, 이름 설정)
 	}
+
 
 	for (auto& groupJson : groupsJson)
 	{
 		unsigned int id = groupJson["id"].get<unsigned int>();
 		ObjectGroup* group = static_cast<ObjectGroup*>(Engine::SaveBase::mMap[id]);
-		group->Deserialize(groupJson); 
+		if(group)
+			group->Deserialize(groupJson); 
 	}
 
 	for (auto& objectJson : objectsJson)
@@ -309,8 +313,12 @@ void WorldManager::LoadWorlds()
 	{
 		unsigned int id = componentJson["id"].get<unsigned int>();
 		Component* component = static_cast<Component*>(Engine::SaveBase::mMap[id]);
-		component->Deserialize(componentJson);
-		component->UnWake();
+		if (component) 
+		{
+			component->Deserialize(componentJson);
+			component->UnWake();
+		}	
 	}
 
+	
 }

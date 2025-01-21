@@ -64,6 +64,9 @@ public:
 	//Á÷·ÄÈ­
 	json Serialize();
 	void Deserialize(json& j);
+	
+	json SerializeDefault();
+	void DeserializeDefault(json& j);
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }

@@ -116,7 +116,19 @@ void ObjectGroup::SetWorld(World* _world)
 {
 	if (mOwnerWorld == _world)
 		return;
-    _world->ReceiveObjectGroup(this);
+    
+    mOwnerWorld = _world;
+    
+    //_world->ReceiveObjectGroup(this); //?무슨 코드인지 모르겠음. 일단 호출하는데 없어서 주석처리했습니다
+}
+
+Object* ObjectGroup::GetObject(std::wstring name) const
+{
+    auto found = std::find_if(mObjects.begin(), mObjects.end(), [&name](Object* obj) {return obj->GetName() == name;});
+
+    if (found != mObjects.end())
+        return *found;
+    return nullptr;
 }
 
 json ObjectGroup::Serialize()

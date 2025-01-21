@@ -17,8 +17,8 @@ public:
 	PxPhysics* GetPhysics() const { return mPhysics; }
 	PxMaterial* GetDefaultMaterial() { return mDefaultMaterial; }
 	static PickingRay GetPickingRay() { return ray; }
-	//PxCudaContextManager* GetCudaManager() { return mCudaContextManager; }
-	//PxCudaContext* GetCudaContext() { return mCudaContext; }
+	PxCudaContextManager* GetCudaManager() { return mCudaContextManager; }
+	PxCudaContext* GetCudaContext() { return mCudaContext; }
 
 private:
 	PxFoundation* mFoundation;
@@ -28,7 +28,7 @@ private:
 	PxMaterial* mDefaultMaterial;
 
 	static PickingRay ray;
-	//PxCudaContextManager* mCudaContextManager;
-	//PxCudaContext* mCudaContext;
+	PxCudaContextManager* mCudaContextManager;
+	PxCudaContext* mCudaContext;
 };
 

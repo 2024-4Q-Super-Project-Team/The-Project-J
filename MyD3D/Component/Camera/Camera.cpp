@@ -298,7 +298,8 @@ json Camera::Serialize()
 {
     json ret;
 
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
+    ret["name"] = "Camera";
     ret["fov angle"] = mFovAngle.GetAngle();
     ret["near"] = mProjectionNear;
     ret["far"] = mProjectionFar;

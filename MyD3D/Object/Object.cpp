@@ -244,6 +244,19 @@ void Object::Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _o
     }
 }
 
+std::vector<Component*> Object::GetAllComponents()
+{
+    std::vector<Component*> ret;
+    for (auto& typeComps : mComponentArray)
+    {
+        for (auto& comp : typeComps)
+        {
+            ret.push_back(comp);
+        }
+    }
+    return ret;
+}
+
 json Object::Serialize()
 {
     json ret;
@@ -272,7 +285,7 @@ void Object::Deserialize(json& j)
     {
         std::string name = componentJson["name"].get<std::string>();
         Component* component;
-        if (name == "Transform") //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
+        if (name == "Transform" ) //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
             component = transform;
         else
             component = static_cast<Component*>(CREATE_COMPONENT(name, this));

@@ -73,9 +73,25 @@ void Animator::EditorRender()
 {
 }
 
-void Animator::SetAnimation(std::shared_ptr<AnimationResource> _pAnim)
+void Animator::SetAnimation(ResourceHandle _handle)
 {
-    mActiveAnimation = _pAnim;
+    if (_handle.GetResourceType() == eResourceType::AnimationResource)
+    {
+        mAnimationHandle = _handle;
+        auto pResource = ResourceManager::GetResource<AnimationResource>(_handle);
+        if (pResource)
+        {
+            mActiveAnimation = pResource;
+        }
+    }
+}
+
+void Animator::SetAnimation(AnimationResource* _pAnim)
+{
+    if (_pAnim)
+    {
+        mActiveAnimation = _pAnim;
+    }
 }
 
 json Animator::Serialize()
@@ -177,16 +193,31 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	if (ImGui::TreeNodeEx(("Animator" + uid).c_str(), EDITOR_FLAG_MAIN))
 	{
-        ImGui::Text("Duration : %f", mDuration);
-
+        //////////////////////////////////////////////////////////////////////
+        // Mesh
+        //////////////////////////////////////////////////////////////////////
+        {
+            std::string widgetID = "NULL Animation";
+            std::string name = "NULL Animation";
+            if (mActiveAnimation)
+            {
+                mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
+                name = Helper::ToString(mActiveAnimation->GetKey());
+                widgetID = mActiveAnimation->GetID();
+            }
+            else
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
+            {
+                SetAnimation(mAnimationHandle);
+            }
+        }
         ImGui::Separator();
-
-		if (mActiveAnimation)
-		{
-			
-            ImGui::Separator();
-            mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
-		}
+        ImGui::Text("Duration : %f", mDuration);
 		
 		ImGui::TreePop();
 	}

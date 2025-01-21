@@ -32,10 +32,12 @@ public:
     virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
 public:
-    virtual std::shared_ptr<MeshResource> GetMesh() override;
-    virtual Material* GetMaterial() override;
+    virtual MeshResource* GetMesh() override;
+    virtual MaterialResource* GetMaterial() override;
     virtual void SetMesh(ResourceHandle _handle) override;
+    virtual void SetMesh(MeshResource* _pResource) override;
     virtual void SetMaterial(ResourceHandle _handle) override;
+    virtual void SetMaterial(MaterialResource* _pResource) override;
     void         SetRootBone(Transform* _rootBone);
 private:
     void UpdateTable();
@@ -48,15 +50,16 @@ private:
     // 본이나 메쉬 등이 수정되었는가
     bool isDirty = true;
 
-    ResourceHandle                  mMeshHandle;
-    std::shared_ptr<MeshResource>   mMesh;  
-    ResourceHandle                  mMaterialaHandle;
-    Material*                       mMateiral;   
-    Transform*                      mRootBone; 
+    ResourceHandle    mMeshHandle;
+    ResourceHandle    mMaterialaHandle;
+    MeshResource*     mMesh;  
+    MaterialResource* mMateiral;
+    Transform*        mRootBone; 
 
     std::unordered_map<std::wstring, Transform*> mBoneMappingTable; // 본 이름과 트랜스폼 매칭
     BoneMatrixCBuffer mFinalBoneMatrices; // 최종 본 매트릭스 (셰이더로 전달)
 	TransformCBuffer  mTransformMatrices; // 트랜스폼 매트릭스 (셰이더로 전달)
+    MaterialCBuffer   mMatCBuffer;        // 머티리얼 상수 버퍼 (셰이더로 전달)
 
 	bool isCastShadow = true;
 public:

@@ -32,18 +32,22 @@ public:
     virtual void DrawShadow(Light* _pLight) override;
 public:
     virtual void SetMesh(ResourceHandle _handle) override;
+    virtual void SetMesh(MeshResource* _pResource) override;
     virtual void SetMaterial(ResourceHandle _handle) override;
-    virtual std::shared_ptr<MeshResource> GetMesh() override;
-    virtual Material* GetMaterial() override;
+    virtual void SetMaterial(MaterialResource* _pResource) override;
+    virtual MeshResource* GetMesh() override;
+    virtual MaterialResource* GetMaterial() override;
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
-    ResourceHandle mMeshHandle;
-    std::shared_ptr<MeshResource> mMesh;    // 메쉬
-    ResourceHandle mMaterialaHandle;
-    Material* mMateiral;                    // 사용할 머티리얼
+    ResourceHandle      mMeshHandle;
+    ResourceHandle      mMaterialaHandle;
+    MeshResource*       mMesh; 
+    MaterialResource*   mMateiral; 
+
 	TransformCBuffer mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
+    MaterialCBuffer  mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
 public:

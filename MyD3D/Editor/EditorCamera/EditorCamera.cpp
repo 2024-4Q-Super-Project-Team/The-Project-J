@@ -9,6 +9,8 @@
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 
+#include "Component/Camera/SkyBox/SkyBox.h"
+
 #define CAMERA_MOVE_SPEED (mCameraMoveSpeed * Time::GetUnScaledDeltaTime())
 
 void EditorCamera::EditorUpdate()
@@ -152,8 +154,7 @@ void EditorCamera::PushDrawList(RendererComponent* _renderComponent)
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
     if (pMaterial)
     {
-        if (pMaterial->mMaterialResource)
-            blendMode = pMaterial->mMaterialResource->mBlendMode;
+        blendMode = pMaterial->mBlendMode;
     }
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
 }
@@ -187,7 +188,7 @@ void EditorCamera::ExcuteDrawList()
 
             if (mIsSkyBoxRendering)
             {
-                SkyBox::DefaultSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
+                SkyBox::GetDefaultSkyBox()->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
             }
 
             mMainRenderTarget->EndDraw();

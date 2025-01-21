@@ -3,7 +3,7 @@
 namespace Editor
 {
 	class WorldCreator
-		: public Editor::IWidget
+		: public IWidget
 	{
 	public:
 		explicit WorldCreator();

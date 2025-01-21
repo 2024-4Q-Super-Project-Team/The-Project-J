@@ -68,7 +68,7 @@ public:
     inline void SetFovAngle(Degree _angle) { mFovAngle = _angle; }
     inline void SetProjectionNear(float _near) { mProjectionNear = _near; }
     inline void SetProjectionFar(float _far) { mProjectionFar = _far; }
-    inline void SetSkyBox(std::shared_ptr<SkyBox> _pSkybox) { mSkyBox = _pSkybox; }
+    inline void SetSkyBox(SkyBox* _pSkybox) { mSkyBox = _pSkybox; }
 
     inline const Matrix& GetView() { return mViewMatrix; }
     inline const Matrix& GetProjection() { return mProjectionMatrix; }
@@ -116,7 +116,7 @@ private:
 	LightCBuffer			mLightCBuffer;
 
     // 카메라 스카이박스
-    std::shared_ptr<SkyBox> mSkyBox;
+    SkyBox*                 mSkyBox;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

@@ -86,7 +86,7 @@ std::vector<Object*> MonoBehaviour::FindObjectsWithName(std::wstring_view _name)
 	return tempArr;
 }
 
-Object* MonoBehaviour::Instantiate(Prefab* _pInstant)
+Object* MonoBehaviour::Instantiate(PrefabResource* _pInstant)
 {
     if (_pInstant)
     {
@@ -112,21 +112,21 @@ Object* MonoBehaviour::Instantiate(Prefab* _pInstant)
         }
 
         auto clone = cloneArray.begin();
-        auto prefab = _pInstant->mObjectList.begin();
+        auto PrefabResource = _pInstant->mObjectList.begin();
 
         // 만들어둔 오브젝트 Clone(컴포넌트)
         while (clone != cloneArray.end())
         {
-            (*prefab)->Clone((*clone), cloneTable);
+            (*PrefabResource)->Clone((*clone), cloneTable);
             clone++;
-            prefab++;
+            PrefabResource++;
         }
         return cloneArray.front();
     }
     return nullptr;
 }
 
-Object* MonoBehaviour::Instantiate(Prefab* _pInstant, Vector3 _position)
+Object* MonoBehaviour::Instantiate(PrefabResource* _pInstant, Vector3 _position)
 {
     Object* pObject = Instantiate(_pInstant);
     if (pObject)

@@ -24,7 +24,7 @@ void ModelSpawner::Start()
 
     {   // Gun
         //auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Gun/gun.fbx");
-        //auto ModelPrefab = ResourceManager::AddResource<Prefab>(L"resource/fbx/gun.fbx", ModelResource);
+        //auto ModelPrefab = ResourceManager::AddResource<PrefabResource>(L"resource/fbx/gun.fbx", ModelResource);
         //ModelPrefab->SetGroupName(L"Model_Group1");
         //mFBXModelResources.push_back(ModelResource);
         //mModelPrefabs.push_back(ModelPrefab);
@@ -37,7 +37,7 @@ void ModelSpawner::Start()
     }
     {   // Sphere
         //auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Sphere/sphere.fbx");
-        //auto ModelPrefab = ResourceManager::AddResource<Prefab>(L"resource/fbx/sphere.fbx", ModelResource);
+        //auto ModelPrefab = ResourceManager::AddResource<PrefabResource>(L"resource/fbx/sphere.fbx", ModelResource);
         //ModelPrefab->SetGroupName(L"Model_Group2");
         //mFBXModelResources.push_back(ModelResource);
         //mModelPrefabs.push_back(ModelPrefab);
@@ -54,7 +54,7 @@ void ModelSpawner::Start()
     }
     {   // Mixamo
         //auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Mixamo/SkinningTest.fbx");
-        //auto ModelPrefab = ResourceManager::AddResource<Prefab>(L"resource/fbx/Mixamo/SkinningTest.fbx", ModelResource);
+        //auto ModelPrefab = ResourceManager::AddResource<PrefabResource>(L"resource/fbx/Mixamo/SkinningTest.fbx", ModelResource);
         //ModelPrefab->SetGroupName(L"Model_Group3");
         //mFBXModelResources.push_back(ModelResource);
         //mModelPrefabs.push_back(ModelPrefab);

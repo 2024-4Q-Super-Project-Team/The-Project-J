@@ -9,10 +9,10 @@ void CameraController::Start()
 {
 	// 스카이 박스
 	//auto pSkyBox = ResourceManager::AddResource<SkyBox>(L"Default_SkyBox");
-	//pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
-	//pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
-	//pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
-	//pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2D>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
+	//pSkyBox->SetEnvironmentTexture(ResourceManager::AddResource<Texture2DResource>(L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds"));
+	//pSkyBox->SetDiffuseTexture(ResourceManager::AddResource<Texture2DResource>(L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds"));
+	//pSkyBox->SetSpecularture(ResourceManager::AddResource<Texture2DResource>(L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds"));
+	//pSkyBox->SetLookUpTableTexture(ResourceManager::AddResource<Texture2DResource>(L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds"));
 
 	mCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
 	//mCamera->SetSkyBox(pSkyBox);

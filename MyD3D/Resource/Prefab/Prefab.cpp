@@ -5,14 +5,21 @@
 #include "Resource/Graphics/Mesh/Mesh.h"
 #include "Resource/Graphics/Material/Material.h"
 
-Prefab::Prefab(ResourceHandle _handle)
+#include "ViewportScene/ViewportManager.h"
+#include "ViewportScene/ViewportScene.h"
+#include "World/WorldManager.h"
+#include "World/World.h"
+#include "ObjectGroup/ObjectGroup.h"
+
+PrefabResource::PrefabResource(ResourceHandle _handle)
     : Resource(_handle)
 {
+    SetID("Prefab : " + Helper::ToString(_handle.GetKey()));
     Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
 }
 
-Prefab::Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel)
+PrefabResource::PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel)
     : Resource(_handle)
 {
     Object* mainObject = new Object(GetKey(), L"");
@@ -22,18 +29,18 @@ Prefab::Prefab(ResourceHandle _handle, std::shared_ptr<FBXModelResource> _pModel
     SetComponent(mainObject, _pModel);
 }
 
-Prefab::~Prefab()
+PrefabResource::~PrefabResource()
 {
     SAFE_DELETE_ARRAY(mObjectList);
 }
 
-void Prefab::AddObject(Object* _pObject)
+void PrefabResource::AddObject(Object* _pObject)
 {
     mObjectList.push_back(_pObject);
     mObjectTable[_pObject->GetName()] = _pObject;
 }
 
-void Prefab::AddObjectFromNode(Object* _pObject, ModelNode* _pNode)
+void PrefabResource::AddObjectFromNode(Object* _pObject, ModelNode* _pNode)
 {
     Object* pObject = new Object(_pNode->mNodeName, L"");
     // 1. 트랜스폼을 통해 계층구조 구성
@@ -52,7 +59,7 @@ void Prefab::AddObjectFromNode(Object* _pObject, ModelNode* _pNode)
 }
 
 
-Object* Prefab::GetObjectFromName(const std::wstring& _name)
+Object* PrefabResource::GetObjectFromName(const std::wstring& _name)
 {
     auto itr = Helper::FindMap(_name, mObjectTable);
     if (itr == nullptr)
@@ -65,17 +72,48 @@ Object* Prefab::GetObjectFromName(const std::wstring& _name)
     }
 }
 
-void Prefab::SetGroupName(const std::wstring& _groupName)
+void PrefabResource::SetGroupName(const std::wstring& _groupName)
 {
     mGroupName = _groupName;
 }
 
-void Prefab::SetComponent(Object* _pObject, std::shared_ptr<FBXModelResource> _pModel)
+Object* PrefabResource::InstantiateFromGroup(ObjectGroup* _group)
+{
+    if (_group)
+    {
+        std::list<Object*>                          cloneArray;
+        std::unordered_map<std::wstring, Object*>   cloneTable;
+
+        cloneTable.reserve(mObjectTable.size());
+
+        for (auto itr = mObjectList.begin(); itr != mObjectList.end(); ++itr)
+        {
+            Object* clone = _group->CreateObject((*itr)->GetName(), (*itr)->GetTag());
+            cloneTable[clone->GetName()] = clone;
+            cloneArray.push_back(clone);
+        }
+
+        auto clone = cloneArray.begin();
+        auto PrefabResource = mObjectList.begin();
+
+        // 만들어둔 오브젝트 Clone(컴포넌트)
+        while (clone != cloneArray.end())
+        {
+            (*PrefabResource)->Clone((*clone), cloneTable);
+            clone++;
+            PrefabResource++;
+        }
+        return cloneArray.front();
+    }
+    return nullptr;
+}
+
+void PrefabResource::SetComponent(Object* _pObject, FBXModelResource* _pModel)
 {
     SetMeshRenderer(_pModel->mRootNode, _pModel);
 }
 
-void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource> _pModel)
+void PrefabResource::SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pModel)
 {
     for (int i = 0; i < _pNode->mMeshResources.size(); ++i)
     {
@@ -97,11 +135,11 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                 {
                     MeshRenderer* pRenderer = (*ppObject)->AddComponent<MeshRenderer>();
                     // 메쉬를 넣어준다.
-                    //pRenderer->SetMesh((*ppMesh));
+                    pRenderer->SetMesh((*ppMesh));
                     // 머티리얼은 없을 가능성이 있다. 따라서 비어있는지 확인
                     if (ppMaterial)
                     {
-                        //pRenderer->SetMaterial(*ppMaterial);
+                        pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
                 // 본이 있으면 SkinnedMeshRenderer컴포넌트
@@ -110,14 +148,14 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
                     SkinnedMeshRenderer* pRenderer = (*ppObject)->AddComponent<SkinnedMeshRenderer>();
                     // 스킨드 메쉬 렌더러의 루트 본으로 사용할 오브젝트
                     auto** ppRootBone = Helper::FindMap(_pModel->mRootNode->mNodeName, mObjectTable);
-                    //pRenderer->SetMesh((*ppMesh));
+                    pRenderer->SetMesh((*ppMesh));
                     if (ppRootBone)
                     {
                         pRenderer->SetRootBone((*ppRootBone)->transform);
                     }
                     if(ppMaterial)
                     {
-                        //pRenderer->SetMaterial(*ppMaterial);
+                        pRenderer->SetMaterial(*ppMaterial);
                     }
                 }
             }
@@ -130,19 +168,89 @@ void Prefab::SetMeshRenderer(ModelNode* _pNode, std::shared_ptr<FBXModelResource
     }
 }
 
-void Prefab::EditorRendering(EditorViewerType _viewerType)
+void PrefabResource::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(GetKey());
-    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
-    if (ImGui::TreeNodeEx(("Prefab : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
+
+    switch (_viewerType)
     {
-        for (auto& object : mObjectList)
+    case EditorViewerType::DEFAULT:
+    {
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(GetID(), false, flags))
         {
-            object->EditorRendering(EditorViewerType::DEFAULT);
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
         }
-        ImGui::TreePop();
+        EditorItemState state;
+        state.mResourcePtr = this;
+        state.mName = name;
+        EditorDragNDrop::SendDragAndDropData(GetID(), state);
+        EDITOR_COLOR_POP(1);
+        break;
     }
-    EDITOR_COLOR_POP(1);
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+    {
+      
+        {   // Clone Button
+            ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
+            if (ImGui::Button(("Clone" + uid).c_str(), buttonSize))
+            {
+                ImGui::OpenPopup("Clone Prefab"); // 버튼 클릭 시 팝업 열기
+            }
+            if (ImGui::BeginPopup("Clone Prefab"))
+            {
+                if (EditorManager::mFocusViewport &&
+                    EditorManager::mFocusViewport->GetWorldManager() &&
+                    EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld())
+                {
+                    World* world = EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld();
+                    auto& groups = world->GetObjectGroups();
+                    if (groups.empty() != true)
+                    {
+                        std::vector<std::string> strComboList;
+                        std::vector<const char*> tCharComboList;
+                        for (auto& group : groups)
+                        {
+                            strComboList.push_back(Helper::ToString(group->GetName()));
+                            tCharComboList.push_back(strComboList.back().c_str());
+                        }
+                        static int GroupIndex = 0; // 선택된 리소스 타입 (인덱스)
+                        ImGui::Text("Object Group : ");
+                        ImGui::Combo((uid + "Clone Target Group").c_str(), &GroupIndex, tCharComboList.data(), tCharComboList.size());
+                        ImGui::Separator();
+                        buttonSize = ImVec2(70, 20); // 버튼 크기 
+                        if (ImGui::Button(("OK" + uid).c_str(), buttonSize))
+                        {
+                            InstantiateFromGroup(groups[GroupIndex]);
+                            GroupIndex = 0;
+                        }
+                        ImGui::SameLine();
+                        if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
+                        {
+                            GroupIndex = 0;
+                        }
+                    }
+                }
+                ImGui::EndPopup();
+            }
+        }
+        break;
+    }
+    default:
+        break;
+    }
+
+   
+    
+        
+     
+  
 }
 

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "GameApp.h"
-#include "Contents/GameApp/World/TestWorld.h"
+//#include "Contents/GameApp/World/TestWorld.h"
 #include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene = nullptr;
@@ -28,12 +28,11 @@ BOOL GameApp::OnPostInitialize()
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
-       
 #ifdef _DEBUG
-        /////////////////////////////////////////////////////
-        // ¿¡µðÅÍ
-        /////////////////////////////////////////////////////
         EditorManager::ShowEditorWindow(mMainScene);
+        GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+#else
+        GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG
     }
 

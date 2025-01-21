@@ -22,21 +22,26 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    // Editor Only
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawMesh(Camera* _camera) override;
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
 public:
-    virtual void SetMesh(std::shared_ptr<MeshResource> _mesh) override;
-    virtual void SetMaterial(std::shared_ptr<MaterialResource> _material) override;
+    virtual void SetMesh(ResourceHandle _handle) override;
+    virtual void SetMaterial(ResourceHandle _handle) override;
     virtual std::shared_ptr<MeshResource> GetMesh() override;
     virtual Material* GetMaterial() override;
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
+    ResourceHandle mMeshHandle;
     std::shared_ptr<MeshResource> mMesh;    // 메쉬
+    ResourceHandle mMaterialaHandle;
     Material* mMateiral;                    // 사용할 머티리얼
 	TransformCBuffer mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
 

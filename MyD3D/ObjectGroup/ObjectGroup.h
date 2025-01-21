@@ -19,6 +19,8 @@ public:
     explicit ObjectGroup(std::wstring_view _name, std::wstring_view _tag);
 	virtual ~ObjectGroup();
 public:
+	void Start();
+public:
 	virtual void Tick()			override;
 	virtual void FixedUpdate()	override;
 	virtual void PreUpdate()	override;
@@ -28,6 +30,9 @@ public:
 	virtual void Render()       override;
 	virtual void Draw(Camera* _camera);
 	virtual void PostRender()	override;
+
+	virtual void EditorUpdate()	override;
+	virtual void EditorRender()	override;
 private:
     // 매 틱마다 오브젝트 생성, 삭제 처리하는 함수
     void            UpdateObject();

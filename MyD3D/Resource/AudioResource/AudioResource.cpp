@@ -1,10 +1,10 @@
 #include "pch.h"
 #include "AudioResource.h"
 
-AudioResource::AudioResource(std::wstring_view _path)
-	: Resource(_path)
+AudioResource::AudioResource(ResourceHandle _handle)
+	: Resource(_handle)
 {
-	mAudioClip = new AudioClip(_path.data());
+	mAudioClip = new AudioClip(_handle.GetPath());
 	mAudioClip->Create();
 }
 

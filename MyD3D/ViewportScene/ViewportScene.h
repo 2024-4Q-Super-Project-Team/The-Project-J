@@ -24,6 +24,8 @@ public:
 	ViewportScene(ViewportScene&&) noexcept = default;
 	ViewportScene& operator=(ViewportScene&&) noexcept = default;
 public:
+	void Start();
+public:
 	virtual void Tick()			override;
 	virtual void FixedUpdate()	override;
 	virtual void PreUpdate()	override;
@@ -32,6 +34,9 @@ public:
 	virtual void PreRender()	override;
 	virtual void Render()       override;
 	virtual void PostRender()	override;
+
+	virtual void EditorUpdate()	override;
+	virtual void EditorRender()	override;
 protected:
 	WorldManager* mWorldManager;
 	Display::IWindow* mWindow;

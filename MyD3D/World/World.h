@@ -20,6 +20,8 @@ public:
 	explicit World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty = false);
 	virtual ~World();
 public:
+	void Start();
+public:
 	virtual void Tick()			override;
 	virtual void FixedUpdate()	override;
 	virtual void PreUpdate()	override;
@@ -29,6 +31,9 @@ public:
 	virtual void Render()       override;
     virtual void Draw(Camera* _camera);
 	virtual void PostRender()	override;
+
+	virtual void EditorUpdate()	override;
+	virtual void EditorRender()	override;
 public:
 	virtual void _CALLBACK OnCreate()		override {};
 	virtual void _CALLBACK OnDestroy()		override {};
@@ -42,7 +47,8 @@ public:
 	virtual void _CALLBACK OnPreRender()	override {};
 	virtual void _CALLBACK OnRender()		override {};
 	virtual void _CALLBACK OnPostRender()	override {};
-private:
+public:
+	void InitWorldObject();
     void UpdateGroup();
 public:
     // 오브젝트 그룹을 만듭니다.

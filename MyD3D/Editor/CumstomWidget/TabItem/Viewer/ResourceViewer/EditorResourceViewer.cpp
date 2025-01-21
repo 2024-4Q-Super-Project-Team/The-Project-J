@@ -6,6 +6,10 @@
 
 Editor::ResourceViewer::ResourceViewer()
 {
+	for (size_t i = 0; i < (size_t)eResourceType::SIZE; ++i)
+	{
+		mResourceStringArray.push_back(ResourceTypeToStr((eResourceType)i));
+	}
 }
 
 Editor::ResourceViewer::~ResourceViewer()
@@ -14,31 +18,101 @@ Editor::ResourceViewer::~ResourceViewer()
 
 void Editor::ResourceViewer::Render()
 {
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	std::string name;
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Resource View
+	//////////////////////////////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < (size_t)eResourceType::SIZE; ++i)
 	{
 		std::string ResourceName = ResourceTypeToStr((eResourceType)i);
 		if (ImGui::TreeNodeEx((ResourceName).c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_Selected))
 		{
-			static char buffer[128] = "";
-			const char* defaultPath = "resource/";
-			strcpy_s(buffer, defaultPath);
-
-			ImGui::Text(("Add Resource " + ResourceName).c_str());
-			if (ImGui::InputText(("##Add_" + ResourceName).c_str(), buffer, sizeof(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
-			{
-				const std::wstring resourcePath = Helper::ToWString(std::string(buffer));
-			}
-
-			ImGui::Separator();
-
 			ResourceTable& table = ResourceManager::GetResourceTable((eResourceType)i);
 			for (auto& resource : table)
 			{
+				std::string treeName = (ResourceName + " : " + Helper::ToString(resource.first.GetKey())).c_str();
+
 				if (resource.second.expired())
-					continue;
-				resource.second.lock()->EditorRendering();
+				{
+					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_NULL);
+				}
+				else
+				{
+					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+				}
+			
+				if (ImGui::TreeNodeEx((treeName + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+				{
+					if (resource.second.expired())
+					{
+						ImGui::Text("NULL Resource");
+					}
+					else
+					{
+						resource.second.lock()->EditorRendering(EditorViewerType::DEFAULT);
+					}
+					ImGui::TreePop();
+				}
+				EDITOR_COLOR_POP(1);
 			}
 			ImGui::TreePop();
+		}
+	}
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Add Resource
+	//////////////////////////////////////////////////////////////////////////////////////
+	{
+		ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
+		if (ImGui::Button(("Add Resource" + uid).c_str(), buttonSize))
+		{
+			ImGui::OpenPopup("Resource Register"); // 버튼 클릭 시 팝업 열기
+		}
+		if (ImGui::BeginPopup("Resource Register"))
+		{
+			eResourceType TypeData;
+			std::wstring MainKeyData;
+			std::wstring PathData;
+
+			static int TypeIndex = 0; // 선택된 리소스 타입 (인덱스)
+			// 리소스 타입 (콤보 박스)
+			ImGui::Text("ResourceType : ");
+			ImGui::Combo((uid + "RenderMode").c_str(), &TypeIndex, mResourceStringArray.data(), mResourceStringArray.size());
+			TypeData = (eResourceType)TypeIndex;
+
+			static char MainKeybuffer[128] = "";
+			ImGui::Text("MainKey : ");
+			if (ImGui::InputText("##Add_Resource_MainKey", MainKeybuffer, sizeof(MainKeybuffer)))
+			{
+			}
+			MainKeyData = Helper::ToWString(std::string(MainKeybuffer));
+
+			static char Pathbuffer[128] = "";
+			ImGui::Text("Path : ");
+			if (ImGui::InputText("##Add_Resource_Path", Pathbuffer, sizeof(Pathbuffer)))
+			{
+			}
+			PathData = Helper::ToWString(std::string(Pathbuffer));
+
+			ImGui::NewLine();
+			ImGui::Separator();
+			buttonSize = ImVec2(70, 20); // 버튼 크기 
+			const char* defaultSet = "";
+			if (ImGui::Button(("OK" + uid).c_str(), buttonSize))
+			{
+				ResourceHandle handle = { TypeData, MainKeyData, L"", PathData };
+				ResourceManager::RegisterResourceHandle(handle);
+				strcpy_s(MainKeybuffer, defaultSet);
+				strcpy_s(Pathbuffer, defaultSet);
+			}
+			ImGui::SameLine();
+			if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
+			{
+				strcpy_s(MainKeybuffer, defaultSet);
+				strcpy_s(Pathbuffer, defaultSet);
+			}
+
+			ImGui::EndPopup();
 		}
 	}
 }

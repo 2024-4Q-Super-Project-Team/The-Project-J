@@ -11,6 +11,14 @@ class ComponentManager;
 class ViewportScene;
 class World;
 
+enum class eEngineRunType
+{
+	GAME_MODE,
+	EDITOR_MODE,
+};
+
+
+
 class GameManager
 {
 public:
@@ -23,14 +31,20 @@ public:
 public:
 	BOOL Initialize();
 	void Run();
+	void GameRun();
+	void EditorRun();
 	void Finalization();
+public:
+	static void SetRunType(eEngineRunType _runType);
 public:
     static World*           GetCurrentWorld();
 public:
-	static float			GetFixedUpdateTick() { return mFixedUpdateTick; }
-	static Application*		GetApplication()     { return mApplication; }
-	static PhysicsManager*	GetPhysicsManager()  { return mPhysicsManager; }
+	static auto	GetRunType() { return mRunType; }
+	static auto	GetFixedUpdateTick() { return mFixedUpdateTick; }
+	static auto	GetApplication()     { return mApplication; }
+	static auto	GetPhysicsManager()  { return mPhysicsManager; }
 private:
+	static eEngineRunType    mRunType;
 	static Application*		 mApplication;
 	static PhysicsManager*	 mPhysicsManager;
 	static ComponentManager* mComponentManager;

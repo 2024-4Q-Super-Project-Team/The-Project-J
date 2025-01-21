@@ -100,6 +100,14 @@ void Camera::PostRender()
 {
 }
 
+void Camera::EditorUpdate()
+{
+}
+
+void Camera::EditorRender()
+{
+}
+
 void Camera::SetCameraSize(Vector2 _sizeScale)
 {
     mSizeScale = _sizeScale;
@@ -204,7 +212,7 @@ void Camera::DrawForward()
         //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
         for (auto& drawInfo : mDrawQueue[i])
         {
-            drawInfo->DrawMesh(this);
+            drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
         }
         // 그리기 큐를 초기화한다.
         mDrawQueue[i].clear();
@@ -227,7 +235,7 @@ void Camera::DrawDeferred()
         {
             for (auto& drawInfo : mDrawQueue[i])
             {
-                drawInfo->DrawMesh(this);
+                drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
             }
             // 그리기 큐를 초기화한다.
             mDrawQueue[i].clear();
@@ -377,7 +385,7 @@ void Camera::ExcuteDrawList()
                 // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
                 if (mSkyBox)
                 {
-                    mSkyBox->Draw(this);
+                    mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
                 }
 
                 mMainRenderTarget->EndDraw();
@@ -478,7 +486,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
         {
             ImGui::Separator();
 
-            EDITOR_COLOR_EXTRA;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
             if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
             {
                 auto CameraRTV = mMainRenderTarget->GetRTV();

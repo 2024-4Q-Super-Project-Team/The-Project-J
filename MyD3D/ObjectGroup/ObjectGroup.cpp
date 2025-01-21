@@ -14,6 +14,11 @@ ObjectGroup::~ObjectGroup()
 {
 }
 
+void ObjectGroup::Start()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjects, Start())
+}
+
 void ObjectGroup::Tick()
 {
     UpdateObject();
@@ -58,6 +63,17 @@ void ObjectGroup::Draw(Camera* _camera)
 void ObjectGroup::PostRender()
 {
     FOR_LOOP_ARRAY_ENTITY(mObjects, PostRender())
+}
+
+void ObjectGroup::EditorUpdate()
+{
+    UpdateObject();
+    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorUpdate())
+}
+
+void ObjectGroup::EditorRender()
+{
+    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorRender())
 }
 
 Object* ObjectGroup::CreateObject(std::wstring_view _name, std::wstring_view _tag)

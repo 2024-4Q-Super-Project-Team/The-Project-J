@@ -86,6 +86,14 @@ void PlayerController::PostRender()
 {
 }
 
+void PlayerController::EditorUpdate()
+{
+}
+
+void PlayerController::EditorRender()
+{
+}
+
 json PlayerController::Serialize()
 {
 	json ret;

@@ -79,6 +79,14 @@ void AudioListener::PostRender()
 	mMainListener = nullptr;
 }
 
+void AudioListener::EditorUpdate()
+{
+}
+
+void AudioListener::EditorRender()
+{
+}
+
 void AudioListener::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

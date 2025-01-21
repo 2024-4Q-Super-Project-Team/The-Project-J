@@ -336,6 +336,12 @@
     <ClInclude Include="Graphics\Extra\DebugDraw.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\EditorCamera\EditorCamera.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Physics\PickingRay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -651,6 +657,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorCamera\EditorCamera.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Physics\PickingRay.cpp">

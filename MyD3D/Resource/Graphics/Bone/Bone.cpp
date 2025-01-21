@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "Bone.h"
 
-Bone::Bone(std::wstring_view _name, Matrix _matrix)
-    : Resource(_name)
+Bone::Bone(ResourceHandle _handle, Matrix _matrix)
+    : Resource(_handle)
     , mOffsetMatrix(_matrix)
 {
 }
@@ -14,8 +14,8 @@ Bone::~Bone()
 void Bone::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	std::string name = Helper::ToString(mName);
-	EDITOR_COLOR_RESOURCE;
+	std::string name = Helper::ToString(GetKey());
+	ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
 	if (ImGui::TreeNodeEx(("Bone : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
 	{
 		ImGui::Text("Offset Matrix");

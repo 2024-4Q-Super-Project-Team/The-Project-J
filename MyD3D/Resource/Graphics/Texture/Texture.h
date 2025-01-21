@@ -8,7 +8,7 @@ class Texture2D
 {
 public:
     RESOURCE_TYPE(Texture2D);
-    explicit Texture2D(std::wstring_view _path);
+    explicit Texture2D(ResourceHandle _handle);
     virtual ~Texture2D();
 public:
     D3DGraphicsImg* Texture;

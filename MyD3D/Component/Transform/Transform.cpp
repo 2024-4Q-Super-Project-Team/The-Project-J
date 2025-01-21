@@ -77,6 +77,14 @@ void Transform::PostRender()
 {
 }
 
+void Transform::EditorUpdate()
+{
+}
+
+void Transform::EditorRender()
+{
+}
+
 void Transform::UpdatePxTransform()
 {
     memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);
@@ -221,7 +229,7 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
             ImGui::Text("Scale : ");
             ImGui::DragFloat3((uid + "Scale").c_str(), &scale.x, 0.1f);
         }
-        EDITOR_COLOR_EXTRA;
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
         if (ImGui::TreeNodeEx(("Matrix" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
         {
             {

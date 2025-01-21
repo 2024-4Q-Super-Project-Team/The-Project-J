@@ -118,6 +118,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)MyD3D\ThirdParty;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -159,6 +160,8 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h" />
+    <ClInclude Include="Editor\EditorCamera\EditorCamera.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h" />
@@ -270,6 +273,8 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp" />
+    <ClCompile Include="Editor\EditorCamera\EditorCamera.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldCreator.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp" />

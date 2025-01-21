@@ -1,4 +1,8 @@
 #pragma once
+#include "Editor/EditorCamera/EditorCamera.h"
+
+#include "Editor/CumstomWidget/TabItem/EditorDebug/EditorDebugger.h"
+
 #include "Editor/CumstomWidget/TabItem/Viewer/HierarchyViewer/EditorHierarchyViewer.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/ResourceViewer/EditorResourceViewer.h"
@@ -25,7 +29,10 @@ class EditorManager
 public:
 	static void Initialize();
 	static void Finalization();
-    static void RenderEditor();
+    static void RenderEditorWindow();
+public:
+    static void EditorUpdate();
+    static void EditorRender();
 public:
     static BOOL ShowEditorWindow(ViewportScene* _targetViewport);
     static BOOL IsRenderView(ViewportScene* _targetViewport);
@@ -35,32 +42,37 @@ private:
     static void InitImGui();
     static void InitMainMenuBar();
     static void InitMainWindow();
-    static void /* */CreateTestTab(Editor::TabBar* _pSrcTabBar);
+    static void /* */CreateDebuggerTab(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateInspector(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 public:
     void UpdateIO();
 public:
-    static inline auto GetResourceViewer() { return mResourceViewer; }
+    static inline auto GetFocusViewport()   { return mFocusViewport; }
+    static inline auto GetEditorViewport()  { return mEditorViewport; }
+    static inline auto GetResourceViewer()  { return mResourceViewer; }
     static inline auto GetHierarchyViewer() { return mHierarchyViewer; }
     static inline auto GetInspectorViewer() { return mInspectorViewer; }
 public:
+    static EditorCamera                     mEditorCamera;
+
     static ViewportScene*                   mFocusViewport;
     static ViewportScene*                   mEditorViewport;
     static std::vector<Editor::IWidget*>    mWidgetArray;
 
+    static Editor::EditorDebugger*          mDebbugerTab;
     static Editor::ResourceViewer*          mResourceViewer;
     static Editor::HierarchyViewer*         mHierarchyViewer;
     static Editor::InspectorViewer*         mInspectorViewer;
 
+    static std::vector<std::shared_ptr<Resource>> mResourceContainor;
     /////////////////////////////////////////////////////
     //  Widget Object
     /////////////////////////////////////////////////////
 	static Editor::MenuBar*                 mMainMenuBar;
 	static Editor::WindowBar*               mMainWindowBar_01;
 	static Editor::WindowBar*               mMainWindowBar_02;
-
     /////////////////////////////////////////////////////
 	//  ImGui Object
     /////////////////////////////////////////////////////

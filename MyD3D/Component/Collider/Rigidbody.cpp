@@ -86,6 +86,14 @@ void Rigidbody::PostRender()
 
 }
 
+void Rigidbody::EditorUpdate()
+{
+}
+
+void Rigidbody::EditorRender()
+{
+}
+
 void Rigidbody::SetMass(float mass)
 {
 	if (!mIsDynamic) return;

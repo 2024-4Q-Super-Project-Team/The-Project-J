@@ -21,8 +21,11 @@ public:
 	ViewportManager& operator=(ViewportManager&&) noexcept = default;
 public:
 	static BOOL Initialize();
-	static void Run();
+	static void GameRun();
+	static void EditorRun();
 	static void Finalization();
+public:
+	static void Start();
 public:
 	static void Tick();
 	static void FixedUpdate();
@@ -32,6 +35,9 @@ public:
 	static void PreRender();
 	static void Render();
 	static void PostRender();
+
+	static void EditorUpdate();
+	static void EditorRender();
 public:
 	static ViewportScene* CreateViewportScene(Display::WindowDesc* _pWinDesc);
 	static ViewportScene* GetViewportSceneFromWindowName(std::wstring _winName);

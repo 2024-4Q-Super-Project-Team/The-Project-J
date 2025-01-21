@@ -26,6 +26,9 @@ public:
     virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override {}
 
+    virtual MeshResource* GetMesh() { return nullptr; }
+    virtual MaterialResource* GetMaterial() { return nullptr; }
+
     void SetRadius();
 private:
     const float mInitialRadius = 1.f;

@@ -1,5 +1,7 @@
 #pragma once
 
+class Widget;
+
 class UISystem
 {
 public:

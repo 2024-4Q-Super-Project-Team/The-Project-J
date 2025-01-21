@@ -4,7 +4,7 @@
 #define maxParticleCount 3000
 
 
-class Texture2D;
+class Texture2DResource;
 
 class ParticleSystem : public RendererComponent
 {
@@ -38,9 +38,11 @@ public:
 	virtual void DrawShadow(Light* _pLight);
 public:
 	virtual void SetMesh(ResourceHandle _handle) {}
+	virtual void SetMesh(MeshResource* _pResource) {}
 	virtual void SetMaterial(ResourceHandle _handle) {}
-	virtual std::shared_ptr<MeshResource> GetMesh() { return nullptr; }
-	virtual Material* GetMaterial() { return nullptr; }
+	virtual void SetMaterial(MaterialResource* _pResource) {}
+	virtual MeshResource* GetMesh() { return nullptr; }
+	virtual MaterialResource* GetMaterial() { return nullptr; }
 
 private:
 	//Init Or Renew
@@ -74,7 +76,7 @@ private:
 	float mCflCoefficient = 1.0f;     // CFL 계수
 	float mGravity = 0.0f;            // 중력
 
-	std::shared_ptr<Texture2D>  mTexture;
+	Texture2DResource*  mTexture;
 	int mTextureSize = 5;
 
 	class D3DGraphicsVertexBuffer* mVertexBuffer{};

@@ -6,17 +6,18 @@
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Graphics/GraphicsManager.h"
+#include "Resource/Graphics/Texture/Texture.h"
 
 ParticleSystem::ParticleSystem(Object* _owner)
     : RendererComponent(_owner)
 {
 	ResourceHandle texHandle = {
-			eResourceType::Texture2D,
+			eResourceType::Texture2DResource,
 			L"Test_Particle_Texture",
 			L"",
 			L"resource/texture/ParticleSample/fire_01.png"
 	};
-	mTexture = std::make_shared<Texture2D>(texHandle);
+	mTexture = new Texture2DResource(texHandle);
 
 	mParticleSystem = GameManager::GetPhysicsManager()->GetPhysics()
 		->createPBDParticleSystem(*GameManager::GetPhysicsManager()->GetCudaManager(), 96);

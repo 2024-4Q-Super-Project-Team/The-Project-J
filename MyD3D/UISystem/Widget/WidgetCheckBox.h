@@ -1,4 +1,6 @@
 #pragma once
+#include "Widget.h"
+
 class WidgetCheckBox 
 	: public Widget
 {
@@ -7,9 +9,8 @@ public:
 	virtual ~WidgetCheckBox(); // 버츄얼로 돌려야되는데 왜 안됨?
 
 public:
-	virtual void Update()	override;
-	virtual void Update()	override;
-	virtual void Render()	override;
+	virtual void Update();
+	virtual void Render();
 public:
 	bool IsCheck() { return bIsCheck; }
 	bool OnClick() { return bIsCheck && Input::IsMouseDown(Mouse::LEFT); }

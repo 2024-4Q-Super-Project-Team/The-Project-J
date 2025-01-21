@@ -161,7 +161,7 @@ void Transform::SetParent(Transform* _parent)
 json Transform::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
     ret["name"] = "Transform";
  
     ret["position"] = { position.x, position.y, position.z };

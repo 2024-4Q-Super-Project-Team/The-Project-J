@@ -2,119 +2,75 @@
     {
         "components": [
             {
-                "id": 40,
+                "id": 5,
                 "name": "Transform"
             },
             {
-                "id": 41,
+                "id": 6,
                 "name": "Camera"
             }
         ],
-        "id": 30,
+        "id": 3,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 42,
-                "name": "Transform"
-            }
-        ],
-        "id": 31,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 43,
-                "name": "Transform"
-            }
-        ],
-        "id": 32,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 44,
-                "name": "Transform"
-            }
-        ],
-        "id": 33,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 45,
-                "name": "Transform"
-            }
-        ],
-        "id": 34,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 46,
-                "name": "Transform"
-            }
-        ],
-        "id": 35,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 47,
-                "name": "Transform"
-            }
-        ],
-        "id": 36,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 48,
-                "name": "Transform"
-            }
-        ],
-        "id": 37,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 49,
-                "name": "Transform"
-            }
-        ],
-        "id": 38,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 50,
-                "name": "Transform"
-            }
-        ],
-        "id": 39,
-        "name": "Main_Camera"
-    },
-    {
-        "components": [
-            {
-                "id": 52,
+                "id": 9,
                 "name": "Transform"
             },
             {
-                "id": 53,
+                "id": 10,
                 "name": "Light"
             }
         ],
-        "id": 51,
-        "name": "drdt"
+        "id": 4,
+        "name": "Direction_Light"
+    },
+    {
+        "components": [
+            {
+                "id": 13,
+                "name": "Transform"
+            },
+            {
+                "id": 14,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 15,
+                "name": "BoxCollider"
+            }
+        ],
+        "id": 12,
+        "name": "nn"
+    },
+    {
+        "components": [
+            {
+                "id": 21,
+                "name": "Transform"
+            },
+            {
+                "id": 22,
+                "name": "Camera"
+            }
+        ],
+        "id": 19,
+        "name": "Main_Camera"
+    },
+    {
+        "components": [
+            {
+                "id": 25,
+                "name": "Transform"
+            },
+            {
+                "id": 26,
+                "name": "Light"
+            }
+        ],
+        "id": 20,
+        "name": "Direction_Light"
     }
 ]

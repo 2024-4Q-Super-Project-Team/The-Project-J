@@ -7,6 +7,7 @@
 #include "ViewportScene/ViewportManager.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
+#include "Component/Camera/Camera.h"
 
 PxFilterFlags CustomFilterShader(
     PxFilterObjectAttributes attributes0, PxFilterData filterData0,
@@ -38,12 +39,7 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 {
     if (!isEmpty)
     {
-        ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
-        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
-        Camera* cameraComp = mainCamera->AddComponent<Camera>();
-
         mPickingRay = new PickingRay;
-        mPickingRay->SetMainCamera(cameraComp);
 
         PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
         sceneDesc.gravity = PxVec3(0.f, -0.f, 0.f);
@@ -224,6 +220,69 @@ void World::Deserialize(json& j)
         std::wstring name = Helper::ToWString(groupJson["name"].get<std::string>());
         ObjectGroup* group = CreateObjectGroup(name);
         group->SetId(groupJson["id"].get<unsigned int>());
+    }
+}
+
+json World::SerializeDefault()
+{
+    json ret;
+    ret["id"] = GetId();
+    ret["name"] = Helper::ToString(GetName());
+
+
+    ObjectGroup* defaultGroup = GetObjectGroup(L"Default");
+
+    json groupJson;
+    groupJson["id"] = defaultGroup->GiveId();
+    groupJson["name"] = Helper::ToString(defaultGroup->GetName());
+    
+    json objectsJson;
+    for (Object* object : defaultGroup->GetObjects())
+    {
+        json objectJson;
+        objectJson["id"] = object->GiveId();
+        objectJson["name"] = Helper::ToString(object->GetName());
+        for (Component* component : object->GetAllComponents())
+        {
+            json compJson; 
+            compJson = component->Serialize();
+            objectJson["components"] += compJson;
+        }
+
+        objectsJson.push_back(objectJson);
+    }
+    groupJson["objects"] = objectsJson;
+    ret["groups"] = groupJson;
+
+    return ret;
+}
+
+void World::DeserializeDefault(json& j)
+{
+    ObjectGroup* defaultGroup = GetObjectGroup(L"Default");
+
+    json groupJson = j["groups"];
+    defaultGroup->SetId(groupJson["id"].get<unsigned int>());
+
+    for (json objJson : groupJson["objects"])
+    {
+        Object* obj = defaultGroup->GetObject(Helper::ToWString(objJson["name"].get<std::string>()));
+        obj->SetId(objJson["id"].get<unsigned int>());
+
+        for (json compJson : objJson["components"])
+        {
+            if (compJson["name"] == L"Transform")
+                obj->transform->Deserialize(compJson);
+
+            else if (compJson["name"] == L"Camera")
+            {
+                obj->GetComponent<Camera>()->Deserialize(compJson);
+            }
+            else if (compJson["name"] == L"Light")
+            {
+                obj->GetComponent<Light>()->Deserialize(compJson);
+            }
+        }
     }
 }
 

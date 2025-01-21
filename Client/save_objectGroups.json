@@ -1,57 +1,39 @@
 [
     {
-        "id": 28,
+        "id": 1,
         "name": "Default",
         "objects": [
             {
-                "id": 30,
+                "id": 3,
                 "name": "Main_Camera"
             },
             {
-                "id": 31,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 32,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 33,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 34,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 35,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 36,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 37,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 38,
-                "name": "Main_Camera"
-            },
-            {
-                "id": 39,
-                "name": "Main_Camera"
+                "id": 4,
+                "name": "Direction_Light"
             }
         ]
     },
     {
-        "id": 29,
-        "name": "rtrdtr",
+        "id": 2,
+        "name": "aa",
         "objects": [
             {
-                "id": 51,
-                "name": "drdt"
+                "id": 12,
+                "name": "nn"
+            }
+        ]
+    },
+    {
+        "id": 18,
+        "name": "Default",
+        "objects": [
+            {
+                "id": 19,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 20,
+                "name": "Direction_Light"
             }
         ]
     }

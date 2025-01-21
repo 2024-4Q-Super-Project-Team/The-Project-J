@@ -119,6 +119,15 @@ void ObjectGroup::SetWorld(World* _world)
     _world->ReceiveObjectGroup(this);
 }
 
+Object* ObjectGroup::GetObject(std::wstring name) const
+{
+    auto found = std::find_if(mObjects.begin(), mObjects.end(), [&name](Object* obj) {return obj->GetName() == name;});
+
+    if (found != mObjects.end())
+        return *found;
+    return nullptr;
+}
+
 json ObjectGroup::Serialize()
 {
     json ret;

@@ -354,6 +354,18 @@
     <ClInclude Include="Component\Collider\SphereCollider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="UISystem\UISystem.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UISystem\Widget\Widget.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UISystem\Widget\WidgetButton.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UISystem\Widget\WidgetCheckBox.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -684,6 +696,18 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\Collider\SphereCollider.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem\UISystem.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem\Widget\Widget.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem\Widget\WidgetButton.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UISystem\Widget\WidgetCheckBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">

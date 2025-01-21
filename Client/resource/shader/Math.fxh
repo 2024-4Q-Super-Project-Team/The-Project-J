@@ -128,29 +128,32 @@ float3 ACESToneMapping(float3 accumulatedLight)
 
 }
 
-float CaclulatePointLight(float3 lightDir, float radius, float offset)
+float CaclulateAttenuation(float3 lightDir, float radius, float cutoff = 0.001f)
 {
-    // 원의 반지름
-    float r = radius;
-    // 빛의 방향
-    float3 L = lightDir;
+    float r = radius; // 광원의 반지름
     
-    // 거리 구하기
-    float distance = length(L);
-    // 거리가 음수면 0으로 설정
-    float d = max(distance - r, 0);
-    // 감쇠 계산을 위한 중간 값 설정 (거리 / 반지름 + 1)
-    float denom = d / r + 1;
+    // 사이 거리
+    float distance = abs(length(lightDir));
+     
+    // 사이거리 - 광원의 반지름을 구하여 진짜 거리 계산
+    float d = max(distance - r , 0); // 거리가 음수면 0으로 설정
+    
+    // 감쇠 계산을 위한 중간 값 설정 (거리 / 광원의 반지름 + 1)
+    float denom = (d / r) + 1;
+    
     // 감쇠 강도 계산 (거리가 크면 감쇠되고 반지름이 크면 빛을 많이 받음)
-    float att = 1 / (denom * denom);
-    // 감쇠 스케일 재조정
+    float atten = 1 / (denom * denom);
+    
+    // 감쇠 스케일 재조정 임계값
     // att가 0일때는 광원과 가장 멈
     // att가 1일 때는 광원 중심에 가장 가까움
-    att = (att - offset) / (1 - offset);
-    // att가 음수가 나오지 않도록 조정
-    att = max(att, 0);
+    atten = (atten - cutoff) / (1 - cutoff);
     
-    return att;
+    
+    // att가 음수가 나오지 않도록 조정
+    atten = saturate(atten);
+    
+    return atten;
 }
 
 float CaclulateSpotLight(float3 lightDir)

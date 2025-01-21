@@ -6,19 +6,20 @@
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "ViewportScene/ViewportManager.h"
+#include "Editor/EditorManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
 float				GameManager::mFixedUpdateTick = 0.02f;
-Application*		GameManager::mApplication = nullptr;
-PhysicsManager*		GameManager::mPhysicsManager = nullptr;
-ComponentManager*	GameManager::mComponentManager = nullptr;
+Application* GameManager::mApplication = nullptr;
+PhysicsManager* GameManager::mPhysicsManager = nullptr;
+ComponentManager* GameManager::mComponentManager = nullptr;
 
 GameManager::GameManager(Application* _pApplication)
 {
-	mApplication		= _pApplication;
-	mPhysicsManager		= new PhysicsManager();
-	mComponentManager	= new ComponentManager();
+	mApplication = _pApplication;
+	mPhysicsManager = new PhysicsManager();
+	mComponentManager = new ComponentManager();
 }
 
 GameManager::~GameManager()
@@ -28,12 +29,14 @@ GameManager::~GameManager()
 BOOL GameManager::Initialize()
 {
 	Time::Initialize();
-    Input::Initialize();
+	Input::Initialize();
 	AudioHub::Initialize();
-    GraphicsManager::Initialize();
-    ResourceManager::Initialize();
-    ViewportManager::Initialize();
+	GraphicsManager::Initialize();
+	ResourceManager::Initialize();
+	ViewportManager::Initialize();
+	EditorManager::Initialize();
 	mComponentManager->Initialize();
+	mPhysicsManager->Initialize();
 	return TRUE;
 }
 
@@ -53,21 +56,23 @@ void GameManager::Run()
 
 		ViewportManager::Run();
 
-        Input::Update();
+		Input::Update();
 	}
 }
 
 void GameManager::Finalization()
 {
 	AudioHub::Finalization();
-    GraphicsManager::Finalization();
-    ResourceManager::Finalization();
-    ViewportManager::Finalization();
+	GraphicsManager::Finalization();
+	ResourceManager::Finalization();
+	ViewportManager::Finalization();
+	EditorManager::Finalization();
 	mComponentManager->Finalization();
-    SAFE_DELETE(mPhysicsManager);
+	mPhysicsManager->Finalization();
+	SAFE_DELETE(mPhysicsManager);
 }
 
 World* GameManager::GetCurrentWorld()
 {
-    return ViewportManager::GetActiveViewport()->GetWorldManager()->GetActiveWorld();
+	return ViewportManager::GetActiveViewport()->GetWorldManager()->GetActiveWorld();
 }

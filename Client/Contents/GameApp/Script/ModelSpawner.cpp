@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "ModelSpawner.h"
-#include "Contents/EditorApp/Script/EditorManager.h"
 
 ModelSpawner::~ModelSpawner()
 {
@@ -29,14 +28,12 @@ void ModelSpawner::Start()
         ModelPrefab->SetGroupName(L"Model_Group1");
         mFBXModelResources.push_back(ModelResource);
         mModelPrefabs.push_back(ModelPrefab);
-        
+
         auto Instance = Instantiate(ModelPrefab.get());
         //Instance->transform->scale = Vector3(0.2, 0.2, 0.2);
         Instance->transform->position = Vector3(0, 45, 0);
 
         MeshRenderer* pRenderer = FindObjectWithName(L"Cerberus00_Fixed")->GetComponent<MeshRenderer>();
-        if(EditorManager::mDebugEditor)
-        EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Sphere
         auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Sphere/sphere.fbx");
@@ -53,7 +50,7 @@ void ModelSpawner::Start()
         pRenderer->GetMaterial()->mMatCBuffer.MatProp.RoughnessScale = 0.0f;
         pRenderer->GetMaterial()->mMatCBuffer.MatProp.MetallicScale = 1.0f;
         pRenderer->GetMaterial()->mMatCBuffer.MatProp.AmbienOcclusionScale = 1.0f;
-        EditorManager::mDebugEditor->AddRenderModel(pRenderer);
+        //EditorManager::mDebugEditor->AddRenderModel(pRenderer);
     }
     {   // Mixamo
         auto ModelResource = ResourceManager::AddResource<FBXModelResource>(L"resource/fbx/Mixamo/SkinningTest.fbx");
@@ -91,7 +88,7 @@ void ModelSpawner::Start()
         //    Instance->transform->position = Vector3(100, 50, 50);
         //}
     }
-    
+
     ObjectGroup* pGroup = GameManager::GetCurrentWorld()->GetObjectGroup(L"Default");
     Object* dirLight;
     dirLight = pGroup->CreateObject(L"Direction_Light1", L"Default");
@@ -103,24 +100,7 @@ void ModelSpawner::Start()
     pDirLight2->SetLightDirection(Vector4(0.3, -1, 0.15, 0));
     dirLight->SetActive(false); // 초기 비활성화
 
-    dirLight = pGroup->CreateObject(L"Point_Light1", L"Default");
-    Light* pPointLight1 = dirLight->AddComponent<Light>();
-    dirLight->SetActive(false); // 초기 비활성화
-    pPointLight1->SetLightType(eLightType::Point);
-    pPointLight1->SetLightColor(ColorF::Blue());
-    pPointLight1->gameObject->transform->position = Vector3(0, 50, 0);
-    pPointLight1->SetLightRange(100.f);
-    pPointLight1->SetLightCutOff(0.001f);
-
-
     mMainCamera = FindObject(L"Main_Camera", L"Default")->GetComponent<Camera>();
-    if (EditorManager::mDebugEditor)
-    {
-        EditorManager::mDebugEditor->SetCamera(mMainCamera);
-        EditorManager::mDebugEditor->AddLight(pDirLight1);
-        EditorManager::mDebugEditor->AddLight(pDirLight2);
-        EditorManager::mDebugEditor->AddLight(pPointLight1);
-    }
 }
 
 void ModelSpawner::Tick()
@@ -143,7 +123,6 @@ void ModelSpawner::PreUpdate()
 
 void ModelSpawner::Update()
 {
-    
 }
 
 void ModelSpawner::PostUpdate()

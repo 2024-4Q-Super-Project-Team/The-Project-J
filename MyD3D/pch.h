@@ -76,6 +76,14 @@ using json = nlohmann::json;
 #include "AudioSystem/AudioFramework.h"
 
 #include "Component/ComponentFactory/ComponentFactory.h"
+#include "Manager/GameManager.h"
+#include "Editor/EditorManager.h"
 
+//Debug Draw
+#include "Graphics/Extra/DebugDraw.h"
+#include "Directxtk/VertexTypes.h"
+#include "Directxtk/Effects.h"
+#include "Directxtk/CommonStates.h"
+using namespace DirectX::DX11;
 
 #define NULLID 99999999999

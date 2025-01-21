@@ -7,6 +7,22 @@
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 
+PxFilterFlags CustomFilterShader(
+    PxFilterObjectAttributes attributes0, PxFilterData filterData0,
+    PxFilterObjectAttributes attributes1, PxFilterData filterData1,
+    PxPairFlags& pairFlags, const void* constantBlock, PxU32 constantBlockSize)
+{
+    pairFlags = PxPairFlag::eCONTACT_DEFAULT;
+    pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;
+
+    pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND; // 충돌 시작 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_TOUCH_LOST;  // 충돌 종료 이벤트
+    pairFlags |= PxPairFlag::eNOTIFY_CONTACT_POINTS; // 접촉 지점 정보 요청
+
+    return PxFilterFlag::eDEFAULT;
+}
+
+
 World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty)
     : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
@@ -14,9 +30,13 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 {
     if (!isEmpty)
     {
-        ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
-        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
-        mainCamera->AddComponent<Camera>();
+        PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
+        sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
+        sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
+        sceneDesc.filterShader = CustomFilterShader;
+        //sceneDesc.simulationEventCallback = mEventCallback;
+        // GPU 가속 설정 (필수)
+        mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
     }
 }
 

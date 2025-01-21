@@ -1,5 +1,15 @@
 [
     {
+        "id": 6,
+        "name": "Default",
+        "objects": [
+            {
+                "id": 7,
+                "name": "Main_Camera"
+            }
+        ]
+    },
+    {
         "id": 1,
         "name": "Default",
         "objects": [
@@ -10,26 +20,22 @@
         ]
     },
     {
-        "id": 5,
-        "name": "Test",
+        "id": 11,
+        "name": "Default",
         "objects": [
             {
-                "id": 16,
-                "name": "ModelController"
-            },
-            {
-                "id": 19,
-                "name": "CameraController"
+                "id": 12,
+                "name": "Main_Camera"
             }
         ]
     },
     {
-        "id": 22,
-        "name": "??",
+        "id": 15,
+        "name": "asd",
         "objects": [
             {
-                "id": 23,
-                "name": "ds"
+                "id": 16,
+                "name": "asd"
             }
         ]
     }

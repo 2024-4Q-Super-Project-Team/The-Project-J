@@ -2,7 +2,10 @@
 #include "Mesh.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
+#include "Resource/ResourceManager.h"
 #include "Resource/Graphics/Material/Material.h"
+// Editor
+#include "Editor/EditorManager.h"
 
 // 府家胶概聪历俊辑 积己
 std::shared_ptr<MeshResource> MeshResource::SkyCubeMesh;
@@ -12,8 +15,10 @@ std::shared_ptr<MeshResource> MeshResource::PlainMesh;
 MeshResource::MeshResource(std::wstring_view _name, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
     : Resource(_name)
 {
+    SetID("Mesh : " + Helper::ToString(_name.data()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
+    
 }
 
 MeshResource::~MeshResource()
@@ -203,18 +208,43 @@ void MeshResource::InitPlainMesh()
     PlainMesh->Create();
 }
 
-void MeshResource::EditorRendering()
+void MeshResource::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(GetName());
 
-    EDITOR_COLOR_RESOURCE;
-    if (ImGui::TreeNodeEx(("Mesh : " + name + uid).c_str(), EDITOR_FLAG_RESOURCE))
+    switch (_viewerType)
     {
-		ImGui::Text("Vertex Count : %d", mVertices.size());
-		ImGui::Text("Index Count  : %d", mIndices.size());
-		ImGui::Text("Bone Count  : %d", mBoneArray.size());
-		ImGui::TreePop();
+    case EditorViewerType::DEFAULT:
+    {
+        EDITOR_COLOR_RESOURCE;
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(uid.c_str(), false, flags))
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
+        }
+        EditorItemState state = { nullptr , name };
+        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        EDITOR_COLOR_POP(1);
+        break;
     }
-    EDITOR_COLOR_POP(1);
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR:
+    {
+        EDITOR_COLOR_RESOURCE;
+        ImGui::Text("Vertex Count : %d", mVertices.size());
+        ImGui::Text("Index Count  : %d", mIndices.size());
+        ImGui::Text("Bone Count  : %d", mBoneArray.size());
+        EDITOR_COLOR_POP(1);
+    }
+        break;
+    default:
+        break;
+    }
+   
+
+    
 }

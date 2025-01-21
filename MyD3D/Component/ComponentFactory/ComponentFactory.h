@@ -35,6 +35,9 @@ private:
 class ComponentFactory
 {
 public:
+    ComponentFactory();
+    ~ComponentFactory();
+
     static void Register(const std::string_view& name, ICreator* creator)
     {
         mFactoryMap[name] = creator;

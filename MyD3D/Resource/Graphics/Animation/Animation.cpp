@@ -30,7 +30,7 @@ BOOL AnimationResource::AddChannel(AnimationNode* _pChannel)
     return FALSE;
 }
 
-void AnimationResource::EditorRendering()
+void AnimationResource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(mName);

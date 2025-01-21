@@ -14,7 +14,7 @@ Texture2D::~Texture2D()
     SAFE_RELEASE(Texture);
 }
 
-void Texture2D::EditorRendering()
+void Texture2D::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(mName);

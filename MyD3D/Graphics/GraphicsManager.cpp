@@ -3,11 +3,23 @@
 #include "Manager/GameManager.h"
 #include "Resource/ResourceManager.h"
 
+#include "Graphics/Extra/DebugDraw.h"
+#include "Directxtk/VertexTypes.h"
+#include "Directxtk/Effects.h"
+#include "Directxtk/CommonStates.h"
+
 D3DGraphicsConstantBuffer* GraphicsManager::mCBufferArray[CBUFFER_TYPE_COUNT];
 D3DGraphicsSamplerState* GraphicsManager::mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
 D3DGraphicsVertexShader* GraphicsManager::mVertexShaderArray[VS_TYPE_COUNT];
 D3DGraphicsPixelShader* GraphicsManager::mPixelShaderArray[PS_TYPE_COUNT];
 D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_TYPE_COUNT];
+
+std::unique_ptr<CommonStates> GraphicsManager::mStates;
+std::unique_ptr<PrimitiveBatch<VertexPositionColor>> GraphicsManager::mBatch;
+std::unique_ptr<BasicEffect> GraphicsManager::mEffect;
+ID3D11InputLayout* GraphicsManager::mLayout;
+
+using namespace DirectX::DX11;
 
 BOOL GraphicsManager::Initialize()
 {
@@ -33,6 +45,11 @@ BOOL GraphicsManager::Initialize()
     // Blend State
     //////////////////////////////////////////
     InitBlendState();
+
+    //////////////////////////////////////////
+    // Debug Draw
+    //////////////////////////////////////////
+    InitDebugDraw();
 
     // Opaque 기본 세팅
     mBlendStateArray[(UINT)eBlendType::OPAQUE_BLEND]->Bind();
@@ -219,6 +236,25 @@ void GraphicsManager::InitBlendState()
         }
         mBlendStateArray[slot] = new D3DGraphicsBlendState(&blendDesc);
     }
+}
+
+void GraphicsManager::InitDebugDraw()
+{
+    mStates = std::make_unique<CommonStates>(D3DGraphicsDevice::GetDevice());
+    mBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(D3DGraphicsRenderer::GetDevicecontext());
+
+    mEffect = std::make_unique<BasicEffect>(D3DGraphicsDevice::GetDevice());
+    mEffect->SetVertexColorEnabled(true);
+
+    void const* shaderByteCode;
+    size_t byteCodeLength;
+
+    mEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
+
+    D3DGraphicsDevice::GetDevice()->CreateInputLayout(
+        VertexPositionColor::InputElements, VertexPositionColor::InputElementCount,
+        shaderByteCode, byteCodeLength,
+        &mLayout);
 }
 
 std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultRenderTargetView(UINT _width, UINT _height)
@@ -500,4 +536,22 @@ std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateWorldPosGBuff
     pSRV->SetBindSlot(16);
 
     return std::make_pair(pRTV, pSRV);
+}
+
+void GraphicsManager::SetDebugViewProjection(Matrix _view, Matrix _projection)
+{
+    mEffect->SetView(_view);
+    mEffect->SetProjection(_projection);
+}
+
+void GraphicsManager::DebugDrawBegin()
+{
+    mEffect->Apply(D3DGraphicsRenderer::GetDevicecontext());
+    D3DGraphicsRenderer::GetDevicecontext()->IASetInputLayout(mLayout);
+    mBatch->Begin();
+}
+
+void GraphicsManager::DebugDrawEnd()
+{
+    mBatch->End();
 }

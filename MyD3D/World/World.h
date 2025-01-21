@@ -47,6 +47,8 @@ private:
 public:
     // 오브젝트 그룹을 만듭니다.
     ObjectGroup*    CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
+	// 
+	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
     // 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
     void		    ReceiveObjectGroup(ObjectGroup* _recvGroup);
     // 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환
@@ -59,10 +61,14 @@ public:
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }
+	PxScene* GetPxScene() { return mPxScene; }
 protected:
     ViewportScene* const mOwnerScene;
 private:
     std::vector<ObjectGroup*> mObjectGroups;
     LightSystem* mLightSystem;
+
+	PxScene* mPxScene;
+	class PhysicsEvent* mEventCallback;
 };
 

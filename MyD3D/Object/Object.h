@@ -8,9 +8,11 @@
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
 #include "Component/Animator/Animator.h"
-#include "Component/EditorUI/EditorUI.h"
 #include "Component/Audio/AudioSource.h"
 #include "Component/Audio/AudioListener.h"
+#include "Component/Collider/Rigidbody.h"
+#include "Component/Collider/BoxCollider.h"
+#include "Component/Controller/PlayerController.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
@@ -73,29 +75,7 @@ protected:
     std::vector<Component*> mComponentArray[ComponentSize];
     std::list<Component*> mComponentsToWake;
 public:
-	virtual void EditorRendering() override
-    {
-        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-        std::string name = Helper::ToString(GetName());
-        {   // 활성화 / 비활성화
-            bool preState = mState == EntityState::Active ? true : false;
-            bool isActive = preState;
-            ImGui::Checkbox((uid + "IsActive").c_str(), &isActive);
-            if (isActive != preState)
-            {
-                isActive == true ? OnEnable() : OnDisable();
-                mState = isActive == true ? EntityState::Active : EntityState::Passive;
-            }
-            ImGui::SameLine();
-            static char buffer[128] = ""; 
-            strcpy_s(buffer, Helper::ToString(GetName()).c_str()); 
-            if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
-				std::wstring newName = Helper::ToWString(std::string(buffer));
-				SetName(newName);
-            }
-        }
-    }
-    friend class Editor::Inspector;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
 template <class T, typename... Args>

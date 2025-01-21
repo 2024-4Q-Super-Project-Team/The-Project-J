@@ -225,10 +225,10 @@ json SkinnedMeshRenderer::Serialize()
 
 void SkinnedMeshRenderer::Deserialize(json& j)
 {
- 
+
 }
 
-void SkinnedMeshRenderer::EditorRendering()
+void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Skinned Mesh Renderer" + uid).c_str(), EDITOR_FLAG_MAIN))
@@ -242,7 +242,7 @@ void SkinnedMeshRenderer::EditorRendering()
 
 		if (mMesh)
 		{
-			mMesh->EditorRendering();
+			mMesh->EditorRendering(EditorViewerType::DEFAULT);
 		}
 		else ImGui::Text("NULL Mesh");
 
@@ -252,7 +252,7 @@ void SkinnedMeshRenderer::EditorRendering()
         {
             if (mMateiral->mMaterialResource)
             {
-                mMateiral->EditorRendering();
+                mMateiral->EditorRendering(EditorViewerType::DEFAULT);
             }
             else ImGui::Text("NULL Material");
         }

@@ -59,6 +59,6 @@ private:
 
 	static std::queue<D3DBitmapRenderTarget*> mShadowRenderTargetPool;
 public:
-    virtual void EditorRendering() override;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

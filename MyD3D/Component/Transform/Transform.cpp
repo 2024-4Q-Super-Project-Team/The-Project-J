@@ -10,7 +10,7 @@ Transform::Transform(Object* _owner)
     , mLocalMatrix(Matrix::Identity)
     , mWorldMatrix(Matrix::Identity)
     , position(Vector3::Zero)
-    , rotation(Vector3::Zero)
+    , rotation(Quaternion::Identity)
     , scale(Vector3::One)
 {
 }
@@ -38,6 +38,7 @@ Transform::~Transform()
 
 void Transform::Start()
 {
+
 }
 
 void Transform::Tick()
@@ -74,6 +75,26 @@ void Transform::Draw(Camera* _camera)
 
 void Transform::PostRender()
 {
+}
+
+void Transform::UpdatePxTransform()
+{
+    memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);
+    memcpy_s(&mPxTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+}
+
+void Transform::UpdateFromPxTransform(PxTransform pxTransform)
+{
+    mPxTransform = pxTransform;
+    PxTransform localTransform = mPxTransform;
+    if (mParent)
+    {
+        PxTransform parentInverse = mParent->mPxTransform.getInverse();
+        localTransform = parentInverse.transform(mPxTransform);
+    }
+
+    memcpy_s(&position, sizeof(float) * 3, &mPxTransform.p, sizeof(float) * 3);
+    memcpy_s(&position, sizeof(float) * 4, &mPxTransform.q, sizeof(float) * 4);
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
@@ -177,7 +198,7 @@ void Transform::Deserialize(json& j)
         //TODO: id로 Transform 찾아서 넣는다. 
 }
 
-void Transform::EditorRendering()
+void Transform::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     if (ImGui::TreeNodeEx(("Transform" + uid).c_str(), EDITOR_FLAG_MAIN))

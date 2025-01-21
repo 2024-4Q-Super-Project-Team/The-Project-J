@@ -89,5 +89,6 @@ using json = nlohmann::json;
 #include "Physics/PhysicsManager.h"
 #include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
+#include "Editor/EditorManager.h"
 #include "Manager/GameManager.h"
 #include "Application/Application.h"

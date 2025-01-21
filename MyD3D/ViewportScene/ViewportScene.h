@@ -33,13 +33,13 @@ public:
 	virtual void Render()       override;
 	virtual void PostRender()	override;
 protected:
-	WorldManager*			mWorldManager;
-	Display::IWindow*		mWindow;
-	D3DHwndRenderTarget*	mSwapChain;
+	WorldManager* mWorldManager;
+	Display::IWindow* mWindow;
+	D3DHwndRenderTarget* mSwapChain;
 public:
-	inline auto* GetIWindow()		{ return mWindow; }
-	inline auto* GetWorldManager()	{ return mWorldManager; }
-	inline auto* GetSwapChain()		{ return mSwapChain; }
+	inline auto* GetIWindow() { return mWindow; }
+	inline auto* GetWorldManager() { return mWorldManager; }
+	inline auto* GetSwapChain() { return mSwapChain; }
 public:
 	// 공유할 리소스(윈도우마다 사이즈별로 하나씩 만들어주고, 뷰포트를 다르게 해서 사용)
 	std::weak_ptr<D3DGraphicsViewport>		mSharedViewport;

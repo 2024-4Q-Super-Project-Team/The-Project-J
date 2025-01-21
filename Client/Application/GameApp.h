@@ -17,6 +17,5 @@ public:
 public:
     static ViewportScene* mMainScene;
     static ViewportScene* mEditorScene;
-    static void EditorRePosition();
 };
 

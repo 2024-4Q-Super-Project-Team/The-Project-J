@@ -323,6 +323,7 @@ void Camera::PushDrawList(RendererComponent* _renderComponent)
     eBlendType blendMode = eBlendType::OPAQUE_BLEND;
     if (pMaterial)
     {
+        if(pMaterial->mMaterialResource)
         blendMode = pMaterial->mMaterialResource->mBlendMode;
     }
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
@@ -390,7 +391,7 @@ void Camera::ExcuteDrawList()
     mLightCBuffer.NumLight = 0;
 }
 
-void Camera::EditorRendering()
+void Camera::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 

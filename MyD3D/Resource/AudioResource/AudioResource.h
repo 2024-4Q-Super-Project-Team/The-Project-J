@@ -15,5 +15,5 @@ public:
 public:
 	AudioClip* mAudioClip;
 public:
-	virtual void EditorRendering() override;
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

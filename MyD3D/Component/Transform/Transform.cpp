@@ -179,7 +179,7 @@ void Transform::Deserialize(json& j)
     rotation.x = j["rotation"][0].get<float>();
     rotation.y = j["rotation"][1].get<float>();
     rotation.z = j["rotation"][2].get<float>();
-    rotation.w = j["rotation"][2].get<float>();
+    rotation.w = j["rotation"][3].get<float>();
 
     scale.x = j["scale"][0].get<float>();
     scale.y = j["scale"][1].get<float>();

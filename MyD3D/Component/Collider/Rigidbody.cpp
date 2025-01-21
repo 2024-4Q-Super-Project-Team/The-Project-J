@@ -8,8 +8,6 @@
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
 	mType = eComponentType::RIGIDBODY;
-	_owner->transform->UpdateMatrix();
-	_owner->transform->UpdatePxTransform();
 	mRigidActor = nullptr;
 }
 
@@ -20,6 +18,9 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::Start()
 {
+	gameObject->transform->UpdateMatrix();
+	gameObject->transform->UpdatePxTransform();
+
 	if (mIsDynamic == false)
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()

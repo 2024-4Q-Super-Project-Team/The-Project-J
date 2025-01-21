@@ -64,7 +64,6 @@ public:
 
 public:
   	json Serialize();
-    json SerializeComponents();
     void Deserialize(json& j);
 public:
     Transform* const transform;
@@ -86,8 +85,7 @@ T* Object::AddComponent(Args&&... args)
     T* component = new T(this, std::forward<Args>(args)...);
     mComponentsToWake.push_back(component);
 
-    if(component->GetType() != eComponentType::SCRIPT)
-        component->Wake();
+    component->Wake();/////////////////////////////왜 Wake 했는데도안됨?? IsAwake()가 false임
 
     //에디터일때는 wake를 안한상태. 실행했을때 wake 해야한다. 
     return component;

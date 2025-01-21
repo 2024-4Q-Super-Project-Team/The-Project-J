@@ -239,21 +239,6 @@ json Object::Serialize()
     return ret;
 }
 
-json Object::SerializeComponents()
-{
-    json ret;
-
-    for (auto& cmpArr : mComponentArray)
-    {
-        for (auto& cmp : cmpArr)
-        {
-            ret["id"] = cmp->GetId();
-            ret["data"] = cmp->Serialize();
-        }
-    }
-    return ret;
-}
-
 void Object::Deserialize(json& j)
 {
     for (auto& componentJson : j["components"])

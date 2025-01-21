@@ -29,9 +29,6 @@ Camera::Camera(Object* _owner, Vector2 _size)
     mType = eComponentType::CAMERA;
     mLocalViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
 
-    mCameraViewport     = ViewportManager::GetActiveViewport();
-    mMainViewport       = mCameraViewport->GetMainViewport();
-    mMainRenderTarget   = mCameraViewport->GetMainRenderTarget();
 }
 
 Camera::~Camera()
@@ -120,6 +117,13 @@ void Camera::SetCameraOffset(Vector2 _offsetScale)
 
 void Camera::UpdateCamera()
 {
+    if(mCameraViewport == nullptr)
+        mCameraViewport = ViewportManager::GetActiveViewport();
+    if (mCameraViewport)
+    {
+        mMainViewport = mCameraViewport->GetMainViewport();
+        mMainRenderTarget = mCameraViewport->GetMainRenderTarget();
+    }
     UpdateMatrix();
     UpdateViewport();
 }

@@ -11,7 +11,7 @@ class Camera;
 class IRenderContext
 {
 public:
-    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight) = 0;
 };
 
@@ -38,9 +38,7 @@ public:
     virtual void SetMaterial(ResourceHandle _handle) = 0;
     virtual std::shared_ptr<MeshResource> GetMesh() = 0;
     virtual Material* GetMaterial() = 0;
-public:
-    virtual void DrawMesh(Camera* _camera) = 0;
-    virtual void DrawShadow(Light* _pLight) = 0;
+
 public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;

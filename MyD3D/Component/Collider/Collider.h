@@ -20,7 +20,7 @@ public:
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
 public:
-    virtual void DrawMesh(Camera* _camera) = 0;
+    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight)  = 0;
 public:
     virtual json Serialize()  = 0;

@@ -61,6 +61,14 @@ void SphereCollider::PostRender()
 {
 }
 
+void SphereCollider::EditorUpdate()
+{
+}
+
+void SphereCollider::EditorRender()
+{
+}
+
 json SphereCollider::Serialize()
 {
 	json ret;
@@ -88,7 +96,7 @@ void SphereCollider::Deserialize(json& j)
 	mRadius = j["radius"].get<float>();
 }
 
-void SphereCollider::DrawMesh(Camera* _camera)
+void SphereCollider::DrawMesh(Matrix& _view, Matrix& _projection)
 {
 #ifdef _DEBUG
 	GraphicsManager::DebugDrawBegin();

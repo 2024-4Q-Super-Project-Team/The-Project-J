@@ -34,7 +34,8 @@ D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
     if (mTex)
     {
         ULONG refCount = 0;
-        do { refCount = mTex->Release();
+        do {
+            refCount = mTex->Release();
         } while (refCount > 0);
         mTex = nullptr;
     }
@@ -42,10 +43,11 @@ D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
 
 void D3DGraphicsTexture2D::Release()
 {
-    if (mTex) 
+    if (mTex)
     {
         ULONG refCount = 0;
-        do { refCount = mTex->Release();
+        do {
+            refCount = mTex->Release();
         } while (refCount > 0);
         mTex = nullptr;
     }

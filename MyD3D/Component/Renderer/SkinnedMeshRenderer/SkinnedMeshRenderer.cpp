@@ -16,6 +16,7 @@ SkinnedMeshRenderer::SkinnedMeshRenderer(Object* _owner)
     , mRootBone(nullptr)
     , mMateiral(nullptr)
 {
+    SetEID("SkinnedMeshRenderer");
     mType = eComponentType::SKINNED_MESH_RENDERER;
 }
 
@@ -305,103 +306,99 @@ void SkinnedMeshRenderer::Deserialize(json& j)
 void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("Skinned Mesh Renderer" + uid).c_str(), EDITOR_FLAG_MAIN))
+
+    if (mRootBone)
+        ImGui::Text(Helper::ToString(mRootBone->gameObject->GetName()).c_str());
+    else
+        ImGui::Text("NULL RootBone");
+
+    ImGui::Separator();
+    //////////////////////////////////////////////////////////////////////
+    // Mesh
+    //////////////////////////////////////////////////////////////////////
     {
-        if (mRootBone)
-            ImGui::Text(Helper::ToString(mRootBone->gameObject->GetName()).c_str());
+        std::string widgetID = "NULL Mesh";
+        std::string name = "NULL Mesh";
+        if (mMesh)
+        {
+            mMesh->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mMesh->GetKey());
+            widgetID = mMesh->GetEID();
+        }
         else
-            ImGui::Text("NULL RootBone");
-        
-        ImGui::Separator();
-        //////////////////////////////////////////////////////////////////////
-        // Mesh
-        //////////////////////////////////////////////////////////////////////
         {
-            std::string widgetID = "NULL Mesh";
-            std::string name = "NULL Mesh";
-            if (mMesh)
-            {
-                mMesh->EditorRendering(EditorViewerType::DEFAULT);
-                name = Helper::ToString(mMesh->GetKey());
-                widgetID = mMesh->GetID();
-            }
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
-                EDITOR_COLOR_POP(1);
-            }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MeshResource>(widgetID.c_str(), &mMeshHandle))
-            {
-                SetMesh(mMeshHandle);
-            }
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
         }
-        ImGui::Separator();
-        //////////////////////////////////////////////////////////////////////
-        // Material
-        //////////////////////////////////////////////////////////////////////
+        if (EditorDragNDrop::ReceiveDragAndDropResourceData<MeshResource>(widgetID.c_str(), &mMeshHandle))
         {
-            std::string widgetID = "NULL Material";
-            std::string name = "NULL Material";
+            SetMesh(mMeshHandle);
+        }
+    }
+    ImGui::Separator();
+    //////////////////////////////////////////////////////////////////////
+    // Material
+    //////////////////////////////////////////////////////////////////////
+    {
+        std::string widgetID = "NULL Material";
+        std::string name = "NULL Material";
 
-            if (mMateiral)
+        if (mMateiral)
+        {
+            mMateiral->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mMateiral->GetKey());
+            widgetID = mMateiral->GetEID();
+            if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
-                mMateiral->EditorRendering(EditorViewerType::DEFAULT);
-                name = Helper::ToString(mMateiral->GetKey());
-                widgetID = mMateiral->GetID();
-                if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
+                ImGui::Text("Diffuse : ");
+                ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
+                ImGui::Text("Ambient : ");
+                ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
+                ImGui::Text("Specular : ");
+                ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
+                ImGui::Text("Roughness Scale : ");
+                ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
+                ImGui::Text("Metallic Scale : ");
+                ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
+                ImGui::Text("AmbienOcclusion Scale : ");
+                ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+                for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
-                    ImGui::Text("Diffuse : ");
-                    ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
-                    ImGui::Text("Ambient : ");
-                    ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
-                    ImGui::Text("Specular : ");
-                    ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
-                    ImGui::Text("Roughness Scale : ");
-                    ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
-                    ImGui::Text("Metallic Scale : ");
-                    ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
-                    ImGui::Text("AmbienOcclusion Scale : ");
-                    ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
-                    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+                    if (mMateiral->mMaterialMapTexture[type])
                     {
-                        if (mMateiral->mMaterialMapTexture[type])
+                        bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
+                        if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
                         {
-                            bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
-                            if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
-                            {
-                                mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
-                            }
-                            mMateiral->mMaterialMapTexture[type]->EditorRendering(EditorViewerType::DEFAULT);
-                            ImGui::Separator();
+                            mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
                         }
+                        mMateiral->mMaterialMapTexture[type]->EditorRendering(EditorViewerType::DEFAULT);
+                        ImGui::Separator();
                     }
-                    ImGui::TreePop();
                 }
-            }
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
-                EDITOR_COLOR_POP(1);
-            }
-            
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(widgetID.c_str(), &mMaterialaHandle))
-            {
-                SetMaterial(mMaterialaHandle);
+                ImGui::TreePop();
             }
         }
-
-        ImGui::Separator();
-
-        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-        if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        else
         {
-            ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
-            ImGui::TreePop();
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
         }
-        EDITOR_COLOR_POP(1);
 
+        if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(widgetID.c_str(), &mMaterialaHandle))
+        {
+            SetMaterial(mMaterialaHandle);
+        }
+    }
+
+    ImGui::Separator();
+
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+    if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+    {
+        ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
         ImGui::TreePop();
     }
+    EDITOR_COLOR_POP(1);
 }

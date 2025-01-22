@@ -32,7 +32,7 @@ MaterialResource* MaterialResource::DefaultMaterial;
 MaterialResource::MaterialResource(ResourceHandle _handle)
     : Resource(_handle)
 {
-    SetID("Mateiral : " + Helper::ToString(_handle.GetKey()));
+    SetEID("Mateiral : " + Helper::ToString(_handle.GetKey()));
 }
 
 MaterialResource::~MaterialResource()
@@ -110,7 +110,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         std::string name = Helper::ToString(GetKey());
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(GetID(), false, flags))
+        if (ImGui::Selectable(GetEID(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -120,7 +120,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         EditorItemState state;
         state.mResourcePtr = this;
         state.mName = Helper::ToString(mHandle.GetKey());
-        EditorDragNDrop::SendDragAndDropData(GetID(), state);
+        EditorDragNDrop::SendDragAndDropData(GetEID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }
@@ -204,7 +204,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //{
 //    SetVertexShader(GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD));
 //    SetPixelShader(GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR));
-//    SetID("Mateiral : " + Helper::ToString(_handle.GetKey()));
+//    SetEID("Mateiral : " + Helper::ToString(_handle.GetKey()));
 //}
 //
 //Material::Material(MaterialResource* _pMatResource)
@@ -274,7 +274,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //    {
 //        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
 //        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-//        if (ImGui::Selectable(GetID(), false, flags))
+//        if (ImGui::Selectable(GetEID(), false, flags))
 //        {
 //            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 //            {

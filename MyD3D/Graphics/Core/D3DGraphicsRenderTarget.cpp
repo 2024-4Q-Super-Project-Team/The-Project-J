@@ -212,15 +212,17 @@ D3DBitmapRenderTarget::D3DBitmapRenderTarget(UINT _width, UINT _height)
 
 D3DBitmapRenderTarget::~D3DBitmapRenderTarget()
 {
-    SAFE_RELEASE_ARRAY(mRenderTargetViews);
     SAFE_RELEASE_MAP(mShaderResourceViewTable);
+    SAFE_RELEASE_ARRAY(mRenderTargetViews);
     SAFE_RELEASE(mDepthStencilView);
 }
 
 void D3DBitmapRenderTarget::Release()
 {
-    SAFE_RELEASE_ARRAY(mRenderTargetViews);
+    ResetAllSRV();
+    mDepthStencilView->Reset();
     SAFE_RELEASE_MAP(mShaderResourceViewTable);
+    SAFE_RELEASE_ARRAY(mRenderTargetViews);
     SAFE_RELEASE(mDepthStencilView);
     delete this;
 }

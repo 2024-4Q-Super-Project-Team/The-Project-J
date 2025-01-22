@@ -49,7 +49,7 @@ public:
 	virtual void Render() = 0;
 	virtual void PostRender();
 public:
-	void SetID(std::string _id)						{ mID = _id; };
+	void SetEID(std::string _id)						{ mID = _id; };
 	void SetOwner(UISystem* _owner)					{ m_pUISystem = _owner; };
 	void SetAssetType(eAssetType _type)				{ mAssetType = _type; };
 	void SetPosition(Vector2 _position)				{ mPosition = _position; };

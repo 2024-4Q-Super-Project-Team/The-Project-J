@@ -11,6 +11,7 @@
 ParticleSystem::ParticleSystem(Object* _owner)
     : Component(_owner)
 {
+	SetEID("ParticleSystem");
 	ResourceHandle texHandle = {
 			eResourceType::Texture2DResource,
 			L"Test_Particle_Texture",
@@ -102,53 +103,47 @@ void ParticleSystem::Deserialize(json& j)
 
 void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("ParticleSystem" + uid).c_str(), EDITOR_FLAG_MAIN))
-    {
-        
-        ImGui::Text(u8"파티클 개수 : ");
-        ImGui::DragInt((uid + "Particle Count").c_str(), (int*)&mParticleCount, 100, 0, maxParticleCount);
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-		ImGui::Separator();
-		ImGui::Text("Material Setting : ");
-		ImGui::Separator();
+	ImGui::Text(u8"파티클 개수 : ");
+	ImGui::DragInt((uid + "Particle Count").c_str(), (int*)&mParticleCount, 100, 0, maxParticleCount);
 
-		ImGui::Text(u8"마찰 계수:");
-		ImGui::DragFloat((uid + "mFriction").c_str(), &mFriction, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Separator();
+	ImGui::Text("Material Setting : ");
+	ImGui::Separator();
 
-		ImGui::Text(u8"감쇠 계수:");
-		ImGui::DragFloat((uid + "mDamping").c_str(), &mDamping, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"마찰 계수:");
+	ImGui::DragFloat((uid + "mFriction").c_str(), &mFriction, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"접착력:");
-		ImGui::DragFloat((uid + "mAdhesion").c_str(), &mAdhesion, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"감쇠 계수:");
+	ImGui::DragFloat((uid + "mDamping").c_str(), &mDamping, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"점성:");
-		ImGui::DragFloat((uid + "mViscosity").c_str(), &mViscosity, 0.001f, 0.0f, 1.0f, "%.3f");
+	ImGui::Text(u8"접착력:");
+	ImGui::DragFloat((uid + "mAdhesion").c_str(), &mAdhesion, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"소용돌이 강도:");
-		ImGui::DragFloat((uid + "mVorticity").c_str(), &mVorticity, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"점성:");
+	ImGui::DragFloat((uid + "mViscosity").c_str(), &mViscosity, 0.001f, 0.0f, 1.0f, "%.3f");
 
-		ImGui::Text(u8"표면 장력:");
-		ImGui::DragFloat((uid + "mSurfaceTension").c_str(), &mSurfaceTension, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"소용돌이 강도:");
+	ImGui::DragFloat((uid + "mVorticity").c_str(), &mVorticity, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"결합력:");
-		ImGui::DragFloat((uid + "mCohesion").c_str(), &mCohesion, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"표면 장력:");
+	ImGui::DragFloat((uid + "mSurfaceTension").c_str(), &mSurfaceTension, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"상승력:");
-		ImGui::DragFloat((uid + "mBuoyancy").c_str(), &mBuoyancy, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"결합력:");
+	ImGui::DragFloat((uid + "mCohesion").c_str(), &mCohesion, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"공기 저항:");
-		ImGui::DragFloat((uid + "mAirResistance").c_str(), &mAirResistance, 0.01f, 0.0f, 1.0f, "%.2f");
+	ImGui::Text(u8"상승력:");
+	ImGui::DragFloat((uid + "mBuoyancy").c_str(), &mBuoyancy, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"CFL 계수:");
-		ImGui::DragFloat((uid + "mCflCoefficient").c_str(), &mCflCoefficient, 0.01f, 0.0f, 10.0f, "%.2f");
+	ImGui::Text(u8"공기 저항:");
+	ImGui::DragFloat((uid + "mAirResistance").c_str(), &mAirResistance, 0.01f, 0.0f, 1.0f, "%.2f");
 
-		ImGui::Text(u8"중력:");
-		ImGui::DragFloat((uid + "mGravity").c_str(), &mGravity, 0.01f, -10.0f, 10.0f, "%.2f");
+	ImGui::Text(u8"CFL 계수:");
+	ImGui::DragFloat((uid + "mCflCoefficient").c_str(), &mCflCoefficient, 0.01f, 0.0f, 10.0f, "%.2f");
 
-
-        ImGui::TreePop();
-    }
+	ImGui::Text(u8"중력:");
+	ImGui::DragFloat((uid + "mGravity").c_str(), &mGravity, 0.01f, -10.0f, 10.0f, "%.2f");
 }
 
 Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)

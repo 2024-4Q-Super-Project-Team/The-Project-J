@@ -125,8 +125,9 @@ namespace Editor
 
     void HierarchyViewer::RenderObject(Object* _pObject)
     {
-        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(_pObject));
         std::string name = Helper::ToString(_pObject->GetName());
+
 
         // 현재 포커스된 객체인지
         bool isFocused = false;
@@ -142,7 +143,7 @@ namespace Editor
 
         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
         ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-        isOpened = ImGui::TreeNodeEx(name.c_str(), flags);
+        isOpened = ImGui::TreeNodeEx((name + uid).c_str(), flags);
         ImGui::PopStyleColor(2);
 
         // 클릭 이벤트 감지

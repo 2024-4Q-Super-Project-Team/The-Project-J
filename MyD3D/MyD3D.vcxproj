@@ -247,6 +247,7 @@
     <ClInclude Include="UISystem\Widget\WidgetButton.h" />
     <ClInclude Include="UISystem\Widget\WidgetCheckBox.h" />
     <ClInclude Include="UISystem\Widget\WidgetText.h" />
+    <ClInclude Include="UISystem\Widget\WidgetImage.h" />
     <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="Component\Camera\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
@@ -366,6 +367,7 @@
     <ClCompile Include="UISystem\Widget\WidgetButton.cpp" />
     <ClCompile Include="UISystem\Widget\WidgetCheckBox.cpp" />
     <ClCompile Include="UISystem\Widget\WidgetText.cpp" />
+    <ClCompile Include="UISystem\Widget\WidgetImage.cpp" />
     <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />

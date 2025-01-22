@@ -65,6 +65,13 @@ using namespace physx;
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
+// UI Text
+#include <tchar.h>
+#include <cstdarg>  // 가변 인자 처리
+#include <stdexcept>
+#include <directxtk/SpriteBatch.h>
+#include <directxtk/SpriteFont.h>
+
 // Helper
 #include "Helper/Data/ColorF.h"
 #include "Helper/Data/Angles.h"

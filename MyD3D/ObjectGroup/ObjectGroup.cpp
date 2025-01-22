@@ -16,7 +16,11 @@ ObjectGroup::~ObjectGroup()
 
 void ObjectGroup::Start()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjects, Start())
+    for (auto itr = mObjects.begin(); itr != mObjects.end(); ++itr)
+    {
+        if ((*itr)->GetState() == EntityState::Create)
+            (*itr)->Start();
+    }
 }
 
 void ObjectGroup::Tick()

@@ -71,7 +71,11 @@ World::~World()
 
 void World::Start()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Start())
+    for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end(); ++itr)
+    {
+        if ((*itr)->GetState() == EntityState::Create)				
+            (*itr)->Start();
+    }
 }
 
 void World::Tick()

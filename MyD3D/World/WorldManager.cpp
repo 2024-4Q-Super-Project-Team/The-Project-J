@@ -143,6 +143,7 @@ void WorldManager::UpdateWorld()
                 mCurrActiveWorld->OnDisable();
 			mCurrActiveWorld = mNextActiveWorld;
 			mCurrActiveWorld->OnEnable();
+			mCurrActiveWorld->Start();
 			mNextActiveWorld = nullptr;
 		}
 	}

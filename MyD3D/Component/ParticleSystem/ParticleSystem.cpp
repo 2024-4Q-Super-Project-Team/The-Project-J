@@ -62,7 +62,6 @@ void ParticleSystem::Update()
 
 void ParticleSystem::PostUpdate()
 {
-
 }
 
 void ParticleSystem::PreRender()

@@ -41,16 +41,31 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
 	}
 
 	// Path 추가하기
-	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", L""};
+	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", _handle.GetPath()};
 	mModelPrefab = new PrefabResource(handle, this);
 	ResourceManager::PushResource(mModelPrefab);
 }
 
 FBXModelResource::~FBXModelResource()
 {
-    // 노드와 본은 이 모델말고 안쓰니까 삭제하자
+	for (auto& resource : mMaterialArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mMaterialArray.clear();
+	for (auto& resource : mMeshArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mMeshArray.clear();
+	for (auto& resource : mAnimationArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mAnimationArray.clear();
     SAFE_DELETE_ARRAY(mBoneArray);
     SAFE_DELETE_ARRAY(mModelNodeArray);
+	ResourceManager::Free_Resource(mModelPrefab->GetHandle());
 }
 
 void FBXModelResource::EditorRendering(EditorViewerType _viewerType)

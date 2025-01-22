@@ -68,6 +68,7 @@ inline TYPE* ResourceManager::Alloc_Resource(ResourceHandle _handle)
     {
         TYPE* pResource = new TYPE(_handle);
         table[_handle] = pResource;
+        Display::Console::Log("Alloc_Resource -  MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
         return pResource;
     }
     return nullptr;
@@ -82,5 +83,6 @@ inline void ResourceManager::PushResource(TYPE* _pResource)
         RegisterResourceHandle(handle);
         ResourceTable& table = GetResourceTable(handle.GetResourceType());
         table[handle] = _pResource;
+        Display::Console::Log("Alloc_Resource -  MainKey : ", handle.GetKey(), ", Path : ", handle.GetPath(), '\n');
     }
 }

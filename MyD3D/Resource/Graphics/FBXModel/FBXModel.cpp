@@ -9,6 +9,7 @@
 FBXModelResource::FBXModelResource(ResourceHandle _handle)
     : Resource(_handle)
     , mRootNode(nullptr)
+    , mModelPrefab(nullptr)
 {
     auto pModel = FBXImporter::ImportFBXModel_All(_handle);
     mMaterialArray   = std::move(pModel->MaterialArray);
@@ -55,36 +56,54 @@ void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(GetKey());
 
+	Resource::EditorRendering(_viewerType);
+
 	if (ImGui::TreeNodeEx(("FBXModel" + uid).c_str(), EDITOR_FLAG_RESOURCE))
 	{
-		if (ImGui::TreeNodeEx("Material", EDITOR_FLAG_RESOURCE))
+		if (mMaterialArray.empty() == false)
 		{
-			for (auto& rsc : mMaterialArray)
+			if (ImGui::TreeNodeEx("Material", EDITOR_FLAG_RESOURCE))
 			{
-				if (rsc)
-					rsc->EditorRendering(EditorViewerType::DEFAULT);
+				for (auto& Material : mMaterialArray)
+				{
+					if (Material)
+						Material->EditorRendering(EditorViewerType::DEFAULT);
+				}
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
 		}
-		if (ImGui::TreeNodeEx("Mesh", EDITOR_FLAG_RESOURCE))
+		if (mMeshArray.empty() == false)
 		{
-			for (auto& rsc : mMeshArray)
+			if (ImGui::TreeNodeEx("Mesh", EDITOR_FLAG_RESOURCE))
 			{
-				if (rsc)
-					rsc->EditorRendering(EditorViewerType::DEFAULT);
+				for (auto& Mesh : mMeshArray)
+				{
+					if (Mesh)
+						Mesh->EditorRendering(EditorViewerType::DEFAULT);
+				}
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
 		}
-		if (ImGui::TreeNodeEx("Animation", EDITOR_FLAG_RESOURCE))
+		if (mAnimationArray.empty() == false)
 		{
-			for (auto& rsc : mAnimationArray)
+			if (ImGui::TreeNodeEx("Animation", EDITOR_FLAG_RESOURCE))
 			{
-				if (rsc)
-					rsc->EditorRendering(EditorViewerType::DEFAULT);
+				for (auto& Animation : mAnimationArray)
+				{
+					if (Animation)
+						Animation->EditorRendering(EditorViewerType::DEFAULT);
+				}
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
 		}
-
+		if (mModelPrefab)
+		{
+			if (ImGui::TreeNodeEx("Prefab", EDITOR_FLAG_RESOURCE))
+			{
+				mModelPrefab->EditorRendering(EditorViewerType::DEFAULT);
+				ImGui::TreePop();
+			}
+		}
 		ImGui::TreePop();
 	}
 }

@@ -237,6 +237,7 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
+        Resource::EditorRendering(_viewerType);
         ImGui::Text("Vertex Count : %d", mVertices.size());
         ImGui::Text("Index Count  : %d", mIndices.size());
         ImGui::Text("Bone Count  : %d", mBoneArray.size());

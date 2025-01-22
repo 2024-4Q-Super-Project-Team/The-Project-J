@@ -33,7 +33,6 @@ namespace Display
     template<typename... Args>
     static void Console::Log(Args&&... args)
     {
-#ifdef _DEBUG
         if (mHwnd)
         {
             if (mOutputHandle != INVALID_HANDLE_VALUE)
@@ -51,7 +50,6 @@ namespace Display
                 WriteConsoleW(mOutputHandle, logMessage.c_str(), static_cast<DWORD>(logMessage.size()), &charsWritten, nullptr);
             }
         }
-#endif
     }
 }
 

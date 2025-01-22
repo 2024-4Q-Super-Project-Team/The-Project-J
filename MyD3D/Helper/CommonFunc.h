@@ -50,6 +50,7 @@ namespace Helper
     void HRT(HRESULT _hr, const char* _errorMsg = "");
     void DecomposeMatrix(const Matrix& mat, Vector3& position, Quaternion& rotation, Vector3& scale);
     HRESULT ReadFile(const WCHAR* filePath, std::vector<uint8_t>* data, std::size_t* size);
-
-
+    HRESULT ABSPath_To_RelativePath(const std::wstring& _absPath, std::wstring& _relPath);
+    HRESULT GetExtFromFilePath(const std::wstring& _filePath, std::wstring& _ext);
+    HRESULT GetFileNameFromFilePath(const std::wstring& _filePath, std::wstring& _fileName);
 }

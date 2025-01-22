@@ -119,4 +119,82 @@ namespace Helper
 
         return S_OK;
     }
+    HRESULT ABSPath_To_RelativePath(const std::wstring& _absPath, std::wstring& _relPath)
+    {
+        std::filesystem::path absPath;
+        std::filesystem::path relativePath;
+        try
+        {
+            // 절대 경로를 std::filesystem::path 객체로 변환
+            absPath = _absPath;
+
+            // 작업 디렉토리를 가져와 상대 경로 계산
+            std::filesystem::path currentPath = std::filesystem::current_path();
+            std::filesystem::path relativePath = std::filesystem::relative(absPath, currentPath);
+            if (relativePath != L"")
+            {
+                _relPath = relativePath.wstring();
+                return S_OK;
+            }
+            else
+            {
+                _relPath = L"";
+                return S_FALSE;
+            }
+        }
+        catch (const std::filesystem::filesystem_error& e)
+        {
+            // 에러 처리: 절대 경로를 상대 경로로 변환할 수 없는 경우
+            Display::Console::Log(L"Failed to convert to relative path:");
+            Display::Console::Log(_absPath, '\n');
+            Display::Console::Log(e.what());
+            return E_FAIL;
+        }
+    }
+    HRESULT GetExtFromFilePath(const std::wstring& _filePath, std::wstring& _ext)
+    {
+        try
+        {
+            // std::filesystem::path를 이용하여 파일 경로를 처리
+            std::filesystem::path filePath(_filePath);
+
+            // 확장자를 가져옴
+            if (filePath.has_extension()) {
+                _ext = filePath.extension().wstring();
+                return S_OK; // 성공적으로 확장자를 가져옴
+            }
+            else {
+                _ext.clear(); // 확장자가 없는 경우 빈 문자열 반환
+                return S_FALSE; // 확장자가 없음
+            }
+        }
+        catch (const std::exception& e)
+        {
+            // 오류가 발생한 경우
+            _ext.clear();
+            return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 일반적인 데이터 오류 코드 반환
+        }
+    }
+    HRESULT GetFileNameFromFilePath(const std::wstring& _filePath, std::wstring& _fileName)
+    {
+        try {
+            // std::filesystem::path를 이용하여 파일 경로를 처리
+            std::filesystem::path filePath(_filePath);
+
+            // 파일 이름을 가져옴
+            if (filePath.has_filename()) {
+                _fileName = filePath.filename().wstring();
+                return S_OK; // 성공적으로 파일 이름을 가져옴
+            }
+            else {
+                _fileName.clear(); // 파일 이름이 없는 경우 빈 문자열 반환
+                return S_FALSE; // 파일 이름이 없음
+            }
+        }
+        catch (const std::exception& e) {
+            // 오류가 발생한 경우
+            _fileName.clear();
+            return HRESULT_FROM_WIN32(ERROR_INVALID_DATA); // 일반적인 데이터 오류 코드 반환
+        }
+    }
 }

@@ -121,6 +121,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
+        Resource::EditorRendering(_viewerType);
         for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
         {
             eMaterialMapType mapType = (eMaterialMapType)type;

@@ -317,23 +317,27 @@ void D3DGraphicsImg::Release()
 
 HRESULT D3DGraphicsImg::Create()
 {
+    HRESULT hr;
     ScratchImage Image;
     std::wstring ext = mName.substr(mName.find_last_of(L".") + 1);
     if (ext == L"dds")
     {
-        Helper::HRT(LoadFromDDSFile(mName.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, nullptr, Image),
-            "Hresult Failed to GraphicsTexture2D::LoadFromDDSFile.");
+        if (S_OK != LoadFromDDSFile(mName.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, nullptr, Image)) {
+            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromDDSFile.");
+        }
     }
     else if (ext == L"tga")
     {
         TexMetadata metadata;
-        Helper::HRT(LoadFromTGAFile(mName.c_str(), &metadata, Image),
-            "Hresult Failed to GraphicsTexture2D::LoadFromDDSFile.");
+        if (S_OK != LoadFromTGAFile(mName.c_str(), &metadata, Image)) {
+            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromTGAFile.");
+        }
     }
     else
     {
-        Helper::HRT(LoadFromWICFile(mName.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, nullptr, Image),
-            "Hresult Failed to GraphicsTexture2D::LoadFromDDSFile.");
+        if (S_OK != LoadFromWICFile(mName.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, nullptr, Image)) {
+            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromWICFile.");
+        }
     }
     ID3D11Device* pDevice = D3DGraphicsDevice::GetDevice();
     if (pDevice)

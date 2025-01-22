@@ -4,7 +4,7 @@
 struct TextInfo
 {
 	std::wstring filepath = L"";
-	float line = 10.f;
+	float line = 15.f;
 	char defaultText = '_';
 	Color color{};
 	wchar_t msg[1024];
@@ -29,7 +29,7 @@ public:
 	void SetTextDefault(char _defaultText) { mTextInfo.defaultText = _defaultText; }
 	void SetTextColor(Color _color) { mTextInfo.color = _color; }
 	void SetTextPosition(Vector2 _position) { SetPosition(_position); }
-	void SetTextFormat(wchar_t* _msg, ...);
+	void SetTextFormat(const wchar_t* _msg, ...);
 private:
 	SpriteFont* m_pSpriteFont = nullptr;
 	SpriteBatch* m_pSpriteBatch = nullptr;

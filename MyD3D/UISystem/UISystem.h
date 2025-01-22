@@ -1,6 +1,7 @@
 #pragma once
 
 class Widget;
+class Camera;
 
 class UISystem
 {
@@ -21,9 +22,25 @@ public:
 
 public:
     std::vector<Widget*> GetWidgets() { return mWidgetContainer; };
-    void AddWidget(Widget* _pWidget) {};
+    
+    template <class T>
+    T* AddWidget(std::wstring _id);
 
+    // TODO : find 함수 만들기
+    // auto FindWidget(std::wstring _id);
 private:
     std::vector<Widget*> mWidgetContainer;
 
 };
+
+template<class T>
+T* UISystem::AddWidget(std::wstring _id)
+{
+    static_assrt(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
+    T* widget = new T();
+    widget->SetID(_id);
+    widget->SetOwner(this);
+    mWidgetContainer.push_back(widget);
+
+    return widget;
+}

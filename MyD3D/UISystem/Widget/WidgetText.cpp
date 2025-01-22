@@ -41,7 +41,7 @@ void WidgetText::PostRender()
 	m_pSpriteBatch->End();
 }
 
-void WidgetText::SetTextFormat(wchar_t* _msg, ...)
+void WidgetText::SetTextFormat(const wchar_t* _msg, ...)
 {
 	// 가변 인자 처리
 	va_list args;

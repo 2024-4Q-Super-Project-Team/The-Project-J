@@ -83,9 +83,14 @@ void MaterialResource::SetMaterialProperty(MaterialProperty* _pProp)
     }
 }
 
-void MaterialResource::SetBlendingMode(eBlendType _type)
+void MaterialResource::SetBlendingMode(eBlendModeType _type)
 {
     mBlendMode = _type;
+}
+
+void MaterialResource::SetCullingMode(eRasterizerStateType _type)
+{
+    mRasterMode = _type;
 }
 
 void MaterialResource::InitDefaultMaterial()
@@ -96,6 +101,8 @@ void MaterialResource::InitDefaultMaterial()
 
 void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
@@ -103,7 +110,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         std::string name = Helper::ToString(GetKey());
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(uid.c_str(), false, flags))
+        if (ImGui::Selectable(GetID(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -113,7 +120,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         EditorItemState state;
         state.mResourcePtr = this;
         state.mName = Helper::ToString(mHandle.GetKey());
-        EditorDragNDrop::SendDragAndDropData(uid.c_str(), state);
+        EditorDragNDrop::SendDragAndDropData(GetID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }
@@ -121,6 +128,32 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
+        Resource::EditorRendering(_viewerType);
+
+        {   // 블렌드 타입
+            const char* renderMode[] = { "Opaque", "Transparent" };
+            int SelectIndex = (int)mBlendMode; // 현재 선택된 항목 (인덱스)
+
+            ImGui::Text("Blend Mode");
+            if (ImGui::Combo((uid + "Blend Mode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
+            {
+                mBlendMode = (eBlendModeType)SelectIndex;
+            }
+        }
+
+        ImGui::Separator();
+
+        {   // 컬링 타입
+            const char* cullingMode[] = { "None_Culling", "BackFace_Culling", "FrontFace_Culling"};
+            int SelectIndex = (int)mRasterMode; // 현재 선택된 항목 (인덱스)
+
+            ImGui::Text("Blend Mode");
+            if (ImGui::Combo((uid + "Culling Mode").c_str(), &SelectIndex, cullingMode, IM_ARRAYSIZE(cullingMode)))
+            {
+                mRasterMode = (eRasterizerStateType)SelectIndex;
+            }
+        }
+
         for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
         {
             eMaterialMapType mapType = (eMaterialMapType)type;
@@ -160,11 +193,8 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
                 break;
             }
         }
-       
         break;
-
     }
-       
     default:
         break;
     }

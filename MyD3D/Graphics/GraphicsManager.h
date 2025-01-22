@@ -27,6 +27,7 @@ private:
     static void InitShader();
     static void InitSamplerState();
     static void InitBlendState();
+    static void InitRasterizerState();
     static void InitDebugDraw();
 public:
     static inline auto GetConstantBuffer(eCBufferType _type) { return mCBufferArray[(UINT)_type]; }
@@ -34,7 +35,8 @@ public:
     static inline auto GetVertexShader(eVertexShaderType _type) { return mVertexShaderArray[(UINT)_type]; }
     static inline auto GetGeometryShader(eGeometryShaderType _type) { return mGeometryShaderArray[(UINT)_type]; }
     static inline auto GetPixelShader(ePixelShaderType _type) { return mPixelShaderArray[(UINT)_type]; }
-    static inline auto GetBlendState(eBlendType _type) { return mBlendStateArray[(UINT)_type]; }
+    static inline auto GetBlendState(eBlendStateType _type) { return mBlendStateArray[(UINT)_type]; }
+    static inline auto GetRasterizerState(eRasterizerStateType _type) { return mRasterizerStateArray[(UINT)_type]; }
 public:
     static std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> CreateDefaultRenderTargetView(UINT _width, UINT _height);
     static std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> CreateDefaultDepthStencilView(UINT _width, UINT _height);
@@ -46,11 +48,11 @@ public:
 private:
     static D3DGraphicsConstantBuffer*   mCBufferArray[CBUFFER_TYPE_COUNT];
     static D3DGraphicsVertexShader*     mVertexShaderArray[VS_TYPE_COUNT];
-    static D3DGraphicsGeometryShader*     mGeometryShaderArray[VS_TYPE_COUNT];
+    static D3DGraphicsGeometryShader*   mGeometryShaderArray[VS_TYPE_COUNT];
     static D3DGraphicsPixelShader*      mPixelShaderArray[PS_TYPE_COUNT];
     static D3DGraphicsSamplerState*     mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
-    static D3DGraphicsBlendState*       mBlendStateArray[BLEND_TYPE_COUNT];
-
+    static D3DGraphicsBlendState*       mBlendStateArray[BLEND_STATE_TYPE_COUNT];
+    static D3DGraphicsRasterizerState*  mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
     //Debug Draw
 
 public:

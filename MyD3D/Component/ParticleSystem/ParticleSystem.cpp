@@ -9,7 +9,7 @@
 #include "Resource/Graphics/Texture/Texture.h"
 
 ParticleSystem::ParticleSystem(Object* _owner)
-    : RendererComponent(_owner)
+    : Component(_owner)
 {
 	ResourceHandle texHandle = {
 			eResourceType::Texture2DResource,
@@ -62,7 +62,6 @@ void ParticleSystem::Update()
 
 void ParticleSystem::PostUpdate()
 {
-
 }
 
 void ParticleSystem::PreRender()
@@ -152,7 +151,12 @@ void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
-void ParticleSystem::DrawMesh(Matrix& _view, Matrix& _projection)
+Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)
+{
+	return _camera->GetDistance(gameObject->transform);
+}
+
+void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
 	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 

@@ -110,7 +110,7 @@ void BoxCollider::Deserialize(json& j)
 	mExtents.z = j["extents"][2].get<float>();
 }
 
-void BoxCollider::DrawMesh(Matrix& _view, Matrix& _projection)
+void BoxCollider::DrawObject(Matrix& _view, Matrix& _projection)
 {
 #ifdef _DEBUG
 	GraphicsManager::DebugDrawBegin();

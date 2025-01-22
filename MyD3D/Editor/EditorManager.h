@@ -30,8 +30,8 @@
 class EditorManager
 {
 public:
-	static void Initialize();
-	static void Finalization();
+    static void Initialize();
+    static void Finalization();
     static void RenderEditorWindow();
 public:
     static void EditorUpdate();
@@ -41,6 +41,7 @@ public:
     static BOOL IsRenderView(ViewportScene* _targetViewport);
     static BOOL IsFocusView(ViewportScene* _targetViewport);
     static BOOL EditorReposition();
+    static BOOL ProcessDragFile(std::vector<std::wstring>& _pathArr);
 private:
     static void InitImGui();
     static void InitMainMenuBar();
@@ -52,34 +53,34 @@ private:
 public:
     void UpdateIO();
 public:
-    static inline auto GetFocusViewport()   { return mFocusViewport; }
-    static inline auto GetEditorViewport()  { return mEditorViewport; }
-    static inline auto GetResourceViewer()  { return mResourceViewer; }
+    static inline auto GetFocusViewport() { return mFocusViewport; }
+    static inline auto GetEditorViewport() { return mEditorViewport; }
+    static inline auto GetResourceViewer() { return mResourceViewer; }
     static inline auto GetHierarchyViewer() { return mHierarchyViewer; }
     static inline auto GetInspectorViewer() { return mInspectorViewer; }
 public:
     static EditorCamera                     mEditorCamera;
 
-    static ViewportScene*                   mFocusViewport;
-    static ViewportScene*                   mEditorViewport;
+    static ViewportScene* mFocusViewport;
+    static ViewportScene* mEditorViewport;
     static std::vector<Editor::IWidget*>    mWidgetArray;
 
-    static Editor::EditorDebugger*          mDebbugerTab;
-    static Editor::ResourceViewer*          mResourceViewer;
-    static Editor::HierarchyViewer*         mHierarchyViewer;
-    static Editor::InspectorViewer*         mInspectorViewer;
+    static Editor::EditorDebugger* mDebbugerTab;
+    static Editor::ResourceViewer* mResourceViewer;
+    static Editor::HierarchyViewer* mHierarchyViewer;
+    static Editor::InspectorViewer* mInspectorViewer;
 
     static std::vector<std::shared_ptr<Resource>> mResourceContainor;
     /////////////////////////////////////////////////////
     //  Widget Object
     /////////////////////////////////////////////////////
-	static Editor::MenuBar*                 mMainMenuBar;
-	static Editor::WindowBar*               mMainWindowBar_01;
-	static Editor::WindowBar*               mMainWindowBar_02;
+    static Editor::MenuBar* mMainMenuBar;
+    static Editor::WindowBar* mMainWindowBar_01;
+    static Editor::WindowBar* mMainWindowBar_02;
     /////////////////////////////////////////////////////
-	//  ImGui Object
+    //  ImGui Object
     /////////////////////////////////////////////////////
-	static ImGuiContext* mContext;
+    static ImGuiContext* mContext;
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 

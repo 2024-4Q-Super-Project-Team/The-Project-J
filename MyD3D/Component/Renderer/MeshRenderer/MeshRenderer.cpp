@@ -90,7 +90,7 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
     clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void MeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
+void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
     
     if (mMesh)
@@ -180,6 +180,29 @@ MaterialResource* MeshRenderer::GetMaterial()
     return mMateiral;
 }
 
+eBlendModeType MeshRenderer::GetBlendMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mBlendMode;
+    }
+    return eBlendModeType::OPAQUE_BLEND;
+}
+
+Vector3 MeshRenderer::GetDistanceFromCamera(Camera* _camera)
+{
+    return _camera->GetDistance(gameObject->transform);
+}
+
+eRasterizerStateType MeshRenderer::GetCullingMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mRasterMode;
+    }
+    return eRasterizerStateType::BACKFACE_CULLING;
+}
+
 json MeshRenderer::Serialize()
 {
     json ret;
@@ -190,7 +213,7 @@ json MeshRenderer::Serialize()
     else 
         ret["mesh"] = nullptr;
 
-    if (mMateiral && mMateiral) 
+    if (mMateiral) 
         ret["material"] = mMateiral->GetKey();
     else  
         ret["material"] = nullptr;

@@ -62,6 +62,11 @@ void Collider::PostRender()
 {
 }
 
+Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
+{
+	return _camera->GetDistance(gameObject->transform);
+}
+
 void Collider::SetLocalPosition()
 {
 	PxTransform currentTransform = mShape->getLocalPose();

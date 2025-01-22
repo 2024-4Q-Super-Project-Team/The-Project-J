@@ -14,14 +14,14 @@ public:
     virtual void EditorRendering(EditorViewerType _viewerType = EditorViewerType::DEFAULT) = 0;
 protected:
     inline void SetID(const std::string& _label) {
-        uid = _label;
+        mUid = _label;
     }
 public:
     inline const char* GetID() {
-        return uid.c_str();
+        return mUid.c_str();
     }
 protected:
-    std::string uid;
+    std::string mUid;
 };
 
 namespace Editor

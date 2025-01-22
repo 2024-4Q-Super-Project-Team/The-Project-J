@@ -2,13 +2,14 @@
 #include "Camera.h"
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportManager.h"
-#include "ViewportScene/ViewportScene.h"
+#include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "World/WorldManager.h"
+
+#include "ViewportScene/ViewportScene.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
-#include "Resource/ResourceManager.h"
 #include "SkyBox/SkyBox.h"
 
 Camera::Camera(Object* _owner, Vector2 _size)
@@ -86,6 +87,9 @@ void Camera::Render()
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
+    UpdateZSort();
+
+    ExcuteDrawList();
 }
 
 void Camera::Draw(Camera* _camera)
@@ -124,6 +128,7 @@ void Camera::UpdateCamera()
     {
         mMainViewport = mCameraViewport->GetMainViewport();
         mMainRenderTarget = mCameraViewport->GetMainRenderTarget();
+        mDeferredRenderTarget = mCameraViewport->GetDeferredRenderTarget();
     }
     UpdateMatrix();
     UpdateViewport();
@@ -177,6 +182,15 @@ void Camera::UpdateViewport()
     }
 }
 
+void Camera::UpdateZSort()
+{
+    std::sort(mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].begin(),
+        mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].end(),
+        [this](IRenderContext*& a, IRenderContext*& b) {
+            return a->GetDistanceFromCamera(this).z < b->GetDistanceFromCamera(this).z; // Z축 기준 내림차순 정렬 (멀리 있는 것부터)
+        });
+}
+
 void Camera::DrawShadow()
 {
     GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
@@ -212,44 +226,64 @@ void Camera::DrawForward()
     GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
 
-    for (int i = 0; i < BLEND_TYPE_COUNT; ++i)
+    ////////////////////////////////////////////////////////////////
+    // OpaQue Blend
+    ////////////////////////////////////////////////////////////////
+    GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND])
     {
-        //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
-        for (auto& drawInfo : mDrawQueue[i])
-        {
-            drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
-        }
-        // 그리기 큐를 초기화한다.
-        mDrawQueue[i].clear();
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
     }
+    mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND].clear();
+    ////////////////////////////////////////////////////////////////
+    // Transparent Blend
+    ////////////////////////////////////////////////////////////////
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
+
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
 }
 
 void Camera::DrawDeferred()
 {
-    //Deferred Pass
+    // Deferred Pass
+    // 디퍼드는 Opaque만 디퍼드로 그린다. 알파큐는 포워드로 그려야함
     {   
         mDeferredRenderTarget->BeginDraw();
         mDeferredRenderTarget->Clear();
 
         // BlendState를 설정해줘야 OM이 rgb값을 a로 훼손시키지 않고 제대로 넣어준다.
-        GraphicsManager::GetBlendState(eBlendType::OPAQUE_BLEND)->Bind();
         GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
         GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Bind();
 
-        for (int i = 0; i < BLEND_TYPE_COUNT; ++i)
+        ////////////////////////////////////////////////////////////////
+        // OpaQue Blend
+        ////////////////////////////////////////////////////////////////
+        GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+        for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND])
         {
-            for (auto& drawInfo : mDrawQueue[i])
-            {
-                drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
-            }
-            // 그리기 큐를 초기화한다.
-            mDrawQueue[i].clear();
+            drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
         }
+        mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND].clear();
+        ////////////////////////////////////////////////////////////////
+        // Transparent Blend
+        ////////////////////////////////////////////////////////////////
+        GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+        for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND])
+        {
+            drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+        }
+        mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
+
         mDeferredRenderTarget->EndDraw();
+        GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
     }
 
     // QuadFrame Pass
-    GraphicsManager::GetBlendState(eBlendType::OPAQUE_BLEND)->Reset();
     GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
@@ -275,24 +309,6 @@ void Camera::DrawSwapChain()
     D3DGraphicsRenderer::DrawCall(6, 0, 0);
 
     mMainRenderTarget->ResetAllSRV();
-}
-
-void Camera::SetProjectionType(ProjectionType _type)
-{
-    mProjectionType = _type;
-}
-
-void Camera::SetCameraRenderType(CameraRenderType _type)
-{
-    mCameraRenderType = _type;
-    if (_type == CameraRenderType::Forward)
-    {
-        mDeferredRenderTarget.reset();
-    }
-    if (_type == CameraRenderType::Deferred)
-    {
-        mDeferredRenderTarget = mCameraViewport->GetDeferredRenderTarget();
-    }
 }
 
 json Camera::Serialize()
@@ -322,6 +338,12 @@ void Camera::Deserialize(json& j)
     mOrthoHeight = j["ortho height"].get<float>();
 }
 
+Vector3 Camera::GetDistance(Transform* _transform)
+{
+    Matrix cameraSpaceMatrix = mViewMatrix * _transform->GetWorldMatrix();
+    return cameraSpaceMatrix.Translation();
+}
+
 D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
 {
     if (mMainRenderTarget)
@@ -334,12 +356,7 @@ D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
 void Camera::PushDrawList(IRenderContext* _renderContext)
 {
     if (_renderContext == nullptr) return;
-    auto pMaterial = _renderContext->GetMaterial();
-    eBlendType blendMode = eBlendType::OPAQUE_BLEND;
-    if (pMaterial)
-    {
-        blendMode = pMaterial->mBlendMode;
-    }
+    eBlendModeType blendMode = _renderContext->GetBlendMode();
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
@@ -417,14 +434,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
         ImGui::Text("RenderMode : ");
         if (ImGui::Combo((uid + "RenderMode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
         {
-			if (SelectIndex == 0)
-			{
-				SetCameraRenderType(CameraRenderType::Forward);
-			}
-			else
-			{
-				SetCameraRenderType(CameraRenderType::Deferred);
-			}
+            mCameraRenderType = (CameraRenderType)SelectIndex;
         }
 
         ImGui::Separator();

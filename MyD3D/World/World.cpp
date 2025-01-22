@@ -47,9 +47,11 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
         sceneDesc.filterShader = CustomFilterShader;
         //sceneDesc.simulationEventCallback = mEventCallback;
             // GPU 가속 설정 (필수)
-        sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
-        sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
-        sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+        //sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+        //sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+        //sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+
+
         mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
 
         PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
@@ -67,11 +69,17 @@ World::~World()
     SAFE_DELETE_VECTOR(mObjectGroups);
     SAFE_DELETE(mLightSystem);
     SAFE_DELETE(mPickingRay);
+    mPxScene->release();
+
 }
 
 void World::Start()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Start())
+    for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end(); ++itr)
+    {
+        if ((*itr)->GetState() == EntityState::Create)				
+            (*itr)->Start();
+    }
 }
 
 void World::Tick()
@@ -128,8 +136,6 @@ void World::Render()
 void World::Draw(Camera* _camera)
 {
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Draw(_camera));
-    // 카메라가 담고 있는 그리기 작업목록을 수행
-    _camera->ExcuteDrawList();
 }
 
 void World::PostRender()

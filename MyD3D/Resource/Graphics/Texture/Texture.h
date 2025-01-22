@@ -13,5 +13,5 @@ public:
 public:
     D3DGraphicsImg* Texture;
 public:
-	virtual void EditorRendering(EditorViewerType _viewerType) override;
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

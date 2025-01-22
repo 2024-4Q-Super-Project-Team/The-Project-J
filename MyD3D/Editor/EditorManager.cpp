@@ -6,28 +6,28 @@
 
 EditorCamera                    EditorManager::mEditorCamera;
 
-ViewportScene*                  EditorManager::mFocusViewport = nullptr;
-ViewportScene*                  EditorManager::mEditorViewport = nullptr;
+ViewportScene* EditorManager::mFocusViewport = nullptr;
+ViewportScene* EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
 
-Editor::EditorDebugger*         EditorManager::mDebbugerTab = nullptr;
-Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
-Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
-Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
+Editor::EditorDebugger* EditorManager::mDebbugerTab = nullptr;
+Editor::ResourceViewer* EditorManager::mResourceViewer = nullptr;
+Editor::HierarchyViewer* EditorManager::mHierarchyViewer = nullptr;
+Editor::InspectorViewer* EditorManager::mInspectorViewer = nullptr;
 
-Editor::MenuBar*                EditorManager::mMainMenuBar = nullptr;
-Editor::WindowBar*              EditorManager::mMainWindowBar_01 = nullptr;
-Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
+Editor::MenuBar* EditorManager::mMainMenuBar = nullptr;
+Editor::WindowBar* EditorManager::mMainWindowBar_01 = nullptr;
+Editor::WindowBar* EditorManager::mMainWindowBar_02 = nullptr;
 
-ImGuiContext*                   EditorManager::mContext;
+ImGuiContext* EditorManager::mContext;
 
 void EditorManager::Initialize()
 {
-	mResourceViewer = new Editor::ResourceViewer();
-	mHierarchyViewer = new Editor::HierarchyViewer();
-	mInspectorViewer = new Editor::InspectorViewer();
-    
+    mResourceViewer = new Editor::ResourceViewer();
+    mHierarchyViewer = new Editor::HierarchyViewer();
+    mInspectorViewer = new Editor::InspectorViewer();
+
     InitMainMenuBar();
     InitMainWindow();
 
@@ -42,7 +42,7 @@ void EditorManager::Finalization()
 void EditorManager::RenderEditorWindow()
 {
     if (mFocusViewport && mEditorViewport)
-    {  
+    {
         // 컨텍스트 활성화
         ImGui::SetCurrentContext(mContext);
         // IO 상태 업데이트
@@ -81,13 +81,13 @@ BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
     if (_targetViewport)
     {
         mFocusViewport = _targetViewport;
-		Display::IWindow* mDestWindow = mFocusViewport->GetIWindow();
+        Display::IWindow* mDestWindow = mFocusViewport->GetIWindow();
         POINT Destsize = mFocusViewport->GetIWindow()->GetSize();
         POINT Destpos = mFocusViewport->GetIWindow()->GetPosition();
-        
-		mMainWindowBar_01->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
-		mMainWindowBar_02->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
-		mMainWindowBar_02->SetOffset(Vector2(EDITOR_WIDTH / 2, 0));
+
+        mMainWindowBar_01->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
+        mMainWindowBar_02->SetSize(Vector2(EDITOR_WIDTH / 2, Destsize.y));
+        mMainWindowBar_02->SetOffset(Vector2(EDITOR_WIDTH / 2, 0));
 
         mHierarchyViewer->SetFocusWorldManager(_targetViewport->GetWorldManager());
         mHierarchyViewer->SetFocusInspector(mInspectorViewer);
@@ -204,8 +204,8 @@ void EditorManager::InitMainWindow()
         }
     }
 
-	mWidgetArray.push_back(mMainWindowBar_01);
-	mWidgetArray.push_back(mMainWindowBar_02);
+    mWidgetArray.push_back(mMainWindowBar_01);
+    mWidgetArray.push_back(mMainWindowBar_02);
 
 }
 void EditorManager::CreateDebuggerTab(Editor::TabBar* _pSrcTabBar)
@@ -280,15 +280,24 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
 
         // 드롭된 파일의 개수
         UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
-        for (UINT i = 0; i < numFiles; ++i) {
-            // 각 파일의 경로를 얻음
-            wchar_t filePath[MAX_PATH];
-            DragQueryFile(hDrop, i, filePath, MAX_PATH);
-            Display::Console::Log(filePath);
-            ResourceHandle handle = { eResourceType::FBXModelResource, filePath, L"", filePath };
-            ResourceManager::RegisterResourceHandle(handle);
-            ResourceManager::Alloc_Resource<FBXModelResource>(handle);
+
+        std::vector<std::wstring> pathArr;
+        pathArr.reserve(numFiles);
+
+        for (size_t i = 0; i < numFiles; ++i) {
+            // 각 파일의 절대경로를 얻음
+            wchar_t absPath[MAX_PATH];
+            DragQueryFile(hDrop, i, absPath, MAX_PATH);
+            //절대 경로를 상대 경로로 변환
+            std::wstring relPath;
+            if (S_OK == Helper::ABSPath_To_RelativePath(absPath, relPath))
+            {
+                pathArr.push_back(relPath);
+            }
+            Display::Console::Log("Drag&Drop File : ", relPath, '\n');
         }
+        ProcessDragFile(pathArr);
+
         // 메모리 해제
         DragFinish(hDrop);
         break;
@@ -349,4 +358,33 @@ BOOL EditorManager::EditorReposition()
         return mEditorViewport->GetIWindow()->SetPosition(resPos);
     }
     return FALSE;
+}
+
+#define REGISTER_AND_ALLOC_RESOUCE(type) \
+ResourceHandle handle = { eResourceType::type, fileName, L"", _pathArr[i] };\
+ResourceManager::RegisterResourceHandle(handle);\
+ResourceManager::Alloc_Resource<type>(handle);\
+
+BOOL EditorManager::ProcessDragFile(std::vector<std::wstring>& _pathArr)
+{
+    for (size_t i = 0; i < _pathArr.size(); ++i)
+    {
+        std::wstring fileExt;
+        std::wstring fileName;
+        Helper::GetExtFromFilePath(_pathArr[i], fileExt);
+        Helper::GetFileNameFromFilePath(_pathArr[i], fileName);
+        if (fileExt == L".fbx" || fileExt == L".FBX")
+        {
+            REGISTER_AND_ALLOC_RESOUCE(FBXModelResource);
+        }
+        if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
+        {
+            REGISTER_AND_ALLOC_RESOUCE(Texture2DResource);
+        }
+        if (fileExt == L".ogg" || fileExt == L".mp3" || fileExt == L".wav")
+        {
+            REGISTER_AND_ALLOC_RESOUCE(AudioResource);
+        }
+    }
+    return TRUE;
 }

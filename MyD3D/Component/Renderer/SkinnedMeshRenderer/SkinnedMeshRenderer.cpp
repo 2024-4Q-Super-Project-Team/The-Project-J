@@ -112,7 +112,7 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
     clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void SkinnedMeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
+void SkinnedMeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
     // 메쉬 바인딩
     if (mMesh)
@@ -160,6 +160,29 @@ MeshResource* SkinnedMeshRenderer::GetMesh()
 MaterialResource* SkinnedMeshRenderer::GetMaterial()
 {
     return mMateiral;
+}
+
+eBlendModeType SkinnedMeshRenderer::GetBlendMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mBlendMode;
+    }
+    return eBlendModeType::OPAQUE_BLEND;
+}
+
+Vector3 SkinnedMeshRenderer::GetDistanceFromCamera(Camera* _camera)
+{
+    return _camera->GetDistance(gameObject->transform);
+}
+
+eRasterizerStateType SkinnedMeshRenderer::GetCullingMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mRasterMode;
+    }
+    return eRasterizerStateType::BACKFACE_CULLING;
 }
 
 void SkinnedMeshRenderer::SetMesh(ResourceHandle _handle)

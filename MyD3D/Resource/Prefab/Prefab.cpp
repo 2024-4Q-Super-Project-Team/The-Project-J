@@ -48,7 +48,7 @@ void PrefabResource::AddObjectFromNode(Object* _pObject, ModelNode* _pNode)
     // 2. 트랜스폼에 노드 행렬을 적용
     pObject->transform->position = _pNode->mOrginPosition;
     pObject->transform->rotation = _pNode->mOrginRotatin;
-    pObject->transform->scale    = _pNode->mOrginScale;
+    pObject->transform->scale = _pNode->mOrginScale;
     // 3. 프리팹에 현재 오브젝트를 추가
     AddObject(pObject);
     // 4. 계층을 순회하기 위해 재귀적으로 반복
@@ -125,7 +125,7 @@ void PrefabResource::SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pMode
             std::wstring mMeshKey = _pNode->mMeshResources[i];
             std::wstring mMaterialKey = _pNode->mMatResources[i];
             // 2. Model의 리소스 내에서 각각의 Key값을 통해 리소스를 가져옴.
-            auto ppMesh     = Helper::FindMap(mMeshKey, _pModel->mMeshTable);
+            auto ppMesh = Helper::FindMap(mMeshKey, _pModel->mMeshTable);
             auto ppMaterial = Helper::FindMap(mMaterialKey, _pModel->mMaterialTable);
             // 3. Mesh의 본 스키닝 정보가 있는지 없는지 확인해서 컴포넌트를 맞게 추가한다.
             if (ppMesh)
@@ -153,7 +153,7 @@ void PrefabResource::SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pMode
                     {
                         pRenderer->SetRootBone((*ppRootBone)->transform);
                     }
-                    if(ppMaterial)
+                    if (ppMaterial)
                     {
                         pRenderer->SetMaterial(*ppMaterial);
                     }
@@ -197,7 +197,6 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
-      
         {   // Clone Button
             ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
             if (ImGui::Button(("Clone" + uid).c_str(), buttonSize))
@@ -235,6 +234,11 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
                         if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
                         {
                             GroupIndex = 0;
+                            ImGui::CloseCurrentPopup();
+                        }
+                        // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+                            ImGui::CloseCurrentPopup();
                         }
                     }
                 }
@@ -247,10 +251,10 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
         break;
     }
 
-   
-    
-        
-     
-  
+
+
+
+
+
 }
 

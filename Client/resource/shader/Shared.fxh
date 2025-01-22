@@ -61,14 +61,14 @@ struct DEFERRED_PS_OUT
 #define TRUE    1
 #define FALSE   0
 
-#define DIFFUSE_MAP 0
-#define SPECULAR_MAP 1
-#define AMBIENT_MAP 2
-#define EMISSIVE_MAP 3
-#define NORMAL_MAP 4
-#define ROUGHNESS_MAP 5
-#define OPACITY_MAP 6
-#define METALNESS_MAP 7
+#define DIFFUSE_MAP     0
+#define SPECULAR_MAP    1
+#define AMBIENT_MAP     2
+#define EMISSIVE_MAP    3
+#define NORMAL_MAP      4
+#define ROUGHNESS_MAP   5
+#define OPACITY_MAP     6
+#define METALNESS_MAP   7
 #define AMBIENT_OCCLUSION_MAP 8
 #define MATERIAL_MAP_COUNT 9
 

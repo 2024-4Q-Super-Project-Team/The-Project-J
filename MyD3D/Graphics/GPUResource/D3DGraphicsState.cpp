@@ -144,3 +144,41 @@ HRESULT D3DGraphicsBlendState::Reset()
     }
     return E_FAIL;
 }
+
+D3DGraphicsRasterizerState::D3DGraphicsRasterizerState(IN D3D11_RASTERIZER_DESC* _pRRDesc)
+{
+    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateRasterizerState(_pRRDesc, &mRRState),
+        "Hresult Failed to Create D3DGraphicsRasterizerState::CreateRasterizerState.");
+}
+
+void D3DGraphicsRasterizerState::Release()
+{
+    SAFE_RELEASE(mRRState);
+}
+
+HRESULT D3DGraphicsRasterizerState::Create()
+{
+    return S_OK;
+}
+
+HRESULT D3DGraphicsRasterizerState::Bind()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->RSSetState(mRRState);
+        return S_OK;
+    }
+    return E_NOTIMPL;
+}
+
+HRESULT D3DGraphicsRasterizerState::Reset()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->RSSetState(nullptr);
+        return S_OK;
+    }
+    return E_NOTIMPL;
+}

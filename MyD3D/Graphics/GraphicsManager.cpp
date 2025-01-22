@@ -13,7 +13,8 @@ D3DGraphicsSamplerState* GraphicsManager::mSamplerStateArray[SAMPLER_STATE_TYPE_
 D3DGraphicsVertexShader* GraphicsManager::mVertexShaderArray[VS_TYPE_COUNT];
 D3DGraphicsGeometryShader* GraphicsManager::mGeometryShaderArray[VS_TYPE_COUNT];
 D3DGraphicsPixelShader* GraphicsManager::mPixelShaderArray[PS_TYPE_COUNT];
-D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_TYPE_COUNT];
+D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_STATE_TYPE_COUNT];
+D3DGraphicsRasterizerState* GraphicsManager::mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
 
 std::unique_ptr<CommonStates> GraphicsManager::mStates;
 std::unique_ptr<PrimitiveBatch<VertexPositionColor>> GraphicsManager::mBatch;
@@ -50,12 +51,16 @@ BOOL GraphicsManager::Initialize()
     InitBlendState();
 
     //////////////////////////////////////////
+    // Raterizer State
+    //////////////////////////////////////////
+    InitRasterizerState();
+
+    //////////////////////////////////////////
     // Debug Draw
     //////////////////////////////////////////
     InitDebugDraw();
 
-    // Opaque 기본 세팅
-    mBlendStateArray[(UINT)eBlendType::OPAQUE_BLEND]->Bind();
+    mBlendStateArray[(UINT)eBlendStateType::DEFAULT]->Bind();
 
     return TRUE;
 }
@@ -217,16 +222,16 @@ void GraphicsManager::InitSamplerState()
 
 void GraphicsManager::InitBlendState()
 {
-    // Opaque Blending (불투명처리)
+    // (불투명처리)
     {
-        UINT slot = static_cast<UINT>(eBlendType::OPAQUE_BLEND);
+        UINT slot = static_cast<UINT>(eBlendStateType::DEFAULT);
         D3D11_BLEND_DESC blendDesc = {};
         blendDesc.AlphaToCoverageEnable = FALSE;  // 알파 투명도 사용 안 함
         blendDesc.IndependentBlendEnable = FALSE; // 모든 렌더 타겟에 동일한 설정 적용
         for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
         {
             blendDesc.RenderTarget[i].BlendEnable = FALSE;                                  // 블렌딩 비활성화
-            blendDesc.RenderTarget[i].SrcBlend = D3D11_BLEND_ONE;                           // 소스 그대로
+            blendDesc.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA ;                    // 소스 그대로
             blendDesc.RenderTarget[i].DestBlend = D3D11_BLEND_ZERO;                         // 대상에 영향 없음
             blendDesc.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;                         // 기본 합산 연산 (영향 없음)
             blendDesc.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;                      // 알파 채널에 영향 없음
@@ -238,22 +243,59 @@ void GraphicsManager::InitBlendState()
     }
     // Alpha Blending (투명처리)
     {
-        UINT slot = static_cast<UINT>(eBlendType::TRANSPARENT_BLEND);
+        UINT slot = static_cast<UINT>(eBlendStateType::ALPHA);
         D3D11_BLEND_DESC blendDesc = {};
         blendDesc.AlphaToCoverageEnable = TRUE;  // 알파 투명도 사용 함
         blendDesc.IndependentBlendEnable = FALSE; // 모든 렌더 타겟에 동일한 설정 적용
         for (int i = 0; i < D3D11_SIMULTANEOUS_RENDER_TARGET_COUNT; ++i)
         {
-            blendDesc.RenderTarget[i].BlendEnable = TRUE;                          // 블렌딩 활성화
-            blendDesc.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;            // 소스 알파 기반
-            blendDesc.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;       // 대상 (1 - 알파) 기반
-            blendDesc.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;                // 소스 + 대상
-            blendDesc.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;             // 알파: 소스를 그대로 사용
-            blendDesc.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;           // 알파: 대상 무시
-            blendDesc.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;           // 알파 합산
+            blendDesc.RenderTarget[i].BlendEnable = TRUE;                                   // 블렌딩 활성화
+            blendDesc.RenderTarget[i].SrcBlend = D3D11_BLEND_SRC_ALPHA;                     // 소스 알파 기반
+            blendDesc.RenderTarget[i].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;                // 대상 (1 - 알파) 기반
+            blendDesc.RenderTarget[i].BlendOp = D3D11_BLEND_OP_ADD;                         // 소스 + 대상
+            blendDesc.RenderTarget[i].SrcBlendAlpha = D3D11_BLEND_ONE;                      // 알파: 소스를 그대로 사용
+            blendDesc.RenderTarget[i].DestBlendAlpha = D3D11_BLEND_ZERO;                    // 알파: 대상 무시
+            blendDesc.RenderTarget[i].BlendOpAlpha = D3D11_BLEND_OP_ADD;                    // 알파 합산
             blendDesc.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; // RGBA 모두 기록
         }
         mBlendStateArray[slot] = new D3DGraphicsBlendState(&blendDesc);
+    }
+}
+
+void GraphicsManager::InitRasterizerState()
+{
+    // None_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::NONE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID; // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_NONE; // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false; // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
+    }
+    // BackFace_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::BACKFACE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID; // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_BACK; // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false; // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
+    }
+    // FrontFace_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::FRONTFACE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID;     // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_FRONT;     // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false;   // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
     }
 }
 

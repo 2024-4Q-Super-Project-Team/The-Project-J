@@ -40,8 +40,6 @@ public:
     static ResourceTable& GetResourceTable(eResourceType _type) { return mResourceTables[static_cast<UINT>(_type)]; }
 private:
     static ResourceTable mResourceTables[static_cast<UINT>(eResourceType::SIZE)];
-public:
-    
 };
 
 template<typename TYPE>

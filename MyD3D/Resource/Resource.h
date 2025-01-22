@@ -65,7 +65,7 @@ public:
 public:
     virtual void Create() {}
 public:
-    virtual void EditorRendering(EditorViewerType _viewerType) override {};
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
 protected:
     ResourceHandle mHandle;
 };

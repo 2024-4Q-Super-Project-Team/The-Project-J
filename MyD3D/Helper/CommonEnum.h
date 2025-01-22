@@ -68,13 +68,33 @@ enum class ePixelShaderType
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)
 
-enum class eBlendType
+enum class eBlendStateType
 {
-    OPAQUE_BLEND,
-    TRANSPARENT_BLEND,
+    //FOWARD_OPAQUE,        // 포워드 렌더링용 Opaque블렌드
+    //DEFERRED_OPAQUE,      // 디퍼드 렌더링용 Opaque블렌드(rgba값을 그대로 사용)
+    //FOWARD_TRANSPARENT,   // 포워드 렌더링용 Transparent블렌드(디퍼드도 이걸 사용)
+    DEFAULT,
+    ALPHA,
     SIZE,
 };
-#define BLEND_TYPE_COUNT static_cast<UINT>(eBlendType::SIZE)
+#define BLEND_STATE_TYPE_COUNT static_cast<UINT>(eBlendStateType::SIZE)
+
+enum class eRasterizerStateType
+{
+    NONE_CULLING,
+    BACKFACE_CULLING,
+    FRONTFACE_CULLING,
+    SIZE,
+};
+#define RASTERIZER_STATE_TYPE_COUNT static_cast<UINT>(eRasterizerStateType::SIZE)
+
+enum class eBlendModeType
+{
+    OPAQUE_BLEND,        // Opaque블렌드
+    TRANSPARENT_BLEND,   // Transparent블렌드
+    SIZE,
+};
+#define BLEND_MODE_TYPE_COUNT static_cast<UINT>(eBlendModeType::SIZE)
 
 enum class eGBufferType
 {

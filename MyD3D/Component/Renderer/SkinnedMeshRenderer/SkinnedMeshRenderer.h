@@ -29,16 +29,17 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
+    virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
 public:
-    virtual MeshResource* GetMesh() override;
-    virtual MaterialResource* GetMaterial() override;
     virtual void SetMesh(ResourceHandle _handle) override;
     virtual void SetMesh(MeshResource* _pResource) override;
     virtual void SetMaterial(ResourceHandle _handle) override;
     virtual void SetMaterial(MaterialResource* _pResource) override;
     void         SetRootBone(Transform* _rootBone);
+    virtual MeshResource* GetMesh() override;
+    virtual MaterialResource* GetMaterial() override;
+    virtual eBlendModeType GetBlendMode() override;
 private:
     void UpdateTable();
     void BoneMapping(Transform* currentBone);

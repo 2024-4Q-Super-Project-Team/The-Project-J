@@ -147,16 +147,11 @@ void EditorCamera::UpdateCamera()
     }
 }
 
-void EditorCamera::PushDrawList(RendererComponent* _renderComponent)
+void EditorCamera::PushDrawList(IRenderContext* _renderContext)
 {
-    if (_renderComponent == nullptr) return;
-    auto pMaterial = _renderComponent->GetMaterial();
-    eBlendType blendMode = eBlendType::OPAQUE_BLEND;
-    if (pMaterial)
-    {
-        blendMode = pMaterial->mBlendMode;
-    }
-    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderComponent);
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = _renderContext->GetBlendMode();
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
 void EditorCamera::PushLightList(Light* _lightComponent)
@@ -184,7 +179,7 @@ void EditorCamera::ExcuteDrawList()
 
             mMainViewport->Bind();
 
-            DrawMesh();
+            DrawObject();
 
             if (mIsSkyBoxRendering)
             {
@@ -233,22 +228,31 @@ void EditorCamera::DrawShadow()
     }
 }
 
-void EditorCamera::DrawMesh()
+void EditorCamera::DrawObject()
 {
     GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
 
-    for (int i = 0; i < BLEND_TYPE_COUNT; ++i)
+    ////////////////////////////////////////////////////////////////
+    // OpaQue Blend
+    ////////////////////////////////////////////////////////////////
+    GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND])
     {
-        //GraphicsManager::GetBlendState((eBlendType)i)->Bind();
-        for (auto& drawInfo : mDrawQueue[i])
-        {
-            drawInfo->DrawMesh(mViewMatrix, mProjectionMatrix);
-            ++mDrawedMeshCount;
-        }
-        // 그리기 큐를 초기화한다.
-        mDrawQueue[i].clear();
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
     }
+    mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND].clear();
+    ////////////////////////////////////////////////////////////////
+    // Transparent Blend
+    ////////////////////////////////////////////////////////////////
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
+
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
 }
 
 void EditorCamera::DrawSwapChain()

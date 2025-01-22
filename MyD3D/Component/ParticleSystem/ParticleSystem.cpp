@@ -9,7 +9,7 @@
 #include "Resource/Graphics/Texture/Texture.h"
 
 ParticleSystem::ParticleSystem(Object* _owner)
-    : RendererComponent(_owner)
+    : Component(_owner)
 {
 	ResourceHandle texHandle = {
 			eResourceType::Texture2DResource,
@@ -151,7 +151,7 @@ void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
-void ParticleSystem::DrawMesh(Matrix& _view, Matrix& _projection)
+void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
 	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
 

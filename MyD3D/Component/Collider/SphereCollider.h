@@ -23,7 +23,7 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 public:
-    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
+    virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override {}
 
     virtual MeshResource* GetMesh() { return nullptr; }

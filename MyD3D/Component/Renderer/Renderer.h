@@ -11,10 +11,8 @@ class Camera;
 class IRenderContext
 {
 public:
-    virtual MeshResource* GetMesh() = 0;
-    virtual MaterialResource* GetMaterial() = 0;
-public:
-    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
+    virtual eBlendModeType GetBlendMode() = 0;
+    virtual void DrawObject(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight) = 0;
 };
 
@@ -42,10 +40,10 @@ public:
     virtual void SetMaterial(ResourceHandle _handle) = 0;
     virtual void SetMaterial(MaterialResource* _pResource) = 0;
 public:
+    virtual MeshResource* GetMesh() = 0;
+    virtual MaterialResource* GetMaterial() = 0;
+public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;
-public:
-    virtual void DrawMesh(Matrix& _view, Matrix& _projection) = 0;
-    virtual void DrawShadow(Light* _pLight) = 0;
 };
 

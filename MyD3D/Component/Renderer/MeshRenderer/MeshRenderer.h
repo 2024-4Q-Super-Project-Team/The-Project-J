@@ -28,7 +28,7 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
 public:
-    virtual void DrawMesh(Matrix& _view, Matrix& _projection) override;
+    virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
 public:
     virtual void SetMesh(ResourceHandle _handle) override;
@@ -37,6 +37,7 @@ public:
     virtual void SetMaterial(MaterialResource* _pResource) override;
     virtual MeshResource* GetMesh() override;
     virtual MaterialResource* GetMaterial() override;
+    virtual eBlendModeType GetBlendMode() override;
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;

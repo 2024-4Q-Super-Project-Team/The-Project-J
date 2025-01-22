@@ -63,7 +63,6 @@ private:
     void DrawSwapChain();
 public:
     void SetProjectionType(ProjectionType _type);
-    void SetCameraRenderType(CameraRenderType _type);
 public:
     inline void SetFovAngle(Degree _angle) { mFovAngle = _angle; }
     inline void SetProjectionNear(float _near) { mProjectionNear = _near; }
@@ -106,7 +105,7 @@ private:
     Vector2                 mOffsetScale;
 
     D3DGraphicsViewport*    mLocalViewport;
-    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
+    DrawQueue               mDrawQueue[BLEND_MODE_TYPE_COUNT];
     LightQueue              mSceneLights;
 
     ProjectionType          mProjectionType;

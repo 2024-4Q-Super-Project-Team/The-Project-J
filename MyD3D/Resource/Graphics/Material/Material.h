@@ -21,14 +21,14 @@ public:
 public:
     void SetMateirlaMapHandle(eMaterialMapType _type, ResourceHandle& _handle);
     void SetMaterialProperty(MaterialProperty* _pProp);
-    void SetBlendingMode(eBlendType _type);
+    void SetBlendingMode(eBlendModeType _type);
 public:
     ResourceHandle      mMaterialMapTextureHandle[MATERIAL_MAP_SIZE];
     Texture2DResource*  mMaterialMapTexture[MATERIAL_MAP_SIZE] = { nullptr, };
     // 머티리얼 고유 속성
     MaterialProperty    mMaterialProperty;
     // 블렌드 타입
-    eBlendType          mBlendMode = eBlendType::OPAQUE_BLEND;
+    eBlendModeType      mBlendMode = eBlendModeType::OPAQUE_BLEND;
     // 기본 머티리얼
     static MaterialResource* DefaultMaterial;
 public:

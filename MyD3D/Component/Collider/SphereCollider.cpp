@@ -96,7 +96,7 @@ void SphereCollider::Deserialize(json& j)
 	mRadius = j["radius"].get<float>();
 }
 
-void SphereCollider::DrawMesh(Matrix& _view, Matrix& _projection)
+void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 {
 #ifdef _DEBUG
 	GraphicsManager::DebugDrawBegin();

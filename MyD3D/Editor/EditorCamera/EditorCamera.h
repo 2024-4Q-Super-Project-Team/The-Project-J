@@ -14,12 +14,12 @@ public:
     void UpdateCameraBuffer();
     void UpdateCamera();
 public:
-    void PushDrawList(RendererComponent* _renderComponent);
+    void PushDrawList(IRenderContext* _renderContext);
     void PushLightList(Light* _lightComponent);
     void ExcuteDrawList();
 public:
     void DrawShadow();
-    void DrawMesh();
+    void DrawObject();
     void DrawSwapChain();
 public:
     // 현재 카메라가 쓰고 있는 리소스 뷰
@@ -41,7 +41,7 @@ public:
     float                   mProjectionNear = 1.0f;
     float                   mProjectionFar = 30000.0f;
 
-    DrawQueue               mDrawQueue[BLEND_TYPE_COUNT];
+    DrawQueue               mDrawQueue[BLEND_MODE_TYPE_COUNT];
     LightQueue              mSceneLights;
 
     CameraCBuffer           mCameraCBuffer;

@@ -90,7 +90,7 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
     clone->SetMaterial(this->mMaterialaHandle);
 }
 
-void MeshRenderer::DrawMesh(Matrix& _view, Matrix& _projection)
+void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
     
     if (mMesh)
@@ -178,6 +178,15 @@ MeshResource* MeshRenderer::GetMesh()
 MaterialResource* MeshRenderer::GetMaterial()
 {
     return mMateiral;
+}
+
+eBlendModeType MeshRenderer::GetBlendMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mBlendMode;
+    }
+    return eBlendModeType::OPAQUE_BLEND;
 }
 
 json MeshRenderer::Serialize()

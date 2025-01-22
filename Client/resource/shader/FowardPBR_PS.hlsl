@@ -24,7 +24,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
             MapColor[MapType] = MaterialMap[MapType].Sample(LinearWrapSampler, input.uv);
         }
     }
-    if (MapColor[OPACITY_MAP].a < 0.01)
+    if (MapColor[OPACITY_MAP].r < 0.1)
         discard;
     
     // 감마 디코딩
@@ -126,7 +126,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     FinalColor.rgb += AmbientLight.rgb;
     // 감마 인코드 작업을 해준다.
     FinalColor.rgb  = pow(FinalColor.rgb, 1.0 / GAMMA);
-    FinalColor.a    = MapColor[OPACITY_MAP].a;
+    FinalColor.a    = MapColor[OPACITY_MAP].r;
     return saturate(FinalColor);
 }
 

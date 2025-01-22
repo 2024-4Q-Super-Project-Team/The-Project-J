@@ -47,9 +47,11 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
         sceneDesc.filterShader = CustomFilterShader;
         //sceneDesc.simulationEventCallback = mEventCallback;
             // GPU 가속 설정 (필수)
-        sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
-        sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
-        sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+        //sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+        //sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+        //sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+
+
         mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
 
         PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
@@ -67,6 +69,8 @@ World::~World()
     SAFE_DELETE_VECTOR(mObjectGroups);
     SAFE_DELETE(mLightSystem);
     SAFE_DELETE(mPickingRay);
+    mPxScene->release();
+
 }
 
 void World::Start()

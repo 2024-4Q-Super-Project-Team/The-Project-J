@@ -2,13 +2,14 @@
 #include "Camera.h"
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportManager.h"
-#include "ViewportScene/ViewportScene.h"
+#include "Resource/ResourceManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "World/WorldManager.h"
+
+#include "ViewportScene/ViewportScene.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
-#include "Resource/ResourceManager.h"
 #include "SkyBox/SkyBox.h"
 
 Camera::Camera(Object* _owner, Vector2 _size)
@@ -86,6 +87,9 @@ void Camera::Render()
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
+    UpdateZSort();
+
+    ExcuteDrawList();
 }
 
 void Camera::Draw(Camera* _camera)
@@ -176,6 +180,15 @@ void Camera::UpdateViewport()
         mLocalViewport->SetOffsetX(mOffsetScale.x * mMainViewport->GetWidth());
         mLocalViewport->SetOffsetY(mOffsetScale.y * mMainViewport->GetHeight());
     }
+}
+
+void Camera::UpdateZSort()
+{
+    std::sort(mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].begin(),
+        mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].end(),
+        [this](IRenderContext*& a, IRenderContext*& b) {
+            return a->GetDistanceFromCamera(this).z < b->GetDistanceFromCamera(this).z; // Z축 기준 내림차순 정렬 (멀리 있는 것부터)
+        });
 }
 
 void Camera::DrawShadow()
@@ -298,11 +311,6 @@ void Camera::DrawSwapChain()
     mMainRenderTarget->ResetAllSRV();
 }
 
-void Camera::SetProjectionType(ProjectionType _type)
-{
-    mProjectionType = _type;
-}
-
 json Camera::Serialize()
 {
     json ret;
@@ -328,6 +336,12 @@ void Camera::Deserialize(json& j)
     mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
     mOrthoWidth = j["ortho width"].get<float>();
     mOrthoHeight = j["ortho height"].get<float>();
+}
+
+Vector3 Camera::GetDistance(Transform* _transform)
+{
+    Matrix cameraSpaceMatrix = mViewMatrix * _transform->GetWorldMatrix();
+    return cameraSpaceMatrix.Translation();
 }
 
 D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()

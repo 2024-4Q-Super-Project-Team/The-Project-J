@@ -136,8 +136,6 @@ void World::Render()
 void World::Draw(Camera* _camera)
 {
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Draw(_camera));
-    // 카메라가 담고 있는 그리기 작업목록을 수행
-    _camera->ExcuteDrawList();
 }
 
 void World::PostRender()

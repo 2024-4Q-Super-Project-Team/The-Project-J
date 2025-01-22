@@ -7,10 +7,12 @@ class MaterialResource;
 class Material;
 class Light;
 class Camera;
+class Transform;
 
 class IRenderContext
 {
 public:
+    virtual Vector3                 GetDistanceFromCamera(Camera* _camera) = 0;
     virtual eBlendModeType          GetBlendMode() = 0;
     virtual eRasterizerStateType    GetCullingMode() = 0;
     virtual void                    DrawObject(Matrix& _view, Matrix& _projection) = 0;

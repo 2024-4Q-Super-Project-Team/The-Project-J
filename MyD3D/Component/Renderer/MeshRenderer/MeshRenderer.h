@@ -38,6 +38,7 @@ public:
     virtual MeshResource* GetMesh() override;
     virtual MaterialResource* GetMaterial() override;
     virtual eBlendModeType GetBlendMode() override;
+    virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
     virtual eRasterizerStateType GetCullingMode() override;
 public:
     virtual json Serialize() override;

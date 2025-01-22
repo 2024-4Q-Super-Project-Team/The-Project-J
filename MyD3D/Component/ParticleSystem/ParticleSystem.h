@@ -35,6 +35,7 @@ public:
 public:
 	virtual eBlendModeType GetBlendMode() override { return eBlendModeType::TRANSPARENT_BLEND; }
 	virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::BACKFACE_CULLING; }
+	virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
 	virtual void DrawObject(Matrix& _view, Matrix& _projection);
 	virtual void DrawShadow(Light* _pLight);
 private:

@@ -189,6 +189,11 @@ eBlendModeType MeshRenderer::GetBlendMode()
     return eBlendModeType::OPAQUE_BLEND;
 }
 
+Vector3 MeshRenderer::GetDistanceFromCamera(Camera* _camera)
+{
+    return _camera->GetDistance(gameObject->transform);
+}
+
 eRasterizerStateType MeshRenderer::GetCullingMode()
 {
     if (mMateiral)
@@ -208,7 +213,7 @@ json MeshRenderer::Serialize()
     else 
         ret["mesh"] = nullptr;
 
-    if (mMateiral && mMateiral) 
+    if (mMateiral) 
         ret["material"] = mMateiral->GetKey();
     else  
         ret["material"] = nullptr;

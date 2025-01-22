@@ -151,6 +151,11 @@ void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
+Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)
+{
+	return _camera->GetDistance(gameObject->transform);
+}
+
 void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
 	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);

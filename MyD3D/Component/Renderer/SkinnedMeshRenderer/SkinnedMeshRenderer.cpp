@@ -171,6 +171,11 @@ eBlendModeType SkinnedMeshRenderer::GetBlendMode()
     return eBlendModeType::OPAQUE_BLEND;
 }
 
+Vector3 SkinnedMeshRenderer::GetDistanceFromCamera(Camera* _camera)
+{
+    return _camera->GetDistance(gameObject->transform);
+}
+
 eRasterizerStateType SkinnedMeshRenderer::GetCullingMode()
 {
     if (mMateiral)

@@ -110,8 +110,12 @@ void Editor::ResourceViewer::Render()
 			{
 				strcpy_s(MainKeybuffer, defaultSet);
 				strcpy_s(Pathbuffer, defaultSet);
+				ImGui::CloseCurrentPopup();
 			}
-
+			// 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+				ImGui::CloseCurrentPopup();
+			}
 			ImGui::EndPopup();
 		}
 	}

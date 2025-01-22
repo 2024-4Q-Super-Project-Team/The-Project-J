@@ -294,7 +294,7 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             {
                 pathArr.push_back(relPath);
             }
-            Display::Console::Log(relPath, '\n');
+            Display::Console::Log("Drag&Drop File : ", relPath, '\n');
         }
         ProcessDragFile(pathArr);
 

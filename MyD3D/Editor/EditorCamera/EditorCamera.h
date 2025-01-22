@@ -26,13 +26,15 @@ public:
     std::shared_ptr<D3DGraphicsViewport>        mMainViewport;
     std::shared_ptr<D3DBitmapRenderTarget>      mMainRenderTarget;
 
-    FLOAT                   mCameraMoveSpeed = 10.0f;
+    Vector3                 mPosition = Vector3(0.0f, 100.0f, -100.0f);
+    Matrix                  mRotation = Matrix::Identity;
+
+    Vector3                 mDirection = Vector3::Backward;
+    FLOAT                   mCameraMoveSpeed = 500.0f;
     FLOAT                   mCameraRotateSpeed = 10.0f;
+    FLOAT                   mCameraMaxAngle = 1.0f;
 
     Vector2                 mSize = Vector2::Zero;
-    Vector3                 mPosition = Vector3(0.0f,100.0f,-100.0f);
-    Vector3                 mDirection = Vector3::Backward;
-    Vector3                 mUp = Vector3::Up;
 
     Matrix                  mViewMatrix = Matrix::Identity;
     Matrix                  mProjectionMatrix = Matrix::Identity;

@@ -197,7 +197,6 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
-
         {   // Clone Button
             ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
             if (ImGui::Button(("Clone" + uid).c_str(), buttonSize))
@@ -235,6 +234,11 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
                         if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
                         {
                             GroupIndex = 0;
+                            ImGui::CloseCurrentPopup();
+                        }
+                        // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+                            ImGui::CloseCurrentPopup();
                         }
                     }
                 }

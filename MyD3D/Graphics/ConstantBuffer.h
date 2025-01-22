@@ -45,7 +45,7 @@ struct TransformCBuffer
 struct MaterialCBuffer
 {
     MaterialProperty MatProp;
-    UINT	         UseMapFlag;
+    UINT	         UseMapFlag = 0xFFFFFFFF; // 초기 상태 모두 TRUE  
     Vector3          Padding;
     BOOL GetUsingMap(eMaterialMapType _type);
     void SetUsingMap(eMaterialMapType _type, BOOL _bValue);

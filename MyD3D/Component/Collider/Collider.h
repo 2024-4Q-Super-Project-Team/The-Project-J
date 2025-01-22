@@ -23,6 +23,7 @@ public:
     virtual void DrawObject(Matrix& _view, Matrix& _projection) = 0;
     virtual void DrawShadow(Light* _pLight)  = 0;
     virtual eBlendModeType GetBlendMode() override { return eBlendModeType::OPAQUE_BLEND; }
+    virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::BACKFACE_CULLING; }
 public:
     virtual json Serialize()  = 0;
     virtual void Deserialize(json& j)  = 0;

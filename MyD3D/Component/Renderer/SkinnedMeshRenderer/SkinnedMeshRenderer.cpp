@@ -171,6 +171,15 @@ eBlendModeType SkinnedMeshRenderer::GetBlendMode()
     return eBlendModeType::OPAQUE_BLEND;
 }
 
+eRasterizerStateType SkinnedMeshRenderer::GetCullingMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mRasterMode;
+    }
+    return eRasterizerStateType::BACKFACE_CULLING;
+}
+
 void SkinnedMeshRenderer::SetMesh(ResourceHandle _handle)
 {
     if (_handle.GetResourceType() == eResourceType::MeshResource)

@@ -48,3 +48,18 @@ public:
 private:
     ID3D11DepthStencilState* mDSState;
 };
+
+class D3DGraphicsRasterizerState
+    : public I3DGraphicsGPUResource
+{
+public:
+    explicit D3DGraphicsRasterizerState(IN D3D11_RASTERIZER_DESC* _pRRDesc);
+    virtual ~D3DGraphicsRasterizerState() = default;
+public:
+    virtual void Release() override;
+    virtual HRESULT Create() override;
+    virtual HRESULT Bind() override;
+    virtual HRESULT Reset() override;
+private:
+    ID3D11RasterizerState* mRRState;
+};

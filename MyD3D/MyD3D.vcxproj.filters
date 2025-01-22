@@ -347,7 +347,7 @@
     </ClInclude>
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h">
       <Filter>헤더 파일</Filter>
-	</ClInclude>
+    </ClInclude>
     <ClInclude Include="Physics\PickingRay.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -690,8 +690,8 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp">
-	<Filter>소스 파일</Filter>
-	</ClCompile>
+      <Filter>소스 파일</Filter>
+    </ClCompile>
     <ClCompile Include="Physics\PickingRay.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>

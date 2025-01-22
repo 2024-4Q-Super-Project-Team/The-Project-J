@@ -79,6 +79,15 @@ enum class eBlendStateType
 };
 #define BLEND_STATE_TYPE_COUNT static_cast<UINT>(eBlendStateType::SIZE)
 
+enum class eRasterizerStateType
+{
+    NONE_CULLING,
+    BACKFACE_CULLING,
+    FRONTFACE_CULLING,
+    SIZE,
+};
+#define RASTERIZER_STATE_TYPE_COUNT static_cast<UINT>(eRasterizerStateType::SIZE)
+
 enum class eBlendModeType
 {
     OPAQUE_BLEND,        // Opaqueºí·»µå

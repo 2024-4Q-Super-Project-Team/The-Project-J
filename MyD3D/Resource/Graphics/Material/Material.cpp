@@ -88,6 +88,11 @@ void MaterialResource::SetBlendingMode(eBlendModeType _type)
     mBlendMode = _type;
 }
 
+void MaterialResource::SetCullingMode(eRasterizerStateType _type)
+{
+    mRasterMode = _type;
+}
+
 void MaterialResource::InitDefaultMaterial()
 {
     ResourceHandle handle = { eResourceType::MaterialResource, L"Default_Materail", L"", L"" };
@@ -125,15 +130,29 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
     {
         Resource::EditorRendering(_viewerType);
 
-        const char* renderMode[] = { "Opaque", "Transparent" };
-        int SelectIndex = (int)mBlendMode; // 현재 선택된 항목 (인덱스)
+        {   // 블렌드 타입
+            const char* renderMode[] = { "Opaque", "Transparent" };
+            int SelectIndex = (int)mBlendMode; // 현재 선택된 항목 (인덱스)
 
-        ImGui::Text("Blend Mode");
-        if (ImGui::Combo((uid + "Blend Mode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
-        {
-            mBlendMode = (eBlendModeType)SelectIndex;
+            ImGui::Text("Blend Mode");
+            if (ImGui::Combo((uid + "Blend Mode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
+            {
+                mBlendMode = (eBlendModeType)SelectIndex;
+            }
         }
+
         ImGui::Separator();
+
+        {   // 컬링 타입
+            const char* cullingMode[] = { "None_Culling", "BackFace_Culling", "FrontFace_Culling"};
+            int SelectIndex = (int)mRasterMode; // 현재 선택된 항목 (인덱스)
+
+            ImGui::Text("Blend Mode");
+            if (ImGui::Combo((uid + "Culling Mode").c_str(), &SelectIndex, cullingMode, IM_ARRAYSIZE(cullingMode)))
+            {
+                mRasterMode = (eRasterizerStateType)SelectIndex;
+            }
+        }
 
         for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
         {

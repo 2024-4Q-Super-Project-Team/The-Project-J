@@ -38,6 +38,7 @@ public:
     virtual MeshResource* GetMesh() override;
     virtual MaterialResource* GetMaterial() override;
     virtual eBlendModeType GetBlendMode() override;
+    virtual eRasterizerStateType GetCullingMode() override;
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;

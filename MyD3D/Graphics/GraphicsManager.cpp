@@ -14,6 +14,7 @@ D3DGraphicsVertexShader* GraphicsManager::mVertexShaderArray[VS_TYPE_COUNT];
 D3DGraphicsGeometryShader* GraphicsManager::mGeometryShaderArray[VS_TYPE_COUNT];
 D3DGraphicsPixelShader* GraphicsManager::mPixelShaderArray[PS_TYPE_COUNT];
 D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_STATE_TYPE_COUNT];
+D3DGraphicsRasterizerState* GraphicsManager::mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
 
 std::unique_ptr<CommonStates> GraphicsManager::mStates;
 std::unique_ptr<PrimitiveBatch<VertexPositionColor>> GraphicsManager::mBatch;
@@ -48,6 +49,11 @@ BOOL GraphicsManager::Initialize()
     // Blend State
     //////////////////////////////////////////
     InitBlendState();
+
+    //////////////////////////////////////////
+    // Raterizer State
+    //////////////////////////////////////////
+    InitRasterizerState();
 
     //////////////////////////////////////////
     // Debug Draw
@@ -253,6 +259,43 @@ void GraphicsManager::InitBlendState()
             blendDesc.RenderTarget[i].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL; // RGBA 모두 기록
         }
         mBlendStateArray[slot] = new D3DGraphicsBlendState(&blendDesc);
+    }
+}
+
+void GraphicsManager::InitRasterizerState()
+{
+    // None_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::NONE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID; // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_NONE; // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false; // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
+    }
+    // BackFace_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::BACKFACE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID; // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_BACK; // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false; // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
+    }
+    // FrontFace_Culling
+    {
+        UINT slot = static_cast<UINT>(eRasterizerStateType::FRONTFACE_CULLING);
+        D3D11_RASTERIZER_DESC rasterDesc;
+        ZeroMemory(&rasterDesc, sizeof(rasterDesc));
+        rasterDesc.FillMode = D3D11_FILL_SOLID;     // 폴리곤을 채우는 모드
+        rasterDesc.CullMode = D3D11_CULL_FRONT;     // 백페이스 컬링 비활성화
+        rasterDesc.FrontCounterClockwise = false;   // 시계 방향 폴리곤을 프론트로 간주
+        rasterDesc.DepthClipEnable = true;
+        mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
     }
 }
 

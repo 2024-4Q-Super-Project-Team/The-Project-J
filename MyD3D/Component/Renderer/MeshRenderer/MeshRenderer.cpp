@@ -189,6 +189,15 @@ eBlendModeType MeshRenderer::GetBlendMode()
     return eBlendModeType::OPAQUE_BLEND;
 }
 
+eRasterizerStateType MeshRenderer::GetCullingMode()
+{
+    if (mMateiral)
+    {
+        return mMateiral->mRasterMode;
+    }
+    return eRasterizerStateType::BACKFACE_CULLING;
+}
+
 json MeshRenderer::Serialize()
 {
     json ret;

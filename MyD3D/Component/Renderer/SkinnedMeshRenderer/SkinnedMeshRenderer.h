@@ -40,6 +40,7 @@ public:
     virtual MeshResource* GetMesh() override;
     virtual MaterialResource* GetMaterial() override;
     virtual eBlendModeType GetBlendMode() override;
+    virtual eRasterizerStateType GetCullingMode() override;
 private:
     void UpdateTable();
     void BoneMapping(Transform* currentBone);

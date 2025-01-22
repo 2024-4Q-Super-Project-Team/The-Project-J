@@ -33,7 +33,8 @@ public:
 public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 public:
-	virtual eBlendModeType GetBlendMode() { return eBlendModeType::TRANSPARENT_BLEND; }
+	virtual eBlendModeType GetBlendMode() override { return eBlendModeType::TRANSPARENT_BLEND; }
+	virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::BACKFACE_CULLING; }
 	virtual void DrawObject(Matrix& _view, Matrix& _projection);
 	virtual void DrawShadow(Light* _pLight);
 private:

@@ -7,6 +7,7 @@ Texture2DResource::Texture2DResource(ResourceHandle _handle)
 	: Resource(_handle)
 	, Texture(new D3DGraphicsImg(_handle.GetPath()))
 {
+	SetEID("Texture : " + Helper::ToString(_handle.GetKey()));
 }
 
 Texture2DResource::~Texture2DResource()
@@ -22,10 +23,20 @@ void Texture2DResource::EditorRendering(EditorViewerType _viewerType)
 	{
 	case EditorViewerType::DEFAULT:
 	{
-		Resource::EditorRendering(_viewerType);
-
+		std::string name = Helper::ToString(GetKey());
 		ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
-		ImGui::Image((ImTextureID)Texture->mSRV, ImVec2(150, 150));
+		auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+		if (ImGui::Selectable(GetEID(), false, flags))
+		{
+			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				EditorManager::GetInspectorViewer()->SetFocusObject(this);
+			}
+		}
+		EditorItemState state;
+		state.mResourcePtr = this;
+		state.mName = Helper::ToString(mHandle.GetKey());
+		EditorDragNDrop::SendDragAndDropData(GetEID(), state);
 		EDITOR_COLOR_POP(1);
 		break;
 	}

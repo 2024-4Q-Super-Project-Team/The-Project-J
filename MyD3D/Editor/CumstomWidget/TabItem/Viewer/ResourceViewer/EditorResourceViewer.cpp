@@ -46,6 +46,7 @@ void Editor::ResourceViewer::Render()
 				{
 					if (resource.second == nullptr)
 					{
+						//ImGui::Selectable(GetEID(), false, flags);
 						ImGui::Text("NULL Resource");
 					}
 					else
@@ -63,60 +64,60 @@ void Editor::ResourceViewer::Render()
 	// Add Resource
 	//////////////////////////////////////////////////////////////////////////////////////
 	{
-		ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
-		if (ImGui::Button(("Add Resource" + uid).c_str(), buttonSize))
-		{
-			ImGui::OpenPopup("Resource Register"); // 버튼 클릭 시 팝업 열기
-		}
-		if (ImGui::BeginPopup("Resource Register"))
-		{
-			eResourceType TypeData;
-			std::wstring MainKeyData;
-			std::wstring PathData;
-
-			static int TypeIndex = 0; // 선택된 리소스 타입 (인덱스)
-			// 리소스 타입 (콤보 박스)
-			ImGui::Text("ResourceType : ");
-			ImGui::Combo((uid + "RenderMode").c_str(), &TypeIndex, mResourceStringArray.data(), mResourceStringArray.size());
-			TypeData = (eResourceType)TypeIndex;
-
-			static char MainKeybuffer[128] = "";
-			ImGui::Text("MainKey : ");
-			if (ImGui::InputText("##Add_Resource_MainKey", MainKeybuffer, sizeof(MainKeybuffer)))
-			{
-			}
-			MainKeyData = Helper::ToWString(std::string(MainKeybuffer));
-
-			static char Pathbuffer[128] = "";
-			ImGui::Text("Path : ");
-			if (ImGui::InputText("##Add_Resource_Path", Pathbuffer, sizeof(Pathbuffer)))
-			{
-			}
-			PathData = Helper::ToWString(std::string(Pathbuffer));
-
-			ImGui::NewLine();
-			ImGui::Separator();
-			buttonSize = ImVec2(70, 20); // 버튼 크기 
-			const char* defaultSet = "";
-			if (ImGui::Button(("OK" + uid).c_str(), buttonSize))
-			{
-				ResourceHandle handle = { TypeData, MainKeyData, L"", PathData };
-				ResourceManager::RegisterResourceHandle(handle);
-				strcpy_s(MainKeybuffer, defaultSet);
-				strcpy_s(Pathbuffer, defaultSet);
-			}
-			ImGui::SameLine();
-			if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
-			{
-				strcpy_s(MainKeybuffer, defaultSet);
-				strcpy_s(Pathbuffer, defaultSet);
-				ImGui::CloseCurrentPopup();
-			}
-			// 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
-			if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}
+		//ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
+		//if (ImGui::Button(("Add Resource" + uid).c_str(), buttonSize))
+		//{
+		//	ImGui::OpenPopup("Resource Register"); // 버튼 클릭 시 팝업 열기
+		//}
+		//if (ImGui::BeginPopup("Resource Register"))
+		//{
+		//	eResourceType TypeData;
+		//	std::wstring MainKeyData;
+		//	std::wstring PathData;
+		//
+		//	static int TypeIndex = 0; // 선택된 리소스 타입 (인덱스)
+		//	// 리소스 타입 (콤보 박스)
+		//	ImGui::Text("ResourceType : ");
+		//	ImGui::Combo((uid + "RenderMode").c_str(), &TypeIndex, mResourceStringArray.data(), mResourceStringArray.size());
+		//	TypeData = (eResourceType)TypeIndex;
+		//
+		//	static char MainKeybuffer[128] = "";
+		//	ImGui::Text("MainKey : ");
+		//	if (ImGui::InputText("##Add_Resource_MainKey", MainKeybuffer, sizeof(MainKeybuffer)))
+		//	{
+		//	}
+		//	MainKeyData = Helper::ToWString(std::string(MainKeybuffer));
+		//
+		//	static char Pathbuffer[128] = "";
+		//	ImGui::Text("Path : ");
+		//	if (ImGui::InputText("##Add_Resource_Path", Pathbuffer, sizeof(Pathbuffer)))
+		//	{
+		//	}
+		//	PathData = Helper::ToWString(std::string(Pathbuffer));
+		//
+		//	ImGui::NewLine();
+		//	ImGui::Separator();
+		//	buttonSize = ImVec2(70, 20); // 버튼 크기 
+		//	const char* defaultSet = "";
+		//	if (ImGui::Button(("OK" + uid).c_str(), buttonSize))
+		//	{
+		//		ResourceHandle handle = { TypeData, MainKeyData, L"", PathData };
+		//		ResourceManager::RegisterResourceHandle(handle);
+		//		strcpy_s(MainKeybuffer, defaultSet);
+		//		strcpy_s(Pathbuffer, defaultSet);
+		//	}
+		//	ImGui::SameLine();
+		//	if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
+		//	{
+		//		strcpy_s(MainKeybuffer, defaultSet);
+		//		strcpy_s(Pathbuffer, defaultSet);
+		//		ImGui::CloseCurrentPopup();
+		//	}
+		//	// 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+		//	if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+		//		ImGui::CloseCurrentPopup();
+		//	}
+		//	ImGui::EndPopup();
+		//}
 	}
 }

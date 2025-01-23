@@ -7,6 +7,7 @@
 
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
+	SetEID("Rigidbody");
 	mType = eComponentType::RIGIDBODY;
 	mRigidActor = nullptr;
 }
@@ -125,23 +126,16 @@ void Rigidbody::Deserialize(json& j)
 void Rigidbody::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("Rigidbody" + uid).c_str(), EDITOR_FLAG_MAIN))
+
+	ImGui::Text("Mass : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 0.f))
 	{
-		ImGui::Separator();
-
-		ImGui::Text("Mass : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 0.f))
-		{
-			SetMass(mMass);
-		}
-
-		ImGui::Separator();
-
-		ImGui::Text("isDynamic : "); ImGui::SameLine;
-		ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
-
-		
-
-		ImGui::TreePop();
+		SetMass(mMass);
 	}
+
+	ImGui::Separator();
+
+	ImGui::Text("isDynamic : "); ImGui::SameLine;
+	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+
 }

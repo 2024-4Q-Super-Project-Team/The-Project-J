@@ -5,6 +5,7 @@
 
 BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 {
+	SetEID("BoxCollider");
 	mGeometry = PxBoxGeometry(PxVec3(mInitialSize.x, mInitialSize.y, mInitialSize.z));
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
@@ -112,6 +113,7 @@ void BoxCollider::Deserialize(json& j)
 
 void BoxCollider::DrawObject(Matrix& _view, Matrix& _projection)
 {
+	SetEID("BoxComponent");
 #ifdef _DEBUG
 	GraphicsManager::DebugDrawBegin();
 	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
@@ -127,40 +129,34 @@ void BoxCollider::SetExtents()
 
 void BoxCollider::EditorRendering(EditorViewerType _type)
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("BoxComponent" + uid).c_str(), EDITOR_FLAG_MAIN))
-    {
-        ImGui::Separator();
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-        ImGui::Text("Position : ");
-		if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
-		{
-			SetLocalPosition();
-			mOBB.Center = mPosition;
-		}
+	ImGui::Text("Position : ");
+	if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
+	{
+		SetLocalPosition();
+		mOBB.Center = mPosition;
+	}
 
-        ImGui::Text("Rotation : ");
-		if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f))
-		{
-			SetRotation();
-			mOBB.Orientation = mQuatRotation;
-		}
+	ImGui::Text("Rotation : ");
+	if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f))
+	{
+		SetRotation();
+		mOBB.Orientation = mQuatRotation;
+	}
 
-        ImGui::Text("Extents : ");
-		if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f))
-		{
-			SetExtents();
-			mOBB.Extents = mExtents;
-		}
+	ImGui::Text("Extents : ");
+	if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f))
+	{
+		SetExtents();
+		mOBB.Extents = mExtents;
+	}
 
-        ImGui::Separator();
+	ImGui::Separator();
 
-		ImGui::Text("isTrigger : "); ImGui::SameLine();
-		if (ImGui::Checkbox(("##isTrigger" + uid).c_str(), (bool*)&mIsTrigger))
-		{
-			SetIsTrigger();
-		}
-        
-        ImGui::TreePop();
-    }
+	ImGui::Text("isTrigger : "); ImGui::SameLine();
+	if (ImGui::Checkbox(("##isTrigger" + uid).c_str(), (bool*)&mIsTrigger))
+	{
+		SetIsTrigger();
+	}
 }

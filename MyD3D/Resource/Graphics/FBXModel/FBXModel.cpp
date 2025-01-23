@@ -11,6 +11,8 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
     , mRootNode(nullptr)
     , mModelPrefab(nullptr)
 {
+	SetEID("FBX Model : " + Helper::ToString(_handle.GetKey()));
+
     auto pModel = FBXImporter::ImportFBXModel_All(_handle);
     mMaterialArray   = std::move(pModel->MaterialArray);
     mMaterialTable   = std::move(pModel->MaterialTable);
@@ -39,16 +41,31 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
 	}
 
 	// Path 추가하기
-	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", L""};
+	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", _handle.GetPath()};
 	mModelPrefab = new PrefabResource(handle, this);
 	ResourceManager::PushResource(mModelPrefab);
 }
 
 FBXModelResource::~FBXModelResource()
 {
-    // 노드와 본은 이 모델말고 안쓰니까 삭제하자
+	for (auto& resource : mMaterialArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mMaterialArray.clear();
+	for (auto& resource : mMeshArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mMeshArray.clear();
+	for (auto& resource : mAnimationArray)
+	{
+		ResourceManager::Free_Resource(resource->GetHandle());
+	}
+	mAnimationArray.clear();
     SAFE_DELETE_ARRAY(mBoneArray);
     SAFE_DELETE_ARRAY(mModelNodeArray);
+	ResourceManager::Free_Resource(mModelPrefab->GetHandle());
 }
 
 void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
@@ -56,10 +73,33 @@ void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name = Helper::ToString(GetKey());
 
-	Resource::EditorRendering(_viewerType);
-
-	if (ImGui::TreeNodeEx(("FBXModel" + uid).c_str(), EDITOR_FLAG_RESOURCE))
+	switch (_viewerType)
 	{
+	case EditorViewerType::DEFAULT:
+	{
+		std::string name = Helper::ToString(GetKey());
+		ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+		auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+		if (ImGui::Selectable(GetEID(), false, flags))
+		{
+			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+				EditorManager::GetInspectorViewer()->SetFocusObject(this);
+			}
+		}
+		EditorItemState state;
+		state.mResourcePtr = this;
+		state.mName = Helper::ToString(mHandle.GetKey());
+		EditorDragNDrop::SendDragAndDropData(GetEID(), state);
+		EDITOR_COLOR_POP(1);
+		break;
+	}
+	case EditorViewerType::HIERARCHY:
+		break;
+	case EditorViewerType::INSPECTOR:
+	{
+		Resource::EditorRendering(_viewerType);
+
 		if (mMaterialArray.empty() == false)
 		{
 			if (ImGui::TreeNodeEx("Material", EDITOR_FLAG_RESOURCE))
@@ -104,8 +144,13 @@ void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 				ImGui::TreePop();
 			}
 		}
-		ImGui::TreePop();
+		break;
 	}
+	default:
+		break;
+	}
+	
+	
 }
 
 ModelNode::ModelNode(std::wstring_view _name, ModelNode* _pParent)

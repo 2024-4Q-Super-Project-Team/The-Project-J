@@ -13,6 +13,7 @@ Transform::Transform(Object* _owner)
     , rotation(Quaternion::Identity)
     , scale(Vector3::One)
 {
+    SetEID("Transform");
 }
 // 객체의 계층적 삭제는 소유자에게 책임을 전달한다.
 // 왜 Why? 소유자가 이미 삭제한 댕글링포인터에 접근할 가능성이 있기 때문에.
@@ -209,76 +210,72 @@ void Transform::Deserialize(json& j)
 void Transform::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("Transform" + uid).c_str(), EDITOR_FLAG_MAIN))
+    {
+        ImGui::Text("Position : ");
+        ImGui::DragFloat3((uid + "Position").c_str(), &position.x, 0.1f);
+    }
+    {
+        Vector3 Euler = GetEulerAngles();
+        ImGui::Text("Rotation : ");
+        bool isTrigger =
+            ImGui::DragFloat3((uid + "Rotation").c_str(), &Euler.x, 0.1f);
+        if (isTrigger)
+        {
+            SetEulerAnglesFromRadian(Euler);
+        }
+    }
+    {
+        ImGui::Text("Scale : ");
+        ImGui::DragFloat3((uid + "Scale").c_str(), &scale.x, 0.1f);
+    }
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+    if (ImGui::TreeNodeEx(("Matrix" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
     {
         {
-            ImGui::Text("Position : ");
-            ImGui::DragFloat3((uid + "Position").c_str(), &position.x, 0.1f);
-        }
-        {
-            Vector3 Euler = GetEulerAngles();
-            ImGui::Text("Rotation : ");
-            bool isTrigger =
-                ImGui::DragFloat3((uid + "Rotation").c_str(), &Euler.x, 0.1f);
-            if (isTrigger)
+            ImGui::Text("Local Matrix");
+            Matrix& m = mLocalMatrix;
             {
-                SetEulerAnglesFromRadian(Euler);
+                ImGui::Text("%.3f", m._11); ImGui::SameLine();
+                ImGui::Text("%.3f", m._12); ImGui::SameLine();
+                ImGui::Text("%.3f", m._13); ImGui::SameLine();
+                ImGui::Text("%.3f", m._14);
+                ImGui::Text("%.3f", m._21); ImGui::SameLine();
+                ImGui::Text("%.3f", m._22); ImGui::SameLine();
+                ImGui::Text("%.3f", m._23); ImGui::SameLine();
+                ImGui::Text("%.3f", m._24);
+                ImGui::Text("%.3f", m._31); ImGui::SameLine();
+                ImGui::Text("%.3f", m._32); ImGui::SameLine();
+                ImGui::Text("%.3f", m._33); ImGui::SameLine();
+                ImGui::Text("%.3f", m._34);
+                ImGui::Text("%.3f", m._41); ImGui::SameLine();
+                ImGui::Text("%.3f", m._42); ImGui::SameLine();
+                ImGui::Text("%.3f", m._43); ImGui::SameLine();
+                ImGui::Text("%.3f", m._44);
             }
         }
         {
-            ImGui::Text("Scale : ");
-            ImGui::DragFloat3((uid + "Scale").c_str(), &scale.x, 0.1f);
-        }
-        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-        if (ImGui::TreeNodeEx(("Matrix" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
-        {
+            ImGui::Text("Wolrd Matrix");
+            Matrix& m = mWorldMatrix;
             {
-                ImGui::Text("Local Matrix");
-                Matrix& m = mLocalMatrix;
-                {
-                    ImGui::Text("%.3f", m._11); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._12); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._13); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._14);
-                    ImGui::Text("%.3f", m._21); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._22); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._23); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._24);
-                    ImGui::Text("%.3f", m._31); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._32); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._33); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._34);
-                    ImGui::Text("%.3f", m._41); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._42); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._43); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._44);
-                }
+                ImGui::Text("%.3f", m._11); ImGui::SameLine();
+                ImGui::Text("%.3f", m._12); ImGui::SameLine();
+                ImGui::Text("%.3f", m._13); ImGui::SameLine();
+                ImGui::Text("%.3f", m._14);
+                ImGui::Text("%.3f", m._21); ImGui::SameLine();
+                ImGui::Text("%.3f", m._22); ImGui::SameLine();
+                ImGui::Text("%.3f", m._23); ImGui::SameLine();
+                ImGui::Text("%.3f", m._24);
+                ImGui::Text("%.3f", m._31); ImGui::SameLine();
+                ImGui::Text("%.3f", m._32); ImGui::SameLine();
+                ImGui::Text("%.3f", m._33); ImGui::SameLine();
+                ImGui::Text("%.3f", m._34);
+                ImGui::Text("%.3f", m._41); ImGui::SameLine();
+                ImGui::Text("%.3f", m._42); ImGui::SameLine();
+                ImGui::Text("%.3f", m._43); ImGui::SameLine();
+                ImGui::Text("%.3f", m._44);
             }
-            {
-                ImGui::Text("Wolrd Matrix");
-                Matrix& m = mWorldMatrix;
-                {
-                    ImGui::Text("%.3f", m._11); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._12); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._13); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._14);
-                    ImGui::Text("%.3f", m._21); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._22); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._23); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._24);
-                    ImGui::Text("%.3f", m._31); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._32); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._33); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._34);
-                    ImGui::Text("%.3f", m._41); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._42); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._43); ImGui::SameLine();
-                    ImGui::Text("%.3f", m._44);
-                }
-            }
-            ImGui::TreePop();
         }
-        EDITOR_COLOR_POP(1);
         ImGui::TreePop();
     }
+    EDITOR_COLOR_POP(1);
 }

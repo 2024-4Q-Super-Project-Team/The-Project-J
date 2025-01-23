@@ -31,7 +31,20 @@ void ResourceManager::Finalization()
 
 BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
 {
-    return 0;
+    ResourceTable& table = GetResourceTable(_handle.GetResourceType());
+    auto itr = table.find(_handle);
+    if (FIND_SUCCESS(itr, table))
+    {
+        if (table[_handle] == nullptr)
+        {
+            return FALSE;
+        }
+        delete table[_handle];
+        table[_handle] = nullptr;
+        Display::Console::Log("Free_Resource -  MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+        return TRUE;
+    }
+    return FALSE;
 }
 
 void ResourceManager::RegisterResourceHandle(ResourceHandle _handle)

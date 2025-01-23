@@ -27,6 +27,7 @@ Camera::Camera(Object* _owner, Vector2 _size)
     , mCameraViewport(nullptr)
     , mSkyBox(SkyBox::GetDefaultSkyBox())
 {
+    SetEID("Camera");
     mType = eComponentType::CAMERA;
     mLocalViewport = new D3DGraphicsViewport(0.0f, 0.0f, 0.0f, 0.0f);
 }
@@ -426,92 +427,88 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-    if (ImGui::TreeNodeEx(("Camera" + uid).c_str(), EDITOR_FLAG_MAIN))
+    const char* renderMode[] = { "Forward", "Deferred" };
+    int SelectIndex = (int)mCameraRenderType; // 현재 선택된 항목 (인덱스)
+
+    ImGui::Text("RenderMode : ");
+    if (ImGui::Combo((uid + "RenderMode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
     {
-        const char* renderMode[] = { "Forward", "Deferred"};
-        int SelectIndex = (int)mCameraRenderType; // 현재 선택된 항목 (인덱스)
+        mCameraRenderType = (CameraRenderType)SelectIndex;
+    }
 
-        ImGui::Text("RenderMode : ");
-        if (ImGui::Combo((uid + "RenderMode").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
-        {
-            mCameraRenderType = (CameraRenderType)SelectIndex;
-        }
+    ImGui::Separator();
 
+    UINT size[2] = {
+        mSizeScale.x * mLocalViewport->GetWidth(),
+        mSizeScale.y * mLocalViewport->GetHeight()
+    };
+    UINT offset[2] = {
+        mOffsetScale.x * mLocalViewport->GetWidth(),
+        mOffsetScale.y * mLocalViewport->GetHeight()
+    };
+    ImGui::Text(("SizeScale : (" + std::to_string(size[0]) + ", " + std::to_string(size[1]).c_str() + ")").c_str());
+    ImGui::SliderFloat2((uid + "SizeScale").c_str(), &mSizeScale.x, 0.0f, 1.0f);
+    ImGui::Text(("OffsetScale : (" + std::to_string(offset[0]) + ", " + std::to_string(offset[1]).c_str() + ")").c_str());
+    ImGui::SliderFloat2((uid + "OffsetScale").c_str(), &mOffsetScale.x, 0.0f, 1.0f);
+
+    ImGui::Separator();
+
+    ImGui::Text("fovAngle : ");
+    ImGui::SliderFloat((uid + "fovAngle").c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
+    ImGui::Text("Near : ");
+    ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
+    ImGui::Text("Far : ");
+    ImGui::SliderFloat((uid + "Far").c_str(), &mProjectionFar, 1.0f, 100000.0f);
+
+    if (mCameraRenderType == CameraRenderType::Deferred && mDeferredRenderTarget)
+    {
         ImGui::Separator();
 
-        UINT size[2] = { 
-            mSizeScale.x * mLocalViewport->GetWidth(),
-            mSizeScale.y * mLocalViewport->GetHeight() 
-        };
-		UINT offset[2] = { 
-            mOffsetScale.x * mLocalViewport->GetWidth(),
-            mOffsetScale.y * mLocalViewport->GetHeight()
-        };
-        ImGui::Text(("SizeScale : (" + std::to_string(size[0]) + ", " + std::to_string(size[1]).c_str() + ")").c_str());
-        ImGui::SliderFloat2((uid + "SizeScale").c_str(), &mSizeScale.x, 0.0f, 1.0f);
-        ImGui::Text(("OffsetScale : (" + std::to_string(offset[0]) + ", " + std::to_string(offset[1]).c_str() + ")").c_str());
-        ImGui::SliderFloat2((uid + "OffsetScale").c_str(), &mOffsetScale.x, 0.0f, 1.0f);
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Deferred View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            //ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");
+            auto CameraRTV = mDeferredRenderTarget->GetRTV();
+            auto CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+            ImGui::SameLine();
+            //ImGui::Text("Normal + Depth ( rgb(Normal), a(Depth) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(1);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
 
+            //ImGui::Text("Material ( r(Metalness), g(Roughness), b(Specular), a(AmbientOcclusion) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(2);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+            ImGui::SameLine();
+            //ImGui::Text("Emessive ( rgb(Emessive) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(3);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+
+            //ImGui::Text("WorldPosition ( rgb(WorldPosition) )");
+            CameraRTV = mDeferredRenderTarget->GetRTV(4);
+            CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
+
+            ImGui::TreePop();
+        }
+        EDITOR_COLOR_POP(1);
+    }
+    if (mMainRenderTarget)
+    {
         ImGui::Separator();
 
-        ImGui::Text("fovAngle : ");
-        ImGui::SliderFloat((uid + "fovAngle").c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
-        ImGui::Text("Near : ");
-        ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
-        ImGui::Text("Far : ");
-        ImGui::SliderFloat((uid + "Far").c_str(), &mProjectionFar, 1.0f, 100000.0f);
-
-        if (mCameraRenderType == CameraRenderType::Deferred && mDeferredRenderTarget)
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
         {
-            ImGui::Separator();
+            auto CameraRTV = mMainRenderTarget->GetRTV();
+            auto CameraSRV = mMainRenderTarget->GetSRV(CameraRTV);
+            ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
 
-            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-            if (ImGui::TreeNodeEx(("Deferred View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
-            {
-                //ImGui::Text("Albedo + Opacity ( rgb(Albedo), a(Opacity) )");
-                auto CameraRTV = mDeferredRenderTarget->GetRTV();
-                auto CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-                ImGui::SameLine();
-                //ImGui::Text("Normal + Depth ( rgb(Normal), a(Depth) )");
-                CameraRTV = mDeferredRenderTarget->GetRTV(1);
-                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-
-                //ImGui::Text("Material ( r(Metalness), g(Roughness), b(Specular), a(AmbientOcclusion) )");
-                CameraRTV = mDeferredRenderTarget->GetRTV(2);
-                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-                ImGui::SameLine();
-                //ImGui::Text("Emessive ( rgb(Emessive) )");
-                CameraRTV = mDeferredRenderTarget->GetRTV(3);
-                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-
-                //ImGui::Text("WorldPosition ( rgb(WorldPosition) )");
-                CameraRTV = mDeferredRenderTarget->GetRTV(4);
-                CameraSRV = mDeferredRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-               
-                ImGui::TreePop();
-            }
-            EDITOR_COLOR_POP(1);
+            ImGui::TreePop();
         }
-        if (mMainRenderTarget)
-        {
-            ImGui::Separator();
-
-            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-            if (ImGui::TreeNodeEx(("Output View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
-            {
-                auto CameraRTV = mMainRenderTarget->GetRTV();
-                auto CameraSRV = mMainRenderTarget->GetSRV(CameraRTV);
-                ImGui::Image((ImTextureID)CameraSRV->mSRV, ImVec2(150, 150));
-
-                ImGui::TreePop();
-            }
-            EDITOR_COLOR_POP(1);
-        }
-        ImGui::TreePop();
+        EDITOR_COLOR_POP(1);
     }
 }

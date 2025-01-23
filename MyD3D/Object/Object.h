@@ -66,10 +66,6 @@ public:
     std::vector<T*>& GetComponents();
     //가지고 있는 모든 컴포넌트를 반환합니다.
     std::vector<Component*> GetAllComponents();
-    // 해당 컴포넌트의 속성 값을 복사하여 추가합니다. 해당 컴포넌트의 복사 생성자가 정의되어 있어야 함.
-    template <class T>
-    T* CloneComponent(T* _pSrc);
-
 public:
   	json Serialize();
     void Deserialize(json& j);
@@ -129,11 +125,4 @@ std::vector<T*>& Object::GetComponents()
         }
     }
     return result;
-}
-
-template<class T>
-inline T* Object::CloneComponent(T* _pSrc)
-{
-
-    return nullptr;
 }

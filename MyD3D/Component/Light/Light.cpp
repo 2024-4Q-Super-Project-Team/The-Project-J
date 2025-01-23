@@ -15,6 +15,7 @@ Light::Light(Object* _owner)
 	, mShadowResolution(4096.0f)
     , mShadowDistance(4096.0f)
 {
+    SetEID("Light");
     mType = eComponentType::LIGHT;
     SetLightType(eLightType::Direction);
     mLightProp.Direction = Vector4(0, 0, 1, 0);
@@ -44,14 +45,12 @@ Light::Light(Object* _owner)
     ShadowSRV->SetBindStage(eShaderStage::PS);
 
     mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
-
-    SAFE_RELEASE(pTexture);
 }
 
 Light::~Light()
 {
-    SAFE_RELEASE(mShadowRenderTarget);
-    SAFE_RELEASE(mShadowViewport);
+    SAFE_DELETE(mShadowRenderTarget);
+    SAFE_DELETE(mShadowViewport);
 }
 
 void Light::Start()
@@ -234,62 +233,59 @@ void Light::Deserialize(json& j)
 void Light::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    if (ImGui::TreeNodeEx(("Light" + uid).c_str(), EDITOR_FLAG_MAIN))
+
+    const char* renderMode[] = { "Direction", "Point", "Spot" };
+    int SelectIndex = mLightProp.LightType; // 현재 선택된 항목 (인덱스)
+
+    ImGui::Text("Light Type : ");
+    if (ImGui::Combo((uid + "Light Type").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
     {
-        const char* renderMode[] = { "Direction", "Point", "Spot"};
-        int SelectIndex = mLightProp.LightType; // 현재 선택된 항목 (인덱스)
+        SetLightType((eLightType)SelectIndex);
+    }
 
-        ImGui::Text("Light Type : ");
-        if (ImGui::Combo((uid + "Light Type").c_str(), &SelectIndex, renderMode, IM_ARRAYSIZE(renderMode)))
-        {
-            SetLightType((eLightType)SelectIndex);
-        }
+    ImGui::Separator();
 
-        ImGui::Separator();
+    if (mLightProp.LightType == (UINT)eLightType::Direction)
+    {
+        ImGui::Text("Light Direction : ");
+        ImGui::DragFloat3((uid + "Direction").c_str(), &mLightProp.Direction.x, 0.05f, -1.0f, 1.0f);
+        mLightProp.Direction.Normalize();
+    }
 
-        if (mLightProp.LightType == (UINT)eLightType::Direction)
-        {
-            ImGui::Text("Light Direction : ");
-            ImGui::DragFloat3((uid + "Direction").c_str(), &mLightProp.Direction.x, 0.05f, -1.0f, 1.0f);
-            mLightProp.Direction.Normalize();
-        }
-        
-        if (mLightProp.LightType == (UINT)eLightType::Point)
-        {
-            ImGui::Text("Light Range : ");
-            ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRange, 0.05f, 1.0f, 500.0f);
-            ImGui::Text("Light CutOff : ");
-            ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
-        }
+    if (mLightProp.LightType == (UINT)eLightType::Point)
+    {
+        ImGui::Text("Light Range : ");
+        ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRange, 0.05f, 1.0f, 500.0f);
+        ImGui::Text("Light CutOff : ");
+        ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
+    }
 
-        ImGui::Text("Light Strengh : ");
-        ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
-        ImGui::Text("Light Radiance : ");
-        ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
+    ImGui::Text("Light Strengh : ");
+    ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
+    ImGui::Text("Light Radiance : ");
+    ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
 
-        ImGui::Separator();
+    ImGui::Separator();
 
-        ImGui::Checkbox(("Using Shadow" + uid).c_str(), (bool*)&mLightProp.UseShadow); 
-        ImGui::Text("Shadow Strengh : ");
-        ImGui::DragFloat((uid + "SStrengh").c_str(), &mLightProp.ShadowStrengh, 0.05f, 0.0f, 1.0f);
-        ImGui::Text("Shadow Resolution : ");
-        ImGui::DragFloat((uid + "SResolution").c_str(), &mShadowResolution, 1.0f, 1.0f, 10000.0f);
-        ImGui::Text("Shadow Distance : ");
-        ImGui::DragFloat((uid + "SDistance").c_str(), &mShadowDistance, 1.0f, 1.0f, 10000.0f);
+    ImGui::Checkbox(("Using Shadow" + uid).c_str(), (bool*)&mLightProp.UseShadow);
+    ImGui::Text("Shadow Strengh : ");
+    ImGui::DragFloat((uid + "SStrengh").c_str(), &mLightProp.ShadowStrengh, 0.05f, 0.0f, 1.0f);
+    ImGui::Text("Shadow Resolution : ");
+    ImGui::DragFloat((uid + "SResolution").c_str(), &mShadowResolution, 1.0f, 1.0f, 10000.0f);
+    ImGui::Text("Shadow Distance : ");
+    ImGui::DragFloat((uid + "SDistance").c_str(), &mShadowDistance, 1.0f, 1.0f, 10000.0f);
 
-        ImGui::Text("Light Near : ");
-        ImGui::DragFloat((uid + "LightNear").c_str(), &mLightNear, 1.0f, 1.0f, 100000.0f);
-        ImGui::Text("Light Far : ");
-        ImGui::DragFloat((uid + "LightFar").c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
+    ImGui::Text("Light Near : ");
+    ImGui::DragFloat((uid + "LightNear").c_str(), &mLightNear, 1.0f, 1.0f, 100000.0f);
+    ImGui::Text("Light Far : ");
+    ImGui::DragFloat((uid + "LightFar").c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
 
-        ImGui::Separator();
-        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-        if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
-        {
-            ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
-            ImGui::TreePop();
-        }
-        EDITOR_COLOR_POP(1);
+    ImGui::Separator();
+    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+    if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+    {
+        ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
         ImGui::TreePop();
     }
+    EDITOR_COLOR_POP(1);
 }

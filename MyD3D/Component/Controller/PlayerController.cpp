@@ -9,8 +9,8 @@ PxControllerManager* PlayerController::ControllerManager = nullptr;
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
+	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
-
 }
 
 PlayerController::~PlayerController()
@@ -131,55 +131,48 @@ void PlayerController::Deserialize(json& j)
 void PlayerController::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("PlayerController" + uid).c_str(), EDITOR_FLAG_MAIN))
+	ImGui::Separator();
+	ImGui::Text("Capsule Controller"); ImGui::SameLine;
+	ImGui::Separator();
+	ImGui::Text("Height : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "Height").c_str(), &mHeight, 0.1f, 0.f, 10.f))
 	{
-		ImGui::Separator();
-		ImGui::Text("Capsule Controller"); ImGui::SameLine;
-		ImGui::Separator();
-		ImGui::Text("Height : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "Height").c_str(), &mHeight, 0.1f, 0.f, 10.f))
-		{
-			mCapsuleController->setHeight(mHeight);
-		}
-		ImGui::Text("Radius : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "Radius").c_str(), &mRadius, 0.1f, 0.f, 10.f))
-		{
-			mCapsuleController->setRadius(mRadius);
-		}
-		ImGui::Text("ContactOffset : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 1.0f))
-		{
-			mCapsuleController->setContactOffset(mContactOffset);
-		}
-		ImGui::Text("SlopeLimit : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "SlopeLimit").c_str(), &mSlopeLimit, 0.005f, 0.01f, 1.0f))
-		{
-			mCapsuleController->setSlopeLimit(mSlopeLimit);
-		}
-		ImGui::Text("StepOffset : "); ImGui::SameLine;
-		if (ImGui::DragFloat((uid + "StepOffset").c_str(), &mStepOffset, 0.01f, 0.f, 10.f))
-		{
-			mCapsuleController->setStepOffset(mStepOffset);
-		}
-
-		ImGui::Separator();
-		ImGui::Text("Movement"); ImGui::SameLine;
-		ImGui::Separator();
-
-		ImGui::Text("MoveSpeed : "); ImGui::SameLine;
-		ImGui::DragFloat((uid + "MoveSpeed").c_str(), &mMoveSpeed, 0.1f, 0.f, 10.f);
-
-		ImGui::Text("JumpSpeed : "); ImGui::SameLine;
-		ImGui::DragFloat((uid + "JumpSpeed").c_str(), &mJumpSpeed, 0.1f, 0.f, 10.f);
-
-		ImGui::Text("Gravity : "); ImGui::SameLine;
-		ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
-
-
-		ImGui::Separator();
-
-
-		ImGui::TreePop();
+		mCapsuleController->setHeight(mHeight);
+	}
+	ImGui::Text("Radius : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "Radius").c_str(), &mRadius, 0.1f, 0.f, 10.f))
+	{
+		mCapsuleController->setRadius(mRadius);
+	}
+	ImGui::Text("ContactOffset : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 1.0f))
+	{
+		mCapsuleController->setContactOffset(mContactOffset);
+	}
+	ImGui::Text("SlopeLimit : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "SlopeLimit").c_str(), &mSlopeLimit, 0.005f, 0.01f, 1.0f))
+	{
+		mCapsuleController->setSlopeLimit(mSlopeLimit);
+	}
+	ImGui::Text("StepOffset : "); ImGui::SameLine;
+	if (ImGui::DragFloat((uid + "StepOffset").c_str(), &mStepOffset, 0.01f, 0.f, 10.f))
+	{
+		mCapsuleController->setStepOffset(mStepOffset);
 	}
 
+	ImGui::Separator();
+	ImGui::Text("Movement"); ImGui::SameLine;
+	ImGui::Separator();
+
+	ImGui::Text("MoveSpeed : "); ImGui::SameLine;
+	ImGui::DragFloat((uid + "MoveSpeed").c_str(), &mMoveSpeed, 0.1f, 0.f, 10.f);
+
+	ImGui::Text("JumpSpeed : "); ImGui::SameLine;
+	ImGui::DragFloat((uid + "JumpSpeed").c_str(), &mJumpSpeed, 0.1f, 0.f, 10.f);
+
+	ImGui::Text("Gravity : "); ImGui::SameLine;
+	ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
+
+
+	ImGui::Separator();
 }

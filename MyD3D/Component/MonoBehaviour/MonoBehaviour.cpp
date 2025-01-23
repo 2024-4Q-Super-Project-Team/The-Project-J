@@ -14,7 +14,6 @@ MonoBehaviour::MonoBehaviour(Object* _owner)
     : Component(_owner)
 {
     mType = eComponentType::SCRIPT;
-
 }
 
 Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _tag)

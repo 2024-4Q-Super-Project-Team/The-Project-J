@@ -14,7 +14,7 @@
 PrefabResource::PrefabResource(ResourceHandle _handle)
     : Resource(_handle)
 {
-    SetID("Prefab : " + Helper::ToString(_handle.GetKey()));
+    SetEID("Prefab : " + Helper::ToString(_handle.GetKey()));
     Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
 }
@@ -22,6 +22,7 @@ PrefabResource::PrefabResource(ResourceHandle _handle)
 PrefabResource::PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel)
     : Resource(_handle)
 {
+    SetEID("Prefab : " + Helper::ToString(_handle.GetKey()));
     Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
     ModelNode* rootNode = _pModel->mRootNode;
@@ -179,7 +180,7 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
     {
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(GetID(), false, flags))
+        if (ImGui::Selectable((GetEID() + uid).c_str(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -189,7 +190,7 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
         EditorItemState state;
         state.mResourcePtr = this;
         state.mName = name;
-        EditorDragNDrop::SendDragAndDropData(GetID(), state);
+        EditorDragNDrop::SendDragAndDropData(GetEID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }

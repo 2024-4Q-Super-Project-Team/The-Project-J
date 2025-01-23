@@ -15,7 +15,7 @@ MeshResource* MeshResource::PlainMesh;
 MeshResource::MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertices, std::vector<UINT>& _indices)
     : Resource(_handle)
 {
-    SetID("Mesh : " + Helper::ToString(_handle.GetKey()));
+    SetEID("Mesh : " + Helper::ToString(_handle.GetKey()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
 }
@@ -219,7 +219,7 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
     {
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(GetID(), false, flags))
+        if (ImGui::Selectable(GetEID(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -229,7 +229,7 @@ void MeshResource::EditorRendering(EditorViewerType _viewerType)
         EditorItemState state;
         state.mResourcePtr = this;
         state.mName = name;
-        EditorDragNDrop::SendDragAndDropData(GetID(), state);
+        EditorDragNDrop::SendDragAndDropData(GetEID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }

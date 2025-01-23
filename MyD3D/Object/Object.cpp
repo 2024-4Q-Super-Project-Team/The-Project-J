@@ -296,6 +296,8 @@ void Object::Deserialize(json& j)
 
 void Object::EditorRendering(EditorViewerType _viewerType)
 {
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string name = Helper::ToString(GetName());
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
@@ -304,8 +306,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
         break;
     case EditorViewerType::INSPECTOR:
     {
-        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-        std::string name = Helper::ToString(GetName());
         {   // 활성화 / 비활성화
             bool preState = mState == EntityState::Active ? true : false;
             bool isActive = preState;
@@ -327,43 +327,79 @@ void Object::EditorRendering(EditorViewerType _viewerType)
         {   // 컴포넌트 렌더링
             for (auto& componentVec : mComponentArray)
             {
-                for (auto& component : componentVec)
+                for (auto itr = componentVec.begin(); itr != componentVec.end();)
                 {
-                    component->EditorRendering(EditorViewerType::DEFAULT);
-                }
-            }
-        }
-        ImGui::Separator();
-        {   // 컴포넌트 추가
-            ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
-            if (ImGui::Button(("Add Component" + uid).c_str(), buttonSize))
-            {
-                ImGui::OpenPopup("Component List"); // 버튼 클릭 시 팝업 열기
-            }
-            if (ImGui::BeginPopup("Component List"))
-            {
-                const std::vector<std::string_view>& names = ComponentFactory::GetComopnentNames();
+                    Component* component = *itr;
+                    std::string compUID = "##" + std::to_string(reinterpret_cast<uintptr_t>(component));
+                    
+                    bool isTreeOpen = ImGui::TreeNodeEx((component->GetEID() + compUID).c_str(), EDITOR_FLAG_MAIN);
+                    
+                    // 버튼을 오른쪽 끝에 배치
+                    ImGui::SameLine(); // 같은 줄에 추가
+                    float cursorX = ImGui::GetCursorPosX();
+                    float contentWidth = ImGui::GetContentRegionAvail().x;
 
-                for (const std::string_view& name : names)
-                {
-                    if (ImGui::Selectable(name.data()))
+                    // 커서를 트리 노드 오른쪽 끝으로 이동
+                    ImGui::SetCursorPosX(cursorX + contentWidth - 20); // 50은 버튼 크기 + 여백
+                    if (ImGui::Button("*", ImVec2(20, 20))) // 설정 아이콘
                     {
-                        CREATE_EDITOR_COMPONENT(name, this);
-                        ImGui::CloseCurrentPopup();         // 팝업 닫기
+                        // 버튼 클릭 시 동작
+                        ImGui::OpenPopup("Component Config");
                     }
-                }
-                // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
-                if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                    ImGui::CloseCurrentPopup();
-                }
+                    // 팝업 메뉴
+                    if (ImGui::BeginPopup("Component Config"))
+                    {
+                        if (ImGui::Button("Remove Component", ImVec2(200,50)))
+                        {
+                            delete component;
+                            itr = componentVec.erase(itr);
+                            ImGui::EndPopup(); // 팝업 종료
+                            if (isTreeOpen)
+                                ImGui::TreePop();
+                            continue; // 다음 반복으로 진행
+                        }
+                        ImGui::EndPopup();
+                    }
 
-                ImGui::EndPopup();
+                    if (isTreeOpen)
+                    {
+                        component->EditorRendering(EditorViewerType::DEFAULT);
+                        ImGui::TreePop();
+                    }
+                   
+                    ++itr;
+                }
             }
+            ImGui::Separator();
+            {   // 컴포넌트 추가
+                ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
+                if (ImGui::Button(("Add Component" + uid).c_str(), buttonSize))
+                {
+                    ImGui::OpenPopup("Component List"); // 버튼 클릭 시 팝업 열기
+                }
+                if (ImGui::BeginPopup("Component List"))
+                {
+                    const std::vector<std::string_view>& names = ComponentFactory::GetComopnentNames();
+
+                    for (const std::string_view& name : names)
+                    {
+                        if (ImGui::Selectable(name.data()))
+                        {
+                            CREATE_EDITOR_COMPONENT(name, this);
+                            ImGui::CloseCurrentPopup();         // 팝업 닫기
+                        }
+                    }
+                    // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
+                    if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
+                        ImGui::CloseCurrentPopup();
+                    }
+
+                    ImGui::EndPopup();
+                }
+            }
+            break;
         }
-        // ImGimozzi 
-        
     }
-        break;
     default:
         break;
     }

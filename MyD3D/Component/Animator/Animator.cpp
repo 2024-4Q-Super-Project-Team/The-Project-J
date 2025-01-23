@@ -203,7 +203,7 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
             {
                 mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
                 name = Helper::ToString(mActiveAnimation->GetKey());
-                widgetID = mActiveAnimation->GetID();
+                widgetID = mActiveAnimation->GetEID();
             }
             else
             {

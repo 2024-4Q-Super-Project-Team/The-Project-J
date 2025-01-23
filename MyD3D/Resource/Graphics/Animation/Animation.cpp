@@ -6,7 +6,7 @@ AnimationResource::AnimationResource(ResourceHandle _handle)
     , mTotalFrame(0.0f)
     , mFramePerSecond(0.0f)
 {
-    SetID("Animation : " + Helper::ToString(_handle.GetKey()));
+    SetEID("Animation : " + Helper::ToString(_handle.GetKey()));
 }
 AnimationResource::~AnimationResource()
 {
@@ -42,7 +42,7 @@ void AnimationResource::EditorRendering(EditorViewerType _viewerType)
     {
         ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
         auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        if (ImGui::Selectable(GetID(), false, flags))
+        if (ImGui::Selectable(GetEID(), false, flags))
         {
             if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
             {
@@ -52,7 +52,7 @@ void AnimationResource::EditorRendering(EditorViewerType _viewerType)
         EditorItemState state;
         state.mResourcePtr = this;
         state.mName = name;
-        EditorDragNDrop::SendDragAndDropData(GetID(), state);
+        EditorDragNDrop::SendDragAndDropData(GetEID(), state);
         EDITOR_COLOR_POP(1);
         break;
     }

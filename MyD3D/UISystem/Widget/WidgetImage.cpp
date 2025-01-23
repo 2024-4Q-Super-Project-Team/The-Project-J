@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "WidgetImage.h"
+#include "Graphics/GraphicsManager.h"
 
 WidgetImage::WidgetImage()
 {
@@ -14,6 +15,7 @@ WidgetImage::~WidgetImage()
 void WidgetImage::Start()
 {
 	ResourceHandle handle;
+	handle.mResourceType = eResourceType::Texture2DResource;
 	handle.mMainKey = mID;
 
 	if (mFilepath.empty())
@@ -34,6 +36,8 @@ void WidgetImage::Update()
 void WidgetImage::Render()
 {
 	m_pSpriteBatch->Begin();
-	m_pSpriteBatch->Draw(mTexture->Texture->mSRV, mPosition);
+	m_pSpriteBatch->Draw(mTexture->Texture->mSRV, mPosition, nullptr, Color(1,1,1));
 	m_pSpriteBatch->End();
+
+	GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
 }

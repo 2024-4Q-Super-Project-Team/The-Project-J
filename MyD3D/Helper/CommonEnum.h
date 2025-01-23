@@ -88,6 +88,13 @@ enum class eRasterizerStateType
 };
 #define RASTERIZER_STATE_TYPE_COUNT static_cast<UINT>(eRasterizerStateType::SIZE)
 
+enum class eDepthStencilStateType
+{
+    DEFAULT,       
+    SIZE,
+};
+#define DEPTHSTENCIL_STATE_TYPE_COUNT static_cast<UINT>(eDepthStencilStateType::SIZE)
+
 enum class eBlendModeType
 {
     OPAQUE_BLEND,        // Opaqueºí·»µå

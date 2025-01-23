@@ -180,5 +180,43 @@ HRESULT D3DGraphicsRasterizerState::Reset()
         pDeviceContext->RSSetState(nullptr);
         return S_OK;
     }
-    return E_NOTIMPL;
+    return E_FAIL;
+}
+
+D3DGraphicsDepthStencilState::D3DGraphicsDepthStencilState(IN D3D11_DEPTH_STENCIL_DESC* _pDSDesc)
+{
+    Helper::HRT(D3DGraphicsDevice::GetDevice()->CreateDepthStencilState(_pDSDesc, &mDSState),
+        "Hresult Failed to Create D3DGraphicsDepthStencilState::CreateDepthStencilState.");
+}
+
+void D3DGraphicsDepthStencilState::Release()
+{
+    SAFE_RELEASE(mDSState);
+}
+
+HRESULT D3DGraphicsDepthStencilState::Create()
+{
+    return S_OK;
+}
+
+HRESULT D3DGraphicsDepthStencilState::Bind()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->OMSetDepthStencilState(mDSState, 1);
+        return S_OK;
+    }
+    return E_FAIL;
+}
+
+HRESULT D3DGraphicsDepthStencilState::Reset()
+{
+    ID3D11DeviceContext* pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        pDeviceContext->OMSetDepthStencilState(nullptr, 1);
+        return S_OK;
+    }
+    return E_FAIL;
 }

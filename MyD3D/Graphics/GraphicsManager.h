@@ -48,14 +48,14 @@ public:
     static std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> CreateEmessiveGBuffer(UINT _width, UINT _height);
     static std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> CreateWorldPosGBuffer(UINT _width, UINT _height);
 private:
-    static D3DGraphicsConstantBuffer*   mCBufferArray[CBUFFER_TYPE_COUNT];
-    static D3DGraphicsVertexShader*     mVertexShaderArray[VS_TYPE_COUNT];
-    static D3DGraphicsPixelShader*      mPixelShaderArray[PS_TYPE_COUNT];
-    static D3DGraphicsGeometryShader*   mGeometryShaderArray[GS_TYPE_COUNT];
-    static D3DGraphicsSamplerState*     mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
-    static D3DGraphicsBlendState*       mBlendStateArray[BLEND_STATE_TYPE_COUNT];
-    static D3DGraphicsRasterizerState*  mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
-    static D3DGraphicsDepthStencilState* mDepthStecilStateArray[DEPTHSTENCIL_STATE_TYPE_COUNT];
+    static D3DGraphicsConstantBuffer*       mCBufferArray[CBUFFER_TYPE_COUNT];
+    static D3DGraphicsVertexShader*         mVertexShaderArray[VS_TYPE_COUNT];
+    static D3DGraphicsPixelShader*          mPixelShaderArray[PS_TYPE_COUNT];
+    static D3DGraphicsGeometryShader*       mGeometryShaderArray[GS_TYPE_COUNT];
+    static D3DGraphicsSamplerState*         mSamplerStateArray[SAMPLER_STATE_TYPE_COUNT];
+    static D3DGraphicsBlendState*           mBlendStateArray[BLEND_STATE_TYPE_COUNT];
+    static D3DGraphicsRasterizerState*      mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
+    static D3DGraphicsDepthStencilState*    mDepthStecilStateArray[DEPTHSTENCIL_STATE_TYPE_COUNT];
 };
 
 namespace DirectX
@@ -82,7 +82,8 @@ public:
     inline static auto GetBatch() { return mBatch; }
     inline static auto GetEffect() { return mEffect; }
 public:
-    static void SetViewProjection(const Matrix& _view, const Matrix& _projection);
+    static void UpdateWorld(const Matrix& _world);
+    static void UpdateViewProjection(const Matrix& _view, const Matrix& _projection);
 public:
     static void BeginDraw();
     static void EndDraw();

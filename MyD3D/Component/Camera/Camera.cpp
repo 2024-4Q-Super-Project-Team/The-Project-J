@@ -300,7 +300,7 @@ void Camera::DrawDeferred()
 void Camera::DrawWire()
 {
     DebugRenderer::BeginDraw();
-    DebugRenderer::SetViewProjection(mViewMatrix, mProjectionMatrix);
+    DebugRenderer::UpdateViewProjection(mViewMatrix, mProjectionMatrix);
 
     for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND])
     {
@@ -356,7 +356,6 @@ void Camera::ExcuteDrawList()
                 default:
                     break;
                 }
-
                 ////////////////////////////////////////////////////
                 // SkyBox Draw
                 ////////////////////////////////////////////////////
@@ -371,7 +370,6 @@ void Camera::ExcuteDrawList()
 
             mLocalViewport->Bind();  // 카메라 출력될 영역 사이즈
             DrawSwapChain();
-
             ////////////////////////////////////////////////////
             // WireFrame Draw
             ////////////////////////////////////////////////////

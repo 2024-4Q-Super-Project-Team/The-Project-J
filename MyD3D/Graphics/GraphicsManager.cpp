@@ -322,25 +322,6 @@ void GraphicsManager::InitDepthStencilState()
     }
 }
 
-void GraphicsManager::InitDebugDraw()
-{
-    mStates = std::make_unique<CommonStates>(D3DGraphicsDevice::GetDevice());
-    mBatch = std::make_unique<PrimitiveBatch<VertexPositionColor>>(D3DGraphicsRenderer::GetDevicecontext());
-
-    mEffect = std::make_unique<BasicEffect>(D3DGraphicsDevice::GetDevice());
-    mEffect->SetVertexColorEnabled(true);
-
-    void const* shaderByteCode;
-    size_t byteCodeLength;
-
-    mEffect->GetVertexShaderBytecode(&shaderByteCode, &byteCodeLength);
-
-    D3DGraphicsDevice::GetDevice()->CreateInputLayout(
-        VertexPositionColor::InputElements, VertexPositionColor::InputElementCount,
-        shaderByteCode, byteCodeLength,
-        &mLayout);
-}
-
 std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultRenderTargetView(UINT _width, UINT _height)
 {
     D3D11_TEXTURE2D_DESC TexDesc = {};
@@ -656,14 +637,23 @@ void DebugRenderer::Finalization()
     SAFE_DELETE(mEffect)
 }
 
-void DebugRenderer::SetViewProjection(const Matrix& _view, const Matrix& _projection)
+void DebugRenderer::UpdateWorld(const Matrix& _world)
+{
+    mEffect->SetWorld(_world);
+    mEffect->Apply(D3DGraphicsRenderer::GetDevicecontext());
+}
+
+void DebugRenderer::UpdateViewProjection(const Matrix& _view, const Matrix& _projection)
 {
     mEffect->SetView(_view);
     mEffect->SetProjection(_projection);
+    // Apply를 호출하지 않으면 적용되지 않는다....
+    mEffect->Apply(D3DGraphicsRenderer::GetDevicecontext());
 }
 
 void DebugRenderer::BeginDraw()
 {
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
     D3DGraphicsRenderer::GetDevicecontext()->RSSetState(mStates->Wireframe());
     D3DGraphicsRenderer::GetDevicecontext()->OMSetBlendState(mStates->Opaque(), nullptr, 0xFFFFFFFF);
     D3DGraphicsRenderer::GetDevicecontext()->OMSetDepthStencilState(mStates->DepthNone(), 0);
@@ -678,6 +668,8 @@ void DebugRenderer::EndDraw()
     mBatch->End();
     GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
     GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
     // 상수버퍼도 디버그드로우가 덮어 씌우므로 다시 바인딩
     GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->Bind();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }

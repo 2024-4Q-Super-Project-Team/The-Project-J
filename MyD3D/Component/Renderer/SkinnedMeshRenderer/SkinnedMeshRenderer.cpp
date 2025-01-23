@@ -158,13 +158,9 @@ void SkinnedMeshRenderer::DrawWire()
 {
     if (mMesh)
     {
-        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-
         mMesh->Bind();
+        DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix());
         D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
-
-        // ¿ø»óº¹±Í
-        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     }
 }
 

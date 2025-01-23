@@ -120,7 +120,12 @@ void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 
 void SphereCollider::DrawWire()
 {
-	Debug::Draw(DebugRenderer::GetBatch(), mBS, mBaseColor);
+	// 원본 구체(로컬 좌표계 기준)
+	DirectX::BoundingSphere localSphere = mBS;
+	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
+	DirectX::BoundingSphere transformedSphere;
+	localSphere.Transform(transformedSphere, worldMatrix);
+	Debug::Draw(DebugRenderer::GetBatch(), transformedSphere, mBaseColor);
 }
 
 void SphereCollider::SetRadius()

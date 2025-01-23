@@ -120,7 +120,14 @@ void BoxCollider::Deserialize(json& j)
 
 void BoxCollider::DrawWire()
 {
-	Debug::Draw(DebugRenderer::GetBatch(), mOBB, mBaseColor);
+	// 원본 OBB(로컬 좌표계 기준)
+	DirectX::BoundingOrientedBox localOBB = mOBB;
+	// 월드 변환 행렬
+	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
+	// 월드 좌표계로 변환된 OBB
+	DirectX::BoundingOrientedBox transformedOBB;
+	localOBB.Transform(transformedOBB, worldMatrix);
+	Debug::Draw(DebugRenderer::GetBatch(), transformedOBB, mBaseColor);
 }
 
 void BoxCollider::SetExtents()

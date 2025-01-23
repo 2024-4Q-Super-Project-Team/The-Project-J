@@ -14,7 +14,7 @@ ViewportScene::ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow
 
 ViewportScene::~ViewportScene()
 {
-    SAFE_DELETE(mWorldManager)
+    SAFE_DELETE(mWorldManager);
 }
 
 void ViewportScene::Start()
@@ -84,7 +84,7 @@ void ViewportScene::Render()
         mWorldManager->Render();
 
         if (EditorManager::IsRenderView(this))
-            EditorManager::RenderEditorWindow();
+            EditorManager::EditorWindowRender();
 
         mSwapChain->EndDraw();
     }
@@ -123,12 +123,12 @@ void ViewportScene::EditorRender()
 
         if (EditorManager::IsFocusView(this))
         {
-            EditorManager::EditorRender();
+            EditorManager::EditorFocusRender();
         }
 
         if (EditorManager::IsRenderView(this))
         {
-            EditorManager::RenderEditorWindow();
+            EditorManager::EditorWindowRender();
         }
 
         mSwapChain->EndDraw();

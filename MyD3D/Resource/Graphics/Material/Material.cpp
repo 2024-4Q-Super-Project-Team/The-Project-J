@@ -61,11 +61,13 @@ void MaterialResource::Create()
 
 void MaterialResource::Bind()
 {
-    for (auto texMap : mMaterialMapTexture)
+    for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
     {
-        if (texMap)
+        if (mMaterialMapTexture[i])
         {
-            texMap->Texture->Bind();
+            mMaterialMapTexture[i]->Texture->SetBindStage(eShaderStage::PS);
+            mMaterialMapTexture[i]->Texture->SetBindSlot(i);
+            mMaterialMapTexture[i]->Texture->Bind();
         }
     }
 }

@@ -16,6 +16,6 @@ public:
 
 public:
     static ViewportScene* mMainScene;
-    static ViewportScene* mEditorScene;
+    static Display::IWindow* mGameWindow;
 };
 

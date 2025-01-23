@@ -159,6 +159,13 @@ void MeshRenderer::SetMaterial(ResourceHandle _handle)
         {
             mMateiral = MatResource;
             mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+            for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
+            {
+                if (MatResource->mMaterialMapTexture[i])
+                {
+                    mMatCBuffer.SetUsingMap((eMaterialMapType)i, true);
+                }
+            }
         }
     }
 }
@@ -206,6 +213,8 @@ eRasterizerStateType MeshRenderer::GetCullingMode()
 
 json MeshRenderer::Serialize()
 {
+    // JSON_TODO : MeshHandle, MaterialHandle을 저장하도록 바꿔야한다 
+    // 또한 Material_Cbuffer값도 저장해야한다.(Diffuse, Metallic등의 값이 있기 때문
     json ret;
     ret["id"] = GetId();
     ret["name"] = "MeshRenderer";

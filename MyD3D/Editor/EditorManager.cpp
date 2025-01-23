@@ -1,4 +1,4 @@
-#include "pch.h"
+ï»¿#include "pch.h"
 #include "EditorManager.h"
 #include "ViewportScene/ViewportManager.h"
 #include "Manager/GameManager.h"
@@ -20,7 +20,9 @@ Editor::MenuBar* EditorManager::mMainMenuBar = nullptr;
 Editor::WindowBar* EditorManager::mMainWindowBar_01 = nullptr;
 Editor::WindowBar* EditorManager::mMainWindowBar_02 = nullptr;
 
-ImGuiContext* EditorManager::mContext;
+ImGuiContext* EditorManager::mFocusContext;
+ImGuiContext* EditorManager::mEditorContext;
+
 
 void EditorManager::Initialize()
 {
@@ -31,28 +33,26 @@ void EditorManager::Initialize()
     InitMainMenuBar();
     InitMainWindow();
 
-    // ÄÁÅØ½ºÆ® È°¼ºÈ­
-    ImGui::SetCurrentContext(mContext);
+    // ì»¨í…ìŠ¤íŠ¸ í™œì„±í™”
+    ImGui::SetCurrentContext(mEditorContext);
 }
 
 void EditorManager::Finalization()
 {
 }
 
-void EditorManager::RenderEditorWindow()
+void EditorManager::EditorWindowRender()
 {
-    if (mFocusViewport && mEditorViewport)
+    if (mEditorViewport)
     {
-        // ÄÁÅØ½ºÆ® È°¼ºÈ­
-        ImGui::SetCurrentContext(mContext);
-        // IO »óÅÂ ¾÷µ¥ÀÌÆ®
-
-        // ImGui ÇÁ·¹ÀÓ ½ÃÀÛ
+        ImGui::SetCurrentContext(mEditorContext);
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        // À§Á¬ ·»´õ¸µ
+        UpdateIO(mEditorContext);
+
+        // ìœ„ì ¯ ë Œë”ë§
         for (auto& widget : mWidgetArray)
         {
             widget->Render();
@@ -71,9 +71,78 @@ void EditorManager::EditorUpdate()
     mEditorCamera.EditorUpdate();
 }
 
-void EditorManager::EditorRender()
+void EditorManager::EditorCameraRender()
 {
     mEditorCamera.EditorRender();
+}
+
+void EditorManager::EditorFocusRender()
+{
+    if (mFocusViewport)
+    {
+        EditorManager::EditorCameraRender();
+        ImGui::SetCurrentContext(mFocusContext);
+        ImGui_ImplDX11_NewFrame();
+        ImGui_ImplWin32_NewFrame();
+        ImGui::NewFrame();
+        ImGuizmo::BeginFrame();
+
+        UpdateIO(mFocusContext);
+
+        mInspectorViewer->RenderGizmo();
+
+        ImGui::Render();
+        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+}
+
+void EditorManager::UpdateIO(ImGuiContext* _context)
+{
+    ImGui::SetCurrentContext(_context);
+    ImGuiIO& io = ImGui::GetIO();
+    // ê¸°ë³¸ ì…ë ¥ ë¹„í™œì„±í™”
+    io.ConfigFlags &= ~ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags &= ~ImGuiConfigFlags_NavEnableSetMousePos;
+    io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+    // í˜„ì¬ í¬ì»¤ìŠ¤ëœ ìœˆë„ìš° í™•ì¸
+    HWND focusHwnd = GetFocus();
+    // ëŒ€ìƒ ì»¨í…ìŠ¤íŠ¸ê°€ ê²Œì„ì”¬ì˜ ì»¨í…ìŠ¤íŠ¸ì¼ ë•Œ
+    if (_context == mFocusContext)
+    {
+        // ê²Œì„ ì”¬ì˜ ìœˆë„ìš°ê°€ í¬ì»¤ì‹±ì¸ì§€ í™•ì¸
+        if (focusHwnd == mFocusViewport->GetIWindow()->GetHandle())
+        { // ë§ë‹¤ë©´ ioë¥¼ í™œì„±í™”ì‹œí‚¨ë‹¤.
+            POINT mousePos;
+            GetCursorPos(&mousePos);
+            ScreenToClient(mFocusViewport->GetIWindow()->GetHandle(), &mousePos); // í˜„ì¬ ìœˆë„ìš°ì˜ í´ë¼ì´ì–¸íŠ¸ ì¢Œí‘œë¡œ ë³€í™˜
+            io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+            io.MouseDown[0] = Input::IsMouseHold(Mouse::LEFT);
+            io.MouseDown[1] = Input::IsMouseHold(Mouse::RIGHT);
+            io.MouseDown[2] = Input::IsMouseHold(Mouse::MID);
+
+            io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse; // ì…ë ¥ í™œì„±í™”
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+        }
+    }
+    // ì•„ë‹ˆë¼ë©´ ì—ë””í„° ìœˆë„ìš°
+    else
+    {
+        // ì—ë””í„°ì˜ ìœˆë„ìš°ê°€ í¬ì»¤ì‹±ì¸ì§€ í™•ì¸
+        if (focusHwnd == mEditorViewport->GetIWindow()->GetHandle())
+        {// ë§ë‹¤ë©´ ioë¥¼ í™œì„±í™”ì‹œí‚¨ë‹¤.
+            POINT mousePos;
+            GetCursorPos(&mousePos);
+            ScreenToClient(mEditorViewport->GetIWindow()->GetHandle(), &mousePos); // í˜„ì¬ ìœˆë„ìš°ì˜ í´ë¼ì´ì–¸íŠ¸ ì¢Œí‘œë¡œ ë³€í™˜
+            io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+            io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+            io.ConfigFlags &= ~ImGuiConfigFlags_NoMouse;
+        }
+    }
 }
 
 BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
@@ -104,7 +173,8 @@ BOOL EditorManager::ShowEditorWindow(ViewportScene* _targetViewport)
 
         EditorReposition();
 
-        InitImGui();
+        InitEditorImGui();
+        InitFocusImGui();
 
         return TRUE;
     }
@@ -121,12 +191,20 @@ BOOL EditorManager::IsFocusView(ViewportScene* _targetViewport)
     return mFocusViewport == _targetViewport;
 }
 
-void EditorManager::InitImGui()
+void EditorManager::InitImGui(ImGuiContext* _context, HWND _hwnd)
 {
-    // ImGui ÄÁÅØ½ºÆ® »ı¼º
+    ImGui::SetCurrentContext(_context);
+    ImGuiIO& io = ImGui::GetIO();
+    ImGui_ImplWin32_Init(_hwnd);
+    ImGui_ImplDX11_Init(D3DGraphicsDevice::GetDevice(), D3DGraphicsRenderer::GetDevicecontext());
+}
+
+void EditorManager::InitEditorImGui()
+{
+    // ImGui ï¿½ï¿½ï¿½Ø½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
     IMGUI_CHECKVERSION();
-    mContext = ImGui::CreateContext();
-    ImGui::SetCurrentContext(mContext);
+    mEditorContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(mEditorContext);
     ImGui::StyleColorsDark();
     ImGuiIO& io = ImGui::GetIO();
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
@@ -134,14 +212,30 @@ void EditorManager::InitImGui()
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
     io.IniFilename = nullptr;
     io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesKorean());
-    // ImGui ÃÊ±âÈ­
-    ImGui_ImplWin32_Init(mEditorViewport->GetIWindow()->GetHandle());
+    InitImGui(mEditorContext, mEditorViewport->GetIWindow()->GetHandle());
+}
+
+void EditorManager::InitFocusImGui()
+{
+    // ImGui ì»¨í…ìŠ¤íŠ¸ ìƒì„±
+    IMGUI_CHECKVERSION();
+    mFocusContext = ImGui::CreateContext();
+    ImGui::SetCurrentContext(mFocusContext);
+    ImGui::StyleColorsDark();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableSetMousePos;
+    io.IniFilename = nullptr;
+    io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\malgun.ttf", 15.0f, NULL, io.Fonts->GetGlyphRangesKorean());
+    // ImGui ì´ˆê¸°í™”
+    ImGui_ImplWin32_Init(mFocusViewport->GetIWindow()->GetHandle());
     ImGui_ImplDX11_Init(D3DGraphicsDevice::GetDevice(), D3DGraphicsRenderer::GetDevicecontext());
 }
 
 void EditorManager::InitMainMenuBar()
 {
-    // ¸Ş´º¹Ù ¹× ¸Ş´º, ¸Ş´º¾ÆÀÌÅÛ »ı¼º
+    // ë©”ë‰´ë°” ë° ë©”ë‰´, ë©”ë‰´ì•„ì´í…œ ìƒì„±
     mMainMenuBar = new Editor::MenuBar();
     mWidgetArray.push_back(mMainMenuBar);
 
@@ -183,7 +277,7 @@ void EditorManager::InitMainWindow()
         mMainWindowBar_01 = new Editor::WindowBar("Editor_Bar_01", Vector2(EDITOR_WIDTH / 2, 0));
         mMainWindowBar_01->AddFlags(ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
         {
-            // ÅÇ¹Ù »ı¼º, ÀÎ½ºÆåÅÍ
+            // íƒ­ë°” ìƒì„±, ì¸ìŠ¤í™í„°
             Editor::TabBar* pTabBar = new Editor::TabBar("TabBar_01");
             mMainWindowBar_01->AddWidget(pTabBar);
 
@@ -196,7 +290,7 @@ void EditorManager::InitMainWindow()
         mMainWindowBar_02 = new Editor::WindowBar("Editor_Bar_02", Vector2(EDITOR_WIDTH / 2, 0), Vector2(EDITOR_WIDTH / 2, 0));
         mMainWindowBar_02->AddFlags(ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar);
         {
-            // ÅÇ¹Ù »ı¼º, ÇÏÀÌ¶óÅ°
+            // íƒ­ë°” ìƒì„±, í•˜ì´ë¼í‚¤
             Editor::TabBar* pTabBar = new Editor::TabBar("TabBar_02");
             mMainWindowBar_02->AddWidget(pTabBar);
 
@@ -210,7 +304,7 @@ void EditorManager::InitMainWindow()
 }
 void EditorManager::CreateDebuggerTab(Editor::TabBar* _pSrcTabBar)
 {
-    {   // ÀÎ½ºÆåÅÍ ÅÇ
+    {   // ì¸ìŠ¤í™í„° íƒ­
         mDebbugerTab = new Editor::EditorDebugger();
         Editor::TabNode* pDebuggerTab = new Editor::TabNode("Debug");
         pDebuggerTab->AddWidget(mDebbugerTab);
@@ -220,7 +314,7 @@ void EditorManager::CreateDebuggerTab(Editor::TabBar* _pSrcTabBar)
 
 void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
 {
-    {   // ÀÎ½ºÆåÅÍ ÅÇ
+    {   // ì¸ìŠ¤í™í„° íƒ­
         mInspectorViewer = new Editor::InspectorViewer();
         Editor::TabNode* pInspectorBar = new Editor::TabNode("Inspector");
         pInspectorBar->AddWidget(mInspectorViewer);
@@ -230,7 +324,7 @@ void EditorManager::CreateInspector(Editor::TabBar* _pSrcTabBar)
 
 void EditorManager::CreateHierarchy(Editor::TabBar* _pSrcTabBar)
 {
-    {   // ÇÏÀÌ¶óÅ° ÅÇ
+    {   // í•˜ì´ë¼í‚¤ íƒ­
         mHierarchyViewer = new Editor::HierarchyViewer();
         Editor::TabNode* pInspectorBar = new Editor::TabNode("Hierarchy");
         pInspectorBar->AddWidget(mHierarchyViewer);
@@ -240,23 +334,11 @@ void EditorManager::CreateHierarchy(Editor::TabBar* _pSrcTabBar)
 
 void EditorManager::CreateResourceViewer(Editor::TabBar* _pSrcTabBar)
 {
-    {   // ¸®¼Ò½º ºä¾î ÅÇ
+    {   // ë¦¬ì†ŒìŠ¤ ë·°ì–´ íƒ­
         mResourceViewer = new Editor::ResourceViewer();
         Editor::TabNode* pBar = new Editor::TabNode("Resource Viewer");
         pBar->AddWidget(mResourceViewer);
         _pSrcTabBar->AddTab(pBar);
-    }
-}
-
-void EditorManager::UpdateIO()
-{
-    HWND editorHwnd = mEditorViewport->GetIWindow()->GetHandle();
-    ImGuiIO& io = ImGui::GetIO();
-    {   // ¿¡µğÅÍ À©µµ¿ìÀÇ ¸¶¿ì½º ÁÂÇ¥·Î º¯È¯
-        POINT mousePos;
-        GetCursorPos(&mousePos);
-        ScreenToClient(editorHwnd, &mousePos);
-        io.MousePos = ImVec2(static_cast<float>(mousePos.x), static_cast<float>(mousePos.y));
     }
 }
 
@@ -275,20 +357,20 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
         break;
     case WM_DROPFILES:  // File Drag&Drop
     {
-        // µå·ÓµÈ ÆÄÀÏµé¿¡ ´ëÇÑ Ã³¸®
+        // ë“œë¡­ëœ íŒŒì¼ë“¤ì— ëŒ€í•œ ì²˜ë¦¬
         HDROP hDrop = (HDROP)_wParam;
 
-        // µå·ÓµÈ ÆÄÀÏÀÇ °³¼ö
+        // ë“œë¡­ëœ íŒŒì¼ì˜ ê°œìˆ˜
         UINT numFiles = DragQueryFile(hDrop, 0xFFFFFFFF, NULL, 0);
 
         std::vector<std::wstring> pathArr;
         pathArr.reserve(numFiles);
 
         for (size_t i = 0; i < numFiles; ++i) {
-            // °¢ ÆÄÀÏÀÇ Àı´ë°æ·Î¸¦ ¾òÀ½
+            // ê° íŒŒì¼ì˜ ì ˆëŒ€ê²½ë¡œë¥¼ ì–»ìŒ
             wchar_t absPath[MAX_PATH];
             DragQueryFile(hDrop, i, absPath, MAX_PATH);
-            //Àı´ë °æ·Î¸¦ »ó´ë °æ·Î·Î º¯È¯
+            //ì ˆëŒ€ ê²½ë¡œë¥¼ ìƒëŒ€ ê²½ë¡œë¡œ ë³€í™˜
             std::wstring relPath;
             if (S_OK == Helper::ABSPath_To_RelativePath(absPath, relPath))
             {
@@ -298,7 +380,7 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
         }
         ProcessDragFile(pathArr);
 
-        // ¸Ş¸ğ¸® ÇØÁ¦
+        // ë©”ëª¨ë¦¬ í•´ì œ
         DragFinish(hDrop);
         break;
     }
@@ -325,21 +407,21 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
 
 void EditorManager::ShowPopUp()
 {
-    // ÀÌÀü À§Á¬À» È£¹ö¸µÁßÀÏ ¶§ && ¸¶¿ì½º ÁÂÅ¬¸¯À» ÇßÀ» ¶§
+    // ì´ì „ ìœ„ì ¯ì„ í˜¸ë²„ë§ì¤‘ì¼ ë•Œ && ë§ˆìš°ìŠ¤ ì¢Œí´ë¦­ì„ í–ˆì„ ë•Œ
     if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Left)) {
         ImGui::SetNextWindowPos(ImGui::GetMousePos());
-        ImGui::OpenPopup("WidgetClickMenu"); // ÀÌ¸§À» ÅëÀÏ½ÃÅ´
+        ImGui::OpenPopup("WidgetClickMenu"); // ì´ë¦„ì„ í†µì¼ì‹œí‚´
     }
-    // ÆË¾÷ ¸Ş´º Á¤ÀÇ
-    if (ImGui::BeginPopup("WidgetClickMenu")) { // OpenPopupÀÇ ÀÌ¸§°ú ÀÏÄ¡ÇØ¾ß ÇÔ
+    // íŒì—… ë©”ë‰´ ì •ì˜
+    if (ImGui::BeginPopup("WidgetClickMenu")) { // OpenPopupì˜ ì´ë¦„ê³¼ ì¼ì¹˜í•´ì•¼ í•¨
         if (ImGui::MenuItem("Option 1")) {
-            // Option 1 ¼±ÅÃ ½Ã µ¿ÀÛ
+            // Option 1 ì„ íƒ ì‹œ ë™ì‘
         }
         if (ImGui::MenuItem("Option 2")) {
-            // Option 2 ¼±ÅÃ ½Ã µ¿ÀÛ
+            // Option 2 ì„ íƒ ì‹œ ë™ì‘
         }
         if (ImGui::MenuItem("Option 3")) {
-            // Option 3 ¼±ÅÃ ½Ã µ¿ÀÛ
+            // Option 3 ì„ íƒ ì‹œ ë™ì‘
         }
         ImGui::EndPopup();
     }
@@ -348,10 +430,10 @@ void EditorManager::ShowPopUp()
 
 BOOL EditorManager::EditorReposition()
 {
-    // ¿¡µğÅÍ À©µµ¿ì À§Ä¡ Á¶Á¤
+    // ì—ë””í„° ìœˆë„ìš° ìœ„ì¹˜ ì¡°ì •
     if (mFocusViewport && mEditorViewport)
     {
-        // ´ë»ó À©µµ¿ìÀÇ À§Ä¡ ¹× »çÀÌÁî¸¦ °¡Á®¿Í¼­ ¿¡µğÅÍ À©µµ¿ì¸¦ ¸®Æ÷Áö¼ÇÇÑ´Ù.
+        // ëŒ€ìƒ ìœˆë„ìš°ì˜ ìœ„ì¹˜ ë° ì‚¬ì´ì¦ˆë¥¼ ê°€ì ¸ì™€ì„œ ì—ë””í„° ìœˆë„ìš°ë¥¼ ë¦¬í¬ì§€ì…˜í•œë‹¤.
         POINT size = mFocusViewport->GetIWindow()->GetSize();
         POINT pos = mFocusViewport->GetIWindow()->GetPosition();
         POINT resPos = { pos.x + size.x + EDITOR_OFFSET , pos.y };

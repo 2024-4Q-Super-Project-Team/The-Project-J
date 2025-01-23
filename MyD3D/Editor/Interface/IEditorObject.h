@@ -5,6 +5,7 @@ enum class EditorViewerType
     DEFAULT,
     HIERARCHY,
     INSPECTOR,
+    GUIZMO,
 };
 
 enum class eEditorRenderResult

@@ -54,7 +54,7 @@ void ViewportManager::EditorRun()
 void ViewportManager::Finalization()
 {
     SAFE_DELETE_ARRAY(mViewportScenes);
-    mDisplayDevice->Release();
+    SAFE_RELEASE(mDisplayDevice);
 }
 
 void ViewportManager::Start()

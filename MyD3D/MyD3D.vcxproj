@@ -241,6 +241,12 @@
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\Collider\Rigidbody.h" />
     <ClInclude Include="Component\Collider\SphereCollider.h" />
+    <ClInclude Include="ThirdParty\imguizmo\GraphEditor.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImCurveEdit.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGradient.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGuizmo.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImSequencer.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImZoomSlider.h" />
     <ClInclude Include="UISystem\UISystem.h" />
     <ClInclude Include="UISystem\Widget\Widget.h" />
     <ClInclude Include="UISystem\Widget\WidgetButton.h" />
@@ -358,6 +364,11 @@
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\Collider\Rigidbody.cpp" />
     <ClCompile Include="Component\Collider\SphereCollider.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\GraphEditor.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGradient.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGuizmo.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImSequencer.cpp" />
     <ClCompile Include="UISystem\UISystem.cpp" />
     <ClCompile Include="UISystem\Widget\Widget.cpp" />
     <ClCompile Include="UISystem\Widget\WidgetButton.cpp" />

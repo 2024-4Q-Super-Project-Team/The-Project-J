@@ -32,10 +32,12 @@ class EditorManager
 public:
     static void Initialize();
     static void Finalization();
-    static void RenderEditorWindow();
+    static void EditorWindowRender();
+    static void FocusWindowRender();
 public:
     static void EditorUpdate();
-    static void EditorRender();
+    static void EditorCameraRender();
+    static void EditorFocusRender();
 public:
     static BOOL ShowEditorWindow(ViewportScene* _targetViewport);
     static BOOL IsRenderView(ViewportScene* _targetViewport);
@@ -43,7 +45,9 @@ public:
     static BOOL EditorReposition();
     static BOOL ProcessDragFile(std::vector<std::wstring>& _pathArr);
 private:
-    static void InitImGui();
+    static void InitImGui(ImGuiContext* _context, HWND _hwnd);
+    static void InitEditorImGui();
+    static void InitFocusImGui();
     static void InitMainMenuBar();
     static void InitMainWindow();
     static void /* */CreateDebuggerTab(Editor::TabBar* _pSrcTabBar);
@@ -51,7 +55,7 @@ private:
     static void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 public:
-    void UpdateIO();
+    static void UpdateIO(ImGuiContext* _context);
 public:
     static inline auto GetFocusViewport() { return mFocusViewport; }
     static inline auto GetEditorViewport() { return mEditorViewport; }
@@ -80,7 +84,9 @@ public:
     /////////////////////////////////////////////////////
     //  ImGui Object
     /////////////////////////////////////////////////////
-    static ImGuiContext* mContext;
+    static ImGuiContext* mFocusContext;
+    static ImGuiContext* mEditorContext;
+
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 

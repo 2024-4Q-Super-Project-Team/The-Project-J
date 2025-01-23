@@ -12,11 +12,6 @@ namespace Display
     }
     void DisplayDevice::Release()
     {
-        for (auto [hwnd, display] : mDisplays)
-        {
-            delete display;
-        }
-        mDisplays.clear();
         delete this;
     }
     HRESULT DisplayDevice::CreateWindowDisplay(WindowDesc* _pWndDesc, IWindow** _ppIWindow)

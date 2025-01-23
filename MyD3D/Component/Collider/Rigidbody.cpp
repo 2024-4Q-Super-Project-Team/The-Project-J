@@ -95,6 +95,10 @@ void Rigidbody::PreRender()
 			updatedRotation.y = gameObject->transform->rotation.y;
 		if (mFreezePosition[2])
 			updatedRotation.z = gameObject->transform->rotation.z;
+
+		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.z, updatedRotation.x );
+		XMStoreFloat4(&q, quat);
+		updatedQuaternion = PxQuat(q.x, q.y, q.z, q.w);
 	}
 
 	PxTransform finalTransform(updatedPosition, updatedQuaternion);

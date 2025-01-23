@@ -203,14 +203,14 @@ void Transform::Deserialize(json& j)
     unsigned int rootId = j["root parent"].get<unsigned int>();
     if (rootId == NULLID)
         mRootParent = nullptr;
-    else;
-        // JSON_TODO: id로 Transform 찾아서 넣는다. 
+    else
+        mRootParent = static_cast<Transform*>(Engine::SaveBase::mMap[rootId]);
 
     unsigned int parentId = j["parent"].get<unsigned int>();
     if (parentId == NULLID)
         mRootParent = nullptr;
-    else;
-        // JSON_TODO: id로 Transform 찾아서 넣는다. 
+    else
+        mRootParent = static_cast<Transform*>(Engine::SaveBase::mMap[parentId]);
 }
 
 void Transform::EditorRendering(EditorViewerType _viewerType)

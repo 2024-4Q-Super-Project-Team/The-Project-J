@@ -36,7 +36,7 @@ private:
 template<class T>
 T* UISystem::AddWidget(std::wstring _id)
 {
-    static_assrt(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
+    static_assert(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
     T* widget = new T();
     widget->SetID(_id);
     widget->SetOwner(this);

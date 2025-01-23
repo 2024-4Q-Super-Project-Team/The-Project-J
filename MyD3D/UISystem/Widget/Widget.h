@@ -50,6 +50,7 @@ public:
 	virtual void PostRender();
 public:
 	void SetID(std::wstring _id)					{ mID = _id; };
+	void SetFilepath(std::wstring _path)			{ mFilepath = _path; }
 	void SetOwner(UISystem* _owner)					{ m_pUISystem = _owner; };
 	void SetAssetType(eAssetType _type)				{ mAssetType = _type; };
 	void SetPosition(Vector2 _position)				{ mPosition = _position; };
@@ -67,17 +68,17 @@ public:
 	UISystem* m_pUISystem = nullptr;
 	std::wstring mID = L"";
 protected:
-	// 위젯 타입
+	std::wstring mFilepath = L"";
+	Texture2DResource* mTexture = nullptr;
+
 	eAssetType mAssetType = eAssetType::NON;
-	// 위젯 포지션
 	Vector2 mPosition{};
-	// 위젯 각도
 	float mRotate = 0.f;
+
 	// 위젯 정렬 타입
 	eAlignmentType mAlignment = eAlignmentType::CENTER;
 	// 외곽선 정보
 	OutlineInfo mOutlineInfo{};
-
 	// 레이아웃 정보 (크기)
 	// 포지션을 같이 넣을까?
 	Layout mLayout{};

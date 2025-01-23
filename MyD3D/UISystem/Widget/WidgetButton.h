@@ -8,7 +8,9 @@ public:
 	WidgetButton();
 	virtual ~WidgetButton(); // 버츄얼로 돌려야되는데 왜 안됨?
 
+
 public:
+	virtual void Start();
 	virtual void Update()	override;
 	virtual void Render()	override;
 public:
@@ -17,4 +19,5 @@ public:
 	bool OnHold() { return bIsEnter && Input::IsMouseHold(Mouse::LEFT); }
 private:
 	bool bIsEnter = false;
+	SpriteBatch* m_pSpriteBatch = nullptr;
 };

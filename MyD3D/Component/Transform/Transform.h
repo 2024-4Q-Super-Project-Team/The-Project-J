@@ -68,6 +68,7 @@ public:
     void UpdateMatrix();
     // 부모를 변경한다.
     void SetParent(Transform* _parent);
+    void SetWorldMatrix(Matrix& _worldMatrix);
 
     virtual json Serialize();
     virtual void Deserialize(json& j);

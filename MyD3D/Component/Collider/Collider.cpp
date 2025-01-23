@@ -2,6 +2,8 @@
 #include "Collider.h"
 #include "Component/Collider/Rigidbody.h"
 
+bool Collider::bDrawMode = false;
+
 Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;

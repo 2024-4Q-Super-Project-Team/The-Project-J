@@ -72,13 +72,14 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ReferencePath>$(ProjectDir);$(ReferencePath)</ReferencePath>
-    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);&amp;(SolutionDir)Physx/physx/lib</LibraryPath>
     <PublicIncludeDirectories>$(ProjectDir);</PublicIncludeDirectories>
-    <ExternalIncludePath>$(ProjectDir);$(ReferencePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir);$(ReferencePath);$(SolutionDir)Physx/physx/include</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ExternalIncludePath>$(ProjectDir);$(ReferencePath)</ExternalIncludePath>
+    <ExternalIncludePath>$(ProjectDir);$(ReferencePath);$(SolutionDir)Physx/physx/include</ExternalIncludePath>
     <ReferencePath>$(ProjectDir);$(ReferencePath)</ReferencePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);&amp;(SolutionDir)Physx/physx/lib</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -118,7 +119,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)MyD3D\ThirdParty;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v12.6\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Physx/physx/include;$(SolutionDir)Physx/physx</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -137,6 +138,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(SolutionDir)Physx/physx/include;$(SolutionDir)Physx/physx</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -241,6 +243,12 @@
     <ClInclude Include="Resource\ResourceManager.h" />
     <ClInclude Include="Component\Collider\Rigidbody.h" />
     <ClInclude Include="Component\Collider\SphereCollider.h" />
+    <ClInclude Include="ThirdParty\imguizmo\GraphEditor.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImCurveEdit.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGradient.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImGuizmo.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImSequencer.h" />
+    <ClInclude Include="ThirdParty\imguizmo\ImZoomSlider.h" />
     <ClInclude Include="UIManager\UIManager.h" />
     <ClInclude Include="UIManager\Widget\Widget.h" />
     <ClInclude Include="UIManager\Widget\WidgetButton.h" />
@@ -360,6 +368,11 @@
     <ClCompile Include="Resource\ResourceManager.cpp" />
     <ClCompile Include="Component\Collider\Rigidbody.cpp" />
     <ClCompile Include="Component\Collider\SphereCollider.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\GraphEditor.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGradient.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImGuizmo.cpp" />
+    <ClCompile Include="ThirdParty\imguizmo\ImSequencer.cpp" />
     <ClCompile Include="UIManager\UIManager.cpp" />
     <ClCompile Include="UIManager\Widget\Widget.cpp" />
     <ClCompile Include="UIManager\Widget\WidgetButton.cpp" />

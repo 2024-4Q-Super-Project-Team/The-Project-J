@@ -16,6 +16,7 @@ void SkyBox::Draw(Matrix& _view, Matrix& _projection, FLOAT _far)
         mSkyBoxTexture2D[Specular] && mSkyBoxTexture2D[BLDFLookUpTable])
     {
         // 리소스 바인딩
+        GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
         GraphicsManager::GetVertexShader(eVertexShaderType::SKYBOX)->Bind();
         GraphicsManager::GetPixelShader(ePixelShaderType::SKYBOX)->Bind();
         mSkyBoxTexture2D[Environment]->Texture->Bind();

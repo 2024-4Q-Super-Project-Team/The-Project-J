@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "Object.h"
 #include "ObjectGroup/ObjectGroup.h"
+#include "ViewportScene/ViewportManager.h"
+#include "ViewportScene/ViewportScene.h"
+
+static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
 Object::Object(std::wstring_view _name, std::wstring_view _tag)
     : Engine::Entity(_name, _tag)
@@ -400,6 +404,37 @@ void Object::EditorRendering(EditorViewerType _viewerType)
             break;
         }
     }
+
+    case EditorViewerType::GUIZMO:
+    {
+        auto pos = EditorManager::mFocusViewport->GetIWindow()->GetPosition();
+        auto size = EditorManager::mFocusViewport->GetIWindow()->GetSize();
+        ImGuiIO& io = ImGui::GetIO();
+
+        ImGuizmo::SetOrthographic(false);
+
+        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
+
+        Matrix& viewMatrix = EditorManager::mEditorCamera.mViewMatrix;
+        Matrix& projectionMatrix = EditorManager::mEditorCamera.mProjectionMatrix;
+        Matrix  modelMatrix = transform->GetWorldMatrix();
+
+        float viewManipulateRight = io.DisplaySize.x;
+        float viewManipulateTop = 0;
+
+        static float lastDebugTime = 0.0f;
+        float currentTime = Time::GetElapsedTime();
+
+        //ImGuizmo::ViewManipulate(*viewMatrix.m, 10.f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+
+        if (ImGuizmo::Manipulate(*viewMatrix.m, *projectionMatrix.m,
+            mCurrentGizmoOperation, ImGuizmo::MODE::LOCAL, *modelMatrix.m))
+        {
+            transform->SetWorldMatrix(modelMatrix);
+        }
+        break;
+    }
+
     default:
         break;
     }

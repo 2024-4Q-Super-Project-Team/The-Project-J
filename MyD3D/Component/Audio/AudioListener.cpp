@@ -88,6 +88,17 @@ void AudioListener::EditorRender()
 {
 }
 
+json AudioListener::Serialize()
+{
+	//TODO
+	return json();
+}
+
+void AudioListener::Deserialize(json& j)
+{
+	//TODO
+}
+
 void AudioListener::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

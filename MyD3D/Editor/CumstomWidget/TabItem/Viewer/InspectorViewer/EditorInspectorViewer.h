@@ -12,6 +12,7 @@ namespace Editor
         virtual ~InspectorViewer() = default;
     public:
         virtual void Render() override;
+        void RenderGizmo();
     public:
         void SetFocusObject(IEditorObject* _object);
         IEditorObject* GetFocusObject();

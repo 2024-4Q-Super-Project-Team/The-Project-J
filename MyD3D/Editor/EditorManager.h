@@ -32,10 +32,12 @@ class EditorManager
 public:
     static void Initialize();
     static void Finalization();
-    static void RenderEditorWindow();
+    static void EditorWindowRender();
+    static void FocusWindowRender();
 public:
     static void EditorUpdate();
-    static void EditorRender();
+    static void EditorCameraRender();
+    static void EditorFocusRender();
 public:
     static BOOL ShowEditorWindow(ViewportScene* _targetViewport);
     static BOOL IsRenderView(ViewportScene* _targetViewport);
@@ -43,7 +45,9 @@ public:
     static BOOL EditorReposition();
     static BOOL ProcessDragFile(std::vector<std::wstring>& _pathArr);
 private:
-    static void InitImGui();
+    static void InitImGui(ImGuiContext* _context, HWND _hwnd);
+    static void InitEditorImGui();
+    static void InitFocusImGui();
     static void InitMainMenuBar();
     static void InitMainWindow();
     static void /* */CreateDebuggerTab(Editor::TabBar* _pSrcTabBar);
@@ -51,7 +55,7 @@ private:
     static void /* */CreateHierarchy(Editor::TabBar* _pSrcTabBar);
     static void /* */CreateResourceViewer(Editor::TabBar* _pSrcTabBar);
 public:
-    void UpdateIO();
+    static void UpdateIO(ImGuiContext* _context);
 public:
     static inline auto GetFocusViewport() { return mFocusViewport; }
     static inline auto GetEditorViewport() { return mEditorViewport; }
@@ -80,7 +84,9 @@ public:
     /////////////////////////////////////////////////////
     //  ImGui Object
     /////////////////////////////////////////////////////
-    static ImGuiContext* mContext;
+    static ImGuiContext* mFocusContext;
+    static ImGuiContext* mEditorContext;
+
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 
@@ -95,26 +101,38 @@ struct Serial {
     std::string key;
     Editor::IWidget* widget = nullptr;
 };
-
+// 기본 템플릿 구조체 정의
 template <typename T>
-struct SerialData : public Serial
-{
+struct SerialData : public Serial {
+public:
     T val;
-
-    SerialData(std::string_view _name, MonoBehaviour* mono)
-        : Serial(_name)
-    {
-        mono->AddField(this);
-        if (std::is_same<T, Vector3>::value)
-            widget = new Editor::InputVector3(_name.data(), &val);
-
-    }
+    SerialData(std::string_view _name, MonoBehaviour* mono, T _initial)
+        : Serial(_name), val(_initial)
+    { mono->AddField(this); }
 };
 
+// 매크로 정의
+#define SERIALDATA_TEMPLATE(Type, Class)         \
+template <>                                      \
+class SerialData<Type> : public Serial {         \
+public:                                          \
+    Type val;                                    \
+    SerialData(std::string_view _name, MonoBehaviour* mono, Type _initial) \
+        : Serial(_name), val(_initial) {         \
+        mono->AddField(this);                    \
+        widget = new Class(_name.data(), &val);  \
+    }                                            \
+};
+
+SERIALDATA_TEMPLATE(INT, Editor::DragInt);
+SERIALDATA_TEMPLATE(FLOAT, Editor::DragFloat);
+SERIALDATA_TEMPLATE(Vector2, Editor::DragVector2);
+SERIALDATA_TEMPLATE(Vector3, Editor::DragVector3);
+SERIALDATA_TEMPLATE(Vector4, Editor::DragVector4);
+
 #ifdef _DEBUG
-#define SerializeField(Type, Name)\
-	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
-	Type Name
+#define SerializeField(Type, Name, Init)\
+	SerialData<Type> Name## = SerialData<Type>(#Name, this, Init);
 #else
 #define SerializeField(Type, Name)\
 	Type Name

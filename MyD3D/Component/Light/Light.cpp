@@ -169,7 +169,7 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 // LightProperty저장 필요
 // (Direction, Radiance, LightType, LightStrengh, LightRadius, LightCutOff)
 // (UseShadow, ShadowStrengh)
-// + 멤버변수 mShadowDistance
+// + 멤버변수 mShadowDistance,mLightNear, mLightFar, mCameradDist, mUpDist
 json Light::Serialize()
 {
     json ret;

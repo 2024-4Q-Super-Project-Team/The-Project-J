@@ -6,11 +6,15 @@ class Collider;
 class Object;
 class MonoBehaviour;
 
+#define _MONOBEHAVIOUR_INIT(Class) \
+explicit Class(Object* _owner) : MonoBehaviour(_owner, #Class) {} \
+virtual ~Class() = default;\
+
 class MonoBehaviour
 	: public Component
 {
 public:
-    explicit MonoBehaviour(Object* _owner);
+    explicit MonoBehaviour(Object* _owner, const std::string& _eid);
     virtual ~MonoBehaviour() = default;
 public:
     virtual void Start() override {}

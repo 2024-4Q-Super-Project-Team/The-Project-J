@@ -3,8 +3,7 @@
 class ModelSpawner : public MonoBehaviour
 {
 public:
-    using MonoBehaviour::MonoBehaviour;
-    virtual ~ModelSpawner();
+    _MONOBEHAVIOUR_INIT(ModelSpawner);
 public:
     virtual void Start() override;
     virtual void Tick() override;

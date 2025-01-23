@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "ModelSpawner.h"
 
-ModelSpawner::~ModelSpawner()
-{
-}
-
 void ModelSpawner::Start()
 {
     //초기 객체 생성하는 코드들은 에디터에서 추가하는 것으로 대체되어야 합니다. 

@@ -11,10 +11,19 @@ namespace Editor
     void InspectorViewer::Render()
     {
          if (mFocusObject)
-        {
+         {
             mFocusObject->EditorRendering(EditorViewerType::INSPECTOR);
+         }
+    }
+
+    void InspectorViewer::RenderGizmo()
+    {
+        if (mFocusObject)
+        {
+            mFocusObject->EditorRendering(EditorViewerType::GUIZMO);
         }
     }
+
     void InspectorViewer::SetFocusObject(IEditorObject* _object)
     {
         mFocusObject = _object;

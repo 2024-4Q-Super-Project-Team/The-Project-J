@@ -1,10 +1,6 @@
 #include "pch.h"
 #include "CameraController.h"
 
-CameraController::~CameraController()
-{
-}
-
 void CameraController::Start()
 {
 	// 스카이 박스
@@ -19,7 +15,7 @@ void CameraController::Start()
 	mCamera->gameObject->AddComponent<AudioListener>();
 
 	mTr = mCamera->gameObject->transform;
-	mMoveSpeed = 100.0f;
+	mMoveSpeed.val = 100.0f;
 
 	mTr->position = Vector3(0, 100, -100);
 
@@ -47,19 +43,19 @@ void CameraController::Update()
 		// 각도를 라디안으로 계산 (Pitch, Yaw)
 		Radian deltaAngleX;
 		Radian deltaAngleY;
-		deltaAngleX = Input::GetDeltaMousePos().x * sensitivity;
-		deltaAngleY = -Input::GetDeltaMousePos().y * sensitivity;
+		deltaAngleX = Input::GetDeltaMousePos().x * sensitivity.val * Time::GetScaledDeltaTime();
+		deltaAngleY = -Input::GetDeltaMousePos().y * sensitivity.val * Time::GetScaledDeltaTime();
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
 			CurrentSubCameraAngles[Yaw] += deltaAngleX;
 			CurrentSubCameraAngles[Pitch] += deltaAngleY;
-			CurrentSubCameraAngles[Pitch] = Clamp(CurrentSubCameraAngles[Pitch], -maxYAngle, maxYAngle);
+			CurrentSubCameraAngles[Pitch] = Clamp(CurrentSubCameraAngles[Pitch], -maxYAngle.val, (FLOAT)maxYAngle.val);
 		}
 		else
 		{
 			CurrentAngles[Yaw] += deltaAngleX;
 			CurrentAngles[Pitch] += deltaAngleY;
-			CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle, maxYAngle);
+			CurrentAngles[Pitch] = Clamp(CurrentAngles[Pitch], -maxYAngle.val, (FLOAT)maxYAngle.val);
 		}
 	}
 	else
@@ -70,55 +66,55 @@ void CameraController::Update()
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position += mMoveSpeed.val * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position += mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
+			mTr->position += mMoveSpeed.val * mTr->Up() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('E'))
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position -= mMoveSpeed.val * mSubCamera->gameObject->transform->Up() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position -= mMoveSpeed * mTr->Up() * Time::GetScaledDeltaTime();
+			mTr->position -= mMoveSpeed.val * mTr->Up() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('W'))
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position += mMoveSpeed.val * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position += mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
+			mTr->position += mMoveSpeed.val * mTr->Forward() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('S'))
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position -= mMoveSpeed.val * mSubCamera->gameObject->transform->Forward() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position -= mMoveSpeed * mTr->Forward() * Time::GetScaledDeltaTime();
+			mTr->position -= mMoveSpeed.val * mTr->Forward() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('A'))
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position += mMoveSpeed * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position += mMoveSpeed.val * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position += mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
+			mTr->position += mMoveSpeed.val * mTr->Right() * Time::GetScaledDeltaTime();
 	}
 	if (Input::IsKeyHold('D'))
 	{
 		if (Input::IsKeyHold(Key::LCONTROL))
 		{
-			mSubCamera->gameObject->transform->position -= mMoveSpeed * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
+			mSubCamera->gameObject->transform->position -= mMoveSpeed.val * mSubCamera->gameObject->transform->Right() * Time::GetScaledDeltaTime() * 10.0f;
 		}
 		else
-			mTr->position -= mMoveSpeed * mTr->Right() * Time::GetScaledDeltaTime();
+			mTr->position -= mMoveSpeed.val * mTr->Right() * Time::GetScaledDeltaTime();
 	}
 	if (Input::GetWheelDeltaPos() != 0)
 	{

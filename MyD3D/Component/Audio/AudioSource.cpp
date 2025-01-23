@@ -154,6 +154,17 @@ void AudioSource::SetSurround(bool _isSuround)
 	mAudioChannel->SetSurround(_isSuround);
 }
 
+json AudioSource::Serialize()
+{
+	//TODO
+	return json();
+}
+
+void AudioSource::Deserialize(json& j)
+{
+	//TODO
+}
+
 void AudioSource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

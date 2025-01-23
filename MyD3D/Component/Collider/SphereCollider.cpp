@@ -21,45 +21,56 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 
 void SphereCollider::Start()
 {
+	Collider::Start();
 }
 
 void SphereCollider::Tick()
 {
+	Collider::Tick();
 }
 
 void SphereCollider::FixedUpdate()
 {
+	Collider::FixedUpdate();
 }
 
 void SphereCollider::PreUpdate()
 {
+	Collider::PreUpdate();
 }
 
 void SphereCollider::Update()
 {
+	Collider::Update();
 }
 
 void SphereCollider::PostUpdate()
 {
+	Collider::PostUpdate();
 }
 
 void SphereCollider::PreRender()
 {
+	Collider::PreRender();
 }
 
 void SphereCollider::Render()
 {
+	Collider::Render();
 }
 
 void SphereCollider::Draw(Camera* _camera)
 {
+	Collider::Draw(_camera);
 #ifdef _DEBUG
-	_camera->PushDrawList(this);
+	if (Collider::bDrawMode)
+		_camera->PushDrawList(this);
 #endif
 }
 
 void SphereCollider::PostRender()
 {
+	Collider::PostRender();
 }
 
 void SphereCollider::EditorUpdate()
@@ -80,6 +91,7 @@ json SphereCollider::Serialize()
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["radius"] = mRadius;
+
 	return ret;
 }
 
@@ -95,6 +107,14 @@ void SphereCollider::Deserialize(json& j)
 	mRotation.y = j["rotation"][1].get<float>();
 	mRotation.z = j["rotation"][2].get<float>();
 	mRadius = j["radius"].get<float>();
+
+
+	SetRadius();
+	SetRotation();
+	SetLocalPosition();
+
+	mBS.Center = mPosition;
+	mBS.Radius = mRadius;
 }
 
 void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)

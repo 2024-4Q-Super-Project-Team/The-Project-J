@@ -34,17 +34,20 @@ public:
 	void GameRun();
 	void EditorRun();
 	void Finalization();
+private:
+	void UpdateGame();
 public:
 	static void SetRunType(eEngineRunType _runType);
 public:
-    static World*           GetCurrentWorld();
+    static World* GetCurrentWorld();
 public:
-	static auto	GetRunType() { return mRunType; }
+	static auto	GetRunType() { return mCurrRunType; }
 	static auto	GetFixedUpdateTick() { return mFixedUpdateTick; }
 	static auto	GetApplication()     { return mApplication; }
 	static auto	GetPhysicsManager()  { return mPhysicsManager; }
 private:
-	static eEngineRunType    mRunType;
+	static eEngineRunType    mCurrRunType;
+	static eEngineRunType    mNextRunType;
 	static Application*		 mApplication;
 	static PhysicsManager*	 mPhysicsManager;
 	static ComponentManager* mComponentManager;

@@ -20,8 +20,7 @@ WorldManager::~WorldManager()
 void WorldManager::Start()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnTick();
-		UPDATE_ENTITY(mCurrActiveWorld, Start())
+		mCurrActiveWorld->Start();
 	}
 }
 
@@ -317,9 +316,6 @@ void WorldManager::LoadWorlds()
 		if (component) 
 		{
 			component->Deserialize(componentJson);
-			component->UnWake();
 		}	
 	}
-
-	
 }

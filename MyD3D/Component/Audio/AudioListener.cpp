@@ -6,6 +6,7 @@ AudioListener* AudioListener::mMainListener = nullptr;
 AudioListener::AudioListener(Object* _owner)
 	: Component(_owner)
 {
+	mType = eComponentType::AUDIO_LISTENER;
 }
 
 AudioListener::~AudioListener()

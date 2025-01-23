@@ -61,6 +61,7 @@ void ViewportManager::Start()
 {
     for (auto& vp : mViewportScenes)
     {
+        mActiveViewport = vp;
         vp->Start();
     }
 }
@@ -188,7 +189,11 @@ LRESULT CALLBACK ViewportManager::WinProc(HWND _hwnd, UINT _msg, WPARAM _wParam,
         return true;
     }
 
-    auto pViewport = GetViewportSceneFromHwnd(_hwnd);
+    ViewportScene* pViewport = nullptr;
+    if (mDisplayDevice)
+    {
+        pViewport = GetViewportSceneFromHwnd(_hwnd);
+    }
 
     switch (_msg)
     {

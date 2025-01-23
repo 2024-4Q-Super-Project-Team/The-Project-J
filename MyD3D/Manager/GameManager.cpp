@@ -10,7 +10,8 @@
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-eEngineRunType		GameManager::mRunType = eEngineRunType::GAME_MODE;
+eEngineRunType		GameManager::mCurrRunType = eEngineRunType::GAME_MODE;
+eEngineRunType		GameManager::mNextRunType = eEngineRunType::GAME_MODE;
 float				GameManager::mFixedUpdateTick = 0.02f;
 Application*		GameManager::mApplication = nullptr;
 PhysicsManager*		GameManager::mPhysicsManager = nullptr;
@@ -55,8 +56,9 @@ void GameManager::Run()
 	{
 		Time::Update();
 		AudioHub::Update();
+		GameManager::UpdateGame();
 
-		switch (mRunType)
+		switch (mCurrRunType)
 		{
 		case eEngineRunType::GAME_MODE:
 			ViewportManager::GameRun();
@@ -67,8 +69,6 @@ void GameManager::Run()
 		default:
 			break;
 		}
-		
-
 		Input::Update();
 	}
 }
@@ -85,24 +85,28 @@ void GameManager::Finalization()
 	SAFE_DELETE(mPhysicsManager);
 }
 
+void GameManager::UpdateGame()
+{
+	if (mCurrRunType != mNextRunType)
+	{
+		mCurrRunType = mNextRunType;
+		switch (mNextRunType)
+		{
+		case eEngineRunType::GAME_MODE:
+			ViewportManager::Start();
+			break;
+		case eEngineRunType::EDITOR_MODE:
+			// TODO : 모든 리소스 로드, JSON 리로드 등
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 void GameManager::SetRunType(eEngineRunType _runType)
 {
-	mRunType = _runType;
-
-	switch (_runType)
-	{
-	case eEngineRunType::GAME_MODE:
-	{
-		ViewportManager::Start();
-		break;
-	}
-	case eEngineRunType::EDITOR_MODE:
-	{
-		break;
-	}
-	default:
-		break;
-	}
+	mNextRunType = _runType;
 }
 
 World* GameManager::GetCurrentWorld()

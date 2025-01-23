@@ -73,7 +73,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         else if (LightProp[i].LightType == 1)
         {
             L = input.worldPos.xyz - LightProp[i].Position.xyz;
-            atten = CaclulateAttenuation(L, LightProp[i].LightRange, LightProp[i].LightCutOff);
+            atten = CaclulateAttenuation(L, LightProp[i].LightRadius, LightProp[i].LightCutOff);
             L = normalize(-L);
         }
         else if (LightProp[i].LightType == 2)

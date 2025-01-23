@@ -4,7 +4,7 @@
 #include "ScriptRegister.h"
 
 ViewportScene* GameApp::mMainScene = nullptr;
-ViewportScene* GameApp::mEditorScene = nullptr;
+Display::IWindow* GameApp::mGameWindow = nullptr;
 
 BOOL GameApp::OnPreInitialize()
 {
@@ -49,6 +49,7 @@ void GameApp::OnPreFinalization()
 
 void GameApp::OnPostFinalization()
 {
+    SAFE_DELETE(mGameWindow);
 }
 
 void _CALLBACK GameApp::OnWindowMessage(ViewportScene* _pViewport, UINT _msg, WPARAM _wParam, LPARAM _lParam)

@@ -72,9 +72,8 @@ public:
     inline auto GetLightSystem() const { return mLightSystem; }
 	PxScene* GetPxScene() { return mPxScene; }
 	class PickingRay* GetPickingRay() { return mPickingRay; }
-protected:
-    ViewportScene* const mOwnerScene;
 private:
+	ViewportScene* const mOwnerScene;
     std::vector<ObjectGroup*> mObjectGroups;
     LightSystem* mLightSystem;
 	class PickingRay* mPickingRay;

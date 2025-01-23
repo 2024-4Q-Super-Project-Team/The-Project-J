@@ -165,6 +165,11 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 {
 }
 
+// JSON_TODO :
+// LightProperty저장 필요
+// (Direction, Radiance, LightType, LightStrengh, LightRadius, LightCutOff)
+// (UseShadow, ShadowStrengh)
+// + 멤버변수 mShadowDistance
 json Light::Serialize()
 {
     json ret;
@@ -255,7 +260,7 @@ void Light::EditorRendering(EditorViewerType _viewerType)
     if (mLightProp.LightType == (UINT)eLightType::Point)
     {
         ImGui::Text("Light Range : ");
-        ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRange, 0.05f, 1.0f, 500.0f);
+        ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRadius, 0.05f, 1.0f, 500.0f);
         ImGui::Text("Light CutOff : ");
         ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
     }
@@ -270,8 +275,6 @@ void Light::EditorRendering(EditorViewerType _viewerType)
     ImGui::Checkbox(("Using Shadow" + uid).c_str(), (bool*)&mLightProp.UseShadow);
     ImGui::Text("Shadow Strengh : ");
     ImGui::DragFloat((uid + "SStrengh").c_str(), &mLightProp.ShadowStrengh, 0.05f, 0.0f, 1.0f);
-    ImGui::Text("Shadow Resolution : ");
-    ImGui::DragFloat((uid + "SResolution").c_str(), &mShadowResolution, 1.0f, 1.0f, 10000.0f);
     ImGui::Text("Shadow Distance : ");
     ImGui::DragFloat((uid + "SDistance").c_str(), &mShadowDistance, 1.0f, 1.0f, 10000.0f);
 

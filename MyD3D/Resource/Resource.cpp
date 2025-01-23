@@ -36,3 +36,14 @@ const char* ResourceTypeToStr(eResourceType _type)
 		break;
 	}
 }
+
+json ResourceHandle::Serialize()
+{
+	// JSON_TODO :
+	// Type(int), MainKey, SubKey, Path
+	return json();
+}
+
+void ResourceHandle::Deserialize(json& j)
+{
+}

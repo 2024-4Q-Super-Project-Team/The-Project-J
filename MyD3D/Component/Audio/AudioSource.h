@@ -40,8 +40,8 @@ public:
     // 3D 입체 음향을 사용합니다
     void SetSurround(bool _isSuround);
 public:
-    virtual json Serialize() override { return json(); }
-    virtual void Deserialize(json& j) override {}
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j);
 private:
     // 현재 재생 예정, 혹은 재생 중인 오디오
     AudioResource* mActiveAudio; 

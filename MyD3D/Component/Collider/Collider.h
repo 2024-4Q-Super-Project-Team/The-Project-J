@@ -29,6 +29,8 @@ public:
     virtual json Serialize()  = 0;
     virtual void Deserialize(json& j)  = 0;
 
+    static bool bDrawMode;
+
 protected:
     void SetIsTrigger();
     virtual void SetLocalPosition();

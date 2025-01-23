@@ -1,6 +1,6 @@
 [
     {
-        "id": 7,
+        "id": 45,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -24,7 +24,7 @@
     {
         "far": 30000.0,
         "fov angle": 1.5707963705062866,
-        "id": 8,
+        "id": 46,
         "name": "Camera",
         "near": 1.0,
         "ortho height": 10.0,
@@ -32,7 +32,7 @@
         "type": 0
     },
     {
-        "id": 11,
+        "id": 49,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -54,7 +54,7 @@
         ]
     },
     {
-        "id": 10,
+        "id": 48,
         "name": "Light",
         "property": {
             "direction": [
@@ -79,7 +79,7 @@
         }
     },
     {
-        "id": 16,
+        "id": 56,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -101,18 +101,18 @@
         ]
     },
     {
-        "id": 14,
+        "id": 54,
         "isDynamic": false,
         "mass": 1.0,
         "name": "Rigidbody"
     },
     {
         "extents": [
+            64.5999984741211,
             1.0,
-            1.0,
-            1.0
+            50.79999923706055
         ],
-        "id": 15,
+        "id": 55,
         "isTrigger": false,
         "name": "BoxCollider",
         "position": [
@@ -127,7 +127,99 @@
         ]
     },
     {
-        "id": 23,
+        "id": 60,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 58,
+        "isDynamic": true,
+        "mass": 1.0,
+        "name": "Rigidbody"
+    },
+    {
+        "extents": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "id": 59,
+        "isTrigger": false,
+        "name": "BoxCollider",
+        "position": [
+            0.0,
+            0.10000000149011612,
+            0.0
+        ],
+        "rotation": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "id": 64,
+        "name": "Transform",
+        "parent": 99999999999,
+        "position": [
+            0.0,
+            13.100000381469727,
+            0.0
+        ],
+        "root parent": 99999999999,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0,
+            1.0
+        ],
+        "scale": [
+            1.0,
+            1.0,
+            1.0
+        ]
+    },
+    {
+        "id": 62,
+        "isDynamic": true,
+        "mass": 1.0,
+        "name": "Rigidbody"
+    },
+    {
+        "id": 63,
+        "isTrigger": false,
+        "name": "Transform",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "radius": 1.0,
+        "rotation": [
+            0.0,
+            0.0,
+            0.0
+        ]
+    },
+    {
+        "id": 71,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
@@ -151,7 +243,7 @@
     {
         "far": 30000.0,
         "fov angle": 1.5707963705062866,
-        "id": 24,
+        "id": 72,
         "name": "Camera",
         "near": 1.0,
         "ortho height": 10.0,
@@ -159,11 +251,11 @@
         "type": 0
     },
     {
-        "id": 27,
+        "id": 75,
         "name": "Transform",
         "parent": 99999999999,
         "position": [
-            -7.900000095367432,
+            0.0,
             0.0,
             0.0
         ],
@@ -181,7 +273,7 @@
         ]
     },
     {
-        "id": 26,
+        "id": 74,
         "name": "Light",
         "property": {
             "direction": [

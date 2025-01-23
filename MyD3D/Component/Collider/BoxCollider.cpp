@@ -63,7 +63,8 @@ void BoxCollider::Draw(Camera* _camera)
 {
 	Collider::Draw(_camera);
 #ifdef _DEBUG
-	_camera->PushDrawList(this);
+	if(Collider::bDrawMode)
+		_camera->PushDrawList(this);
 #endif
 }
 
@@ -92,6 +93,7 @@ json BoxCollider::Serialize()
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["extents"] = { mExtents.x, mExtents.y, mExtents.z };
+
 	return ret;
 }
 
@@ -109,6 +111,14 @@ void BoxCollider::Deserialize(json& j)
 	mExtents.x = j["extents"][0].get<float>();
 	mExtents.y = j["extents"][1].get<float>();
 	mExtents.z = j["extents"][2].get<float>();
+
+	SetExtents();
+	SetRotation();
+	SetLocalPosition();
+
+	mOBB.Center = mPosition;
+	mOBB.Orientation = mQuatRotation;
+	mOBB.Extents = mExtents;
 }
 
 void BoxCollider::DrawObject(Matrix& _view, Matrix& _projection)
@@ -159,4 +169,5 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	{
 		SetIsTrigger();
 	}
+
 }

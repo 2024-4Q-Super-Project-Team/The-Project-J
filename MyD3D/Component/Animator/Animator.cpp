@@ -107,6 +107,7 @@ json Animator::Serialize()
 
 void Animator::Deserialize(json& j)
 {
+    //TODO
 }
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)

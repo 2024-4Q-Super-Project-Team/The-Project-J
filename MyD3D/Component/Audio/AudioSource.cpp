@@ -7,6 +7,7 @@ AudioSource::AudioSource(Object* _owner)
 	, mActiveAudio(nullptr)
 	, mAudioChannel(new AudioChannel)
 {
+	mType = eComponentType::AUDIO_SOURCE;
 }
 
 AudioSource::~AudioSource()

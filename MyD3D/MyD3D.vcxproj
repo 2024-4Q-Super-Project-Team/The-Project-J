@@ -185,7 +185,6 @@
     <ClInclude Include="Component\Controller\PlayerController.h" />
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h" />
     <ClInclude Include="Physics\PickingRay.h" />
-    <ClInclude Include="Resource\ResourceHandle.h" />
     <ClInclude Include="Resource\AudioResource\AudioResource.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDesc.h" />
     <ClInclude Include="Graphics\Extra\D3DGraphicsDefault.h" />
@@ -305,7 +304,6 @@
     <ClCompile Include="Component\Controller\PlayerController.cpp" />
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp" />
     <ClCompile Include="Physics\PickingRay.cpp" />
-    <ClCompile Include="Resource\ResourceHandle.cpp" />
     <ClCompile Include="Resource\AudioResource\AudioResource.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDesc.cpp" />
     <ClCompile Include="Graphics\Extra\D3DGraphicsDefault.cpp" />

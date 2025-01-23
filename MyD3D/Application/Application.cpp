@@ -34,4 +34,5 @@ void Application::Run()
 
 void Application::Finalization()
 {
+	mGameManager->Finalization();
 }

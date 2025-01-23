@@ -327,9 +327,6 @@
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Resource\ResourceHandle.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Graphics\Extra\DebugDraw.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -669,9 +666,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldRemover.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Resource\ResourceHandle.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp">

@@ -75,10 +75,9 @@ World::~World()
 
 void World::Start()
 {
-    for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end(); ++itr)
+    for (auto& group : mObjectGroups)
     {
-        if ((*itr)->GetState() == EntityState::Create)				
-            (*itr)->Start();
+        group->Start();
     }
 }
 

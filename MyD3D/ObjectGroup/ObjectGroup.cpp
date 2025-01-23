@@ -16,10 +16,9 @@ ObjectGroup::~ObjectGroup()
 
 void ObjectGroup::Start()
 {
-    for (auto itr = mObjects.begin(); itr != mObjects.end(); ++itr)
+    for (auto& object : mObjects)
     {
-        if ((*itr)->GetState() == EntityState::Create)
-            (*itr)->Start();
+        object->Start();
     }
 }
 

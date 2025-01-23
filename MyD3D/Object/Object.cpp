@@ -43,7 +43,7 @@ void Object::Tick()
     {
         for (auto& comp : mComponentArray[i])
         {
-            if (comp->IsActive() && comp->IsAwake())
+            if (comp->IsActive())
                 comp->Tick();
         }
     }

@@ -18,6 +18,7 @@ inline static const eResourceType GetType() { return eResourceType::type; }\
 inline static const char* GetTypeName() { return #type; }\
 
 class ResourceHandle
+    //: public Engine::SaveBase
 {
 public:
     ResourceHandle(eResourceType _type, const std::wstring& _mainKey, const std::wstring& _subKey, const std::wstring& _path)

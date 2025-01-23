@@ -23,9 +23,9 @@ struct LightProperty
     Vector4 Direction = { 0.0f,0.0f,0.0f,0.0f };
     ColorF  Radiance = { 1.0f,1.0f,1.0f,1.0f };
     INT     LightType = 0;
-    FLOAT   LightRange = 1.0f; // Point and Spot lights only
-    FLOAT   LightStrengh = 1.0f; 
-    FLOAT   LightCutOff;
+    FLOAT   LightStrengh = 1.0f;
+    FLOAT   LightRadius = 1.0f; // Point and Spot lights only
+    FLOAT   LightCutOff = 0.001f;
     // ==== Shadow ====
 	BOOL    UseShadow = TRUE;
     FLOAT   ShadowStrengh = 1.0f;
@@ -42,11 +42,13 @@ struct TransformCBuffer
     Matrix Projection;
 };
 
+class MaterialResource;
 struct MaterialCBuffer
 {
     MaterialProperty MatProp;
-    UINT	         UseMapFlag = 0xFFFFFFFF; // 초기 상태 모두 TRUE  
+    UINT	         UseMapFlag = 0; // 0xFFFFFFFF = 초기 상태 모두 TRUE 
     Vector3          Padding;
+    void SetMaterial(MaterialResource* _pMaterial);
     BOOL GetUsingMap(eMaterialMapType _type);
     void SetUsingMap(eMaterialMapType _type, BOOL _bValue);
     void ToggleUsingMap(eMaterialMapType _type);

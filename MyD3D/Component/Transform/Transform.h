@@ -90,7 +90,6 @@ private:
     Transform* mRootParent;
     Transform* mParent;
     std::vector<Transform*> mChildren;
-    //UINT mHierarchyLevel; // ∞Ë√˛ ±Ì¿Ã
     // ====================================
     PxTransform mPxTransform{};
 

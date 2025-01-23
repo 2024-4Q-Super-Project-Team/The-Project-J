@@ -280,6 +280,10 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     }
 }
 
+// JSON_TODO :
+// MeshHandle, MaterialHandle을 저장하도록 바꿔야한다 
+// 또한 Material_Cbuffer값도 저장해야한다.(Diffuse, Metallic등의 값이 있기 때문
+// 루트본도 아이디를 찾아서 trasnform객체를 넣어줘야한다......
 json SkinnedMeshRenderer::Serialize()
 {
     json ret;

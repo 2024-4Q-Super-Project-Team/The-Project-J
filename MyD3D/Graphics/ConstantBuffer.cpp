@@ -1,6 +1,20 @@
 #include "pch.h"
 #include "ConstantBuffer.h"
 
+void MaterialCBuffer::SetMaterial(MaterialResource* _pMaterial)
+{
+    if (_pMaterial)
+    {
+        MatProp = _pMaterial->mMaterialProperty;
+        for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
+        {
+            bool hasMap = _pMaterial->mMaterialMapTexture[i];
+            SetUsingMap((eMaterialMapType)i, hasMap);
+        }
+    }
+   
+}
+
 BOOL MaterialCBuffer::GetUsingMap(eMaterialMapType _type)
 {
     if ((UseMapFlag & (1 << (UINT)_type)) != 0)

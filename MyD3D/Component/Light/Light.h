@@ -35,7 +35,7 @@ public:
 public:
     inline void SetLightDirection(Vector4 _xyz) { mLightProp.Direction = _xyz; }
     inline void SetLightType(eLightType _type) { mLightProp.LightType = static_cast<INT>(_type); }
-    inline void SetLightRange(float _range) { mLightProp.LightRange = _range; }
+    inline void SetLightRange(float _range) { mLightProp.LightRadius = _range; }
     inline void SetLightCutOff(float _cutOff) { mLightProp.LightCutOff = _cutOff; }
     inline void SetLightColor(ColorF _color) { mLightProp.Radiance = _color; }
 public:

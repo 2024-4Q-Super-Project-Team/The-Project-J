@@ -14,7 +14,7 @@ ViewportScene::ViewportScene(std::wstring_view _name, Display::IWindow* _pWindow
 
 ViewportScene::~ViewportScene()
 {
-    SAFE_DELETE(mWorldManager)
+    SAFE_DELETE(mWorldManager);
 }
 
 void ViewportScene::Start()

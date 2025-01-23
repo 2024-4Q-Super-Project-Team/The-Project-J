@@ -18,7 +18,7 @@ inline static const eResourceType GetType() { return eResourceType::type; }\
 inline static const char* GetTypeName() { return #type; }\
 
 class ResourceHandle
-    //: public Engine::SaveBase
+    : public Engine::SaveBase
 {
 public:
     ResourceHandle(eResourceType _type, const std::wstring& _mainKey, const std::wstring& _subKey, const std::wstring& _path)
@@ -41,6 +41,9 @@ public:
     bool operator==(const ResourceHandle& other) const {
         return mMainKey == other.mMainKey && mPath == other.mPath;
     }
+public:
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
 };
 namespace std {
     template <>

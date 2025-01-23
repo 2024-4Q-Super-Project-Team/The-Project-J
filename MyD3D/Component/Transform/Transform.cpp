@@ -198,13 +198,13 @@ void Transform::Deserialize(json& j)
     if (rootId == NULLID)
         mRootParent = nullptr;
     else;
-        //TODO: id로 Transform 찾아서 넣는다. 
+        // JSON_TODO: id로 Transform 찾아서 넣는다. 
 
     unsigned int parentId = j["parent"].get<unsigned int>();
     if (parentId == NULLID)
         mRootParent = nullptr;
     else;
-        //TODO: id로 Transform 찾아서 넣는다. 
+        // JSON_TODO: id로 Transform 찾아서 넣는다. 
 }
 
 void Transform::EditorRendering(EditorViewerType _viewerType)

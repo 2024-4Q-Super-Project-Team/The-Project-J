@@ -78,7 +78,7 @@ struct LightProperty
     float4 Direction;
     float4 Radiance;
     int    LightType;
-    float  LightRange;
+    float  LightRadius;
     float  LightStrengh;
     float  LightCutOff;
     // ==== Shadow ====

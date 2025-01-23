@@ -15,6 +15,7 @@ D3DGraphicsGeometryShader* GraphicsManager::mGeometryShaderArray[VS_TYPE_COUNT];
 D3DGraphicsPixelShader* GraphicsManager::mPixelShaderArray[PS_TYPE_COUNT];
 D3DGraphicsBlendState* GraphicsManager::mBlendStateArray[BLEND_STATE_TYPE_COUNT];
 D3DGraphicsRasterizerState* GraphicsManager::mRasterizerStateArray[RASTERIZER_STATE_TYPE_COUNT];
+D3DGraphicsDepthStencilState* GraphicsManager::mDepthStecilStateArray[DEPTHSTENCIL_STATE_TYPE_COUNT];
 
 std::unique_ptr<CommonStates> GraphicsManager::mStates;
 std::unique_ptr<PrimitiveBatch<VertexPositionColor>> GraphicsManager::mBatch;
@@ -49,6 +50,11 @@ BOOL GraphicsManager::Initialize()
     // Blend State
     //////////////////////////////////////////
     InitBlendState();
+
+    //////////////////////////////////////////
+    // DepthStencil State
+    //////////////////////////////////////////
+    InitDepthStencilState();
 
     //////////////////////////////////////////
     // Raterizer State
@@ -296,6 +302,33 @@ void GraphicsManager::InitRasterizerState()
         rasterDesc.FrontCounterClockwise = false;   // 시계 방향 폴리곤을 프론트로 간주
         rasterDesc.DepthClipEnable = true;
         mRasterizerStateArray[slot] = new D3DGraphicsRasterizerState(&rasterDesc);
+    }
+}
+
+void GraphicsManager::InitDepthStencilState()
+{
+    // Default State
+    {
+        UINT slot = static_cast<UINT>(eDepthStencilStateType::DEFAULT);
+        D3D11_DEPTH_STENCIL_DESC DssDesc;
+        ZeroMemory(&DssDesc, sizeof(DssDesc));
+
+        DssDesc.DepthEnable = true;
+        DssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+        DssDesc.DepthFunc = D3D11_COMPARISON_LESS;
+        DssDesc.StencilEnable = true;
+        DssDesc.StencilReadMask = 0xFF;
+        DssDesc.StencilWriteMask = 0xFF;
+        DssDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        DssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+        DssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        DssDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+        DssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        DssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+        DssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        DssDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+        mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&DssDesc);
     }
 }
 

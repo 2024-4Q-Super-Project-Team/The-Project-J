@@ -34,12 +34,12 @@ private:
     ID3D11BlendState* mBlendState;
 };
 
-class D3DDepthStencilState
+class D3DGraphicsDepthStencilState
     : public I3DGraphicsGPUResource
 {
 public:
-    explicit D3DDepthStencilState(IN D3D11_DEPTH_STENCIL_DESC* _pDSDesc);
-    virtual ~D3DDepthStencilState() = default;
+    explicit D3DGraphicsDepthStencilState(IN D3D11_DEPTH_STENCIL_DESC* _pDSDesc);
+    virtual ~D3DGraphicsDepthStencilState() = default;
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;

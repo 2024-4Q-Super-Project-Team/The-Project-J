@@ -17,6 +17,7 @@ public:
     virtual eRasterizerStateType    GetCullingMode() = 0;
     virtual void                    DrawObject(Matrix& _view, Matrix& _projection) = 0;
     virtual void                    DrawShadow(Light* _pLight) = 0;
+    virtual void                    DrawWire() = 0;
 };
 
 class RendererComponent

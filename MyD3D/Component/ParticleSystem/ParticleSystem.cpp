@@ -181,6 +181,10 @@ void ParticleSystem::DrawShadow(Light* _pLight)
 {
 }
 
+void ParticleSystem::DrawWire()
+{
+}
+
 void ParticleSystem::SetMaterial()
 {
 	if (mMaterial)

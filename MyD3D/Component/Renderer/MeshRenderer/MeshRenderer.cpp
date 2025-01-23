@@ -81,6 +81,7 @@ void MeshRenderer::Draw(Camera* _camera)
         mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
 
         _camera->PushDrawList(this);
+        //_camera->PushWireList(this);
     }
 }
 
@@ -129,6 +130,23 @@ void MeshRenderer::DrawShadow(Light* _pLight)
             GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
             D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
         }
+    }
+}
+
+void MeshRenderer::DrawWire()
+{
+    if (mMesh)
+    {
+        // 레스터 라이저 상태를 와이어 프레임으로 설정
+        D3DGraphicsRenderer::GetDevicecontext()->RSSetState(DebugRenderer::GetState()->Wireframe());
+
+        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+
+        mMesh->Bind();
+        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+
+        // 원상복귀
+        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     }
 }
 

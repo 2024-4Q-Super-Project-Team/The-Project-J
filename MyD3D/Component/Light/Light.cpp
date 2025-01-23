@@ -120,7 +120,7 @@ void Light::Draw(Camera* _camera)
     }
     Vector3 WolrdPos = gameObject->transform->GetWorldPosition();
     memcpy(&mLightProp.Position, &WolrdPos, sizeof(Vector3)); // 3원소만 복사
-    _camera->PushLight(this);
+    _camera->PushLightList(this);
 }
 
 void Light::PostRender()

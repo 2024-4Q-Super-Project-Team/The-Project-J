@@ -25,6 +25,7 @@ public:
 public:
     virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override {}
+    virtual void DrawWire() override;
 
     virtual MeshResource* GetMesh() { return nullptr; }
     virtual MaterialResource* GetMaterial() { return nullptr; }

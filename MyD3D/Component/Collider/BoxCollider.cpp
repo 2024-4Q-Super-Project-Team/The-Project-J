@@ -61,11 +61,8 @@ void BoxCollider::Render()
 
 void BoxCollider::Draw(Camera* _camera)
 {
-	Collider::Draw(_camera);
-#ifdef _DEBUG
 	if(Collider::bDrawMode)
-		_camera->PushDrawList(this);
-#endif
+		_camera->PushWireList(this);
 }
 
 void BoxCollider::PostRender()
@@ -121,14 +118,9 @@ void BoxCollider::Deserialize(json& j)
 	mOBB.Extents = mExtents;
 }
 
-void BoxCollider::DrawObject(Matrix& _view, Matrix& _projection)
+void BoxCollider::DrawWire()
 {
-	SetEID("BoxComponent");
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
+	Debug::Draw(DebugRenderer::GetBatch(), mOBB, mBaseColor);
 }
 
 void BoxCollider::SetExtents()

@@ -84,7 +84,6 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
-        GraphicsManager::SetDebugViewProjection(mViewMatrix, mProjectionMatrix);
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
@@ -298,6 +297,20 @@ void Camera::DrawDeferred()
     mDeferredRenderTarget->ResetAllSRV();
 }
 
+void Camera::DrawWire()
+{
+    DebugRenderer::BeginDraw();
+    DebugRenderer::SetViewProjection(mViewMatrix, mProjectionMatrix);
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND])
+    {
+        drawInfo->DrawWire();
+    }
+    mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND].clear();
+
+    DebugRenderer::EndDraw();
+}
+
 void Camera::DrawSwapChain()
 {
     // QuadFrame Pass
@@ -312,6 +325,62 @@ void Camera::DrawSwapChain()
     D3DGraphicsRenderer::DrawCall(6, 0, 0);
 
     mMainRenderTarget->ResetAllSRV();
+}
+
+void Camera::ExcuteDrawList()
+{
+    GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
+    if (mSizeScale.Length() > 0.05f)
+    {
+        if (mMainRenderTarget)
+        {
+            {
+                mMainRenderTarget->BeginDraw();
+                mMainRenderTarget->Clear();
+                ////////////////////////////////////////////////////
+                // 그림자 연산
+                ////////////////////////////////////////////////////
+                DrawShadow();
+
+                mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
+
+                // 렌더타입으로 Draw실행
+                switch (mCameraRenderType)
+                {
+                case CameraRenderType::Forward:
+                    DrawForward();
+                    break;
+                case CameraRenderType::Deferred:
+                    DrawDeferred();
+                    break;
+                default:
+                    break;
+                }
+
+                ////////////////////////////////////////////////////
+                // SkyBox Draw
+                ////////////////////////////////////////////////////
+                // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
+                if (mSkyBox)
+                {
+                    mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
+                }
+
+                mMainRenderTarget->EndDraw();
+            }
+
+            mLocalViewport->Bind();  // 카메라 출력될 영역 사이즈
+            DrawSwapChain();
+
+            ////////////////////////////////////////////////////
+            // WireFrame Draw
+            ////////////////////////////////////////////////////
+            DrawWire();
+        }
+    }
+    // 조명 리스트를 초기화한다.
+    mSceneLights.clear();
+    mLightCBuffer.NumLight = 0;
 }
 
 json Camera::Serialize()
@@ -363,7 +432,7 @@ void Camera::PushDrawList(IRenderContext* _renderContext)
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
-void Camera::PushLight(Light* _pLight)
+void Camera::PushLightList(Light* _pLight)
 {
     if (_pLight == nullptr) return;
     if (mLightCBuffer.NumLight < MAX_LIGHT_COUNT)
@@ -374,55 +443,11 @@ void Camera::PushLight(Light* _pLight)
     }
 }
 
-void Camera::ExcuteDrawList()
+void Camera::PushWireList(IRenderContext* _renderContext)
 {
-    GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
-    if (mSizeScale.Length() > 0.05f)
-    {
-        if (mMainRenderTarget)
-        {
-            {
-                mMainRenderTarget->BeginDraw();
-                mMainRenderTarget->Clear();
-                ////////////////////////////////////////////////////
-                // 그림자 연산
-                ////////////////////////////////////////////////////
-                DrawShadow();
-
-                mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
-
-                // 렌더타입으로 Draw실행
-                switch (mCameraRenderType)
-                {
-                case CameraRenderType::Forward:
-                    DrawForward();
-                    break;
-                case CameraRenderType::Deferred:
-                    DrawDeferred();
-                    break;
-                default:
-                    break;
-                }
-
-                ////////////////////////////////////////////////////
-                // SkyBox Draw
-                ////////////////////////////////////////////////////
-                // 스카이박스 렌더 (최적화를 위해 마지막에 렌더링)
-                if (mSkyBox)
-                {
-                    mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
-                }
-
-                mMainRenderTarget->EndDraw();
-            }
-
-            mLocalViewport->Bind();  // 카메라 출력될 영역 사이즈
-            DrawSwapChain();
-        }
-    }
-    // 조명 리스트를 초기화한다.
-    mSceneLights.clear();
-    mLightCBuffer.NumLight = 0;
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = eBlendModeType::WIREFRAME_BELND;
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
 void Camera::EditorRendering(EditorViewerType _viewerType)

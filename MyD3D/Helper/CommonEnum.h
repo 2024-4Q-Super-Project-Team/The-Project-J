@@ -97,8 +97,9 @@ enum class eDepthStencilStateType
 
 enum class eBlendModeType
 {
-    OPAQUE_BLEND,        // Opaqueºí·»µå
-    TRANSPARENT_BLEND,   // Transparentºí·»µå
+    OPAQUE_BLEND,           // Opaqueºí·»µå
+    TRANSPARENT_BLEND,      // Transparentºí·»µå
+    WIREFRAME_BELND,        // WireFrameºí·»µå
     SIZE,
 };
 #define BLEND_MODE_TYPE_COUNT static_cast<UINT>(eBlendModeType::SIZE)

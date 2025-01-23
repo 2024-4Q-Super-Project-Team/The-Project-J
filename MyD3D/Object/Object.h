@@ -19,6 +19,8 @@
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
 
+#include "Manager/GameManager.h"
+
 class Component;
 class ObjectGroup;
 
@@ -89,7 +91,13 @@ T* Object::AddComponent(Args&&... args)
     eComponentType type = component->GetType();
     int index = static_cast<UINT>(type);
     mComponentArray[index].push_back(component);
-    // Start는 나중에 호출
+
+    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+    {
+        // JSON_TODO : 이거 컴포넌트 추가도 Addcomponent로 하지 말아주세요 ㅠㅠ
+        //component->Start();
+    }
+
     return component;
 }
 

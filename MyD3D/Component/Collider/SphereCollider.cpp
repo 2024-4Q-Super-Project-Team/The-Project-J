@@ -61,11 +61,8 @@ void SphereCollider::Render()
 
 void SphereCollider::Draw(Camera* _camera)
 {
-	Collider::Draw(_camera);
-#ifdef _DEBUG
 	if (Collider::bDrawMode)
-		_camera->PushDrawList(this);
-#endif
+		_camera->PushWireList(this);
 }
 
 void SphereCollider::PostRender()
@@ -119,11 +116,11 @@ void SphereCollider::Deserialize(json& j)
 
 void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 {
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mBS, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
+}
+
+void SphereCollider::DrawWire()
+{
+	Debug::Draw(DebugRenderer::GetBatch(), mBS, mBaseColor);
 }
 
 void SphereCollider::SetRadius()

@@ -1,31 +1,23 @@
 #pragma once
 
-
-
 class CameraController : public MonoBehaviour
 {
 public:
-    using MonoBehaviour::MonoBehaviour;
-    ~CameraController();
+    _MONOBEHAVIOUR_INIT(CameraController);
     void Start();
     void Update();
-
 public:
     virtual json Serialize() override;
 public:
-
-    float mMoveSpeed;
+    SerializeField(FLOAT, mMoveSpeed, 100.0f);
+    SerializeField(FLOAT, sensitivity, 1.0f);
+    SerializeField(FLOAT, maxYAngle, 1.0f);
+    FLOAT CurrentAngles[3];
+    FLOAT  CurrentSubCameraAngles[3];
     Transform* mTr;
     Camera* mCamera;
-
-    float sensitivity = 0.005f;
-    Radian maxYAngle = 1.0f;
-    Radian CurrentAngles[3];
-
     Camera* mSubCamera;
-    Radian  CurrentSubCameraAngles[3];
-
-    SerializeField(Vector3, vec);
+    
 
 public:
     enum AxisType

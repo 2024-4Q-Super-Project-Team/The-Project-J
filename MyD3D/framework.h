@@ -57,8 +57,9 @@ using namespace DirectX::SimpleMath;
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 //Physics
-#include <physx/PxPhysicsAPI.h>
-#include <physx/PxPhysics.h>
+#include <PxPhysicsAPI.h>
+#include "cudamanager\PxCudaContextManager.h"
+#include "cudamanager/PxCudaContext.h"
 using namespace physx;
 
 //json

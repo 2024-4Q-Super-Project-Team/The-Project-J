@@ -45,12 +45,12 @@ using namespace DirectX;
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 //Imguizmo
-#include "imguizmo\ImGuizmo.h"
-#include "imguizmo\ImSequencer.h"
-#include "imguizmo\ImZoomSlider.h"
-#include "imguizmo\ImCurveEdit.h"
-#include "imguizmo\GraphEditor.h"
-#include "imguizmo\ImGradient.h"
+#include "Thirdparty\imguizmo\ImGuizmo.h"
+#include "Thirdparty\imguizmo\ImSequencer.h"
+#include "Thirdparty\imguizmo\ImZoomSlider.h"
+#include "Thirdparty\imguizmo\ImCurveEdit.h"
+#include "Thirdparty\imguizmo\GraphEditor.h"
+#include "Thirdparty\imguizmo\ImGradient.h"
 // SimpleMath
 #include <directxtk/SimpleMath.h>
 using namespace DirectX::SimpleMath;
@@ -59,8 +59,10 @@ using namespace DirectX::SimpleMath;
 #include <assimp\scene.h>
 #include <assimp\postprocess.h>
 //Physics
-#include <physx/PxPhysicsAPI.h>
-#include <physx/PxPhysics.h>
+#include <PxPhysicsAPI.h>
+#include "cudamanager/PxCudaContextManager.h"
+#include "cudamanager/PxCudaContext.h"
+
 using namespace physx;
 //json
 #include <nlohmann/json.hpp>

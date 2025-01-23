@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "WidgetImage.h"
-#include "Graphics/GraphicsManager.h"
 
 WidgetImage::WidgetImage()
 {
@@ -9,11 +8,13 @@ WidgetImage::WidgetImage()
 
 WidgetImage::~WidgetImage()
 {
-	m_pSpriteBatch = nullptr;
+	
 }
 
-void WidgetImage::Start()
+void WidgetImage::Init()
 {
+	Widget::Init();
+
 	ResourceHandle handle;
 	handle.mResourceType = eResourceType::Texture2DResource;
 	handle.mMainKey = mID;
@@ -23,21 +24,22 @@ void WidgetImage::Start()
 
 	handle.mPath = mFilepath;
 	ResourceManager::RegisterResourceHandle(handle);
-	mTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
-
-	m_pSpriteBatch = new SpriteBatch(D3DGraphicsRenderer::GetDevicecontext());
+	m_pTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
 }
 
 void WidgetImage::Update()
 {
-	
+	m_pSpriteBatch->SetRotation(DXGI_MODE_ROTATION_IDENTITY);
 }
 
 void WidgetImage::Render()
 {
 	m_pSpriteBatch->Begin();
-	m_pSpriteBatch->Draw(mTexture->Texture->mSRV, mPosition, nullptr, Color(1,1,1));
+	m_pSpriteBatch->Draw(m_pTexture->Texture->mSRV, mPosition, nullptr, mColor);
 	m_pSpriteBatch->End();
+}
 
-	GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
+void WidgetImage::Release()
+{
+	Widget::Release();
 }

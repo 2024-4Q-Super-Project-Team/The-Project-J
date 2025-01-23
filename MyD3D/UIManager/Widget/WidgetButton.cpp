@@ -11,8 +11,10 @@ WidgetButton::~WidgetButton()
 	m_pSpriteBatch = nullptr;
 }
 
-void WidgetButton::Start()
+void WidgetButton::Init()
 {
+	Widget::Init();
+
 	ResourceHandle handle;
 	handle.mMainKey = mID;
 
@@ -21,9 +23,7 @@ void WidgetButton::Start()
 
 	handle.mPath = mFilepath;
 	ResourceManager::RegisterResourceHandle(handle);
-	mTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
-
-	m_pSpriteBatch = new SpriteBatch(D3DGraphicsRenderer::GetDevicecontext());
+	m_pTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
 }
 
 void WidgetButton::Update()
@@ -34,6 +34,11 @@ void WidgetButton::Update()
 void WidgetButton::Render()
 {
 	m_pSpriteBatch->Begin();
-	m_pSpriteBatch->Draw(mTexture->Texture->mSRV, mPosition);
+	m_pSpriteBatch->Draw(m_pTexture->Texture->mSRV, mPosition);
 	m_pSpriteBatch->End();
+}
+
+void WidgetButton::Release()
+{
+	Widget::Release();
 }

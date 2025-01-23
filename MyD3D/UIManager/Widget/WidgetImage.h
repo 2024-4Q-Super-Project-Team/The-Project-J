@@ -7,14 +7,11 @@ class WidgetImage
 public:
 	WidgetImage();
 	virtual ~WidgetImage(); // 버츄얼로 돌려야되는데 왜 안됨?
-
 public:
-	virtual void Start();
-	virtual void Update();
-	virtual void Render();
-public:
-
+	virtual void Init()		override;
+	virtual void Update()	override;
+	virtual void Render()	override;
+	virtual void Release()	override;
 private:
-	SpriteBatch* m_pSpriteBatch = nullptr;
 };
 

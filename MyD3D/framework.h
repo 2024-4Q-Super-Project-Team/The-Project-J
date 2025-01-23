@@ -107,3 +107,5 @@ using json = nlohmann::json;
 #include "Editor/EditorManager.h"
 #include "Manager/GameManager.h"
 #include "Application/Application.h"
+
+#include "UIManager/UIManager.h"

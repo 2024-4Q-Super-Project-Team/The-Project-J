@@ -11,6 +11,11 @@ WidgetCheckBox::~WidgetCheckBox()
 
 }
 
+void WidgetCheckBox::Init()
+{
+	Widget::Init();
+}
+
 void WidgetCheckBox::Update()
 {
 
@@ -19,4 +24,9 @@ void WidgetCheckBox::Update()
 void WidgetCheckBox::Render()
 {
 
+}
+
+void WidgetCheckBox::Release()
+{
+	Widget::Release();
 }

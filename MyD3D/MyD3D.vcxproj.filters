@@ -351,25 +351,25 @@
     <ClInclude Include="Component\Collider\SphereCollider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\UISystem.h">
+    <ClInclude Include="UIManager\UIManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\Widget\Widget.h">
+    <ClInclude Include="UIManager\Widget\Widget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\Widget\WidgetButton.h">
+    <ClInclude Include="UIManager\Widget\WidgetButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\Widget\WidgetCheckBox.h">
+    <ClInclude Include="UIManager\Widget\WidgetCheckBox.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\Widget\WidgetText.h">
+    <ClInclude Include="UIManager\Widget\WidgetText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UISystem\Widget\WidgetImage.h">
+    <ClInclude Include="UIManager\Widget\WidgetImage.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -698,25 +698,25 @@
     <ClCompile Include="Component\Collider\SphereCollider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\UISystem.cpp">
+    <ClCompile Include="UIManager\UIManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\Widget\Widget.cpp">
+    <ClCompile Include="UIManager\Widget\Widget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\Widget\WidgetButton.cpp">
+    <ClCompile Include="UIManager\Widget\WidgetButton.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\Widget\WidgetCheckBox.cpp">
+    <ClCompile Include="UIManager\Widget\WidgetCheckBox.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\Widget\WidgetText.cpp">
+    <ClCompile Include="UIManager\Widget\WidgetText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UISystem\Widget\WidgetImage.cpp">
+    <ClCompile Include="UIManager\Widget\WidgetImage.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

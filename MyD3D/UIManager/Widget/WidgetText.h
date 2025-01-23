@@ -5,8 +5,8 @@ struct TextInfo
 {
 	float line = 15.f;
 	char defaultText = '_';
-	Color color{};
 	wchar_t msg[1024];
+	Rect textBox{};
 };
 
 class WidgetText
@@ -17,17 +17,22 @@ public:
 	virtual ~WidgetText(); // 버츄얼로 돌려야되는데 왜 안됨?
 
 public:
-	virtual void Start();
-	virtual void Update();
-	virtual void Render();
+	virtual void Init()		override;
+	virtual void Update()	override;
+	virtual void Render()	override;
+	virtual void Release()	override;
 public:
 	void SetTextLine(float _line) { mTextInfo.line = _line; }
 	void SetTextDefault(char _defaultText) { mTextInfo.defaultText = _defaultText; }
-	void SetTextColor(Color _color) { mTextInfo.color = _color; }
 	void SetTextFormat(const wchar_t* _msg, ...);
+public:
+
+	Rect			GetTextBox()	{ return mTextInfo.textBox; }
+	std::wstring	GetTextFormat()	{ return mTextInfo.msg; }
 private:
+	void OutlinedTextRender(float _offset, Color _outlineColor);
+
 	SpriteFont* m_pSpriteFont = nullptr;
-	SpriteBatch* m_pSpriteBatch = nullptr;
 
 	TextInfo mTextInfo;
 };

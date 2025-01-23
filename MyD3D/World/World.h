@@ -61,12 +61,15 @@ public:
     ObjectGroup*    GetObjectGroup(std::wstring_view _name);
     // 오브젝트 그룹 컨테이너를 반환
     inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
+public:
 	//직렬화
 	json Serialize();
 	void Deserialize(json& j);
 	
 	json SerializeDefault();
 	void DeserializeDefault(json& j);
+	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
+	std::vector<ResourceHandle> mNeedResourceHandleTable;
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }

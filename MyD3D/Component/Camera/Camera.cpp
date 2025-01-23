@@ -194,6 +194,7 @@ void Camera::UpdateZSort()
 
 void Camera::DrawShadow()
 {
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::BACKFACE_CULLING)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Reset();
 
@@ -300,6 +301,7 @@ void Camera::DrawDeferred()
 void Camera::DrawSwapChain()
 {
     // QuadFrame Pass
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();

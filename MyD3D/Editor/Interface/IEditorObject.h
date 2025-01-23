@@ -19,6 +19,11 @@ enum class eEditorRenderResult
 class IEditorObject
 {
 public:
+    explicit IEditorObject() = default;
+    explicit IEditorObject(const std::string& _label)
+        : mUid(_label){ }
+    virtual ~IEditorObject() = default;
+public:
     virtual void EditorRendering(EditorViewerType _viewerType = EditorViewerType::DEFAULT) = 0;
 protected:
     inline void SetEID(const std::string& _label) {

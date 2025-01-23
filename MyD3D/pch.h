@@ -8,7 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <wrl/client.h> 
-
+#include <concepts>
+#include <type_traits>
 #include <string>
 #include <string_view>
 #include <array>

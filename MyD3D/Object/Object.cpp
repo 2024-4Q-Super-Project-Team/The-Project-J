@@ -5,8 +5,6 @@
 #include "ViewportScene/ViewportScene.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 Object::Object(std::wstring_view _name, std::wstring_view _tag)
     : Engine::Entity(_name, _tag)
     , transform(new Transform(this))

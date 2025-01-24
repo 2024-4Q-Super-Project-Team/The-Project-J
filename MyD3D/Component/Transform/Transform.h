@@ -35,19 +35,12 @@ public:
     void UpdateFromPxTransform(PxTransform pxTransform);
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
+
+//회전 관련
 public:
-    // Radian으로 받는 Vector3
-    inline void SetEulerAnglesFromRadian(const Vector3& euler) {
-        rotation = Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z);
-    }
-    // Degree로 받는 Vector3
-    inline void SetEulerAnglesFromDegree(const Vector3& euler) {
-        rotation = Quaternion::CreateFromYawPitchRoll(Degree::ToRadian(euler.y), Degree::ToRadian(euler.x), Degree::ToRadian(euler.z));
-    }
-    // Euler로 가져오기
-    inline Vector3 GetEulerAngles() const { 
-        return rotation.ToEuler();
-    }
+    void SetEulerAngles(const Vector3& euler) { rotation = Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z); }
+    Vector3 GetEulerAngles() const { return rotation.ToEuler(); }
+
 public:
     inline Transform* GetParent() const { return mParent; }
     inline Transform* GetChild(UINT _index = 0) {
@@ -59,7 +52,7 @@ public:
     inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
     inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
     inline const Vector3  Forward() { return GetWorldMatrix().Forward(); }
-    inline const Vector3  Up() { return GetWorldMatrix().Up(); }
+    inline const Vector3  Up() { return GetWorldMatrix().Up(); }     
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
     inline const PxTransform  GetPxTransform() { return mPxTransform; }
@@ -96,4 +89,9 @@ private:
 
 public:
     void EditorRendering(EditorViewerType _viewerType);
+public:
+    void LookAt(Transform* _dest);
+    //dotween함수
+
+
 };

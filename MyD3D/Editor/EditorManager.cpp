@@ -221,7 +221,6 @@ void EditorManager::InitImGui(ImGuiContext* _context, HWND _hwnd)
 
 void EditorManager::InitEditorImGui()
 {
-    // ImGui ���ؽ�Ʈ ����
     IMGUI_CHECKVERSION();
     mEditorContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(mEditorContext);
@@ -450,7 +449,6 @@ void EditorManager::ShowPopUp()
         ImGui::EndPopup();
     }
 }
-
 
 BOOL EditorManager::EditorReposition()
 {

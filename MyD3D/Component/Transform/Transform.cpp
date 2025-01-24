@@ -218,13 +218,22 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
         ImGui::DragFloat3((uid + "Position").c_str(), &position.x, 0.1f);
     }
     {
+        // 쿼터니언에서 오일러로
         Vector3 Euler = GetEulerAngles();
+        Vector3 EulerDegrees;
+        EulerDegrees.x = DirectX::XMConvertToDegrees(Euler.x);
+        EulerDegrees.y = DirectX::XMConvertToDegrees(Euler.y);
+        EulerDegrees.z = DirectX::XMConvertToDegrees(Euler.z);
         ImGui::Text("Rotation : ");
-        bool isTrigger =
-            ImGui::DragFloat3((uid + "Rotation").c_str(), &Euler.x, 0.1f);
+        bool isTrigger = ImGui::DragFloat3((uid + "Rotation").c_str(), &EulerDegrees.x, 0.1f);
         if (isTrigger)
         {
-            SetEulerAnglesFromRadian(Euler);
+            Euler.x = DirectX::XMConvertToRadians(EulerDegrees.x);
+            Euler.y = DirectX::XMConvertToRadians(EulerDegrees.y);
+            Euler.z = DirectX::XMConvertToRadians(EulerDegrees.z);
+
+            // 라디안에서 쿼터니언으로
+            SetEulerAngles(Euler);
         }
     }
     {

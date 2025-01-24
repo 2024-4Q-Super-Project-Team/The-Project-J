@@ -2,11 +2,11 @@
     {
         "components": [
             {
-                "id": 5,
+                "id": 8,
                 "name": "Transform"
             },
             {
-                "id": 6,
+                "id": 9,
                 "name": "Camera"
             }
         ],
@@ -16,11 +16,11 @@
     {
         "components": [
             {
-                "id": 9,
+                "id": 11,
                 "name": "Transform"
             },
             {
-                "id": 10,
+                "id": 12,
                 "name": "Light"
             }
         ],
@@ -30,83 +30,103 @@
     {
         "components": [
             {
+                "id": 13,
+                "name": "Transform"
+            }
+        ],
+        "id": 5,
+        "name": "monster.fbx_Prefab"
+    },
+    {
+        "components": [
+            {
+                "id": 14,
+                "name": "Transform"
+            }
+        ],
+        "id": 6,
+        "name": "RootNode"
+    },
+    {
+        "components": [
+            {
                 "id": 15,
                 "name": "Transform"
             },
             {
                 "id": 16,
-                "name": "Rigidbody"
-            },
-            {
-                "id": 17,
-                "name": "BoxCollider"
+                "name": "MeshRenderer"
             }
         ],
-        "id": 12,
-        "name": "nn"
-    },
-    {
-        "components": [
-            {
-                "id": 19,
-                "name": "Transform"
-            },
-            {
-                "id": 20,
-                "name": "Rigidbody"
-            },
-            {
-                "id": 21,
-                "name": "BoxCollider"
-            }
-        ],
-        "id": 13,
-        "name": "monster"
+        "id": 7,
+        "name": "NurbsPath.002"
     },
     {
         "components": [
             {
                 "id": 23,
                 "name": "Transform"
-            },
+            }
+        ],
+        "id": 17,
+        "name": "monster.fbx_Prefab"
+    },
+    {
+        "components": [
             {
                 "id": 24,
-                "name": "Rigidbody"
-            },
+                "name": "Transform"
+            }
+        ],
+        "id": 18,
+        "name": "RootNode"
+    },
+    {
+        "components": [
             {
                 "id": 25,
-                "name": "SphereCollider"
+                "name": "Transform"
+            },
+            {
+                "id": 26,
+                "name": "MeshRenderer"
             }
         ],
-        "id": 14,
-        "name": "sphere"
+        "id": 19,
+        "name": "NurbsPath.002"
     },
     {
         "components": [
             {
-                "id": 31,
+                "id": 27,
                 "name": "Transform"
-            },
-            {
-                "id": 32,
-                "name": "Camera"
             }
         ],
-        "id": 29,
-        "name": "Main_Camera"
+        "id": 20,
+        "name": "monster.fbx_Prefab"
     },
     {
         "components": [
             {
-                "id": 35,
+                "id": 28,
+                "name": "Transform"
+            }
+        ],
+        "id": 21,
+        "name": "RootNode"
+    },
+    {
+        "components": [
+            {
+                "id": 29,
                 "name": "Transform"
             },
             {
-                "id": 36,
-                "name": "Light"
+                "id": 30,
+                "name": "MeshRenderer"
             }
         ],
-        "id": 30,
-        "name": "Direction_Light"
+        "id": 22,
+        "name": "NurbsPath.002"
     }
 ]

@@ -104,4 +104,4 @@ using json = nlohmann::json;
 #include "Directxtk/CommonStates.h"
 using namespace DirectX::DX11;
 
-#define NULLID 99999999999
+#define NULLID 9999999

@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "name": "sad",
+        "name": "test",
         "object groups": [
             {
                 "id": 1,
@@ -9,17 +9,7 @@
             },
             {
                 "id": 2,
-                "name": "aa"
-            }
-        ]
-    },
-    {
-        "id": 27,
-        "name": "rr",
-        "object groups": [
-            {
-                "id": 28,
-                "name": "Default"
+                "name": "ee"
             }
         ]
     }

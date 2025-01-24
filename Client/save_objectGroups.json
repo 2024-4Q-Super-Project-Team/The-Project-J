@@ -10,38 +10,48 @@
             {
                 "id": 4,
                 "name": "Direction_Light"
+            },
+            {
+                "id": 5,
+                "name": "monster.fbx_Prefab"
+            },
+            {
+                "id": 6,
+                "name": "RootNode"
+            },
+            {
+                "id": 7,
+                "name": "NurbsPath.002"
             }
         ]
     },
     {
         "id": 2,
-        "name": "aa",
+        "name": "ee",
         "objects": [
             {
-                "id": 12,
-                "name": "nn"
+                "id": 17,
+                "name": "monster.fbx_Prefab"
             },
             {
-                "id": 13,
-                "name": "monster"
+                "id": 18,
+                "name": "RootNode"
             },
             {
-                "id": 14,
-                "name": "sphere"
-            }
-        ]
-    },
-    {
-        "id": 28,
-        "name": "Default",
-        "objects": [
-            {
-                "id": 29,
-                "name": "Main_Camera"
+                "id": 19,
+                "name": "NurbsPath.002"
             },
             {
-                "id": 30,
-                "name": "Direction_Light"
+                "id": 20,
+                "name": "monster.fbx_Prefab"
+            },
+            {
+                "id": 21,
+                "name": "RootNode"
+            },
+            {
+                "id": 22,
+                "name": "NurbsPath.002"
             }
         ]
     }

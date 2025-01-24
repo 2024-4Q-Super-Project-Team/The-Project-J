@@ -43,7 +43,6 @@ public:
     static BOOL IsRenderView(ViewportScene* _targetViewport);
     static BOOL IsFocusView(ViewportScene* _targetViewport);
     static BOOL EditorReposition();
-    static BOOL ProcessDragFile(std::vector<std::wstring>& _pathArr);
 private:
     static void InitImGui(ImGuiContext* _context, HWND _hwnd);
     static void InitEditorImGui();

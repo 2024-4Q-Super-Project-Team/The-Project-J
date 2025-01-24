@@ -18,6 +18,9 @@ MeshResource::MeshResource(ResourceHandle _handle, std::vector<Vertex>& _vertice
     SetEID("Mesh : " + Helper::ToString(_handle.GetKey()));
     mVertices = std::move(_vertices);
     mIndices = std::move(_indices);
+    // JSON_TODO : 핸들의 Path경로에 Json파일이 있는지 확인
+    // 있으면 해당 JSON의 값을 쓰고
+    // 없으면 JSON을 만들고 기본 값 사용
 }
 
 MeshResource::~MeshResource()

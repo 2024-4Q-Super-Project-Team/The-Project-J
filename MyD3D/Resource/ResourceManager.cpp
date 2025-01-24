@@ -5,10 +5,47 @@
 #include "Graphics/GraphicsManager.h"
 #include "Object/Object.h"
 
-ResourceTable ResourceManager::mResourceTables[static_cast<UINT>(eResourceType::SIZE)] = {};
+std::unordered_map<ResourceHandle, Resource*>       ResourceManager::mHandleFromResourceMappingTable[static_cast<UINT>(eResourceType::SIZE)] = {};
+std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromMainKeyMappingTable;
+std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromPathMappingTable;
+std::vector<ResourceHandle>                         ResourceManager::mLoadResourceList;
 
 BOOL ResourceManager::Initialize()
 {
+    FBXImporter::Initialize();
+
+    // 여기서 json을 읽어 mLoadResourceList에 핸들정보를 담는다.
+    // 그리고 로드한다.
+    Reload();
+
+    return TRUE;
+}
+
+void ResourceManager::Finalization()
+{
+    FBXImporter::Finalizaiton();
+}
+
+void ResourceManager::Reset()
+{
+    for (auto& table : mHandleFromResourceMappingTable)
+    {
+        for (auto& [handle, resource] : table)
+        {
+            SAFE_DELETE(resource);
+        }
+        table.clear();
+    }
+}
+
+void ResourceManager::Reload()
+{
+    // 리셋 -> json 다시 불러오기 -> 전부 Alloc
+    
+    Reset();    // 리셋
+    // JSON_TODO : 여기에 json불러오기 함수 넣어주세요 ㅠ
+    Alloc_All_Resource(); // 전부 Alloc
+
     // 스카이박스 메쉬
     MeshResource::InitSkyCubeMesh();
     PushResource<MeshResource>(MeshResource::SkyCubeMesh);
@@ -21,17 +58,20 @@ BOOL ResourceManager::Initialize()
     // 기본 머티리얼
     MaterialResource::InitDefaultMaterial();
     PushResource<MaterialResource>(MaterialResource::DefaultMaterial);
-    return FBXImporter::Initialize();
+
 }
 
-void ResourceManager::Finalization()
+void ResourceManager::Alloc_All_Resource()
 {
-    FBXImporter::Finalizaiton();
+    for (auto& handle : mLoadResourceList)
+    {
+        LoadFileFromHandle(handle);
+    }
 }
 
 BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
 {
-    ResourceTable& table = GetResourceTable(_handle.GetResourceType());
+    auto& table = GetResourceTable(_handle.GetResourceType());
     auto itr = table.find(_handle);
     if (FIND_SUCCESS(itr, table))
     {
@@ -47,17 +87,147 @@ BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
     return FALSE;
 }
 
-void ResourceManager::RegisterResourceHandle(ResourceHandle _handle)
+void ResourceManager::Free_All_Resource()
 {
-    ResourceTable& table = GetResourceTable(_handle.GetResourceType());
+    for (auto& table : mHandleFromResourceMappingTable)
+    {
+        for (auto& [handle, resource] : table)
+        {
+            SAFE_DELETE(resource);
+        }
+    }
+}
+
+BOOL ResourceManager::RegisterResourceHandle(ResourceHandle _handle)
+{
+    auto& table = GetResourceTable(_handle.GetResourceType());
     auto itr = table.find(_handle);
     if (FIND_FAILED(itr, table))
     {
         table[_handle] = nullptr;
+        mHandleFromMainKeyMappingTable[_handle.GetKey()] = _handle;
+        mHandleFromPathMappingTable[_handle.GetPath()] = _handle;
+        return TRUE;
+    }
+    else
+    {
+        Display::Console::Log("=====================================================\n");
+        Display::Console::Log("Warning - ResourceHandle is already used. \n");
+        Display::Console::Log("MainKey : ", _handle.GetKey(), '\n');
+        Display::Console::Log("SubKey : ", _handle.GetSubKey(), '\n');
+        Display::Console::Log("FilePath : ", _handle.GetPath(), '\n');
+        Display::Console::Log("=====================================================\n");
+        return FALSE;
     }
 }
 
-void ResourceManager::UnRegisterResourceHandle(ResourceHandle _handle)
+BOOL ResourceManager::UnRegisterResourceHandle(ResourceHandle _handle)
 {
+    {
+        auto& table = GetResourceTable(_handle.GetResourceType());
+        auto itr = table.find(_handle);
+        if (FIND_SUCCESS(itr, table))
+        {
+            SAFE_DELETE(itr->second);
+            table.erase(itr);
+        }
+        else
+        {
+            return FALSE;
+        }
+    }
+    {
+        auto itr = mHandleFromMainKeyMappingTable.find(_handle.GetKey());
+        if (FIND_SUCCESS(itr, mHandleFromMainKeyMappingTable))
+        {
+            mHandleFromMainKeyMappingTable.erase(itr);
+        }
+    }
+    {
+        auto itr = mHandleFromPathMappingTable.find(_handle.GetPath());
+        if (FIND_SUCCESS(itr, mHandleFromPathMappingTable))
+        {
+            mHandleFromPathMappingTable.erase(itr);
+        }
+    }
+    return TRUE;
 }
 
+std::unordered_map<ResourceHandle, Resource*>& ResourceManager::GetResourceTable(eResourceType _type)
+{
+    return mHandleFromResourceMappingTable[static_cast<UINT>(_type)];
+}
+
+std::pair<BOOL, ResourceHandle> ResourceManager::GetResourceHandleFromMainKey(const std::wstring _key)
+{
+    BOOL result = FALSE;
+    ResourceHandle handle = {};
+    auto itr = Helper::FindMap(_key, mHandleFromMainKeyMappingTable);
+    if (itr)
+    {
+        result = TRUE;
+        handle = *itr;
+    }
+    return std::make_pair(result, handle);
+}
+
+std::pair<BOOL, ResourceHandle> ResourceManager::GetResourceHandleFromPath(const std::wstring _key)
+{
+    BOOL result = FALSE;
+    ResourceHandle handle = {};
+    auto itr = Helper::FindMap(_key, mHandleFromPathMappingTable);
+    if (itr)
+    {
+        result = TRUE;
+        handle = *itr;
+    }
+    return std::make_pair(result, handle);
+}
+
+std::vector<ResourceHandle>& ResourceManager::GetLoadResourceList()
+{
+    return mLoadResourceList;
+}
+
+#define REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(type) \
+if(_handle.GetResourceType() == eResourceType::type)\
+if(ResourceManager::RegisterResourceHandle(_handle)){\
+ResourceManager::Alloc_Resource<type>(_handle);\
+ResourceManager::GetLoadResourceList().push_back(_handle);\
+return TRUE; \
+} else { \
+return FALSE;} \
+
+BOOL ResourceManager::LoadFileFromHandle(const ResourceHandle& _handle)
+{
+    REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(FBXModelResource);
+    REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(Texture2DResource);
+    REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(AudioResource);
+    return FALSE;
+}
+
+BOOL ResourceManager::LoadFileFromPath(const std::wstring& _path)
+{
+    std::wstring fileExt;
+    std::wstring fileName;
+    Helper::GetExtFromFilePath(_path, fileExt);
+    Helper::GetFileNameFromFilePath(_path, fileName);
+
+    ResourceHandle handle = { eResourceType::SIZE , fileName, L"", _path };
+    if (fileExt == L".fbx" || fileExt == L".FBX")
+        handle.mResourceType = eResourceType::FBXModelResource;
+    if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
+        handle.mResourceType = eResourceType::Texture2DResource;
+    if (fileExt == L".ogg" || fileExt == L".mp3" || fileExt == L".wav")
+        handle.mResourceType = eResourceType::AudioResource;
+
+    if (handle.GetResourceType() == eResourceType::SIZE)
+    {
+        Display::Console::Log(L"This extension is not supported. 지원하지 않는 확장자거나 경로입니다. (", _path, L")");
+        return FALSE;
+    }
+    else
+    {
+        return ResourceManager::LoadFileFromHandle(handle);
+    }
+}

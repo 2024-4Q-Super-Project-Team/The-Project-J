@@ -8,16 +8,23 @@ Resource::Resource(ResourceHandle _handle)
 
 void Resource::EditorRendering(EditorViewerType _viewerType)
 {
-	ImGui::Text(("Main Key : " + Helper::ToString(mHandle.GetKey())).c_str());
-	if (mHandle.GetSubKey().empty() == false)
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+	ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+	if (ImGui::TreeNodeEx(("Resource Handle Info" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
 	{
-		ImGui::Text(("Sub Key : " + Helper::ToString(mHandle.GetSubKey())).c_str());
-	}
-	if (mHandle.GetPath().empty() == false)
-	{
-		ImGui::Text(("Path : " + Helper::ToString(mHandle.GetPath())).c_str());
+		ImGui::Text(("Main Key : " + Helper::ToString(mHandle.GetKey())).c_str());
+		if (mHandle.GetSubKey().empty() == false)
+		{
+			ImGui::Text(("Sub Key : " + Helper::ToString(mHandle.GetSubKey())).c_str());
+		}
+		if (mHandle.GetPath().empty() == false)
+		{
+			ImGui::Text(("Path : " + Helper::ToString(mHandle.GetPath())).c_str());
+		}
+		ImGui::TreePop();
 	}
 	ImGui::Separator();
+	EDITOR_COLOR_POP(1);
 }
 
 const char* ResourceTypeToStr(eResourceType _type)

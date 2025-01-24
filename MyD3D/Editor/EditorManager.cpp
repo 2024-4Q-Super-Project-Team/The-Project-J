@@ -386,7 +386,8 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
         std::vector<std::wstring> pathArr;
         pathArr.reserve(numFiles);
 
-        for (size_t i = 0; i < numFiles; ++i) {
+        for (size_t i = 0; i < numFiles; ++i) 
+        {
             // 각 파일의 절대경로를 얻음
             wchar_t absPath[MAX_PATH];
             DragQueryFile(hDrop, i, absPath, MAX_PATH);
@@ -398,8 +399,11 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             }
             Display::Console::Log("Drag&Drop File : ", relPath, '\n');
         }
-        ProcessDragFile(pathArr);
-
+        
+        for (size_t i = 0; i < pathArr.size(); ++i)
+        {
+            ResourceManager::LoadFileFromPath(pathArr[i]);
+        }
         // 메모리 해제
         DragFinish(hDrop);
         break;
@@ -460,43 +464,4 @@ BOOL EditorManager::EditorReposition()
         return mEditorViewport->GetIWindow()->SetPosition(resPos);
     }
     return FALSE;
-}
-
-#define REGISTER_AND_ALLOC_RESOUCE(type) \
-ResourceHandle handle = { eResourceType::type, fileName, L"", _pathArr[i] };\
-ResourceManager::RegisterResourceHandle(handle);\
-ResourceManager::Alloc_Resource<type>(handle);\
-
-BOOL EditorManager::ProcessDragFile(std::vector<std::wstring>& _pathArr)
-{
-    for (size_t i = 0; i < _pathArr.size(); ++i)
-    {
-        std::wstring fileExt;
-        std::wstring fileName;
-        Helper::GetExtFromFilePath(_pathArr[i], fileExt);
-        Helper::GetFileNameFromFilePath(_pathArr[i], fileName);
-        if (fileExt == L".fbx" || fileExt == L".FBX")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(FBXModelResource);
-        }
-        if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(Texture2DResource);
-        }
-        if (fileExt == L".ogg" || fileExt == L".mp3" || fileExt == L".wav")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(AudioResource);
-        }
-    }
-    return TRUE;
-}
-
-void EditorManager::SetGizmoOperation(ImGuizmo::OPERATION operation)
-{
-    mCurrentGizmoOperation = operation;
-}
-
-ImGuizmo::OPERATION EditorManager::GetGizmoOperation()
-{
-    return mCurrentGizmoOperation;
 }

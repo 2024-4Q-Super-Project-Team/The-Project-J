@@ -7,6 +7,9 @@ AnimationResource::AnimationResource(ResourceHandle _handle)
     , mFramePerSecond(0.0f)
 {
     SetEID("Animation : " + Helper::ToString(_handle.GetKey()));
+    // JSON_TODO : 핸들의 Path경로에 Json파일이 있는지 확인
+    // 있으면 해당 JSON의 값을 쓰고
+    // 없으면 JSON을 만들고 기본 값 사용
 }
 AnimationResource::~AnimationResource()
 {
@@ -62,6 +65,7 @@ void AnimationResource::EditorRendering(EditorViewerType _viewerType)
     }
     case EditorViewerType::INSPECTOR:
     {
+        Resource::EditorRendering(_viewerType);
         ImGui::Text("Total Frame : %f", mTotalFrame);
         ImGui::Text("Frame Per Second : %f", mFramePerSecond);
         ImGui::Separator();

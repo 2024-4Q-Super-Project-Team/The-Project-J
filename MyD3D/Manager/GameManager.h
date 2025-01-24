@@ -13,6 +13,7 @@ class World;
 
 enum class eEngineRunType
 {
+	NONE,
 	GAME_MODE,
 	EDITOR_MODE,
 };

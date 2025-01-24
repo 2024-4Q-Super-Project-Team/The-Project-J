@@ -3,6 +3,13 @@
 
 class AudioGroup;
 
+enum class eAudioListenMode
+{
+	DEFAULT,
+	SOUND_2D,
+	SOUND_3D,
+};
+
 class AudioClip : public IAudioResource
 {
 public:
@@ -15,14 +22,13 @@ public:
 	// 오디오 그룹을 설정합니다.
 	void SetGroup(AudioGroup* _pGroup);
 	// 루프 설정을 합니다.
-	void SetLoop(bool _isLoop);
+	void SetLoop(BOOL _isLoop);
 	// 3D 입체 음향을 사용합니다. (왠만해선 사용X. 채널에서 설정 가능)
-	void SetSurround(bool _isSuround);
+	void SetSoundMode(eAudioListenMode _soundMode);
 public:
-	std::wstring	mPath;
-	bool			isLoop;
-	AudioGroup*		mGroup;
-	FMOD::Sound*	mSound;
+	std::wstring		mPath;
+	AudioGroup*			mGroup;
+	FMOD::Sound*		mSound;
 public:
 	inline auto GetSound() { return mSound; }
 	inline auto GetGroup() { return mGroup; }

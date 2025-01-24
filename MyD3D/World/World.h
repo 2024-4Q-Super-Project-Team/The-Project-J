@@ -55,6 +55,7 @@ public:
     ObjectGroup*    CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
 	// Rigidbody을 PxScene에 추가합니다. 
 	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
+	void RemovePxActor(PxActor* actor) { mPxScene->removeActor(*actor); }
     // 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
     void		    ReceiveObjectGroup(ObjectGroup* _recvGroup);
     // 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환

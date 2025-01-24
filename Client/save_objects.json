@@ -2,111 +2,111 @@
     {
         "components": [
             {
-                "id": 43,
+                "id": 5,
                 "name": "Transform"
             },
             {
-                "id": 44,
+                "id": 6,
                 "name": "Camera"
             }
         ],
-        "id": 41,
+        "id": 3,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 47,
+                "id": 9,
                 "name": "Transform"
             },
             {
-                "id": 48,
+                "id": 10,
                 "name": "Light"
             }
         ],
-        "id": 42,
+        "id": 4,
         "name": "Direction_Light"
     },
     {
         "components": [
             {
-                "id": 53,
+                "id": 15,
                 "name": "Transform"
             },
             {
-                "id": 54,
+                "id": 16,
                 "name": "Rigidbody"
             },
             {
-                "id": 55,
+                "id": 17,
                 "name": "BoxCollider"
             }
         ],
-        "id": 50,
+        "id": 12,
         "name": "nn"
     },
     {
         "components": [
             {
-                "id": 57,
+                "id": 19,
                 "name": "Transform"
             },
             {
-                "id": 58,
+                "id": 20,
                 "name": "Rigidbody"
             },
             {
-                "id": 59,
+                "id": 21,
                 "name": "BoxCollider"
             }
         ],
-        "id": 51,
+        "id": 13,
         "name": "monster"
     },
     {
         "components": [
             {
-                "id": 61,
+                "id": 23,
                 "name": "Transform"
             },
             {
-                "id": 62,
+                "id": 24,
                 "name": "Rigidbody"
             },
             {
-                "id": 63,
+                "id": 25,
                 "name": "SphereCollider"
             }
         ],
-        "id": 52,
+        "id": 14,
         "name": "sphere"
     },
     {
         "components": [
             {
-                "id": 69,
+                "id": 31,
                 "name": "Transform"
             },
             {
-                "id": 70,
+                "id": 32,
                 "name": "Camera"
             }
         ],
-        "id": 67,
+        "id": 29,
         "name": "Main_Camera"
     },
     {
         "components": [
             {
-                "id": 73,
+                "id": 35,
                 "name": "Transform"
             },
             {
-                "id": 74,
+                "id": 36,
                 "name": "Light"
             }
         ],
-        "id": 68,
+        "id": 30,
         "name": "Direction_Light"
     }
 ]

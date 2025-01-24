@@ -13,19 +13,14 @@ Collider::Collider(Object* _owner) : Component(_owner)
 
 Collider::~Collider()
 {
-	mShape->release();
+	if (mShape)
+	{
+		mShape->release();
+	}
 }
 
 void Collider::Start()
 {
-	Rigidbody* rigidbody = gameObject->GetComponent<Rigidbody>();
-	if (rigidbody)
-		rigidbody->AddShape(mShape);
-
-	SetIsTrigger();
-	SetLocalPosition();
-	SetRotation();
-
 }
 
 void Collider::Tick()
@@ -82,6 +77,17 @@ void Collider::SetRotation()
 	PxQuat pxRot;
 	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+}
+
+void Collider::AddShapeToRigidbody()
+{
+	Rigidbody* rigidbody = gameObject->GetComponent<Rigidbody>();
+	if (rigidbody)
+		rigidbody->AddShape(mShape);
+
+	SetIsTrigger();
+	SetLocalPosition();
+	SetRotation();
 }
 
 

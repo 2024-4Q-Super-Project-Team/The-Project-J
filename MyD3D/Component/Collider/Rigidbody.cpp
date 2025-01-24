@@ -4,21 +4,14 @@
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 #include "World/WorldManager.h"
+#include "ObjectGroup/ObjectGroup.h"
 
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
 	SetEID("Rigidbody");
 	mType = eComponentType::RIGIDBODY;
 	mRigidActor = nullptr;
-}
 
-Rigidbody::~Rigidbody()
-{
-	mRigidActor->release();
-}
-
-void Rigidbody::Start()
-{
 	gameObject->transform->UpdateMatrix();
 	gameObject->transform->UpdatePxTransform();
 
@@ -35,8 +28,23 @@ void Rigidbody::Start()
 	}
 	mRigidActor->userData = gameObject;
 
-	EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()->AddPxActor(mRigidActor);
+	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+}
+
+Rigidbody::~Rigidbody()
+{
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerObjectGroup()->GetWorld()->RemovePxActor(mRigidActor);
+		mRigidActor->release();
+	}
+		
+}
+
+void Rigidbody::Start()
+{
+	
 }
 
 void Rigidbody::Tick()
@@ -127,6 +135,27 @@ void Rigidbody::EditorRender()
 {
 }
 
+void Rigidbody::SetIsDynamic(bool _isDynamic)
+{
+	if (mIsDynamic == _isDynamic) return;
+
+	mIsDynamic = _isDynamic; 
+
+	EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()->RemovePxActor(mRigidActor);
+	mRigidActor->release();
+
+	if (mIsDynamic) //RigidDynamic
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidDynamic(gameObject->transform->GetPxTransform());
+	}
+	else//RigidStatic
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidStatic(gameObject->transform->GetPxTransform());
+	}
+}
+
 void Rigidbody::SetMass(float mass)
 {
 	if (!mIsDynamic) return;
@@ -168,7 +197,10 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 	ImGui::Separator();
 
 	ImGui::Text("isDynamic : "); ImGui::SameLine;
-	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+	if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mEditorIsDynamic))
+	{
+		SetIsDynamic(mEditorIsDynamic);
+	}
 
 
 	ImGui::Separator();

@@ -11,11 +11,10 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial());
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
+	AddShapeToRigidbody();
 
 	mBS.Center = gameObject->transform->position;
 	mBS.Radius = mInitialRadius;
-
-
 	mRadius = mInitialRadius;
 }
 

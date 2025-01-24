@@ -35,6 +35,7 @@ protected:
     void SetIsTrigger();
     virtual void SetLocalPosition();
     virtual void SetRotation();
+    void AddShapeToRigidbody();
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;

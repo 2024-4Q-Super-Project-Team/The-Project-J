@@ -27,14 +27,14 @@ public:
 
 public:
     void SetMass(float mass);
-
+    void SetIsKinematic(bool b);
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
-    bool mEditorIsDynamic = mIsDynamic;
+    bool mIsKinematic = false;
     float mMass = 1.f;
 
     bool mFreezePosition[3];

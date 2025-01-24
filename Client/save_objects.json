@@ -37,11 +37,15 @@
             },
             {
                 "id": 12,
-                "name": "PlayerController"
+                "name": "Rigidbody"
+            },
+            {
+                "id": 13,
+                "name": "BoxCollider"
             }
         ],
         "id": 10,
-        "name": "gg",
-        "tag": "yee"
+        "name": "test",
+        "tag": ""
     }
 ]

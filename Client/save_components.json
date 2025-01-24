@@ -101,15 +101,30 @@
         ]
     },
     {
-        "contactOffset": 0.10000000149011612,
-        "gravity": 9.800000190734863,
-        "height": 4.0,
         "id": 12,
-        "jumpSpeed": 30.0,
-        "moveSpeed": 0.5,
-        "name": "PlayerController",
-        "radius": 2.0,
-        "slopeLimit": 0.7070000171661377,
-        "stepOffset": 0.5
+        "isDynamic": true,
+        "isKinematic": false,
+        "mass": 1.0,
+        "name": "Rigidbody"
+    },
+    {
+        "extents": [
+            1.0,
+            1.0,
+            1.0
+        ],
+        "id": 13,
+        "isTrigger": false,
+        "name": "BoxCollider",
+        "position": [
+            0.0,
+            0.0,
+            0.0
+        ],
+        "rotation": [
+            0.0,
+            0.0,
+            0.0
+        ]
     }
 ]

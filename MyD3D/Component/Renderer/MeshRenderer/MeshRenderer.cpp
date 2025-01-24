@@ -81,6 +81,7 @@ void MeshRenderer::Draw(Camera* _camera)
         mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
 
         _camera->PushDrawList(this);
+        //_camera->PushWireList(this);
     }
 }
 
@@ -129,6 +130,16 @@ void MeshRenderer::DrawShadow(Light* _pLight)
             GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
             D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
         }
+    }
+}
+
+void MeshRenderer::DrawWire()
+{
+    if (mMesh)
+    {
+        mMesh->Bind();
+        DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix());
+        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
 

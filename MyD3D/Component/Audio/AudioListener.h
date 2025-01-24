@@ -27,8 +27,8 @@ public:
     // ∞≈∏Æ ∞®ºË¿≤
     inline void SetDistanceAttenuationScale(float _val) { mDistanceAttenuationScale = Clamp(_val, 0.0f, 1.0f); }
 public:
-    virtual json Serialize() override { return json(); }
-    virtual void Deserialize(json& j) override {}
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j);
 public:
     static AudioListener* mMainListener;
 

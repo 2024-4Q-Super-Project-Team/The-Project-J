@@ -14,56 +14,68 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 
 	mBS.Center = gameObject->transform->position;
 	mBS.Radius = mInitialRadius;
-
-
 	mRadius = mInitialRadius;
 }
 
 void SphereCollider::Start()
 {
+	Collider::Start();
 }
 
 void SphereCollider::Tick()
 {
+	Collider::Tick();
 }
 
 void SphereCollider::FixedUpdate()
 {
+	Collider::FixedUpdate();
 }
 
 void SphereCollider::PreUpdate()
 {
+	Collider::PreUpdate();
 }
 
 void SphereCollider::Update()
 {
+	Collider::Update();
 }
 
 void SphereCollider::PostUpdate()
 {
+	Collider::PostUpdate();
 }
 
 void SphereCollider::PreRender()
 {
+	Collider::PreRender();
 }
 
 void SphereCollider::Render()
 {
+	Collider::Render();
 }
 
 void SphereCollider::Draw(Camera* _camera)
 {
-#ifdef _DEBUG
-	_camera->PushDrawList(this);
-#endif
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
+		_camera->PushWireList(this);
+	}
 }
 
 void SphereCollider::PostRender()
 {
+	Collider::PostRender();
 }
 
 void SphereCollider::EditorUpdate()
 {
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
+		EditorManager::mEditorCamera.PushWireList(this);
+	}
 }
 
 void SphereCollider::EditorRender()
@@ -80,6 +92,7 @@ json SphereCollider::Serialize()
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["radius"] = mRadius;
+
 	return ret;
 }
 
@@ -95,15 +108,28 @@ void SphereCollider::Deserialize(json& j)
 	mRotation.y = j["rotation"][1].get<float>();
 	mRotation.z = j["rotation"][2].get<float>();
 	mRadius = j["radius"].get<float>();
+
+
+	SetRadius();
+	SetRotation();
+	SetLocalPosition();
+
+	mBS.Center = mPosition;
+	mBS.Radius = mRadius;
 }
 
 void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 {
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mBS, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
+}
+
+void SphereCollider::DrawWire()
+{
+	// 원본 구체(로컬 좌표계 기준)
+	DirectX::BoundingSphere localSphere = mBS;
+	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
+	DirectX::BoundingSphere transformedSphere;
+	localSphere.Transform(transformedSphere, worldMatrix);
+	Debug::Draw(DebugRenderer::GetBatch(), transformedSphere, mBaseColor);
 }
 
 void SphereCollider::SetRadius()

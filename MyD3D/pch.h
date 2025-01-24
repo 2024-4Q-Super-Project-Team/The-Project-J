@@ -8,7 +8,8 @@
 #include <iostream>
 #include <fstream>
 #include <wrl/client.h> 
-
+#include <concepts>
+#include <type_traits>
 #include <string>
 #include <string_view>
 #include <array>
@@ -45,12 +46,12 @@ using namespace DirectX;
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 //Imguizmo
-#include "ThirdParty\imguizmo\ImGuizmo.h"
-#include "ThirdParty\imguizmo\ImSequencer.h"
-#include "ThirdParty\imguizmo\ImZoomSlider.h"
-#include "ThirdParty\imguizmo\ImCurveEdit.h"
-#include "ThirdParty\imguizmo\GraphEditor.h"
-#include "ThirdParty\imguizmo\ImGradient.h"
+#include "Thirdparty\imguizmo\ImGuizmo.h"
+#include "Thirdparty\imguizmo\ImSequencer.h"
+#include "Thirdparty\imguizmo\ImZoomSlider.h"
+#include "Thirdparty\imguizmo\ImCurveEdit.h"
+#include "Thirdparty\imguizmo\GraphEditor.h"
+#include "Thirdparty\imguizmo\ImGradient.h"
 // SimpleMath
 #include <directxtk/SimpleMath.h>
 using namespace DirectX::SimpleMath;
@@ -60,12 +61,19 @@ using namespace DirectX::SimpleMath;
 #include <assimp\postprocess.h>
 //Physics
 #include <physx/PxPhysicsAPI.h>
-#include <physx/PxPhysics.h>
+#include "physx/cudamanager/PxCudaContextManager.h"
+#include "physx/cudamanager/PxCudaContext.h"
+
 using namespace physx;
 //json
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-
+// UI Text
+#include <tchar.h>
+#include <cstdarg>  // 가변 인자 처리
+#include <stdexcept>
+#include <directxtk/SpriteBatch.h>
+#include <directxtk/SpriteFont.h>
 #include "../Window/framework.h"
 // Helper
 #include "Helper/Data/ColorF.h"
@@ -87,6 +95,7 @@ using json = nlohmann::json;
 #include "Component/ComponentFactory/ComponentFactory.h"
 #include "Manager/GameManager.h"
 #include "Editor/EditorManager.h"
+#include "UIManager/UIManager.h"
 
 //Debug Draw
 #include "Graphics/Extra/DebugDraw.h"
@@ -95,4 +104,4 @@ using json = nlohmann::json;
 #include "Directxtk/CommonStates.h"
 using namespace DirectX::DX11;
 
-#define NULLID 99999999999
+#define NULLID 9999999

@@ -168,25 +168,22 @@ void Transform::SetWorldMatrix(Matrix& _worldMatrix)
 json Transform::Serialize()
 {
     json ret;
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["name"] = "Transform";
  
     ret["position"] = { position.x, position.y, position.z };
     ret["rotation"] = { rotation.x, rotation.y, rotation.z, rotation.w };
     ret["scale"] = { scale.x, scale.y, scale.z };
-    ret["root parent"] = mRootParent ? mRootParent->GetId() : NULLID;
-    ret["parent"] = mParent ? mParent->GetId() : NULLID;
-    //mchildren은 deserialize 할 때 parent 정보 이용해서 넣어주기 (SetParent())
+    ret["root parent"] = mRootParent ? mRootParent->gameObject->GetId() : NULLID;
+    ret["parent"] = mParent ? mParent->gameObject->GetId() : NULLID;
 
-    //컴포넌트의 id를 들고 있기 때문에, 컴포넌트를 모두 생성만 한 다음 
-    //데이터는 따로 마지막에 넣어준다.
-    //오브젝트 그룹 - 오브젝트 - 컴포넌트종류  이렇게 파일 (1) -> 먼저 역직렬화
-    //컴포넌트 목록 {id, 데이터} 이렇게 파일 (2) -> 나중에 역직렬화. id로 컴포넌트 찾아서 데이터 넣어줌.
     return ret;
 }
 
 void Transform::Deserialize(json& j)
 {
+    SetId(j["id"].get<unsigned int>());
+
     position.x = j["position"][0].get<float>();
     position.y = j["position"][1].get<float>();
     position.z = j["position"][2].get<float>();
@@ -203,14 +200,14 @@ void Transform::Deserialize(json& j)
     unsigned int rootId = j["root parent"].get<unsigned int>();
     if (rootId == NULLID)
         mRootParent = nullptr;
-    else;
-        // JSON_TODO: id로 Transform 찾아서 넣는다. 
+    else
+        mRootParent = static_cast<Object*>(Engine::SaveBase::mMap[rootId])->GetComponent<Transform>();
 
     unsigned int parentId = j["parent"].get<unsigned int>();
     if (parentId == NULLID)
-        mRootParent = nullptr;
-    else;
-        // JSON_TODO: id로 Transform 찾아서 넣는다. 
+        mParent = nullptr;
+    else
+        SetParent(static_cast<Object*>(Engine::SaveBase::mMap[parentId])->GetComponent<Transform>());
 }
 
 void Transform::EditorRendering(EditorViewerType _viewerType)

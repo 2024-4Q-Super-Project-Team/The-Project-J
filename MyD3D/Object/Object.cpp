@@ -290,10 +290,11 @@ void Object::Deserialize(json& j)
     {
         std::string name = componentJson["name"].get<std::string>();
         Component* component;
-        if (name == "Transform" ) //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
+        if (name == "Transform") //Transform은 기본 컴포넌트이므로 추가로 생성하지 않습니다. 
             component = transform;
         else
             component = static_cast<Component*>(CREATE_COMPONENT(name, this));
+
         if (component)
             component->SetId(componentJson["id"].get<unsigned int>());
     }

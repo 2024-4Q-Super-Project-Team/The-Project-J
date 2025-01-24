@@ -29,16 +29,20 @@ public:
     virtual json Serialize()  = 0;
     virtual void Deserialize(json& j)  = 0;
 
+    static bool bDrawMode;
+
 protected:
     void SetIsTrigger();
     virtual void SetLocalPosition();
     virtual void SetRotation();
+    void AddShapeToRigidbody();
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;
     Vector3 mPosition;
     Vector3 mRotation;
     Quaternion mQuatRotation;
+    Rigidbody* mRefRigidbody;
 protected:
     const Color mBaseColor = Color(0, 1, 0, 1);
     const Color mIntersectColor = Color(1, 0, 0, 1);

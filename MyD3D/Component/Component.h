@@ -50,7 +50,7 @@ public:
 	explicit Component(Object* _owner);
 	virtual ~Component();
 public:
-    virtual void Start() = 0;
+	virtual void Start() {};
 	virtual void Tick()	= 0;
 	virtual void FixedUpdate() = 0;
 	virtual void PreUpdate() = 0;

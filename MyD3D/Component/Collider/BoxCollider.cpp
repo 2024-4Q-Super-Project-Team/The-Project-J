@@ -11,7 +11,7 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-
+	
 	mOBB.Center = gameObject->transform->position;
 	mOBB.Extents = mInitialSize;
 	mOBB.Orientation = Quaternion::Identity;
@@ -61,10 +61,10 @@ void BoxCollider::Render()
 
 void BoxCollider::Draw(Camera* _camera)
 {
-	Collider::Draw(_camera);
-#ifdef _DEBUG
-	_camera->PushDrawList(this);
-#endif
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
+		_camera->PushWireList(this);
+	}
 }
 
 void BoxCollider::PostRender()
@@ -74,6 +74,10 @@ void BoxCollider::PostRender()
 
 void BoxCollider::EditorUpdate()
 {
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
+		EditorManager::mEditorCamera.PushWireList(this);
+	}
 }
 
 void BoxCollider::EditorRender()
@@ -92,6 +96,7 @@ json BoxCollider::Serialize()
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["extents"] = { mExtents.x, mExtents.y, mExtents.z };
+
 	return ret;
 }
 
@@ -109,16 +114,26 @@ void BoxCollider::Deserialize(json& j)
 	mExtents.x = j["extents"][0].get<float>();
 	mExtents.y = j["extents"][1].get<float>();
 	mExtents.z = j["extents"][2].get<float>();
+
+	SetExtents();
+	SetRotation();
+	SetLocalPosition();
+
+	mOBB.Center = mPosition;
+	mOBB.Orientation = mQuatRotation;
+	mOBB.Extents = mExtents;
 }
 
-void BoxCollider::DrawObject(Matrix& _view, Matrix& _projection)
+void BoxCollider::DrawWire()
 {
-	SetEID("BoxComponent");
-#ifdef _DEBUG
-	GraphicsManager::DebugDrawBegin();
-	Debug::Draw(GraphicsManager::GetBatch(), mOBB, mBaseColor);
-	GraphicsManager::DebugDrawEnd();
-#endif
+	// 원본 OBB(로컬 좌표계 기준)
+	DirectX::BoundingOrientedBox localOBB = mOBB;
+	// 월드 변환 행렬
+	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
+	// 월드 좌표계로 변환된 OBB
+	DirectX::BoundingOrientedBox transformedOBB;
+	localOBB.Transform(transformedOBB, worldMatrix);
+	Debug::Draw(DebugRenderer::GetBatch(), transformedOBB, mBaseColor);
 }
 
 void BoxCollider::SetExtents()
@@ -159,4 +174,5 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	{
 		SetIsTrigger();
 	}
+
 }

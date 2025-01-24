@@ -2,6 +2,8 @@
 #include "Collider.h"
 #include "Component/Collider/Rigidbody.h"
 
+bool Collider::bDrawMode = false;
+
 Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;
@@ -11,19 +13,21 @@ Collider::Collider(Object* _owner) : Component(_owner)
 
 Collider::~Collider()
 {
-	mShape->release();
+	if (mShape)
+	{
+		mShape->release();
+	}
 }
 
 void Collider::Start()
 {
-	Rigidbody* rigidbody = gameObject->GetComponent<Rigidbody>();
-	if (rigidbody)
-		rigidbody->AddShape(mShape);
-
-	SetIsTrigger();
-	SetLocalPosition();
-	SetRotation();
-
+	//Collider는 Rigidbody가 있어야 동작하므로 Rigidbody가 없으면 만들어줍니다. 
+	if (gameObject->GetComponent<Rigidbody>() == nullptr)
+	{
+		Rigidbody* rigid = new Rigidbody(gameObject);
+		mRefRigidbody = gameObject->EditorAddComponent<Rigidbody>();
+	}
+	AddShapeToRigidbody();
 }
 
 void Collider::Tick()
@@ -80,6 +84,17 @@ void Collider::SetRotation()
 	PxQuat pxRot;
 	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+}
+
+void Collider::AddShapeToRigidbody()
+{
+	mRefRigidbody = gameObject->GetComponent<Rigidbody>();
+	if (mRefRigidbody)
+		mRefRigidbody->AddShape(mShape);
+
+	SetIsTrigger();
+	SetLocalPosition();
+	SetRotation();
 }
 
 

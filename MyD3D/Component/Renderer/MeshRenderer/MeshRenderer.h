@@ -30,6 +30,7 @@ public:
 public:
     virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
     virtual void DrawShadow(Light* _pLight) override;
+    virtual void DrawWire() override;
 public:
     virtual void SetMesh(ResourceHandle _handle) override;
     virtual void SetMesh(MeshResource* _pResource) override;

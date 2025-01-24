@@ -55,18 +55,22 @@ public:
     ObjectGroup*    CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
 	// Rigidbody을 PxScene에 추가합니다. 
 	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
+	void RemovePxActor(PxActor* actor) { mPxScene->removeActor(*actor); }
     // 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
     void		    ReceiveObjectGroup(ObjectGroup* _recvGroup);
     // 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환
     ObjectGroup*    GetObjectGroup(std::wstring_view _name);
     // 오브젝트 그룹 컨테이너를 반환
     inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
+public:
 	//직렬화
 	json Serialize();
 	void Deserialize(json& j);
 	
 	json SerializeDefault();
 	void DeserializeDefault(json& j);
+	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
+	std::vector<ResourceHandle> mNeedResourceHandleTable;
 public:
     inline auto GetOwnerViewportScene() const { return mOwnerScene; }
     inline auto GetLightSystem() const { return mLightSystem; }

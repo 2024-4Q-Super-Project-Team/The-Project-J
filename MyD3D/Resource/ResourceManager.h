@@ -39,7 +39,10 @@ public:
 public:
     static ResourceTable& GetResourceTable(eResourceType _type) { return mResourceTables[static_cast<UINT>(_type)]; }
 private:
+    // 실 리소스를 매핑하고 저장하는 테이블
     static ResourceTable mResourceTables[static_cast<UINT>(eResourceType::SIZE)];
+    // 리소스 핸들 저장 정보를 직렬화하기위한 테이블
+    static std::unordered_set<std::wstring> mResourceHandleTable;
 };
 
 template<typename TYPE>

@@ -19,6 +19,8 @@
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
 
+#include "Manager/GameManager.h"
+
 class Component;
 class ObjectGroup;
 
@@ -60,6 +62,8 @@ public:
     T* AddComponent(Args&&... args);
     // 특정 타입의 컴포넌트가 있으면 그 컴포넌트 중 제일 첫 번째 컴포넌트가 반환됨. 없으면 nullptr반환
     template <class T>
+    T* EditorAddComponent();
+    template <class T>
     T* GetComponent();
     // 특정 타입 컴포넌트를 배열로 전부 반환. 없으면 빈 배열이 반환됨.
     template <class T>
@@ -91,7 +95,25 @@ T* Object::AddComponent(Args&&... args)
     eComponentType type = component->GetType();
     int index = static_cast<UINT>(type);
     mComponentArray[index].push_back(component);
-    // Start는 나중에 호출
+
+    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+    {
+        // JSON_TODO : 이거 컴포넌트 추가도 Addcomponent로 하지 말아주세요 ㅠㅠ
+        //component->Start();
+    }
+
+    return component;
+}
+
+template<class T>
+inline T* Object::EditorAddComponent()
+{
+    static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
+    T* component = new T(this);
+    eComponentType type = component->GetType();
+    int index = static_cast<UINT>(type);
+    mComponentArray[index].push_back(component);
+
     return component;
 }
 

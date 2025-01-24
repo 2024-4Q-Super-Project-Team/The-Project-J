@@ -103,26 +103,38 @@ struct Serial {
     std::string key;
     Editor::IWidget* widget = nullptr;
 };
-
+// 기본 템플릿 구조체 정의
 template <typename T>
-struct SerialData : public Serial
-{
+struct SerialData : public Serial {
+public:
     T val;
-
-    SerialData(std::string_view _name, MonoBehaviour* mono)
-        : Serial(_name)
-    {
-        mono->AddField(this);
-        if (std::is_same<T, Vector3>::value)
-            widget = new Editor::InputVector3(_name.data(), &val);
-
-    }
+    SerialData(std::string_view _name, MonoBehaviour* mono, T _initial)
+        : Serial(_name), val(_initial)
+    { mono->AddField(this); }
 };
 
+// 매크로 정의
+#define SERIALDATA_TEMPLATE(Type, Class)         \
+template <>                                      \
+class SerialData<Type> : public Serial {         \
+public:                                          \
+    Type val;                                    \
+    SerialData(std::string_view _name, MonoBehaviour* mono, Type _initial) \
+        : Serial(_name), val(_initial) {         \
+        mono->AddField(this);                    \
+        widget = new Class(_name.data(), &val);  \
+    }                                            \
+};
+
+SERIALDATA_TEMPLATE(INT, Editor::DragInt);
+SERIALDATA_TEMPLATE(FLOAT, Editor::DragFloat);
+SERIALDATA_TEMPLATE(Vector2, Editor::DragVector2);
+SERIALDATA_TEMPLATE(Vector3, Editor::DragVector3);
+SERIALDATA_TEMPLATE(Vector4, Editor::DragVector4);
+
 #ifdef _DEBUG
-#define SerializeField(Type, Name)\
-	SerialData<Type> Name##Data = SerialData<Type>(#Name, this);\
-	Type Name
+#define SerializeField(Type, Name, Init)\
+	SerialData<Type> Name## = SerialData<Type>(#Name, this, Init);
 #else
 #define SerializeField(Type, Name)\
 	Type Name

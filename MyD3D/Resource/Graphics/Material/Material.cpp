@@ -61,6 +61,7 @@ void MaterialResource::Create()
 
 void MaterialResource::Bind()
 {
+    GraphicsManager::GetRasterizerState(mRasterMode)->Bind();
     for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
     {
         if (mMaterialMapTexture[i])

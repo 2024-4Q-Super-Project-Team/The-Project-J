@@ -4,24 +4,30 @@
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 #include "World/WorldManager.h"
+#include "ObjectGroup/ObjectGroup.h"
 
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
 	SetEID("Rigidbody");
 	mType = eComponentType::RIGIDBODY;
 	mRigidActor = nullptr;
+
+	gameObject->transform->UpdateMatrix();
+	gameObject->transform->UpdatePxTransform();
 }
 
 Rigidbody::~Rigidbody()
 {
-	mRigidActor->release();
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerObjectGroup()->GetWorld()->RemovePxActor(mRigidActor);
+		mRigidActor->release();
+	}
+		
 }
 
 void Rigidbody::Start()
 {
-	gameObject->transform->UpdateMatrix();
-	gameObject->transform->UpdatePxTransform();
-
 	if (mIsDynamic == false)
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
@@ -33,9 +39,8 @@ void Rigidbody::Start()
 			->createRigidDynamic(gameObject->transform->GetPxTransform());
 	}
 	mRigidActor->userData = gameObject;
-
-	EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()->AddPxActor(mRigidActor);
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
 }
 
 void Rigidbody::Tick()
@@ -70,7 +75,38 @@ void Rigidbody::PostUpdate()
 void Rigidbody::PreRender()
 {
 	//리지드액터 -> 오브젝트 동기화 
-	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
+	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
+	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
+
+	//Position Freeze!
+	if (mFreezePosition[0])
+		updatedPosition[0] = gameObject->transform->position.x;
+	if (mFreezePosition[1])
+		updatedPosition[1] = gameObject->transform->position.y;
+	if (mFreezePosition[2])
+		updatedPosition[2] = gameObject->transform->position.z;
+
+
+	//Rotation Freeze!
+	if (mFreezeRotation[0])
+	{
+		Quaternion q = { updatedQuaternion.x,updatedQuaternion.y, updatedQuaternion.z, updatedQuaternion.w };
+		Vector3 updatedRotation = q.ToEuler();
+		
+		if (mFreezeRotation[0])
+			updatedRotation.x = gameObject->transform->rotation.x;
+		if (mFreezeRotation[1])
+			updatedRotation.y = gameObject->transform->rotation.y;
+		if (mFreezePosition[2])
+			updatedRotation.z = gameObject->transform->rotation.z;
+
+		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.z, updatedRotation.x );
+		XMStoreFloat4(&q, quat);
+		updatedQuaternion = PxQuat(q.x, q.y, q.z, q.w);
+	}
+
+	PxTransform finalTransform(updatedPosition, updatedQuaternion);
+	gameObject->transform->UpdateFromPxTransform(finalTransform);
 }
 
 void Rigidbody::Render()
@@ -97,8 +133,8 @@ void Rigidbody::EditorRender()
 
 void Rigidbody::SetMass(float mass)
 {
-	if (!mIsDynamic) return;
-
+	mMass = mass;
+	if (!mRigidActor || !mIsDynamic) return;
 	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
 	rigid->setMass(mMass); 
 }
@@ -109,7 +145,7 @@ json Rigidbody::Serialize()
 	ret["id"] = GetId();
 	ret["name"] = "Rigidbody";
 
-	ret["isDynamic"] = mIsDynamic;
+	ret["isDynamic"] = mEditorIsDynamic;
 	ret["mass"] = mMass;
 	return ret;
 }
@@ -128,14 +164,30 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
 	ImGui::Text("Mass : "); ImGui::SameLine;
-	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 0.f))
+	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 1000.f))
 	{
 		SetMass(mMass);
 	}
 
 	ImGui::Separator();
 
-	ImGui::Text("isDynamic : "); ImGui::SameLine;
-	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+	ImGui::Text(u8"isDynamic(저장 후 에디터 재시작해야 반영됨) : "); ImGui::SameLine;
+	if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mEditorIsDynamic));
+
+	ImGui::Separator();
+
+	ImGui::Text("Freeze Position : "); ImGui::SameLine(); ImGui::Text("x "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezePositionX").c_str(), (bool*)&mFreezePosition[0]));
+	ImGui::SameLine(); ImGui::Text("y "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezePositionY").c_str(), (bool*)&mFreezePosition[1]));
+		ImGui::SameLine(); ImGui::Text("z "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezePositionZ").c_str(), (bool*)&mFreezePosition[2]));
+
+	ImGui::Text("Freeze Rotation : "); ImGui::SameLine(); ImGui::Text("x "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezeRotationX").c_str(), (bool*)&mFreezeRotation[0]));
+	ImGui::SameLine(); ImGui::Text("y "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezeRotationY").c_str(), (bool*)&mFreezeRotation[1]));
+	ImGui::SameLine(); ImGui::Text("z "); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "FreezeRotationnZ").c_str(), (bool*)&mFreezeRotation[2]));
 
 }

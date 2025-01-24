@@ -84,7 +84,6 @@ void Camera::Render()
         mCameraCBuffer.InverseProjection = XMMatrixTranspose(mCameraCBuffer.InverseProjection);
         // 카메라 상수버퍼 바인딩
         GraphicsManager::GetConstantBuffer(eCBufferType::Camera)->UpdateGPUResoure(&mCameraCBuffer);
-        GraphicsManager::SetDebugViewProjection(mViewMatrix, mProjectionMatrix);
         // 월드의 오브젝트를 그린다.
         world->Draw(this);
     }
@@ -194,6 +193,7 @@ void Camera::UpdateZSort()
 
 void Camera::DrawShadow()
 {
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::BACKFACE_CULLING)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Reset();
 
@@ -297,9 +297,24 @@ void Camera::DrawDeferred()
     mDeferredRenderTarget->ResetAllSRV();
 }
 
+void Camera::DrawWire()
+{
+    DebugRenderer::BeginDraw();
+    DebugRenderer::UpdateViewProjection(mViewMatrix, mProjectionMatrix);
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND])
+    {
+        drawInfo->DrawWire();
+    }
+    mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND].clear();
+
+    DebugRenderer::EndDraw();
+}
+
 void Camera::DrawSwapChain()
 {
     // QuadFrame Pass
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
@@ -310,66 +325,6 @@ void Camera::DrawSwapChain()
     D3DGraphicsRenderer::DrawCall(6, 0, 0);
 
     mMainRenderTarget->ResetAllSRV();
-}
-
-json Camera::Serialize()
-{
-    json ret;
-
-    ret["id"] = GiveId();
-    ret["name"] = "Camera";
-    ret["fov angle"] = mFovAngle.GetAngle();
-    ret["near"] = mProjectionNear;
-    ret["far"] = mProjectionFar;
-    ret["type"] = mProjectionType;
-    ret["ortho width"] = mOrthoWidth;
-    ret["ortho height"] = mOrthoHeight;
-
-    return ret;
-}
-
-void Camera::Deserialize(json& j)
-{
-    SetId(j["id"].get<unsigned int>());
-    mFovAngle = Degree(j["fov angle"].get<float>());
-    mProjectionNear = j["near"].get<float>();
-    mProjectionFar = j["far"].get<float>();
-    mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
-    mOrthoWidth = j["ortho width"].get<float>();
-    mOrthoHeight = j["ortho height"].get<float>();
-}
-
-Vector3 Camera::GetDistance(Transform* _transform)
-{
-    Matrix cameraSpaceMatrix = mViewMatrix * _transform->GetWorldMatrix();
-    return cameraSpaceMatrix.Translation();
-}
-
-D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
-{
-    if (mMainRenderTarget)
-    {
-        return mMainRenderTarget.get();
-    }
-    return nullptr;
-}
-
-void Camera::PushDrawList(IRenderContext* _renderContext)
-{
-    if (_renderContext == nullptr) return;
-    eBlendModeType blendMode = _renderContext->GetBlendMode();
-    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
-}
-
-void Camera::PushLight(Light* _pLight)
-{
-    if (_pLight == nullptr) return;
-    if (mLightCBuffer.NumLight < MAX_LIGHT_COUNT)
-    {
-        mLightCBuffer.LightProp[mLightCBuffer.NumLight] = _pLight->GetProperty();
-        mLightCBuffer.NumLight++;
-        mSceneLights.push_back(_pLight);
-    }
 }
 
 void Camera::ExcuteDrawList()
@@ -401,7 +356,6 @@ void Camera::ExcuteDrawList()
                 default:
                     break;
                 }
-
                 ////////////////////////////////////////////////////
                 // SkyBox Draw
                 ////////////////////////////////////////////////////
@@ -416,11 +370,82 @@ void Camera::ExcuteDrawList()
 
             mLocalViewport->Bind();  // 카메라 출력될 영역 사이즈
             DrawSwapChain();
+            ////////////////////////////////////////////////////
+            // WireFrame Draw
+            ////////////////////////////////////////////////////
+            DrawWire();
         }
     }
     // 조명 리스트를 초기화한다.
     mSceneLights.clear();
     mLightCBuffer.NumLight = 0;
+}
+
+json Camera::Serialize()
+{
+    json ret;
+
+    ret["id"] = GiveId();
+    ret["name"] = "Camera";
+    ret["fov angle"] = mFovAngle;
+    ret["near"] = mProjectionNear;
+    ret["far"] = mProjectionFar;
+    ret["type"] = mProjectionType;
+    ret["ortho width"] = mOrthoWidth;
+    ret["ortho height"] = mOrthoHeight;
+
+    return ret;
+}
+
+void Camera::Deserialize(json& j)
+{
+    SetId(j["id"].get<unsigned int>());
+    mFovAngle = j["fov angle"].get<float>();
+    mProjectionNear = j["near"].get<float>();
+    mProjectionFar = j["far"].get<float>();
+    mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
+    mOrthoWidth = j["ortho width"].get<float>();
+    mOrthoHeight = j["ortho height"].get<float>();
+}
+
+Vector3 Camera::GetDistance(Transform* _transform)
+{
+    Matrix cameraSpaceMatrix = mViewMatrix * _transform->GetWorldMatrix();
+    return cameraSpaceMatrix.Translation();
+}
+
+D3DBitmapRenderTarget* Camera::GetCurrentRenderTarget()
+{
+    if (mMainRenderTarget)
+    {
+        return mMainRenderTarget.get();
+    }
+    return nullptr;
+}
+
+void Camera::PushDrawList(IRenderContext* _renderContext)
+{
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = _renderContext->GetBlendMode();
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
+}
+
+void Camera::PushLightList(Light* _pLight)
+{
+    if (_pLight == nullptr) return;
+    if (mLightCBuffer.NumLight < MAX_LIGHT_COUNT)
+    {
+        mLightCBuffer.LightProp[mLightCBuffer.NumLight] = _pLight->GetProperty();
+        mLightCBuffer.NumLight++;
+        mSceneLights.push_back(_pLight);
+    }
+}
+
+void Camera::PushWireList(IRenderContext* _renderContext)
+{
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = eBlendModeType::WIREFRAME_BELND;
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
 void Camera::EditorRendering(EditorViewerType _viewerType)
@@ -454,7 +479,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
     ImGui::Separator();
 
     ImGui::Text("fovAngle : ");
-    ImGui::SliderFloat((uid + "fovAngle").c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
+    ImGui::SliderFloat((uid + "fovAngle").c_str(), &mFovAngle, 1.0f, Degree::MaxDegree);
     ImGui::Text("Near : ");
     ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
     ImGui::Text("Far : ");

@@ -26,7 +26,6 @@ public:
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
 
 public:
-    void SetIsDynamic(bool _isDynamic) { mIsDynamic = _isDynamic; }
     void SetMass(float mass);
 
 public:
@@ -35,7 +34,12 @@ public:
 private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
+    bool mEditorIsDynamic = mIsDynamic;
     float mMass = 1.f;
+
+    bool mFreezePosition[3];
+    bool mFreezeRotation[3];
+
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

@@ -50,9 +50,9 @@ public:
     // 카메라에 Draw할 컴포넌트를 Push합니다.
     void PushDrawList(IRenderContext* _renderContext);
     // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
-    void PushLight(Light* _pLight);
-    // 렌더 큐의 Draw 작업 수행
-    void ExcuteDrawList(); 
+    void PushLightList(Light* _pLight);
+    // 카메라에 그릴 와이어프레임 정보를 Push합니다.
+    void PushWireList(IRenderContext* _renderContext);
 private:
     void UpdateCamera();
     void UpdateMatrix();
@@ -62,7 +62,10 @@ private:
     void DrawShadow();
     void DrawForward();
     void DrawDeferred();
+    void DrawWire();
     void DrawSwapChain();
+    // 렌더 큐의 Draw 작업 수행
+    void ExcuteDrawList();
 public:
     Vector3 GetDistance(Transform* _transform);
 public:
@@ -96,7 +99,7 @@ private:
     Matrix                  mViewMatrix;
     Matrix                  mProjectionMatrix;
 
-    Degree                  mFovAngle;
+    float                   mFovAngle;
     float                   mProjectionNear;
     float                   mProjectionFar;
 

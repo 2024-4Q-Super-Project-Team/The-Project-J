@@ -4,6 +4,7 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "ObjectGroup/ObjectGroup.h"
 
 PxControllerManager* PlayerController::ControllerManager = nullptr;
 
@@ -11,6 +12,14 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
+
+	if (ControllerManager == nullptr)
+		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerObjectGroup()->GetWorld()->GetPxScene());
+
+	
+
+	Vector3 pos = gameObject->transform->position;
+	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 }
 
 PlayerController::~PlayerController()
@@ -21,10 +30,6 @@ PlayerController::~PlayerController()
 
 void PlayerController::Start()
 {
-
-	if (ControllerManager == nullptr)
-		ControllerManager = PxCreateControllerManager(*EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()->GetPxScene());
-
 	PxCapsuleControllerDesc capsuleDesc;
 	capsuleDesc.height = mHeight;
 	capsuleDesc.radius = mRadius;
@@ -34,11 +39,7 @@ void PlayerController::Start()
 	capsuleDesc.contactOffset = mContactOffset;
 	capsuleDesc.slopeLimit = mSlopeLimit;
 	capsuleDesc.stepOffset = mStepOffset;
-
 	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
-
-	Vector3 pos = gameObject->transform->position;
-	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 }
 
 void PlayerController::Tick()

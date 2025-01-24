@@ -1,8 +1,6 @@
 #include "pch.h"
 #include "ParticleSystem.h"
 #include "Physics/PhysicsManager.h"
-#include "physx/cudamanager/PxCudaContextManager.h"
-#include "physx/cudamanager/PxCudaContext.h"
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Graphics/GraphicsManager.h"
@@ -180,6 +178,10 @@ void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 }
 
 void ParticleSystem::DrawShadow(Light* _pLight)
+{
+}
+
+void ParticleSystem::DrawWire()
 {
 }
 

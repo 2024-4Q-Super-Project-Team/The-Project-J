@@ -16,7 +16,16 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	if (ControllerManager == nullptr)
 		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerObjectGroup()->GetWorld()->GetPxScene());
 
-	
+	PxCapsuleControllerDesc capsuleDesc;
+	capsuleDesc.height = mHeight;
+	capsuleDesc.radius = mRadius;
+	capsuleDesc.position = PxExtendedVec3(0, 0, 0);
+	capsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
+	capsuleDesc.density = 10.f;
+	capsuleDesc.contactOffset = mContactOffset;
+	capsuleDesc.slopeLimit = mSlopeLimit;
+	capsuleDesc.stepOffset = mStepOffset;
+	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
 
 	Vector3 pos = gameObject->transform->position;
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
@@ -30,16 +39,7 @@ PlayerController::~PlayerController()
 
 void PlayerController::Start()
 {
-	PxCapsuleControllerDesc capsuleDesc;
-	capsuleDesc.height = mHeight;
-	capsuleDesc.radius = mRadius;
-	capsuleDesc.position = PxExtendedVec3(0, 0, 0);
-	capsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
-	capsuleDesc.density = 10.f;
-	capsuleDesc.contactOffset = mContactOffset;
-	capsuleDesc.slopeLimit = mSlopeLimit;
-	capsuleDesc.stepOffset = mStepOffset;
-	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
+
 }
 
 void PlayerController::Tick()
@@ -119,14 +119,14 @@ void PlayerController::Deserialize(json& j)
 	SetId(j["id"].get<unsigned int>());
 
 	mHeight = j["height"].get<float>();
-	mRadius = j["radius"][0].get<float>();
-	mContactOffset = j["contactOffset"][1].get<float>();
-	mSlopeLimit = j["slopeLimit"][2].get<float>();
-	mStepOffset = j["stepOffset"][0].get<float>();
+	mRadius = j["radius"].get<float>();
+	mContactOffset = j["contactOffset"].get<float>();
+	mSlopeLimit = j["slopeLimit"].get<float>();
+	mStepOffset = j["stepOffset"].get<float>();
 
-	mMoveSpeed = j["moveSpeed"][1].get<float>();
-	mJumpSpeed = j["jumpSpeed"][2].get<float>();
-	mGravity = j["gravity"][0].get<float>();
+	mMoveSpeed = j["moveSpeed"].get<float>();
+	mJumpSpeed = j["jumpSpeed"].get<float>();
+	mGravity = j["gravity"].get<float>();
 }
 
 void PlayerController::EditorRendering(EditorViewerType _type)

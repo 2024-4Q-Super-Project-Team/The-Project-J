@@ -6,6 +6,7 @@
 #include "World/World.h"
 #include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
+#include "Save/SaveManager.h"
 
 namespace Editor
 {
@@ -171,7 +172,7 @@ namespace Editor
     }
     void HierarchyViewer::SaveWorld()
     {
-        mRefWorldManager->SaveWorlds();
+        SaveManager::Save();
     }
     void HierarchyViewer::SetFocusInspector(InspectorViewer* _pInspector)
     {

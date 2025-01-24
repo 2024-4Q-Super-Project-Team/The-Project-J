@@ -385,7 +385,8 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
         std::vector<std::wstring> pathArr;
         pathArr.reserve(numFiles);
 
-        for (size_t i = 0; i < numFiles; ++i) {
+        for (size_t i = 0; i < numFiles; ++i) 
+        {
             // 각 파일의 절대경로를 얻음
             wchar_t absPath[MAX_PATH];
             DragQueryFile(hDrop, i, absPath, MAX_PATH);
@@ -397,8 +398,11 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             }
             Display::Console::Log("Drag&Drop File : ", relPath, '\n');
         }
-        ProcessDragFile(pathArr);
-
+        
+        for (size_t i = 0; i < pathArr.size(); ++i)
+        {
+            ResourceManager::LoadFileFromPath(pathArr[i]);
+        }
         // 메모리 해제
         DragFinish(hDrop);
         break;

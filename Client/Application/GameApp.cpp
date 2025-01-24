@@ -2,6 +2,7 @@
 #include "GameApp.h"
 //#include "Contents/GameApp/World/TestWorld.h"
 #include "ScriptRegister.h"
+#include "Save/SaveManager.h"
 
 ViewportScene* GameApp::mMainScene = nullptr;
 Display::IWindow* GameApp::mGameWindow = nullptr;
@@ -35,9 +36,7 @@ BOOL GameApp::OnPostInitialize()
         GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG
     }
-
-    WorldManager* wrdMng = mMainScene->GetWorldManager();
-    wrdMng->LoadWorlds();
+    SaveManager::Load();
 
     return TRUE;
 }

@@ -1,0 +1,51 @@
+[
+    {
+        "components": [
+            {
+                "id": 5,
+                "name": "Transform"
+            },
+            {
+                "id": 6,
+                "name": "Camera"
+            }
+        ],
+        "id": 3,
+        "name": "Main_Camera",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 8,
+                "name": "Transform"
+            },
+            {
+                "id": 9,
+                "name": "Light"
+            }
+        ],
+        "id": 4,
+        "name": "Direction_Light",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 11,
+                "name": "Transform"
+            },
+            {
+                "id": 12,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 13,
+                "name": "BoxCollider"
+            }
+        ],
+        "id": 10,
+        "name": "lol",
+        "tag": ""
+    }
+]

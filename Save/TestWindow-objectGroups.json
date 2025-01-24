@@ -1,0 +1,26 @@
+[
+    {
+        "id": 1,
+        "name": "Default",
+        "objects": [
+            {
+                "id": 3,
+                "name": "Main_Camera"
+            },
+            {
+                "id": 4,
+                "name": "Direction_Light"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "wow",
+        "objects": [
+            {
+                "id": 10,
+                "name": "lol"
+            }
+        ]
+    }
+]

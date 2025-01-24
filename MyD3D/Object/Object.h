@@ -79,6 +79,8 @@ protected:
     std::vector<Component*> mComponentArray[ComponentSize];
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
+private:
+    Matrix identity = Matrix::Identity;
 };
 
 template <class T, typename... Args>

@@ -15,9 +15,9 @@ namespace Editor
         void RenderGizmo();
     public:
         void SetFocusObject(IEditorObject* _object);
-        IEditorObject* GetFocusObject();
+        static IEditorObject* GetFocusObject();
     private:
-        IEditorObject* mFocusObject;
+        static IEditorObject* mFocusObject;
         bool mbComponentChoosing = false;
 
     };

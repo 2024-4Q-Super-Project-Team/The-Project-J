@@ -14,22 +14,6 @@ Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 
 	gameObject->transform->UpdateMatrix();
 	gameObject->transform->UpdatePxTransform();
-
-	if (mRigidActor) return;
-	if (mIsDynamic == false)
-	{
-		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidStatic(gameObject->transform->GetPxTransform());
-	}
-	else
-	{
-		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidDynamic(gameObject->transform->GetPxTransform());
-	}
-	mRigidActor->userData = gameObject;
-
-	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
 }
 
 Rigidbody::~Rigidbody()
@@ -44,7 +28,19 @@ Rigidbody::~Rigidbody()
 
 void Rigidbody::Start()
 {
-	
+	if (mIsDynamic == false)
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidStatic(gameObject->transform->GetPxTransform());
+	}
+	else
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidDynamic(gameObject->transform->GetPxTransform());
+	}
+	mRigidActor->userData = gameObject;
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
 }
 
 void Rigidbody::Tick()
@@ -135,31 +131,10 @@ void Rigidbody::EditorRender()
 {
 }
 
-void Rigidbody::SetIsDynamic(bool _isDynamic)
-{
-	if (mIsDynamic == _isDynamic) return;
-
-	mIsDynamic = _isDynamic; 
-
-	EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()->RemovePxActor(mRigidActor);
-	mRigidActor->release();
-
-	if (mIsDynamic) //RigidDynamic
-	{
-		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidDynamic(gameObject->transform->GetPxTransform());
-	}
-	else//RigidStatic
-	{
-		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidStatic(gameObject->transform->GetPxTransform());
-	}
-}
-
 void Rigidbody::SetMass(float mass)
 {
-	if (!mIsDynamic) return;
-
+	mMass = mass;
+	if (!mRigidActor || !mIsDynamic) return;
 	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
 	rigid->setMass(mMass); 
 }
@@ -170,7 +145,7 @@ json Rigidbody::Serialize()
 	ret["id"] = GetId();
 	ret["name"] = "Rigidbody";
 
-	ret["isDynamic"] = mIsDynamic;
+	ret["isDynamic"] = mEditorIsDynamic;
 	ret["mass"] = mMass;
 	return ret;
 }
@@ -189,19 +164,15 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
 	ImGui::Text("Mass : "); ImGui::SameLine;
-	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 0.f))
+	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 1000.f))
 	{
 		SetMass(mMass);
 	}
 
 	ImGui::Separator();
 
-	ImGui::Text("isDynamic : "); ImGui::SameLine;
-	if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mEditorIsDynamic))
-	{
-		SetIsDynamic(mEditorIsDynamic);
-	}
-
+	ImGui::Text(u8"isDynamic(저장 후 에디터 재시작해야 반영됨) : "); ImGui::SameLine;
+	if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mEditorIsDynamic));
 
 	ImGui::Separator();
 

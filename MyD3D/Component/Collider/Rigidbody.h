@@ -26,7 +26,6 @@ public:
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
 
 public:
-    void SetIsDynamic(bool _isDynamic);
     void SetMass(float mass);
 
 public:

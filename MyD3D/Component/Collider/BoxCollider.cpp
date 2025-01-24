@@ -11,8 +11,7 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
-	AddShapeToRigidbody();
-
+	
 	mOBB.Center = gameObject->transform->position;
 	mOBB.Extents = mInitialSize;
 	mOBB.Orientation = Quaternion::Identity;

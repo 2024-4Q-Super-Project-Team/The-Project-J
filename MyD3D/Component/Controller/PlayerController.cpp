@@ -16,17 +16,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	if (ControllerManager == nullptr)
 		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerObjectGroup()->GetWorld()->GetPxScene());
 
-	PxCapsuleControllerDesc capsuleDesc;
-	capsuleDesc.height = mHeight;
-	capsuleDesc.radius = mRadius;
-	capsuleDesc.position = PxExtendedVec3(0, 0, 0);
-	capsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
-	capsuleDesc.density = 10.f;
-	capsuleDesc.contactOffset = mContactOffset;
-	capsuleDesc.slopeLimit = mSlopeLimit;
-	capsuleDesc.stepOffset = mStepOffset;
-
-	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
+	
 
 	Vector3 pos = gameObject->transform->position;
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
@@ -40,6 +30,16 @@ PlayerController::~PlayerController()
 
 void PlayerController::Start()
 {
+	PxCapsuleControllerDesc capsuleDesc;
+	capsuleDesc.height = mHeight;
+	capsuleDesc.radius = mRadius;
+	capsuleDesc.position = PxExtendedVec3(0, 0, 0);
+	capsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
+	capsuleDesc.density = 10.f;
+	capsuleDesc.contactOffset = mContactOffset;
+	capsuleDesc.slopeLimit = mSlopeLimit;
+	capsuleDesc.stepOffset = mStepOffset;
+	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
 }
 
 void PlayerController::Tick()

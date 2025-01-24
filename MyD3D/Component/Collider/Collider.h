@@ -42,6 +42,7 @@ protected:
     Vector3 mPosition;
     Vector3 mRotation;
     Quaternion mQuatRotation;
+    Rigidbody* mRefRigidbody;
 protected:
     const Color mBaseColor = Color(0, 1, 0, 1);
     const Color mIntersectColor = Color(1, 0, 0, 1);

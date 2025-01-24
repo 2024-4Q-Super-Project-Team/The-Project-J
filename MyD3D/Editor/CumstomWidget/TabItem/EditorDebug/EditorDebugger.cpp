@@ -18,8 +18,5 @@ void Editor::EditorDebugger::Render()
     D3DGraphicsDevice::GetVirtualMemoryInfo(str);
     ImGui::Text("%s", str.c_str());
 
-    ImGui::Text("\nDebug Draw Mode");
-    ImGui::Checkbox("##debugdraw", &Collider::bDrawMode);
-
     EditorManager::mEditorCamera.EditorRendering(EditorViewerType::DEFAULT);
 }

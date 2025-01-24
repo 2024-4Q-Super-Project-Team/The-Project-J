@@ -99,7 +99,7 @@ private:
     Matrix                  mViewMatrix;
     Matrix                  mProjectionMatrix;
 
-    Degree                  mFovAngle;
+    float                   mFovAngle;
     float                   mProjectionNear;
     float                   mProjectionFar;
 

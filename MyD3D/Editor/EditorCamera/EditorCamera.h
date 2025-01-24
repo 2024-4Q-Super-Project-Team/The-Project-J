@@ -16,10 +16,12 @@ public:
 public:
     void PushDrawList(IRenderContext* _renderContext);
     void PushLightList(Light* _lightComponent);
+    void PushWireList(IRenderContext* _renderContext);
     void ExcuteDrawList();
 public:
     void DrawShadow();
     void DrawObject();
+    void DrawWire();
     void DrawSwapChain();
 public:
     // 현재 카메라가 쓰고 있는 리소스 뷰
@@ -52,6 +54,7 @@ public:
     UINT                    mDrawedMeshCount;
     UINT                    mDrawedLightCount;
     bool                    mIsSkyBoxRendering = TRUE;
+    bool                    mIsColliderRendering = TRUE;
 public:
     void EditorRendering(EditorViewerType _viewerType);
 };

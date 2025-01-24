@@ -61,8 +61,10 @@ void SphereCollider::Render()
 
 void SphereCollider::Draw(Camera* _camera)
 {
-	if (Collider::bDrawMode)
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
 		_camera->PushWireList(this);
+	}
 }
 
 void SphereCollider::PostRender()
@@ -72,6 +74,10 @@ void SphereCollider::PostRender()
 
 void SphereCollider::EditorUpdate()
 {
+	if (EditorManager::mEditorCamera.mIsColliderRendering)
+	{
+		EditorManager::mEditorCamera.PushWireList(this);
+	}
 }
 
 void SphereCollider::EditorRender()

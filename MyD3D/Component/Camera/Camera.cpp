@@ -387,7 +387,7 @@ json Camera::Serialize()
 
     ret["id"] = GiveId();
     ret["name"] = "Camera";
-    ret["fov angle"] = mFovAngle.GetAngle();
+    ret["fov angle"] = mFovAngle;
     ret["near"] = mProjectionNear;
     ret["far"] = mProjectionFar;
     ret["type"] = mProjectionType;
@@ -400,7 +400,7 @@ json Camera::Serialize()
 void Camera::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
-    mFovAngle = Degree(j["fov angle"].get<float>());
+    mFovAngle = j["fov angle"].get<float>();
     mProjectionNear = j["near"].get<float>();
     mProjectionFar = j["far"].get<float>();
     mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
@@ -479,7 +479,7 @@ void Camera::EditorRendering(EditorViewerType _viewerType)
     ImGui::Separator();
 
     ImGui::Text("fovAngle : ");
-    ImGui::SliderFloat((uid + "fovAngle").c_str(), mFovAngle, 1.0f, Degree::MaxDegree);
+    ImGui::SliderFloat((uid + "fovAngle").c_str(), &mFovAngle, 1.0f, Degree::MaxDegree);
     ImGui::Text("Near : ");
     ImGui::SliderFloat((uid + "Near").c_str(), &mProjectionNear, 0.1f, 1000.0f);
     ImGui::Text("Far : ");

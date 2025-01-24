@@ -162,6 +162,13 @@ void EditorCamera::PushLightList(Light* _lightComponent)
     }
 }
 
+void EditorCamera::PushWireList(IRenderContext* _renderContext)
+{
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = eBlendModeType::WIREFRAME_BELND;
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
+}
+
 void EditorCamera::ExcuteDrawList()
 {
     GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
@@ -185,8 +192,9 @@ void EditorCamera::ExcuteDrawList()
 
             mMainRenderTarget->EndDraw();
 
-
             DrawSwapChain();
+
+            DrawWire();
         }
     }
     // 조명 리스트를 초기화한다.
@@ -252,6 +260,20 @@ void EditorCamera::DrawObject()
     GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
 }
 
+void EditorCamera::DrawWire()
+{
+    DebugRenderer::BeginDraw();
+    DebugRenderer::UpdateViewProjection(mViewMatrix, mProjectionMatrix);
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND])
+    {
+        drawInfo->DrawWire();
+    }
+    mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND].clear();
+
+    DebugRenderer::EndDraw();
+}
+
 void EditorCamera::DrawSwapChain()
 {
     // QuadFrame Pass
@@ -296,6 +318,6 @@ void EditorCamera::EditorRendering(EditorViewerType _viewerType)
     ImGui::SliderFloat((uid + "MoveSpeed").c_str(), &mCameraMoveSpeed, 1.0f, 10000.0f);
     ImGui::Separator();
     ImGui::Checkbox(("Rendering SkyBox" + uid).c_str(), &mIsSkyBoxRendering);
-    
+    ImGui::Checkbox(("Rendering Collider" + uid).c_str(), &mIsColliderRendering);
 }
 

@@ -266,6 +266,7 @@ json Object::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = Helper::ToString(mName);
+    ret["tag"] = Helper::ToString(mTag);
 
     json cmps = json::array();
     for (auto& cmpArr : mComponentArray)
@@ -285,6 +286,8 @@ json Object::Serialize()
 
 void Object::Deserialize(json& j)
 {
+    mTag = Helper::ToWString(j["tag"].get<std::string>());
+
     for (auto& componentJson : j["components"])
     {
         std::string name = componentJson["name"].get<std::string>();
@@ -326,6 +329,13 @@ void Object::EditorRendering(EditorViewerType _viewerType)
             if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
                 std::wstring newName = Helper::ToWString(std::string(buffer));
                 SetName(newName);
+            }
+            static char buffer2[128] = "";
+            strcpy_s(buffer2, Helper::ToString(GetTag()).c_str());
+            ImGui::Text("Tag "); ImGui::SameLine();
+            if (ImGui::InputText((uid + "Tag").c_str(), buffer2, IM_ARRAYSIZE(buffer2))) {
+                std::wstring newTag = Helper::ToWString(std::string(buffer2));
+                SetTag(newTag);
             }
         }
         ImGui::Separator();

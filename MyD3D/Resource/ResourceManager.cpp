@@ -118,7 +118,7 @@ BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
         }
         delete table[_handle];
         table[_handle] = nullptr;
-        Display::Console::Log("Free_Resource -  MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+        Display::Console::Log("Free_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
         return TRUE;
     }
     return FALSE;

@@ -28,7 +28,6 @@ void WorldManager::Tick()
 {
 	UpdateWorld();
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnTick();
 		UPDATE_ENTITY(mCurrActiveWorld, Tick())
 	}
 }
@@ -36,7 +35,6 @@ void WorldManager::Tick()
 void WorldManager::FixedUpdate()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnFixedUpdate();
         UPDATE_ENTITY(mCurrActiveWorld, FixedUpdate());
 	}
 }
@@ -44,7 +42,6 @@ void WorldManager::FixedUpdate()
 void WorldManager::PreUpdate()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnPreUpdate();
 		UPDATE_ENTITY(mCurrActiveWorld, PreUpdate())
 	}
 }
@@ -52,7 +49,6 @@ void WorldManager::PreUpdate()
 void WorldManager::Update()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnUpdate();
 		UPDATE_ENTITY(mCurrActiveWorld, Update())
 	}
 }
@@ -60,7 +56,6 @@ void WorldManager::Update()
 void WorldManager::PostUpdate()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnPostUpdate();
 		UPDATE_ENTITY(mCurrActiveWorld, PostUpdate())
 	}
 }
@@ -68,7 +63,6 @@ void WorldManager::PostUpdate()
 void WorldManager::PreRender()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnPreRender();
 		UPDATE_ENTITY(mCurrActiveWorld, PreRender())
 	}
 }
@@ -76,7 +70,6 @@ void WorldManager::PreRender()
 void WorldManager::Render()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnRender();
 		UPDATE_ENTITY(mCurrActiveWorld, Render())
 	}
 }
@@ -84,7 +77,6 @@ void WorldManager::Render()
 void WorldManager::PostRender()
 {
 	if (mCurrActiveWorld) {
-		mCurrActiveWorld->OnPostRender();
 		UPDATE_ENTITY(mCurrActiveWorld, PostRender())
 	}
 }

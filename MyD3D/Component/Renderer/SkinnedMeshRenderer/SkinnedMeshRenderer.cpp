@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "SkinnedMeshRenderer.h"
-#include "Component/Camera/Camera.h"
-#include "Component/Transform/Transform.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
-#include "Resource/Graphics/FBXModel/FBXModel.h"
-#include "Resource/Graphics/Mesh/Mesh.h"
-#include "Resource/Graphics/Material/Material.h"
-#include "Resource/Graphics/Texture/Texture.h"
+#include "ViewportScene/ViewportManager.h"
+#include "World/WorldManager.h"
+#include "Resource/ResourceManager.h"
+
+#include "ViewportScene/ViewportScene.h"
+#include "World/World.h"
 #include "Object/Object.h"
 
 SkinnedMeshRenderer::SkinnedMeshRenderer(Object* _owner)
@@ -63,6 +63,9 @@ void SkinnedMeshRenderer::PostRender()
 
 void SkinnedMeshRenderer::EditorUpdate()
 {
+    if (ViewportManager::GetActiveViewport() == nullptr) return;
+    if (ViewportManager::GetActiveViewport()->GetWorldManager() == nullptr) return;
+    ViewportManager::GetActiveViewport()->GetWorldManager()->GetActiveWorld()->mNeedResourceHandleTable.push_back(mMeshHandle);
 }
 
 void SkinnedMeshRenderer::EditorRender()

@@ -49,7 +49,7 @@ public:
 
     virtual void EditorUpdate()	override;
     virtual void EditorRender()	override;
-private:
+public:
     virtual void _CALLBACK OnEnable()  override;
     virtual void _CALLBACK OnDisable() override;
     virtual void _CALLBACK OnDestroy() override;

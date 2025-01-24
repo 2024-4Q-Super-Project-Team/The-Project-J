@@ -63,10 +63,6 @@ public:
 	// ===========================================
 	// 
 	// CallBackÇÔ¼ö===============================
-public:
-	virtual void _CALLBACK OnEnable() {};
-	virtual void _CALLBACK OnDisable() {};
-	virtual void _CALLBACK OnDestroy() {};
 
 	virtual void _CALLBACK OnCollisionEnter(Collider* _origin, Collider* _destination) {};
 	virtual void _CALLBACK OnCollisionStay(Collider* _origin, Collider* _destination) {};

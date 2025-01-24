@@ -26,6 +26,8 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     , mOwnerScene(_pViewport)
     , mLightSystem(new LightSystem)
 {
+    SetEID(Helper::ToString(_name.data()));
+    mNeedResourceHandleTable.reserve(30);
     if (!isEmpty)
     {
         mPickingRay = new PickingRay;
@@ -73,31 +75,26 @@ void World::Start()
 void World::Tick()
 {
     UpdateGroup();
-    OnTick();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Tick())
 }
 
 void World::FixedUpdate()
 {
-    OnFixedUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, FixedUpdate())
 }
 
 void World::PreUpdate()
 {
-    OnPreUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PreUpdate())
 }
 
 void World::Update()
 {
-    OnUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Update())
 }
 
 void World::PostUpdate()
 {
-    OnPostUpdate();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostUpdate())
 
 
@@ -111,13 +108,11 @@ void World::PostUpdate()
 
 void World::PreRender()
 {
-    OnPreRender();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PreRender())
 }
 
 void World::Render()
 {
-    OnRender();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Render())
 }
 
@@ -128,7 +123,6 @@ void World::Draw(Camera* _camera)
 
 void World::PostRender()
 {
-    OnPostRender();
     FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostRender())
 }
 
@@ -285,6 +279,24 @@ void World::DeserializeDefault(json& j)
     }
 }
 
+void _CALLBACK World::OnEnable()
+{
+    for (auto& group : mObjectGroups)
+    {
+        group->OnEnable();
+    }
+    return void _CALLBACK();
+}
+
+void _CALLBACK World::OnDisable()
+{
+    for (auto& group : mObjectGroups)
+    {
+        group->OnDisable();
+    }
+    return void _CALLBACK();
+}
+
 void World::InitWorldObject()
 {
     // 월드 초기 생성시 기본적으로 제공하는 그룹과 오브젝트를 만들어준다.
@@ -304,13 +316,14 @@ void World::InitWorldObject()
 
 void World::UpdateGroup()
 {
+    mNeedResourceHandleTable.clear();
     // 삭제 및 생성 처리
     for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end();)
     {
-
         // 삭제
         if ((*itr)->GetState() == EntityState::Destroy)
         {
+            SAFE_DELETE(*itr);
             itr = mObjectGroups.erase(itr);
             continue;
         }
@@ -327,4 +340,53 @@ void World::UpdateGroup()
             return left->GetOrder() < right->GetOrder(); // 오름차순
         }
     );
+}
+
+void World::EditorRendering(EditorViewerType _viewerType)
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+
+    switch (_viewerType)
+    {
+        case EditorViewerType::DEFAULT:
+        {
+            break;
+        }
+        case EditorViewerType::HIERARCHY:
+        {
+            break;
+        }
+        case EditorViewerType::INSPECTOR:
+        {
+            {
+                ImGui::Text("World");
+                static char buffer1[128] = "";
+                strcpy_s(buffer1, Helper::ToString(GetName()).c_str());
+                if (ImGui::InputText((uid + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {
+                    std::wstring newName = Helper::ToWString(std::string(buffer1));
+                    SetName(newName);
+                }
+                static char buffer2[128] = "";
+                strcpy_s(buffer2, Helper::ToString(GetTag()).c_str());
+                ImGui::Text("Tag ");
+                if (ImGui::InputText((uid + "Tag").c_str(), buffer2, IM_ARRAYSIZE(buffer2))) {
+                    std::wstring newTag = Helper::ToWString(std::string(buffer2));
+                    SetTag(newTag);
+                }
+            }
+            ImGui::Separator();
+            {
+                ImGui::Text("Pre Load Resource List :");
+                for (auto itr = mNeedResourceHandleTable.begin(); itr != mNeedResourceHandleTable.end(); ++itr)
+                {
+                    ImGui::Text(Helper::ToString((*itr).GetKey() + L" : " + (*itr).GetPath()).c_str());
+                }
+            }
+            break;
+        }
+        default:
+        {
+            break;
+        }
+    }
 }

@@ -20,6 +20,7 @@ namespace Editor
         void SetFocusInspector(InspectorViewer* _pInspector);
         void SetFocusWorldManager(WorldManager* _pWorldManager);
     private:
+        void RenderWorld(World* _pWorld);
         void RenderObjectGroup(ObjectGroup* _pObjectGroup);
         void RenderObject(Object* _pObject);
 
@@ -40,5 +41,13 @@ namespace Editor
 
         bool mbAddingGroup = false;
         int mbAddingObjIndex = -1;
+    public:
+        ObjectGroup* mPopupGroup = nullptr;
+        bool isAddObjectPopupOpen = false;
+        bool isDeleteGroupPopupOpen = false;
+        bool isRenameGroupPopupOpen = false;
+        void ShowAddObjectPopup();
+        void ShowDeleteGroupPopup();
+        void ShowRenameGroupPopup();
     };
 }

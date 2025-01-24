@@ -64,6 +64,10 @@ public:
 	virtual void EditorUpdate() = 0;
 	virtual void EditorRender() = 0;
 public:
+	virtual void _CALLBACK OnEnable() {};
+	virtual void _CALLBACK OnDisable() {};
+	virtual void _CALLBACK OnDestroy() {};
+public:
 	inline eComponentType	GetType()				{ return mType; }
 	inline void				SetActive(bool _active) { isActive = _active;}
 	inline bool				IsActive()				{ return isActive; }

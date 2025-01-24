@@ -12,9 +12,9 @@ class Camera;
 
 class World
 	: public Engine::ICycleHandler
-	, public Engine::ICycleEventHandler
 	, public Engine::Entity
 	, public Engine::SaveBase
+	, public IEditorObject
 {
 public:
 	explicit World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty = false);
@@ -35,18 +35,10 @@ public:
 	virtual void EditorUpdate()	override;
 	virtual void EditorRender()	override;
 public:
-	virtual void _CALLBACK OnCreate()		override {};
-	virtual void _CALLBACK OnDestroy()		override {};
-	virtual void _CALLBACK OnEnable()		override {};
-	virtual void _CALLBACK OnDisable()		override {};
-	virtual void _CALLBACK OnTick()			override {};
-	virtual void _CALLBACK OnFixedUpdate()	override {};
-	virtual void _CALLBACK OnPreUpdate()	override {};
-	virtual void _CALLBACK OnUpdate()		override {};
-	virtual void _CALLBACK OnPostUpdate()	override {};
-	virtual void _CALLBACK OnPreRender()	override {};
-	virtual void _CALLBACK OnRender()		override {};
-	virtual void _CALLBACK OnPostRender()	override {};
+	virtual void _CALLBACK OnCreate()	override {};
+	virtual void _CALLBACK OnDestroy()	override {};
+	virtual void _CALLBACK OnEnable()	override;
+	virtual void _CALLBACK OnDisable()	override;
 public:
 	void InitWorldObject();
     void UpdateGroup();
@@ -84,5 +76,7 @@ private:
 
 	PxScene* mPxScene;
 	class PhysicsEvent* mEventCallback;
+public:
+	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

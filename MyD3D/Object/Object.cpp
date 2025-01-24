@@ -50,6 +50,14 @@ void Object::Tick()
                 comp->Tick();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Tick();
+        }
+    }
 }
 
 void Object::FixedUpdate()
@@ -60,6 +68,14 @@ void Object::FixedUpdate()
         {
             if (comp->IsActive())
                 comp->FixedUpdate();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->FixedUpdate();
         }
     }
 }
@@ -74,6 +90,14 @@ void Object::PreUpdate()
                 comp->PreUpdate();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PreUpdate();
+        }
+    }
 }
 
 void Object::Update()
@@ -84,6 +108,14 @@ void Object::Update()
         {
             if (comp->IsActive())
                 comp->Update();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Update();
         }
     }
 }
@@ -98,6 +130,14 @@ void Object::PostUpdate()
                 comp->PostUpdate();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PostUpdate();
+        }
+    }
 }
 
 void Object::PreRender()
@@ -108,6 +148,14 @@ void Object::PreRender()
         {
             if (comp->IsActive())
                 comp->PreRender();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PreRender();
         }
     }
 }
@@ -122,6 +170,14 @@ void Object::Render()
                 comp->Render();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Render();
+        }
+    }
 }
 
 void Object::Draw(Camera* _camera)
@@ -134,6 +190,14 @@ void Object::Draw(Camera* _camera)
                 comp->Draw(_camera);
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Draw(_camera);
+        }
+    }
 }
 
 void Object::PostRender()
@@ -144,6 +208,14 @@ void Object::PostRender()
         {
             if (comp->IsActive())
                 comp->PostRender();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PostRender();
         }
     }
     if (!transform->GetParent())
@@ -163,6 +235,14 @@ void Object::EditorUpdate()
             comp->EditorUpdate();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorUpdate();
+        }
+    }
     if (!transform->GetParent())
         transform->UpdateMatrix();
 }
@@ -176,25 +256,24 @@ void Object::EditorRender()
             comp->EditorRender();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorRender();
+        }
+    }
 }
 
 void _CALLBACK Object::OnEnable()
 {
-    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
-        for (auto child : transform->GetChildren())
-        {
-            child->gameObject->SetActive(true);
-        }
-        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
+        for (auto& comp : mComponentArray[i])
         {
             if (comp->IsActive())
-                static_cast<MonoBehaviour*>(comp)->OnEnable();
-        }
-        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-        {
-            if (comp->IsActive())
-                static_cast<MonoBehaviour*>(comp)->OnEnable();
+                comp->OnEnable();
         }
     }
     return void _CALLBACK();
@@ -202,19 +281,13 @@ void _CALLBACK Object::OnEnable()
 
 void _CALLBACK Object::OnDisable()
 {
-    for (auto child : transform->GetChildren())
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
-        child->gameObject->SetActive(false);
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnDisable();
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnDisable();
+        for (auto& comp : mComponentArray[i])
+        {
+            if (comp->IsActive())
+                comp->OnDisable();
+        }
     }
     return void _CALLBACK();
 }
@@ -323,10 +396,10 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 mState = isActive == true ? EntityState::Active : EntityState::Passive;
             }
             ImGui::SameLine();
-            static char buffer[128] = "";
-            strcpy_s(buffer, Helper::ToString(GetName()).c_str());
-            if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
-                std::wstring newName = Helper::ToWString(std::string(buffer));
+            static char buffer1[128] = "";
+            strcpy_s(buffer1, Helper::ToString(GetName()).c_str());
+            if (ImGui::InputText((uid + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {
+                std::wstring newName = Helper::ToWString(std::string(buffer1));
                 SetName(newName);
             }
             static char buffer2[128] = "";

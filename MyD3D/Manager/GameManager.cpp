@@ -10,8 +10,8 @@
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-eEngineRunType		GameManager::mCurrRunType = eEngineRunType::GAME_MODE;
-eEngineRunType		GameManager::mNextRunType = eEngineRunType::GAME_MODE;
+eEngineRunType		GameManager::mCurrRunType = eEngineRunType::NONE;
+eEngineRunType		GameManager::mNextRunType = eEngineRunType::NONE;
 float				GameManager::mFixedUpdateTick = 0.02f;
 Application*		GameManager::mApplication = nullptr;
 PhysicsManager*		GameManager::mPhysicsManager = nullptr;
@@ -60,6 +60,8 @@ void GameManager::Run()
 
 		switch (mCurrRunType)
 		{
+		case eEngineRunType::NONE:
+			break;
 		case eEngineRunType::GAME_MODE:
 			ViewportManager::GameRun();
 			break;

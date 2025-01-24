@@ -360,6 +360,8 @@ void World::EditorRendering(EditorViewerType _viewerType)
         {
             {
                 ImGui::Text("World");
+                ImGui::Separator();
+
                 static char buffer1[128] = "";
                 strcpy_s(buffer1, Helper::ToString(GetName()).c_str());
                 if (ImGui::InputText((uid + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {

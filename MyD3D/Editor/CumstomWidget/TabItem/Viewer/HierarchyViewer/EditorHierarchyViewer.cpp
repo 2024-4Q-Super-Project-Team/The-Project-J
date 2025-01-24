@@ -35,35 +35,8 @@ namespace Editor
                 for (int i = 0; i < groups.size(); i++)
                 {
                     auto group = groups[i];
-
-                    //오브젝트 추가 버튼
-                    //{
-                    //    ImGui::SameLine();
-                    //    std::string objBtnName = "AddObject##" + std::to_string(reinterpret_cast<uintptr_t>(group));
-                    //    bool buttonClicked = ImGui::Button(objBtnName.c_str());
-                    //
-                    //    if (buttonClicked)
-                    //        mbAddingObjIndex = i;
-                    //
-                    //    if (mbAddingObjIndex == i)
-                    //    {
-                    //        ImGui::SameLine();
-                    //        char nameBuffer[20] = ""; //오브젝트 이름 입력
-                    //        if (ImGui::InputText(("##" + objBtnName).c_str(), nameBuffer, 10, ImGuiInputTextFlags_EnterReturnsTrue))
-                    //        {
-                    //            mbAddingObjIndex = -1;
-                    //
-                    //            wchar_t wcNameBuffer[20] = L"";
-                    //            MultiByteToWideChar(CP_UTF8, 0, nameBuffer, -1, wcNameBuffer, 20);
-                    //
-                    //            //오브젝트 그룹 생성
-                    //            AddObject(wcNameBuffer, group);
-                    //        }
-                    //    }
-                    //}
                     RenderObjectGroup(group);
                 }
-
             }
             else
             {
@@ -77,6 +50,9 @@ namespace Editor
         ShowAddObjectPopup();
         ShowDeleteGroupPopup();
         ShowRenameGroupPopup();
+
+        ShowAddChildObjectPopup();
+        ShowDeleteObjectPopup();
     }
 
     void HierarchyViewer::RenderWorld(World* _pWorld)
@@ -130,45 +106,57 @@ namespace Editor
             {
                 // 부모가 있으면 최상단 부모가 안에서 알아서 그려줄거므로 패스
                 if (obj->transform->GetParent()) continue;
-                RenderObject(obj);
+                RenderObject(obj, _pObjectGroup);
             }
             ImGui::TreePop();
         }
     }   
 
-    void HierarchyViewer::RenderObject(Object* _pObject)
+    void HierarchyViewer::RenderObject(Object* _pObject, ObjectGroup* _pObjectGroup)
     {
-        std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(_pObject));
         std::string name = Helper::ToString(_pObject->GetName());
+        std::string ptr = "##" + std::to_string(reinterpret_cast<uintptr_t>(_pObject));
 
-        // 현재 포커스된 객체인지
-        bool isFocused = false;
-        // 트리 노드가 열려있는지
-        bool isOpened = false;
         // TreeNode 플래그 설정
         ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow;
-
         if (mRefInspector && mRefInspector->GetFocusObject() == _pObject)
         {
             flags |= ImGuiTreeNodeFlags_Selected; // 선택 상태 플래그 추가
         }
-
         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
-        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, ImVec4(0.5f, 0.5f, 0.5f, 1.0f));
-        isOpened = ImGui::TreeNodeEx((name + uid).c_str(), flags);
-        ImGui::PopStyleColor(2);
+        bool isSelected = ImGui::TreeNodeEx((name + ptr).c_str(), flags);
+        ImGui::PopStyleColor(1);
 
-        // 클릭 이벤트 감지
+        // 왼쪽 클릭 - 인스펙터 포커싱
         if (mRefInspector && ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
             mRefInspector->SetFocusObject(_pObject);
         }
-        if (isOpened)
+        // 오른쪽 클릭 - 팝업 메뉴 오픈
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            ImGui::OpenPopup(ptr.c_str()); // 유니크한 식별자로 팝업을 엶
+        }
+        if (ImGui::BeginPopup(ptr.c_str()))
+        {
+            if (ImGui::MenuItem("Add Child Object")) {
+                isAddChildPopupOpen = true;
+                mPopupGroup = _pObjectGroup;
+                mPopupObject = _pObject;
+            }
+            if (ImGui::MenuItem("Delete Object")) {
+                isDeleteObjectPopupOpen = true;
+                mPopupGroup = _pObjectGroup;
+                mPopupObject = _pObject;
+            }
+            ImGui::EndPopup();
+        }
+        if (isSelected)
         {
             const std::vector<Transform*>& children = _pObject->transform->GetChildren();
             for (auto child : children)
             {
-                RenderObject(child->gameObject);
+                RenderObject(child->gameObject, _pObjectGroup);
             }
             ImGui::TreePop();
         }
@@ -205,14 +193,15 @@ namespace Editor
         if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
         {
             ImGui::Text("Object Name : ");
-            static char Name[128] = ""; // 임시 입력 변수
+            static char Name[128] = "GameObject";
             ImGui::InputText("##AddObjectName", Name, IM_ARRAYSIZE(Name));
 
             ImGui::Text("Object Tag : ");
-            static char Tag[128] = ""; // 임시 입력 변수
+            static char Tag[128] = ""; 
             ImGui::InputText("##AddObjectTag", Tag, IM_ARRAYSIZE(Tag));
 
-            const char* defaultSet = "";
+            const char* defaultName = "GameObject";
+            const char* defaultTag = "";
             if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
             {
                 std::string newName = Name;
@@ -222,16 +211,16 @@ namespace Editor
                     mPopupGroup->CreateObject(Helper::ToWString(newName), Helper::ToWString(newTag));
                 }
                 ImGui::CloseCurrentPopup();
-                strcpy_s(Name, defaultSet);
-                strcpy_s(Tag, defaultSet);
+                strcpy_s(Name, defaultName);
+                strcpy_s(Tag, defaultTag);
                 mPopupGroup = nullptr;
             }
             ImGui::SameLine();
             if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
             {
                 ImGui::CloseCurrentPopup();
-                strcpy_s(Name, defaultSet);
-                strcpy_s(Tag, defaultSet);
+                strcpy_s(Name, defaultName);
+                strcpy_s(Tag, defaultTag);
                 mPopupGroup = nullptr;
             }
             ImGui::EndPopup();
@@ -300,6 +289,84 @@ namespace Editor
                 strcpy_s(Name, defaultSet);
                 ImGui::CloseCurrentPopup();
                 mPopupGroup = nullptr;
+            }
+            ImGui::EndPopup();
+        }
+    }
+    void HierarchyViewer::ShowAddChildObjectPopup()
+    {
+        std::string id = "Add Child Object";
+        if (isAddChildPopupOpen)
+        {
+            ImGui::OpenPopup(id.c_str());
+            isAddChildPopupOpen = false;
+        }
+        if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Object Name : ");
+            static char Name[128] = "GameObject";
+            ImGui::InputText("##AddObjectName", Name, IM_ARRAYSIZE(Name));
+
+            ImGui::Text("Object Tag : ");
+            static char Tag[128] = "";
+            ImGui::InputText("##AddObjectTag", Tag, IM_ARRAYSIZE(Tag));
+
+            const char* defaultName = "GameObject";
+            const char* defaultTag = "";
+            if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+            {
+                std::string newName = Name;
+                std::string newTag = Tag;
+                if (mPopupGroup && mPopupObject)
+                {
+                    Object* Clone = mPopupGroup->CreateObject(Helper::ToWString(newName), Helper::ToWString(newTag));
+                    Clone->transform->SetParent(mPopupObject->transform);
+                }
+                ImGui::CloseCurrentPopup();
+                strcpy_s(Name, defaultName);
+                strcpy_s(Tag, defaultTag);
+                mPopupGroup = nullptr;
+                mPopupObject = nullptr;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+            {
+                ImGui::CloseCurrentPopup();
+                strcpy_s(Name, defaultName);
+                strcpy_s(Tag, defaultTag);
+                mPopupGroup = nullptr;
+                mPopupObject = nullptr;
+            }
+            ImGui::EndPopup();
+        }
+    }
+    void HierarchyViewer::ShowDeleteObjectPopup()
+    {
+        std::string id = "Delete Object";
+        if (isDeleteObjectPopupOpen)
+        {
+            ImGui::OpenPopup(id.c_str());
+            isDeleteObjectPopupOpen = false;
+        }
+        if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text(("Delete Object : " + Helper::ToString(mPopupObject->GetName())).c_str());
+
+            const char* defaultSet = "";
+            if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+            {
+                if (mPopupObject)
+                {
+                    mPopupObject->SetDestroy();
+                    ImGui::CloseCurrentPopup();
+                }
+                mPopupObject = nullptr;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+            {
+                ImGui::CloseCurrentPopup();
+                mPopupObject = nullptr;
             }
             ImGui::EndPopup();
         }

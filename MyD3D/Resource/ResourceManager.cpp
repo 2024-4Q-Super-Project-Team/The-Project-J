@@ -8,7 +8,8 @@
 std::unordered_map<ResourceHandle, Resource*>       ResourceManager::mHandleFromResourceMappingTable[static_cast<UINT>(eResourceType::SIZE)] = {};
 std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromMainKeyMappingTable;
 std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromPathMappingTable;
-std::vector<ResourceHandle>                         ResourceManager::mLoadResourceList;
+std::unordered_set<ResourceHandle>                  ResourceManager::mLoadResourceList;
+std::string                                         ResourceManager::mSaveFilePath = "../Save/";
 
 BOOL ResourceManager::Initialize()
 {
@@ -43,7 +44,7 @@ void ResourceManager::Reload()
     // 리셋 -> json 다시 불러오기 -> 전부 Alloc
     
     Reset();    // 리셋
-    // JSON_TODO : 여기에 json불러오기 함수 넣어주세요 ㅠ
+    LoadResources();
     Alloc_All_Resource(); // 전부 Alloc
 
     // 스카이박스 메쉬
@@ -61,9 +62,45 @@ void ResourceManager::Reload()
 
 }
 
+void ResourceManager::SaveResources()
+{
+    json saveJson;
+    for (ResourceHandle resource : mLoadResourceList)
+    {
+        saveJson += resource.Serialize();
+    }
+
+    std::ofstream file(mSaveFilePath + "resources.json");
+    file << saveJson.dump(4);
+    file.close();
+}
+
+void ResourceManager::LoadResources()
+{
+    std::ifstream loadFile(mSaveFilePath + "resources.json");
+
+    json loadJson;
+    if (loadFile.is_open())
+    {
+        loadFile >> loadJson;
+        loadFile.close();
+    }
+
+    for (json j : loadJson)
+    {
+        ResourceHandle handle;
+        handle.Deserialize(j);
+        mLoadResourceList.insert(handle);
+    }
+}
+
 void ResourceManager::Alloc_All_Resource()
 {
-    for (auto& handle : mLoadResourceList)
+    //for (int i = 0; i < mLoadResourceList.size(); ++i)
+    //{
+    //    LoadFileFromHandle(mLoadResourceList[i]);
+    //}
+    for (ResourceHandle handle : mLoadResourceList)
     {
         LoadFileFromHandle(handle);
     }
@@ -184,7 +221,7 @@ std::pair<BOOL, ResourceHandle> ResourceManager::GetResourceHandleFromPath(const
     return std::make_pair(result, handle);
 }
 
-std::vector<ResourceHandle>& ResourceManager::GetLoadResourceList()
+std::unordered_set<ResourceHandle>& ResourceManager::GetLoadResourceList()
 {
     return mLoadResourceList;
 }
@@ -193,7 +230,7 @@ std::vector<ResourceHandle>& ResourceManager::GetLoadResourceList()
 if(_handle.GetResourceType() == eResourceType::type)\
 if(ResourceManager::RegisterResourceHandle(_handle)){\
 ResourceManager::Alloc_Resource<type>(_handle);\
-ResourceManager::GetLoadResourceList().push_back(_handle);\
+ResourceManager::GetLoadResourceList().insert(_handle);\
 return TRUE; \
 } else { \
 return FALSE;} \

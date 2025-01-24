@@ -46,7 +46,7 @@ public:
     virtual void Deserialize(json& j) override;
 private:
     ResourceHandle      mMeshHandle;
-    ResourceHandle      mMaterialaHandle;
+    ResourceHandle      mMaterialHandle;
     MeshResource*       mMesh; 
     MaterialResource*   mMateiral; 
 

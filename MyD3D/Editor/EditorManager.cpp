@@ -465,3 +465,13 @@ BOOL EditorManager::EditorReposition()
     }
     return FALSE;
 }
+
+void EditorManager::SetGizmoOperation(ImGuizmo::OPERATION operation)
+{
+    mCurrentGizmoOperation = operation;
+}
+
+ImGuizmo::OPERATION EditorManager::GetGizmoOperation()
+{
+    return mCurrentGizmoOperation;
+}

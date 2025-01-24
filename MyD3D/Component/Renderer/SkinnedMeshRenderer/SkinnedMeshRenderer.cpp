@@ -111,7 +111,7 @@ void SkinnedMeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring,
         clone->mRootBone = (*ppRootBone)->transform;
     }
     clone->SetMesh(this->mMeshHandle);
-    clone->SetMaterial(this->mMaterialaHandle);
+    clone->SetMaterial(this->mMaterialHandle);
 }
 
 void SkinnedMeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
@@ -220,7 +220,7 @@ void SkinnedMeshRenderer::SetMaterial(ResourceHandle _handle)
 {
     if (_handle.GetResourceType() == eResourceType::MaterialResource)
     {
-        mMaterialaHandle = _handle;
+        mMaterialHandle = _handle;
         auto MatResource = ResourceManager::GetResource<MaterialResource>(_handle);
         if (MatResource)
         {
@@ -236,7 +236,7 @@ void SkinnedMeshRenderer::SetMaterial(MaterialResource* _pResource)
 {
     if (_pResource)
     {
-        mMaterialaHandle = _pResource->GetHandle();
+        mMaterialHandle = _pResource->GetHandle();
         mMateiral = _pResource;
         mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
     }
@@ -291,31 +291,57 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     }
 }
 
-// JSON_TODO :
-// MeshHandle, MaterialHandle을 저장하도록 바꿔야한다 
-// 또한 Material_Cbuffer값도 저장해야한다.(Diffuse, Metallic등의 값이 있기 때문
-// 루트본도 아이디를 찾아서 trasnform객체를 넣어줘야한다......
 json SkinnedMeshRenderer::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
-    ret["name"] = "SkinnedMeshRenderer";
-    if (mMesh) 
-        ret["mesh"] = Helper::ToString(mMesh->GetKey());
-    else 
-        ret["mesh"] = nullptr;
+    ret["id"] = GiveId();
+    ret["name"] = "MeshRenderer";
 
-    if (mMateiral) 
-        ret["material"] = mMateiral->GetKey();
-    else  
-        ret["material"] = nullptr;
-    ret["root bone"] = mRootBone ? mRootBone->GetId() : NULLID;
+    ret["mesh handle"] = mMeshHandle.Serialize();
+    ret["material handle"] = mMaterialHandle.Serialize();
+
+    json mprop;
+    ColorF diffuse = mMatCBuffer.MatProp.DiffuseRGB;
+    ColorF ambient = mMatCBuffer.MatProp.AmbientRGB;
+    ColorF specular = mMatCBuffer.MatProp.SpecularRGB;
+    mprop["diffuse"] = { diffuse.r,diffuse.g, diffuse.b, diffuse.a };
+    mprop["ambient"] = { ambient.r, ambient.g, ambient.b, ambient.a };
+    mprop["specular"] = { specular.r, specular.g, specular.b, specular.a };
+    mprop["roughness"] = mMatCBuffer.MatProp.RoughnessScale;
+    mprop["metallic"] = mMatCBuffer.MatProp.MetallicScale;
+    mprop["ao"] = mMatCBuffer.MatProp.AmbienOcclusionScale;
+
+    ret["property"] = mprop;
+    ret["root"] = mRootBone->gameObject->GetId();
+
     return ret;
 }
 
 void SkinnedMeshRenderer::Deserialize(json& j)
 {
+    SetId(j["id"].get<unsigned int>());
 
+    mMeshHandle.Deserialize(j["mesh handle"]);
+    mMaterialHandle.Deserialize(j["material handle"]);
+
+    mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+    mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
+
+    json mProp = j["property"];
+
+    for (int i = 0; i < 4; i++)
+    {
+        mMatCBuffer.MatProp.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
+        mMatCBuffer.MatProp.AmbientRGB[i] = mProp["ambient"][i].get<float>();
+        mMatCBuffer.MatProp.SpecularRGB[i] = mProp["specular"][i].get<float>();
+    }
+
+    mMatCBuffer.MatProp.RoughnessScale = mProp["roughness"].get<float>();
+    mMatCBuffer.MatProp.MetallicScale = mProp["metallic"].get<float>();
+    mMatCBuffer.MatProp.AmbienOcclusionScale = mProp["ao"].get<float>();
+
+    Object* rootObj = static_cast<Object*>(Engine::SaveBase::mMap[j["root"].get<unsigned int>()]);
+    mRootBone = rootObj->transform;
 }
 
 void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
@@ -401,9 +427,9 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
             EDITOR_COLOR_POP(1);
         }
 
-        if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(widgetID.c_str(), &mMaterialaHandle))
+        if (EditorDragNDrop::ReceiveDragAndDropResourceData<MaterialResource>(widgetID.c_str(), &mMaterialHandle))
         {
-            SetMaterial(mMaterialaHandle);
+            SetMaterial(mMaterialHandle);
         }
     }
 

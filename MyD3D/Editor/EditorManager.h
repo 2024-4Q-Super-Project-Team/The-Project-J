@@ -87,11 +87,13 @@ public:
     static ImGuiContext* mFocusContext;
     static ImGuiContext* mEditorContext;
 
-
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
 
 public:
     static void ShowPopUp();
+public:
+    static void SetGizmoOperation(ImGuizmo::OPERATION operation);
+    static ImGuizmo::OPERATION GetGizmoOperation();
 };
 
 struct Serial {

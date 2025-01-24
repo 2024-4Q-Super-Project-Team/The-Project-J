@@ -4,10 +4,12 @@
 
 namespace Editor
 {
+    IEditorObject* InspectorViewer::mFocusObject = nullptr;
+
     InspectorViewer::InspectorViewer()
-        : mFocusObject(nullptr)
     {
     }
+
     void InspectorViewer::Render()
     {
          if (mFocusObject)
@@ -28,6 +30,7 @@ namespace Editor
     {
         mFocusObject = _object;
     }
+
     IEditorObject* InspectorViewer::GetFocusObject()
     {
         return mFocusObject;

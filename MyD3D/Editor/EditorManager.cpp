@@ -23,6 +23,7 @@ Editor::WindowBar* EditorManager::mMainWindowBar_02 = nullptr;
 ImGuiContext* EditorManager::mFocusContext;
 ImGuiContext* EditorManager::mEditorContext;
 
+static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
 void EditorManager::Initialize()
 {
@@ -88,6 +89,25 @@ void EditorManager::EditorFocusRender()
         ImGuizmo::BeginFrame();
 
         UpdateIO(mFocusContext);
+
+        // 기즈모 모드 변경 버튼 테스트
+        // 추후 더 이쁘게 변경
+        if (ImGui::Begin("Gizmo Mode"))
+        {
+            if (ImGui::Button("Translate") || Input::IsKeyDown('G'))
+            {
+                mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
+            }
+            if (ImGui::Button("Rotate") || Input::IsKeyDown('R'))
+            {
+                mCurrentGizmoOperation = ImGuizmo::ROTATE;
+            }
+            if (ImGui::Button("Scale") || Input::IsKeyDown('S'))
+            {
+                mCurrentGizmoOperation = ImGuizmo::SCALE;
+            }
+            ImGui::End();
+        }
 
         mInspectorViewer->RenderGizmo();
 
@@ -469,4 +489,14 @@ BOOL EditorManager::ProcessDragFile(std::vector<std::wstring>& _pathArr)
         }
     }
     return TRUE;
+}
+
+void EditorManager::SetGizmoOperation(ImGuizmo::OPERATION operation)
+{
+    mCurrentGizmoOperation = operation;
+}
+
+ImGuizmo::OPERATION EditorManager::GetGizmoOperation()
+{
+    return mCurrentGizmoOperation;
 }

@@ -3,6 +3,7 @@
 #include "ObjectGroup/ObjectGroup.h"
 #include "ViewportScene/ViewportManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
 
 static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
 
@@ -429,23 +430,43 @@ void Object::EditorRendering(EditorViewerType _viewerType)
         Matrix& viewMatrix = EditorManager::mEditorCamera.mViewMatrix;
         Matrix& projectionMatrix = EditorManager::mEditorCamera.mProjectionMatrix;
         Matrix  modelMatrix = transform->GetWorldMatrix();
-
+        static std::vector<std::pair<IEditorObject*, Matrix>> previousModelMatrixStack; // ctrl + z 용 이전 모델행렬 저장, 행렬에 대응하는 Object와 같이.
+        static bool isFirstManipulate = true;
         float viewManipulateRight = io.DisplaySize.x;
         float viewManipulateTop = 0;
 
-        static float lastDebugTime = 0.0f;
-        float currentTime = Time::GetElapsedTime();
-
-        //ImGuizmo::ViewManipulate(*viewMatrix.m, 10.f, ImVec2(viewManipulateRight - 128, viewManipulateTop), ImVec2(128, 128), 0x10101010);
+        IEditorObject* focusObject = Editor::InspectorViewer::GetFocusObject();
 
         if (ImGuizmo::Manipulate(*viewMatrix.m, *projectionMatrix.m,
-            mCurrentGizmoOperation, ImGuizmo::MODE::LOCAL, *modelMatrix.m))
+            EditorManager::GetGizmoOperation(), ImGuizmo::MODE::LOCAL, *modelMatrix.m))
         {
+            if (isFirstManipulate)
+            {
+                Display::Console::Log("Manipulating... : ");              
+                previousModelMatrixStack.push_back({ focusObject, transform->GetWorldMatrix() });
+                isFirstManipulate = false;
+
+            }
             transform->SetWorldMatrix(modelMatrix);
+        }
+
+        if (!ImGuizmo::IsUsing()) {
+            isFirstManipulate = true;
+        }
+
+        if (!previousModelMatrixStack.empty())
+        {
+            if (Input::IsKeyHold(Key::LCONTROL) && Input::IsKeyDown('Z'))
+            {
+                auto [focusObject, matrix] = previousModelMatrixStack.back();
+                previousModelMatrixStack.pop_back();
+                static_cast<Object*>(focusObject)->transform->SetWorldMatrix(matrix);
+                Display::Console::Log("ctrl z, set to previous", "\n");
+                Display::Console::Log("Stack size :", previousModelMatrixStack.size(), "\n");
+            }
         }
         break;
     }
-
     default:
         break;
     }

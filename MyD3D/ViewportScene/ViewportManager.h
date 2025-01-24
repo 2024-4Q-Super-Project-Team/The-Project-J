@@ -43,6 +43,7 @@ public:
 	static ViewportScene* GetViewportSceneFromWindowName(std::wstring _winName);
 	static ViewportScene* GetViewportSceneFromHwnd(HWND _hWnd);
 	static ViewportScene* GetActiveViewport() { return  mActiveViewport; }
+	static std::vector<ViewportScene*>& GetViewports() { return  mViewportScenes; }
 private:
 	static ViewportScene* mActiveViewport;
 	static Display::IDisplayDevice* mDisplayDevice;

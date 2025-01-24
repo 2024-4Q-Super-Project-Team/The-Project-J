@@ -1,7 +1,7 @@
 [
     {
         "id": 0,
-        "name": "test",
+        "name": "SaveTestWorld",
         "object groups": [
             {
                 "id": 1,
@@ -9,7 +9,7 @@
             },
             {
                 "id": 2,
-                "name": "test"
+                "name": "wow"
             }
         ]
     }

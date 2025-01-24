@@ -28,6 +28,8 @@ public:
 public:
     void SetMass(float mass);
     void SetIsKinematic(bool b);
+    void SetDisableGravity(bool b);
+    void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
@@ -35,6 +37,7 @@ private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
     bool mIsKinematic = false;
+    bool mDisableGravity = false;
     float mMass = 1.f;
 
     bool mFreezePosition[3];

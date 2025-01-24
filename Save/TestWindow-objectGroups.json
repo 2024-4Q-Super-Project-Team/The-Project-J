@@ -15,11 +15,11 @@
     },
     {
         "id": 2,
-        "name": "test",
+        "name": "wow",
         "objects": [
             {
                 "id": 10,
-                "name": "test"
+                "name": "lol"
             }
         ]
     }

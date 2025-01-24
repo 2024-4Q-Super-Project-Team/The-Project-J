@@ -148,6 +148,19 @@ void Rigidbody::SetIsKinematic(bool b)
 	rigid->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, b);
 }
 
+void Rigidbody::SetDisableGravity(bool b)
+{
+	mRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, b);
+}
+
+void Rigidbody::AddForce(Vector3 force, PxForceMode::Enum forceMode)
+{
+	if (!mRigidActor || !mIsDynamic) return;
+
+	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
+	rigid->addForce(PxVec3(force.x, force.y, force.z), forceMode);
+}
+
 json Rigidbody::Serialize()
 {
 	json ret;
@@ -176,13 +189,16 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 
 	ImGui::Separator();
 
-	if (ImGui::Text("isDynamic: "); ImGui::SameLine);
+	ImGui::Text("isDynamic: "); ImGui::SameLine;
 	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
 
 	if(mIsDynamic)
 	{
 		ImGui::Text("isKinematic: "); ImGui::SameLine;
-		ImGui::Checkbox(("##isKinematic" + uid).c_str(), (bool*)&mIsKinematic);
+		if (ImGui::Checkbox(("##isKinematic" + uid).c_str(), (bool*)&mIsKinematic))
+		{
+			SetIsKinematic(mIsKinematic);
+		}
 
 		ImGui::Text("Mass : "); ImGui::SameLine;
 		if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 1000.f))
@@ -191,6 +207,13 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 		}
 	}
 
+	ImGui::Separator();
+
+	ImGui::Text("disable gravity: "); ImGui::SameLine;
+	if (ImGui::Checkbox(("##disable gravity" + uid).c_str(), (bool*)&mDisableGravity))
+	{
+		SetDisableGravity(mDisableGravity);
+	}
 
 	ImGui::Separator();
 

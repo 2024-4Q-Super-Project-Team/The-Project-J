@@ -103,7 +103,7 @@
     {
         "id": 12,
         "isDynamic": true,
-        "isKinematic": false,
+        "isKinematic": true,
         "mass": 1.0,
         "name": "Rigidbody"
     },

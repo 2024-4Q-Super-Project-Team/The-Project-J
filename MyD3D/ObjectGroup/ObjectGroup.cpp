@@ -191,6 +191,11 @@ void ObjectGroup::UpdateObject()
         // »èÁ¦
         if ((*itr)->GetState() == EntityState::Destroy)
         {
+            if (EditorManager::mInspectorViewer &&
+                EditorManager::mInspectorViewer->GetFocusObject() == *itr) {
+                EditorManager::mInspectorViewer->SetFocusObject(nullptr);
+            }
+            SAFE_DELETE(*itr);
             itr = mObjects.erase(itr);
             continue;
         }

@@ -159,9 +159,9 @@ void Transform::SetParent(Transform* _parent)
     mParent = _parent;
 }
 
-void Transform::SetWorldMatrix(Matrix& _worldMatrix)
+void Transform::SetLocalMatrix(Matrix& _matrix)
 {
-    _worldMatrix.Decompose(scale, rotation, position);
+    _matrix.Decompose(scale, rotation, position);
     UpdateMatrix();
 }
 

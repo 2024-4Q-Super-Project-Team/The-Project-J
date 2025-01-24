@@ -130,7 +130,8 @@ namespace Editor
         // ¿ÞÂÊ Å¬¸¯ - ÀÎ½ºÆåÅÍ Æ÷Ä¿½Ì
         if (mRefInspector && ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
-            mRefInspector->SetFocusObject(_pObject);
+            EditorManager::mInspectorViewer->SetFocusObject(_pObject);
+            EditorManager::mGuizmoHandler->mManipulater->SetFocusObjedct(_pObject);
         }
         // ¿À¸¥ÂÊ Å¬¸¯ - ÆË¾÷ ¸Þ´º ¿ÀÇÂ
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))

@@ -7,7 +7,6 @@
 
 AudioClip::AudioClip(std::wstring _wPath, bool _isLoop)
 	: mSound(nullptr)
-	, isLoop(_isLoop)
 	, mPath(_wPath)
 	, mGroup(nullptr)
 {
@@ -49,12 +48,26 @@ void AudioClip::SetGroup(AudioGroup* _pGroup)
 	}
 }
 
-void AudioClip::SetLoop(bool _isLoop)
+void AudioClip::SetLoop(BOOL _isLoop)
 {
 	FMOD_CHECK(mSound->setMode(_isLoop ? FMOD_LOOP_NORMAL : FMOD_LOOP_OFF));
 }
 
-void AudioClip::SetSurround(bool _isSuround)
+void AudioClip::SetSoundMode(eAudioListenMode _mode)
 {
-	FMOD_CHECK(mSound->setMode(_isSuround ? FMOD_3D : FMOD_2D));
+	switch (_mode)
+	{
+	case eAudioListenMode::DEFAULT:
+		FMOD_CHECK(mSound->setMode(FMOD_DEFAULT));
+		break;
+	case eAudioListenMode::SOUND_2D:
+		FMOD_CHECK(mSound->setMode(FMOD_2D));
+		break;
+	case eAudioListenMode::SOUND_3D:
+		FMOD_CHECK(mSound->setMode(FMOD_3D));
+		break;
+	default:
+		FMOD_CHECK(mSound->setMode(FMOD_DEFAULT));
+		break;
+	}
 }

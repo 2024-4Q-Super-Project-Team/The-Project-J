@@ -96,6 +96,7 @@ using json = nlohmann::json;
 #include "Manager/GameManager.h"
 #include "Editor/EditorManager.h"
 #include "UIManager/UIManager.h"
+#include "Save/SaveManager.h"
 
 //Debug Draw
 #include "Graphics/Extra/DebugDraw.h"

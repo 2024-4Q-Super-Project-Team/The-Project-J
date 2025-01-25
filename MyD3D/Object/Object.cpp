@@ -5,8 +5,6 @@
 #include "ViewportScene/ViewportScene.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 Object::Object(std::wstring_view _name, std::wstring_view _tag)
     : Engine::Entity(_name, _tag)
     , transform(new Transform(this))
@@ -52,6 +50,14 @@ void Object::Tick()
                 comp->Tick();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Tick();
+        }
+    }
 }
 
 void Object::FixedUpdate()
@@ -62,6 +68,14 @@ void Object::FixedUpdate()
         {
             if (comp->IsActive())
                 comp->FixedUpdate();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->FixedUpdate();
         }
     }
 }
@@ -76,6 +90,14 @@ void Object::PreUpdate()
                 comp->PreUpdate();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PreUpdate();
+        }
+    }
 }
 
 void Object::Update()
@@ -86,6 +108,14 @@ void Object::Update()
         {
             if (comp->IsActive())
                 comp->Update();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Update();
         }
     }
 }
@@ -100,6 +130,14 @@ void Object::PostUpdate()
                 comp->PostUpdate();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PostUpdate();
+        }
+    }
 }
 
 void Object::PreRender()
@@ -112,16 +150,36 @@ void Object::PreRender()
                 comp->PreRender();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PreRender();
+        }
+    }
 }
 
 void Object::Render()
 {
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
         {
             if (comp->IsActive())
                 comp->Render();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Render();
         }
     }
 }
@@ -136,6 +194,14 @@ void Object::Draw(Camera* _camera)
                 comp->Draw(_camera);
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->Draw(_camera);
+        }
+    }
 }
 
 void Object::PostRender()
@@ -148,11 +214,14 @@ void Object::PostRender()
                 comp->PostRender();
         }
     }
-    if (!transform->GetParent())
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
     {
-        transform->UpdateMatrix();
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->PostRender();
+        }
     }
-        
 }
 
 // 에디터 업데이트는 활성화 여부와 관계없이 업데이트 되어야 한다
@@ -163,6 +232,14 @@ void Object::EditorUpdate()
         for (auto& comp : mComponentArray[i])
         {
             comp->EditorUpdate();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorUpdate();
         }
     }
     if (!transform->GetParent())
@@ -178,25 +255,24 @@ void Object::EditorRender()
             comp->EditorRender();
         }
     }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorRender();
+        }
+    }
 }
 
 void _CALLBACK Object::OnEnable()
 {
-    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
-        for (auto child : transform->GetChildren())
-        {
-            child->gameObject->SetActive(true);
-        }
-        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
+        for (auto& comp : mComponentArray[i])
         {
             if (comp->IsActive())
-                static_cast<MonoBehaviour*>(comp)->OnEnable();
-        }
-        for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-        {
-            if (comp->IsActive())
-                static_cast<MonoBehaviour*>(comp)->OnEnable();
+                comp->OnEnable();
         }
     }
     return void _CALLBACK();
@@ -204,19 +280,13 @@ void _CALLBACK Object::OnEnable()
 
 void _CALLBACK Object::OnDisable()
 {
-    for (auto child : transform->GetChildren())
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
-        child->gameObject->SetActive(false);
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::SCRIPT)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnDisable();
-    }
-    for (auto comp : mComponentArray[Helper::ToInt(eComponentType::FINITE_STATE_MACHINE)])
-    {
-        if (comp->IsActive())
-            static_cast<MonoBehaviour*>(comp)->OnDisable();
+        for (auto& comp : mComponentArray[i])
+        {
+            if (comp->IsActive())
+                comp->OnDisable();
+        }
     }
     return void _CALLBACK();
 }
@@ -325,10 +395,10 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 mState = isActive == true ? EntityState::Active : EntityState::Passive;
             }
             ImGui::SameLine();
-            static char buffer[128] = "";
-            strcpy_s(buffer, Helper::ToString(GetName()).c_str());
-            if (ImGui::InputText((uid + "InputName").c_str(), buffer, IM_ARRAYSIZE(buffer))) {
-                std::wstring newName = Helper::ToWString(std::string(buffer));
+            static char buffer1[128] = "";
+            strcpy_s(buffer1, Helper::ToString(GetName()).c_str());
+            if (ImGui::InputText((uid + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {
+                std::wstring newName = Helper::ToWString(std::string(buffer1));
                 SetName(newName);
             }
             static char buffer2[128] = "";
@@ -412,57 +482,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
 
                     ImGui::EndPopup();
                 }
-            }
-            break;
-        }
-    }
-
-    case EditorViewerType::GUIZMO:
-    {
-        auto pos = EditorManager::mFocusViewport->GetIWindow()->GetPosition();
-        auto size = EditorManager::mFocusViewport->GetIWindow()->GetSize();
-        ImGuiIO& io = ImGui::GetIO();
-
-        ImGuizmo::SetOrthographic(false);
-
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
-
-        Matrix& viewMatrix = EditorManager::mEditorCamera.mViewMatrix;
-        Matrix& projectionMatrix = EditorManager::mEditorCamera.mProjectionMatrix;
-        Matrix  modelMatrix = transform->GetWorldMatrix();
-        static std::vector<std::pair<IEditorObject*, Matrix>> previousModelMatrixStack; // ctrl + z 용 이전 모델행렬 저장, 행렬에 대응하는 Object와 같이.
-        static bool isFirstManipulate = true;
-        float viewManipulateRight = io.DisplaySize.x;
-        float viewManipulateTop = 0;
-
-        IEditorObject* focusObject = Editor::InspectorViewer::GetFocusObject();
-
-        if (ImGuizmo::Manipulate(*viewMatrix.m, *projectionMatrix.m,
-            EditorManager::GetGizmoOperation(), ImGuizmo::MODE::LOCAL, *modelMatrix.m))
-        {
-            if (isFirstManipulate)
-            {
-                Display::Console::Log("Manipulating... : ");              
-                previousModelMatrixStack.push_back({ focusObject, transform->GetWorldMatrix() });
-                isFirstManipulate = false;
-
-            }
-            transform->SetWorldMatrix(modelMatrix);
-        }
-
-        if (!ImGuizmo::IsUsing()) {
-            isFirstManipulate = true;
-        }
-
-        if (!previousModelMatrixStack.empty())
-        {
-            if (Input::IsKeyHold(Key::LCONTROL) && Input::IsKeyDown('Z'))
-            {
-                auto [focusObject, matrix] = previousModelMatrixStack.back();
-                previousModelMatrixStack.pop_back();
-                static_cast<Object*>(focusObject)->transform->SetWorldMatrix(matrix);
-                Display::Console::Log("ctrl z, set to previous", "\n");
-                Display::Console::Log("Stack size :", previousModelMatrixStack.size(), "\n");
             }
         }
         break;

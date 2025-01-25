@@ -49,7 +49,7 @@ public:
 
     virtual void EditorUpdate()	override;
     virtual void EditorRender()	override;
-private:
+public:
     virtual void _CALLBACK OnEnable()  override;
     virtual void _CALLBACK OnDisable() override;
     virtual void _CALLBACK OnDestroy() override;
@@ -99,7 +99,7 @@ T* Object::AddComponent(Args&&... args)
     if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
     {
         // JSON_TODO : 이거 컴포넌트 추가도 Addcomponent로 하지 말아주세요 ㅠㅠ
-        //component->Start();
+        component->Start();
     }
 
     return component;

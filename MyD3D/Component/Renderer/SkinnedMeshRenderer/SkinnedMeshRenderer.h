@@ -55,7 +55,7 @@ private:
     bool isDirty = true;
 
     ResourceHandle    mMeshHandle;
-    ResourceHandle    mMaterialaHandle;
+    ResourceHandle    mMaterialHandle;
     MeshResource*     mMesh;  
     MaterialResource* mMateiral;
     Transform*        mRootBone; 

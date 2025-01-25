@@ -97,7 +97,7 @@ void Light::Draw(Camera* _camera)
         Vector3 forward = _camera->gameObject->transform->Forward();
 
         // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
-        Vector3 shadowPos = eye + forward * mCameradDist;
+        Vector3 shadowPos = eye + forward * mCameraDist;
         // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
         Vector3 lightPos = Vector3{};
         if (mLightProp.LightType == 0)
@@ -139,7 +139,7 @@ void Light::EditorUpdate()
         Vector3 forward = EditorManager::mEditorCamera.mDirection;
 
         // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
-        Vector3 shadowPos = eye + forward * mCameradDist;
+        Vector3 shadowPos = eye + forward * mCameraDist;
         // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
         Vector3 lightPos = shadowPos - (mLightProp.Direction * mUpDist);
 
@@ -165,24 +165,30 @@ void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _obj
 {
 }
 
-// JSON_TODO :
-// LightProperty저장 필요
-// (Direction, Radiance, LightType, LightStrengh, LightRadius, LightCutOff)
-// (UseShadow, ShadowStrengh)
-// + 멤버변수 mShadowDistance,mLightNear, mLightFar, mCameradDist, mUpDist
 json Light::Serialize()
 {
     json ret;
     
     ret["id"] = GetId();
     ret["name"] = "Light";
+
+    //props
     json prop = json::object();
-    prop["position"] = { mLightProp.Position.x, mLightProp.Position.y, mLightProp.Position.z, mLightProp.Position.w };
     prop["direction"] = { mLightProp.Direction.x, mLightProp.Direction.y, mLightProp.Direction.z, mLightProp.Direction.w };
     prop["radiance"] = { mLightProp.Radiance.r, mLightProp.Radiance.g, mLightProp.Radiance.b, mLightProp.Radiance.a };
     prop["type"] = mLightProp.LightType;
-
+    prop["strength"] = mLightProp.LightStrengh;
+    prop["radius"] = mLightProp.LightRadius;
+    prop["cutoff"] = mLightProp.LightCutOff;
+    prop["use shadow"] = mLightProp.UseShadow;
+    prop["shadow strength"] = mLightProp.ShadowStrengh;
     ret["property"] = prop;
+
+    ret["shadow distance"] = mShadowDistance;
+    ret["light near"] = mLightNear;
+    ret["light far"] = mLightFar;
+    ret["camera dist"] = mCameraDist;
+    ret["up dist"] = mUpDist;
 
     return ret;
 }
@@ -194,17 +200,6 @@ void Light::Deserialize(json& j)
     // Ensure the "property" key exists
     if (j.contains("property")) {
         const auto& prop = j["property"];
-
-        // Deserialize position
-        if (prop.contains("position")) {
-            auto pos = prop["position"];
-            if (pos.is_array() && pos.size() == 4) {
-                mLightProp.Position.x = pos[0].get<float>();
-                mLightProp.Position.y = pos[1].get<float>();
-                mLightProp.Position.z = pos[2].get<float>();
-                mLightProp.Position.w = pos[3].get<float>();
-            }
-        }
 
         // Deserialize direction
         if (prop.contains("direction")) {
@@ -232,7 +227,47 @@ void Light::Deserialize(json& j)
         if (prop.contains("type")) {
             mLightProp.LightType = prop["type"].get<int>();
         }
+
+        if (prop.contains("strength")) {
+            mLightProp.LightStrengh = prop["strength"].get<float>();
+        }
+
+        if (prop.contains("radius")) {
+            mLightProp.LightRadius = prop["radius"].get<float>();
+        }
+
+        if (prop.contains("cutoff")) {
+            mLightProp.LightCutOff = prop["cutoff"].get<float>();
+        }
+
+        if (prop.contains("use shadow")) {
+            mLightProp.UseShadow = (prop["use shadow"].get<int>());
+        }
+
+        if (prop.contains("shadow strength")) {
+            mLightProp.ShadowStrengh = prop["shadow strength"].get<float>();
+        }
     }
+
+    if (j.contains("shadow distance")) {
+        mShadowDistance = j["shadow distance"].get<float>();
+    }
+
+    if (j.contains("light near")) {
+        mLightNear = j["light near"].get<float>();
+    }
+
+    if (j.contains("light far")) {
+        mLightFar = j["light far"].get<float>();
+    }
+
+    if (j.contains("camera dist")) {
+        mCameraDist = j["camera dist"].get<float>();
+    }
+    if (j.contains("up dist")) {
+        mUpDist = j["up dist"].get<float>();
+    }
+
 }
 
 void Light::EditorRendering(EditorViewerType _viewerType)

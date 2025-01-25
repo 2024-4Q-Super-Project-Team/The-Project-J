@@ -33,6 +33,8 @@ public:
     std::wstring    mMainKey = L"";		                    // 리소스 매니저에서 쓸 키 값.
     std::wstring    mSubKey = L"";		                    // 메쉬의 경우, fbxModel내에서 사용하는 key값을 통해 불러와야 하므로, fbxModel내에서 사용하는 key값을 저장한다.
     std::wstring    mPath = L"";			                // 리소스를 불러오기 위한 경로(FBX모델안에 있는 메쉬의 경우, 이 값은 fbx의 경로다.)
+
+    std::wstring    mParentHandleKey;
 public:
     inline const auto& GetResourceType()    const { return mResourceType; }
     inline const auto& GetKey()             const { return mMainKey; }

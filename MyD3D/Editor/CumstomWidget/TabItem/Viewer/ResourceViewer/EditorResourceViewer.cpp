@@ -21,14 +21,24 @@ void Editor::ResourceViewer::Render()
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	std::string name;
 	//////////////////////////////////////////////////////////////////////////////////////
-	// Resource View
+	// Resource Load List
+	//////////////////////////////////////////////////////////////////////////////////////
+	auto& loadList = ResourceManager::GetLoadResourceList();
+	ImGui::Text("Load Resource List");
+	for (ResourceHandle handle : loadList)
+	{
+		ImGui::Text(Helper::ToString(handle.GetKey() + L" : " + handle.GetPath()).c_str());
+	}
+	ImGui::Separator();
+	//////////////////////////////////////////////////////////////////////////////////////
+	// Resource Handle & Reosource View
 	//////////////////////////////////////////////////////////////////////////////////////
 	for (size_t i = 0; i < (size_t)eResourceType::SIZE; ++i)
 	{
 		std::string ResourceName = ResourceTypeToStr((eResourceType)i);
 		if (ImGui::TreeNodeEx((ResourceName).c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_Selected))
 		{
-			ResourceTable& table = ResourceManager::GetResourceTable((eResourceType)i);
+			auto& table = ResourceManager::GetResourceTable((eResourceType)i);
 			for (auto& resource : table)
 			{
 				std::string treeName = (ResourceName + " : " + Helper::ToString(resource.first.GetKey())).c_str();

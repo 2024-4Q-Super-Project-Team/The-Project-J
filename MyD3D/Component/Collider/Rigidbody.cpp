@@ -23,7 +23,7 @@ Rigidbody::~Rigidbody()
 		gameObject->GetOwnerObjectGroup()->GetWorld()->RemovePxActor(mRigidActor);
 		mRigidActor->release();
 	}
-		
+	
 }
 
 void Rigidbody::Start()
@@ -41,6 +41,9 @@ void Rigidbody::Start()
 	mRigidActor->userData = gameObject;
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
 	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
+
+	SetMass(mMass);
+	SetIsKinematic(mIsKinematic);
 }
 
 void Rigidbody::Tick()
@@ -133,10 +136,29 @@ void Rigidbody::EditorRender()
 
 void Rigidbody::SetMass(float mass)
 {
-	mMass = mass;
 	if (!mRigidActor || !mIsDynamic) return;
 	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
 	rigid->setMass(mMass); 
+}
+
+void Rigidbody::SetIsKinematic(bool b)
+{
+	if (!mRigidActor || !mIsDynamic) return;
+	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
+	rigid->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, b);
+}
+
+void Rigidbody::SetDisableGravity(bool b)
+{
+	mRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, b);
+}
+
+void Rigidbody::AddForce(Vector3 force, PxForceMode::Enum forceMode)
+{
+	if (!mRigidActor || !mIsDynamic) return;
+
+	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
+	rigid->addForce(PxVec3(force.x, force.y, force.z), forceMode);
 }
 
 json Rigidbody::Serialize()
@@ -145,7 +167,8 @@ json Rigidbody::Serialize()
 	ret["id"] = GetId();
 	ret["name"] = "Rigidbody";
 
-	ret["isDynamic"] = mEditorIsDynamic;
+	ret["isDynamic"] = mIsDynamic;
+	ret["isKinematic"] = mIsKinematic;
 	ret["mass"] = mMass;
 	return ret;
 }
@@ -156,6 +179,7 @@ void Rigidbody::Deserialize(json& j)
 
 	bool why = j.contains("isDynamic");
 	mIsDynamic = j["isDynamic"].get<bool>();
+	mIsKinematic = j["isKinematic"].get<bool>();
 	mMass = j["mass"].get<float>();
 }
 
@@ -163,16 +187,33 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-	ImGui::Text("Mass : "); ImGui::SameLine;
-	if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 1000.f))
+	ImGui::Separator();
+
+	ImGui::Text("isDynamic: "); ImGui::SameLine;
+	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+
+	if(mIsDynamic)
 	{
-		SetMass(mMass);
+		ImGui::Text("isKinematic: "); ImGui::SameLine;
+		if (ImGui::Checkbox(("##isKinematic" + uid).c_str(), (bool*)&mIsKinematic))
+		{
+			SetIsKinematic(mIsKinematic);
+		}
+
+		ImGui::Text("Mass : "); ImGui::SameLine;
+		if (ImGui::DragFloat((uid + "Mass").c_str(), &mMass, 0.f, 0.f, 1000.f))
+		{
+			SetMass(mMass);
+		}
 	}
 
 	ImGui::Separator();
 
-	ImGui::Text(u8"isDynamic(저장 후 에디터 재시작해야 반영됨) : "); ImGui::SameLine;
-	if (ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mEditorIsDynamic));
+	ImGui::Text("disable gravity: "); ImGui::SameLine;
+	if (ImGui::Checkbox(("##disable gravity" + uid).c_str(), (bool*)&mDisableGravity))
+	{
+		SetDisableGravity(mDisableGravity);
+	}
 
 	ImGui::Separator();
 

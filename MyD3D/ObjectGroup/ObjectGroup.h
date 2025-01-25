@@ -33,6 +33,9 @@ public:
 
 	virtual void EditorUpdate()	override;
 	virtual void EditorRender()	override;
+public:
+	virtual void _CALLBACK OnEnable() override;
+	virtual void _CALLBACK OnDisable() override;
 private:
     // 매 틱마다 오브젝트 생성, 삭제 처리하는 함수
     void            UpdateObject();

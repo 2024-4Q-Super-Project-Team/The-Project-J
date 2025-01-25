@@ -6,33 +6,15 @@
 #include "Resource/Graphics/Texture/Texture.h"
 // Editor
 #include "Editor/EditorManager.h"
-
-#define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \
-if (mMaterialMapTexture[(UINT)typeEnum]) \
-{ \
-    ImGui::Separator();\
-    mMaterialMapTexture[(UINT)typeEnum]->EditorRendering(EditorViewerType::DEFAULT); \
-}\
-
-#define SHOW_MATERIAL_MAP_PROP(typeEnum, label) \
-if (mMaterialResource->mMaterialMapTexture[(UINT)typeEnum]) \
-{ \
-    ImGui::Separator();\
-    if (ImGui::TreeNodeEx((label + uid).c_str(), ImGuiTreeNodeFlags_Selected)){ \
-         if (ImGui::Checkbox(("Using " + std::string(label) + uid).c_str(), (bool*)&UseMap)){\
-            mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
-        }\
-        mMaterialResource->mMaterialMapTexture[(UINT)typeEnum]->EditorRendering(EditorViewerType::DEFAULT); \
-        ImGui::TreePop(); \
-    }\
-}\
-
 MaterialResource* MaterialResource::DefaultMaterial;
 
 MaterialResource::MaterialResource(ResourceHandle _handle)
     : Resource(_handle)
 {
     SetEID("Mateiral : " + Helper::ToString(_handle.GetKey()));
+    // JSON_TODO : 핸들의 Path경로에 Json파일이 있는지 확인
+    // 있으면 해당 JSON의 값을 쓰고
+    // 없으면 JSON을 만들고 기본 값 사용
 }
 
 MaterialResource::~MaterialResource()
@@ -101,6 +83,14 @@ void MaterialResource::InitDefaultMaterial()
     ResourceHandle handle = { eResourceType::MaterialResource, L"Default_Materail", L"", L"" };
     DefaultMaterial = new MaterialResource(handle);
 }
+
+#define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \
+if (mMaterialMapTexture[(UINT)typeEnum]) \
+{ \
+    ImGui::Separator();\
+    ImGui::Text(label);\
+    mMaterialMapTexture[(UINT)typeEnum]->EditorRendering(EditorViewerType::INSPECTOR); \
+}\
 
 void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {

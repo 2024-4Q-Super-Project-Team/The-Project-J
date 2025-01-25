@@ -5,28 +5,25 @@
 #include "ViewportScene/ViewportScene.h"
 
 EditorCamera                    EditorManager::mEditorCamera;
-
-ViewportScene* EditorManager::mFocusViewport = nullptr;
-ViewportScene* EditorManager::mEditorViewport = nullptr;
+ViewportScene*                  EditorManager::mFocusViewport = nullptr;
+ViewportScene*                  EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
-
-Editor::EditorDebugger* EditorManager::mDebbugerTab = nullptr;
-Editor::ResourceViewer* EditorManager::mResourceViewer = nullptr;
-Editor::HierarchyViewer* EditorManager::mHierarchyViewer = nullptr;
-Editor::InspectorViewer* EditorManager::mInspectorViewer = nullptr;
-
-Editor::MenuBar* EditorManager::mMainMenuBar = nullptr;
-Editor::WindowBar* EditorManager::mMainWindowBar_01 = nullptr;
-Editor::WindowBar* EditorManager::mMainWindowBar_02 = nullptr;
+Editor::MenuBar*                EditorManager::mMainMenuBar = nullptr;
+Editor::WindowBar*              EditorManager::mMainWindowBar_01 = nullptr;
+Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
+Editor::GuizmoHandler*          EditorManager::mGuizmoHandler = nullptr;
+Editor::EditorDebugger*         EditorManager::mDebbugerTab = nullptr;
+Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
+Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
+Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
 
 ImGuiContext* EditorManager::mFocusContext;
 ImGuiContext* EditorManager::mEditorContext;
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 void EditorManager::Initialize()
 {
+    mGuizmoHandler = new Editor::GuizmoHandler();
     mResourceViewer = new Editor::ResourceViewer();
     mHierarchyViewer = new Editor::HierarchyViewer();
     mInspectorViewer = new Editor::InspectorViewer();
@@ -40,6 +37,35 @@ void EditorManager::Initialize()
 
 void EditorManager::Finalization()
 {
+}
+
+void EditorManager::Render()
+{
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
+    
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
+    }
+}
+
+void EditorManager::EditorRender()
+{
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
+
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
+    }
+    if (pCurrentViewport == mFocusViewport)
+    {
+        // 포커스 윈도우(게임 씬) 렌더링
+        FocusWindowRender();
+    }
 }
 
 void EditorManager::EditorWindowRender()
@@ -63,56 +89,53 @@ void EditorManager::EditorWindowRender()
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+}
 
+void EditorManager::FocusWindowRender()
+{
+    // 에디터 모드일때만 렌더링
+    if (GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+    {
+        if (mFocusViewport)
+        {
+            ///////////////////////////////////////////
+            // 카메라 렌더링 수행
+            ///////////////////////////////////////////
+            mEditorCamera.EditorRender();
+
+            ///////////////////////////////////////////
+            // Guizmo 렌더링 수행
+            ///////////////////////////////////////////
+            ImGui::SetCurrentContext(mFocusContext);
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+            ImGuizmo::BeginFrame();
+
+            UpdateIO(mFocusContext);
+
+            if (mGuizmoHandler)
+            {
+                mGuizmoHandler->Render();
+            }
+
+            mInspectorViewer->RenderGizmo();
+
+            ImGui::Render();
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        }
     }
 }
 
 void EditorManager::EditorUpdate()
 {
-    mEditorCamera.EditorUpdate();
-}
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
 
-void EditorManager::EditorCameraRender()
-{
-    mEditorCamera.EditorRender();
-}
-
-void EditorManager::EditorFocusRender()
-{
-    if (mFocusViewport)
+    if (pCurrentViewport == mFocusViewport)
     {
-        EditorManager::EditorCameraRender();
-        ImGui::SetCurrentContext(mFocusContext);
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-        ImGuizmo::BeginFrame();
-
-        UpdateIO(mFocusContext);
-
-        // 기즈모 모드 변경 버튼 테스트
-        // 추후 더 이쁘게 변경
-        if (ImGui::Begin("Gizmo Mode"))
-        {
-            if (ImGui::Button("Translate") || Input::IsKeyDown('G'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-            }
-            if (ImGui::Button("Rotate") || Input::IsKeyDown('R'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::ROTATE;
-            }
-            if (ImGui::Button("Scale") || Input::IsKeyDown('S'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::SCALE;
-            }
-            ImGui::End();
-        }
-
-        mInspectorViewer->RenderGizmo();
-
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        mEditorCamera.EditorUpdate();
     }
 }
 
@@ -221,7 +244,6 @@ void EditorManager::InitImGui(ImGuiContext* _context, HWND _hwnd)
 
 void EditorManager::InitEditorImGui()
 {
-    // ImGui ���ؽ�Ʈ ����
     IMGUI_CHECKVERSION();
     mEditorContext = ImGui::CreateContext();
     ImGui::SetCurrentContext(mEditorContext);
@@ -386,7 +408,8 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
         std::vector<std::wstring> pathArr;
         pathArr.reserve(numFiles);
 
-        for (size_t i = 0; i < numFiles; ++i) {
+        for (size_t i = 0; i < numFiles; ++i) 
+        {
             // 각 파일의 절대경로를 얻음
             wchar_t absPath[MAX_PATH];
             DragQueryFile(hDrop, i, absPath, MAX_PATH);
@@ -398,8 +421,11 @@ LRESULT EditorManager::EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPAR
             }
             Display::Console::Log("Drag&Drop File : ", relPath, '\n');
         }
-        ProcessDragFile(pathArr);
-
+        
+        for (size_t i = 0; i < pathArr.size(); ++i)
+        {
+            ResourceManager::LoadFileFromPath(pathArr[i]);
+        }
         // 메모리 해제
         DragFinish(hDrop);
         break;
@@ -462,41 +488,3 @@ BOOL EditorManager::EditorReposition()
     return FALSE;
 }
 
-#define REGISTER_AND_ALLOC_RESOUCE(type) \
-ResourceHandle handle = { eResourceType::type, fileName, L"", _pathArr[i] };\
-ResourceManager::RegisterResourceHandle(handle);\
-ResourceManager::Alloc_Resource<type>(handle);\
-
-BOOL EditorManager::ProcessDragFile(std::vector<std::wstring>& _pathArr)
-{
-    for (size_t i = 0; i < _pathArr.size(); ++i)
-    {
-        std::wstring fileExt;
-        std::wstring fileName;
-        Helper::GetExtFromFilePath(_pathArr[i], fileExt);
-        Helper::GetFileNameFromFilePath(_pathArr[i], fileName);
-        if (fileExt == L".fbx" || fileExt == L".FBX")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(FBXModelResource);
-        }
-        if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(Texture2DResource);
-        }
-        if (fileExt == L".ogg" || fileExt == L".mp3" || fileExt == L".wav")
-        {
-            REGISTER_AND_ALLOC_RESOUCE(AudioResource);
-        }
-    }
-    return TRUE;
-}
-
-void EditorManager::SetGizmoOperation(ImGuizmo::OPERATION operation)
-{
-    mCurrentGizmoOperation = operation;
-}
-
-ImGuizmo::OPERATION EditorManager::GetGizmoOperation()
-{
-    return mCurrentGizmoOperation;
-}

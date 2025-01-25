@@ -390,6 +390,15 @@
     <ClInclude Include="ThirdParty\imguizmo\ImZoomSlider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Save\SaveManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -750,6 +759,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\imguizmo\ImSequencer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Save\SaveManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

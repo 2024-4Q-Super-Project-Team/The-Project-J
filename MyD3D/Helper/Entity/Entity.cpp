@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Entity.h"
+#include "Manager/GameManager.h"
 
 void Engine::Entity::SetActive(bool _isActive)
 {
@@ -11,13 +12,13 @@ void Engine::Entity::SetActive(bool _isActive)
 			mState = EntityState::Active;
 			// Create에서 Active로 바뀔 땐 콜백을 호출하면 안된다. 
 			// 그러므로 이전 상태가 Passive일때만 호출하도록 조건을 설정
-			if (preState == EntityState::Passive)
+			if (preState == EntityState::Passive && GameManager::GetRunType() == eEngineRunType::GAME_MODE)
 				OnEnable();
 		}
 		if (!_isActive)
 		{
 			mState = EntityState::Passive;
-			if (preState == EntityState::Active)
+			if (preState == EntityState::Active && GameManager::GetRunType() == eEngineRunType::GAME_MODE)
 				OnDisable();
 		}
 	}
@@ -29,7 +30,8 @@ void Engine::Entity::SetDestroy()
 	if (mState != EntityState::Destroy)
 	{
 		mState = EntityState::Destroy;
-		OnDestroy();
+		if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+			OnDestroy();
 	}
 }
 
@@ -42,7 +44,7 @@ void Engine::Entity::SetCreate()
 		mState = EntityState::Create;
 	}
 	// 근데 처음 만들어진거면 어차피 Create상태이다. 따라서 콜백을 호출해준다.
-	else
+	else if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
 	{
 		OnCreate();
 	}

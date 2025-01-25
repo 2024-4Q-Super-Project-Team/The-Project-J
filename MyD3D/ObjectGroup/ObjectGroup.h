@@ -33,6 +33,9 @@ public:
 
 	virtual void EditorUpdate()	override;
 	virtual void EditorRender()	override;
+public:
+	virtual void _CALLBACK OnEnable() override;
+	virtual void _CALLBACK OnDisable() override;
 private:
     // 매 틱마다 오브젝트 생성, 삭제 처리하는 함수
     void            UpdateObject();
@@ -44,7 +47,7 @@ public:
 	// 그룹을 해당 월드로 이동. 해당 월드에 이미 같은 이름의 그룹이 있다면 합칠건지, 새로 
 	void		    SetWorld(World* _world);
     // 오브젝트 컨테이너를 반환
-    inline auto&    GetObjects() const { return mObjects; }
+    inline auto&    GetObjects() { return mObjects; }
 	Object*			GetObject(std::wstring name) const;
 	inline World*	GetWorld() const { return mOwnerWorld; }
 	inline INT		GetOrder() const { return mGroupOrder; }

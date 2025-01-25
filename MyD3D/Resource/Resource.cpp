@@ -46,11 +46,35 @@ const char* ResourceTypeToStr(eResourceType _type)
 
 json ResourceHandle::Serialize()
 {
-	// JSON_TODO :
-	// Type(int), MainKey, SubKey, Path
-	return json();
+	json ret;
+
+	ret["id"] = GiveId();
+	ret["type"] = mResourceType;
+	ret["main key"] = Helper::ToString(mMainKey);
+	ret["sub key"] = Helper::ToString(mSubKey);
+	ret["path"] = Helper::ToString(mPath);
+	ret["parent"] = Helper::ToString(mParentHandleKey);
+
+	return ret;
 }
 
 void ResourceHandle::Deserialize(json& j)
 {
+	SetId(j["id"].get<unsigned int>());
+
+	if (j.contains("type")){
+		mResourceType = static_cast<eResourceType>(j["type"].get<int>());
+	}
+	if (j.contains("main key")) {
+		mMainKey = Helper::ToWString(j["main key"].get<std::string>());
+	}
+	if (j.contains("sub key")) {
+		mSubKey = Helper::ToWString(j["sub key"].get<std::string>());
+	}
+	if (j.contains("path")) {
+		mPath = Helper::ToWString(j["path"].get<std::string>());
+	}
+	if (j.contains("parent")) {
+		mParentHandleKey = Helper::ToWString(j["parent"].get<std::string>());
+	}
 }

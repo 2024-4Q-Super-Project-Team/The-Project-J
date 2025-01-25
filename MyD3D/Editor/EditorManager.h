@@ -1,6 +1,8 @@
 #pragma once
 #include "Editor/EditorCamera/EditorCamera.h"
 
+#include "Editor/CumstomWidget/GuizmoItem/GuizmoHandler.h"
+
 #include "Editor/CumstomWidget/TabItem/EditorDebug/EditorDebugger.h"
 
 #include "Editor/CumstomWidget/TabItem/Viewer/HierarchyViewer/EditorHierarchyViewer.h"
@@ -32,12 +34,11 @@ class EditorManager
 public:
     static void Initialize();
     static void Finalization();
+    static void Render(); // 게임모드의 렌더
+    static void EditorUpdate();
+    static void EditorRender(); // 에디터모드의 렌더
     static void EditorWindowRender();
     static void FocusWindowRender();
-public:
-    static void EditorUpdate();
-    static void EditorCameraRender();
-    static void EditorFocusRender();
 public:
     static BOOL ShowEditorWindow(ViewportScene* _targetViewport);
     static BOOL IsRenderView(ViewportScene* _targetViewport);
@@ -62,24 +63,25 @@ public:
     static inline auto GetHierarchyViewer() { return mHierarchyViewer; }
     static inline auto GetInspectorViewer() { return mInspectorViewer; }
 public:
-    static EditorCamera                     mEditorCamera;
-
-    static ViewportScene* mFocusViewport;
-    static ViewportScene* mEditorViewport;
-    static std::vector<Editor::IWidget*>    mWidgetArray;
-
-    static Editor::EditorDebugger* mDebbugerTab;
-    static Editor::ResourceViewer* mResourceViewer;
-    static Editor::HierarchyViewer* mHierarchyViewer;
-    static Editor::InspectorViewer* mInspectorViewer;
-
-    static std::vector<std::shared_ptr<Resource>> mResourceContainor;
+    static EditorCamera                             mEditorCamera;
+    static ViewportScene*                           mFocusViewport;
+    static ViewportScene*                           mEditorViewport;
+    static std::vector<std::shared_ptr<Resource>>   mResourceContainor;
     /////////////////////////////////////////////////////
     //  Widget Object
     /////////////////////////////////////////////////////
-    static Editor::MenuBar* mMainMenuBar;
-    static Editor::WindowBar* mMainWindowBar_01;
-    static Editor::WindowBar* mMainWindowBar_02;
+    static std::vector<Editor::IWidget*>    mWidgetArray;
+
+    static Editor::MenuBar*         mMainMenuBar;
+    static Editor::WindowBar*       mMainWindowBar_01;
+    static Editor::WindowBar*       mMainWindowBar_02;
+
+    static Editor::GuizmoHandler*   mGuizmoHandler;
+
+    static Editor::EditorDebugger*  mDebbugerTab;
+    static Editor::ResourceViewer*  mResourceViewer;
+    static Editor::HierarchyViewer* mHierarchyViewer;
+    static Editor::InspectorViewer* mInspectorViewer;
     /////////////////////////////////////////////////////
     //  ImGui Object
     /////////////////////////////////////////////////////
@@ -87,12 +89,8 @@ public:
     static ImGuiContext* mEditorContext;
 
     static LRESULT CALLBACK EditorWinProc(HWND _hwnd, UINT _msg, WPARAM _wParam, LPARAM _lParam);
-
 public:
     static void ShowPopUp();
-public:
-    static void SetGizmoOperation(ImGuizmo::OPERATION operation);
-    static ImGuizmo::OPERATION GetGizmoOperation();
 };
 
 struct Serial {

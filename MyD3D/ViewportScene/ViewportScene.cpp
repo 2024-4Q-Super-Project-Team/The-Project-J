@@ -83,8 +83,7 @@ void ViewportScene::Render()
 
         mWorldManager->Render();
 
-        if (EditorManager::IsRenderView(this))
-            EditorManager::EditorWindowRender();
+        EditorManager::Render();
 
         mSwapChain->EndDraw();
     }
@@ -104,10 +103,7 @@ void ViewportScene::EditorUpdate()
     {
         mWorldManager->EditorUpdate();
 
-        if (EditorManager::IsFocusView(this))
-        {
-            EditorManager::EditorUpdate();
-        }
+        EditorManager::EditorUpdate();
     }
 }
 
@@ -121,15 +117,7 @@ void ViewportScene::EditorRender()
 
         mWorldManager->EditorRender();
 
-        if (EditorManager::IsFocusView(this))
-        {
-            EditorManager::EditorFocusRender();
-        }
-
-        if (EditorManager::IsRenderView(this))
-        {
-            EditorManager::EditorWindowRender();
-        }
+        EditorManager::EditorRender();
 
         mSwapChain->EndDraw();
     }

@@ -54,7 +54,7 @@ private:
     float mLightNear = 50.0f;
     float mLightFar = 15000.0f;
     // 카메라 -> 그림자(광원 지점) 거리
-    float mCameradDist = 0.0f;
+    float mCameraDist = 0.0f;
     // 그림자 -> 조명 거리
     float mUpDist = 3000.0f;
 	// 그림자 맵 해상도

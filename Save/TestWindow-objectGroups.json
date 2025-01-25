@@ -1,6 +1,6 @@
 [
     {
-        "id": 1,
+        "id": 2,
         "name": "Default",
         "objects": [
             {
@@ -10,16 +10,18 @@
             {
                 "id": 4,
                 "name": "Direction_Light"
-            }
-        ]
-    },
-    {
-        "id": 2,
-        "name": "wow",
-        "objects": [
+            },
             {
-                "id": 10,
-                "name": "lol"
+                "id": 5,
+                "name": "monster.fbx_Prefab"
+            },
+            {
+                "id": 6,
+                "name": "RootNode"
+            },
+            {
+                "id": 7,
+                "name": "NurbsPath.002"
             }
         ]
     }

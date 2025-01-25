@@ -12,6 +12,8 @@ std::string SaveManager::filePath = "../Save/";
 
 void SaveManager::Save()
 {
+	ResourceManager::SaveResources();
+
 	auto viewports = ViewportManager::GetViewports();
 
 	for (auto& viewport : viewports)

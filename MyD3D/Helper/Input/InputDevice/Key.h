@@ -30,6 +30,7 @@ public:
         ESCAPE = 27,
         LSHIFT = 16,
         LCONTROL = 17,
-        TAB = 9
+        TAB = 9,
+        ENTER = 13,
     };
 };

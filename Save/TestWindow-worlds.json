@@ -1,15 +1,11 @@
 [
     {
-        "id": 0,
-        "name": "SaveTestWorld",
+        "id": 1,
+        "name": "a",
         "object groups": [
             {
-                "id": 1,
-                "name": "Default"
-            },
-            {
                 "id": 2,
-                "name": "wow"
+                "name": "Default"
             }
         ]
     }

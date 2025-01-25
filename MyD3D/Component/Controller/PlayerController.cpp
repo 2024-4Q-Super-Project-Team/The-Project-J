@@ -29,6 +29,12 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 
 	Vector3 pos = gameObject->transform->position;
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 PlayerController::~PlayerController()
@@ -39,7 +45,6 @@ PlayerController::~PlayerController()
 
 void PlayerController::Start()
 {
-
 }
 
 void PlayerController::Tick()
@@ -129,6 +134,18 @@ void PlayerController::Deserialize(json& j)
 	mGravity = j["gravity"].get<float>();
 }
 
+void PlayerController::SetMaterial(std::string _name)
+{
+	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
+
+	PxShape* pxShapes[30];
+	int size = mCapsuleController->getActor()->getShapes(pxShapes, 30);
+	for (int i = 0; i < size; i++)
+	{
+		pxShapes[i]->setMaterials(&material, 1);
+	}
+}
+
 void PlayerController::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
@@ -161,6 +178,18 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 		mCapsuleController->setStepOffset(mStepOffset);
 	}
 
+	std::vector<const char*> ccharMaterial;
+	for (auto& mat : mMaterials)
+	{
+		ccharMaterial.push_back(mat.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mMaterialIdx, ccharMaterial.data(), static_cast<int>(ccharMaterial.size())))
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+	}
+
+
 	ImGui::Separator();
 	ImGui::Text("Movement"); ImGui::SameLine;
 	ImGui::Separator();
@@ -174,6 +203,8 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 	ImGui::Text("Gravity : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
 
+	ImGui::Text("Mateiral : "); ImGui::SameLine;
+	
 
 	ImGui::Separator();
 }

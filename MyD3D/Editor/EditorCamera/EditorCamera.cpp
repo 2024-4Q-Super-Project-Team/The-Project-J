@@ -24,10 +24,6 @@ void EditorCamera::EditorUpdate()
 
 void EditorCamera::EditorRender()
 {
-    //if (!EditorManager::GetFocusViewport()) return;
-    //if (!EditorManager::GetFocusViewport()->GetWorldManager()) return;
-    //World* world = EditorManager::GetFocusViewport()->GetWorldManager()->GetActiveWorld();
-
     ExcuteDrawList();
 }
 

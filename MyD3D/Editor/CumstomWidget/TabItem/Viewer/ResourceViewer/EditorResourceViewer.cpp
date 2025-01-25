@@ -25,9 +25,9 @@ void Editor::ResourceViewer::Render()
 	//////////////////////////////////////////////////////////////////////////////////////
 	auto& loadList = ResourceManager::GetLoadResourceList();
 	ImGui::Text("Load Resource List");
-	for (size_t i = 0; i < loadList.size(); ++i)
+	for (ResourceHandle handle : loadList)
 	{
-		ImGui::Text(Helper::ToString(std::to_wstring(i) + L". " + loadList[i].GetKey() + L" : " + loadList[i].GetPath()).c_str());
+		ImGui::Text(Helper::ToString(handle.GetKey() + L" : " + handle.GetPath()).c_str());
 	}
 	ImGui::Separator();
 	//////////////////////////////////////////////////////////////////////////////////////

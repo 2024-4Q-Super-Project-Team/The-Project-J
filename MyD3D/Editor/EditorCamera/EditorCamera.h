@@ -32,7 +32,7 @@ public:
     Matrix                  mRotation = Matrix::Identity;
 
     Vector3                 mDirection = Vector3::Backward;
-    FLOAT                   mCameraMoveSpeed = 500.0f;
+    FLOAT                   mCameraMoveSpeed = 10.0f;
     FLOAT                   mCameraRotateSpeed = 10.0f;
     FLOAT                   mCameraMaxAngle = 1.0f;
 

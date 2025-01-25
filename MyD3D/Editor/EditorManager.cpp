@@ -5,28 +5,25 @@
 #include "ViewportScene/ViewportScene.h"
 
 EditorCamera                    EditorManager::mEditorCamera;
-
-ViewportScene* EditorManager::mFocusViewport = nullptr;
-ViewportScene* EditorManager::mEditorViewport = nullptr;
+ViewportScene*                  EditorManager::mFocusViewport = nullptr;
+ViewportScene*                  EditorManager::mEditorViewport = nullptr;
 
 std::vector<Editor::IWidget*>   EditorManager::mWidgetArray;
-
-Editor::EditorDebugger* EditorManager::mDebbugerTab = nullptr;
-Editor::ResourceViewer* EditorManager::mResourceViewer = nullptr;
-Editor::HierarchyViewer* EditorManager::mHierarchyViewer = nullptr;
-Editor::InspectorViewer* EditorManager::mInspectorViewer = nullptr;
-
-Editor::MenuBar* EditorManager::mMainMenuBar = nullptr;
-Editor::WindowBar* EditorManager::mMainWindowBar_01 = nullptr;
-Editor::WindowBar* EditorManager::mMainWindowBar_02 = nullptr;
+Editor::MenuBar*                EditorManager::mMainMenuBar = nullptr;
+Editor::WindowBar*              EditorManager::mMainWindowBar_01 = nullptr;
+Editor::WindowBar*              EditorManager::mMainWindowBar_02 = nullptr;
+Editor::GuizmoHandler*          EditorManager::mGuizmoHandler = nullptr;
+Editor::EditorDebugger*         EditorManager::mDebbugerTab = nullptr;
+Editor::ResourceViewer*         EditorManager::mResourceViewer = nullptr;
+Editor::HierarchyViewer*        EditorManager::mHierarchyViewer = nullptr;
+Editor::InspectorViewer*        EditorManager::mInspectorViewer = nullptr;
 
 ImGuiContext* EditorManager::mFocusContext;
 ImGuiContext* EditorManager::mEditorContext;
 
-static ImGuizmo::OPERATION mCurrentGizmoOperation(ImGuizmo::TRANSLATE);
-
 void EditorManager::Initialize()
 {
+    mGuizmoHandler = new Editor::GuizmoHandler();
     mResourceViewer = new Editor::ResourceViewer();
     mHierarchyViewer = new Editor::HierarchyViewer();
     mInspectorViewer = new Editor::InspectorViewer();
@@ -40,6 +37,35 @@ void EditorManager::Initialize()
 
 void EditorManager::Finalization()
 {
+}
+
+void EditorManager::Render()
+{
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
+    
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
+    }
+}
+
+void EditorManager::EditorRender()
+{
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
+
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
+    }
+    if (pCurrentViewport == mFocusViewport)
+    {
+        // 포커스 윈도우(게임 씬) 렌더링
+        FocusWindowRender();
+    }
 }
 
 void EditorManager::EditorWindowRender()
@@ -63,62 +89,53 @@ void EditorManager::EditorWindowRender()
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    }
+}
 
+void EditorManager::FocusWindowRender()
+{
+    // 에디터 모드일때만 렌더링
+    if (GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+    {
+        if (mFocusViewport)
+        {
+            ///////////////////////////////////////////
+            // 카메라 렌더링 수행
+            ///////////////////////////////////////////
+            mEditorCamera.EditorRender();
+
+            ///////////////////////////////////////////
+            // Guizmo 렌더링 수행
+            ///////////////////////////////////////////
+            ImGui::SetCurrentContext(mFocusContext);
+            ImGui_ImplDX11_NewFrame();
+            ImGui_ImplWin32_NewFrame();
+            ImGui::NewFrame();
+            ImGuizmo::BeginFrame();
+
+            UpdateIO(mFocusContext);
+
+            if (mGuizmoHandler)
+            {
+                mGuizmoHandler->Render();
+            }
+
+            mInspectorViewer->RenderGizmo();
+
+            ImGui::Render();
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        }
     }
 }
 
 void EditorManager::EditorUpdate()
 {
-    mEditorCamera.EditorUpdate();
-}
+    // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
+    ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
 
-void EditorManager::EditorCameraRender()
-{
-    mEditorCamera.EditorRender();
-}
-
-void EditorManager::EditorFocusRender()
-{
-    if (mFocusViewport)
+    if (pCurrentViewport == mFocusViewport)
     {
-        EditorManager::EditorCameraRender();
-        ImGui::SetCurrentContext(mFocusContext);
-        ImGui_ImplDX11_NewFrame();
-        ImGui_ImplWin32_NewFrame();
-        ImGui::NewFrame();
-        ImGuizmo::BeginFrame();
-
-        UpdateIO(mFocusContext);
-
-        // 기즈모 모드 변경 버튼 테스트
-        // 추후 더 이쁘게 변경
-        if (ImGui::Begin("Gizmo Mode"))
-        {
-            if (ImGui::Button("Translate") || Input::IsKeyDown('G'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
-            }
-            if (ImGui::Button("Rotate") || Input::IsKeyDown('R'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::ROTATE;
-            }
-            if (ImGui::Button("Scale") || Input::IsKeyDown('S'))
-            {
-                mCurrentGizmoOperation = ImGuizmo::SCALE;
-            }
-            if (ImGui::Button("Turn!"))
-            {
-                // 여기에 Dotween 활용, 한바퀴 돌게
-                IEditorObject* focusObject = Editor::InspectorViewer::GetFocusObject();
-                static_cast<Object*>(focusObject)->transform->Rotate360(2.0f, Dotween::EasingEffect::Linear);
-            }
-            ImGui::End();
-        }
-
-        mInspectorViewer->RenderGizmo();
-
-        ImGui::Render();
-        ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+        mEditorCamera.EditorUpdate();
     }
 }
 
@@ -456,6 +473,7 @@ void EditorManager::ShowPopUp()
     }
 }
 
+
 BOOL EditorManager::EditorReposition()
 {
     // 에디터 윈도우 위치 조정
@@ -470,12 +488,3 @@ BOOL EditorManager::EditorReposition()
     return FALSE;
 }
 
-void EditorManager::SetGizmoOperation(ImGuizmo::OPERATION operation)
-{
-    mCurrentGizmoOperation = operation;
-}
-
-ImGuizmo::OPERATION EditorManager::GetGizmoOperation()
-{
-    return mCurrentGizmoOperation;
-}

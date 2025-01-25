@@ -25,58 +25,153 @@ void ObjectGroup::Start()
 void ObjectGroup::Tick()
 {
     UpdateObject();
-	FOR_LOOP_ARRAY_ENTITY(mObjects, Tick())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Tick();
+        }
+    }
 }
 
 void ObjectGroup::FixedUpdate()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, FixedUpdate())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->FixedUpdate();
+        }
+    }
 }
 
 void ObjectGroup::PreUpdate()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, PreUpdate())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PreUpdate();
+        }
+    }
 }
 
 void ObjectGroup::Update()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, Update())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Update();
+        }
+    }
 }
 
 void ObjectGroup::PostUpdate()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, PostUpdate())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PostUpdate();
+        }
+    }
 }
 
 void ObjectGroup::PreRender()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, PreRender())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PreRender();
+        }
+    }
 }
 
 void ObjectGroup::Render()
 {
-	FOR_LOOP_ARRAY_ENTITY(mObjects, Render())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Render();
+        }
+    }
 }
 
 void ObjectGroup::Draw(Camera* _camera)
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjects, Draw(_camera))
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Draw(_camera);
+        }
+    }
 }
 
 void ObjectGroup::PostRender()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjects, PostRender())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PostRender();
+        }
+    }
 }
 
 void ObjectGroup::EditorUpdate()
 {
     UpdateObject();
-    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorUpdate())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->EditorUpdate();
+        }
+    }
 }
 
 void ObjectGroup::EditorRender()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjects, EditorRender())
+    for (Object* object : mObjects)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->EditorRender();
+        }
+    }
+}
+
+void _CALLBACK ObjectGroup::OnEnable()
+{
+    for (auto& object : mObjects)
+    {
+        object->OnEnable();
+    }
+    return void _CALLBACK();
+}
+
+void _CALLBACK ObjectGroup::OnDisable()
+{
+    for (auto& object : mObjects)
+    {
+        object->OnDisable();
+    }
+    return void _CALLBACK();
 }
 
 Object* ObjectGroup::CreateObject(std::wstring_view _name, std::wstring_view _tag)
@@ -96,6 +191,11 @@ void ObjectGroup::UpdateObject()
         // »èÁ¦
         if ((*itr)->GetState() == EntityState::Destroy)
         {
+            if (EditorManager::mInspectorViewer &&
+                EditorManager::mInspectorViewer->GetFocusObject() == *itr) {
+                EditorManager::mInspectorViewer->SetFocusObject(nullptr);
+            }
+            SAFE_DELETE(*itr);
             itr = mObjects.erase(itr);
             continue;
         }

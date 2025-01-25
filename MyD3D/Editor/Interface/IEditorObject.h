@@ -51,6 +51,7 @@ namespace Editor
 #define EDITOR_FLAG_RESOURCE  ImGuiTreeNodeFlags_Selected | ImGuiTreeNodeFlags_Bullet
 
 #define EDITOR_COLOR_EXTRA		ImVec4(0.4f, 0.4f, 0.4f, 1.0f)
+#define EDITOR_COLOR_WORLD	    ImVec4(0.2f, 0.2f, 0.4f, 1.0f)
 #define EDITOR_COLOR_RESOURCE	ImVec4(0.0f, 0.4f, 0.2f, 1.0f)
 #define EDITOR_COLOR_NULL	    ImVec4(0.3f, 0.0f, 0.0f, 1.0f)
 #define EDITOR_COLOR_POP(num)	ImGui::PopStyleColor(num);

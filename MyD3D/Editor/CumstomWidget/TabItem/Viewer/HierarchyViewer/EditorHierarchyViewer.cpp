@@ -47,6 +47,8 @@ namespace Editor
         {
             // 참조하는 월드매니저가 없다.
         }
+        ShowAddObjectGroupPopup();
+
         ShowAddObjectPopup();
         ShowDeleteGroupPopup();
         ShowRenameGroupPopup();
@@ -66,6 +68,19 @@ namespace Editor
             {
                 EditorManager::GetInspectorViewer()->SetFocusObject(_pWorld);
             }
+        }
+        // 오른쪽 클릭을 감지하고 팝업 메뉴를 열기
+        if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+        {
+            ImGui::OpenPopup(ptr.c_str()); // 유니크한 식별자로 팝업을 엶
+        }
+        // 팝업 창
+        if (ImGui::BeginPopup(ptr.c_str()))
+        {
+            if (ImGui::MenuItem("Add Object Group")) {
+                isAddObjectGroupPopupOpen = true;
+            }
+            ImGui::EndPopup();
         }
         EDITOR_COLOR_POP(1);
     }
@@ -183,6 +198,48 @@ namespace Editor
         mRefWorldManager = _pWorldManager;
     }
 
+    void HierarchyViewer::ShowAddObjectGroupPopup()
+    {
+        std::string id = "Add Object Group";
+        if (isAddObjectGroupPopupOpen)
+        {
+            ImGui::OpenPopup(id.c_str());
+            isAddObjectGroupPopupOpen = false;
+        }
+        if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+        {
+            ImGui::Text("Object Group Name : ");
+            static char Name[128] = "ObjectGroup";
+            ImGui::InputText("##AddObjectGroupName", Name, IM_ARRAYSIZE(Name));
+
+            const char* defaultName = "ObjectGroup";
+            if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+            {
+                std::string newName = Name;
+                if (mRefWorldManager->GetActiveWorld())
+                {
+                    mRefWorldManager->GetActiveWorld()
+                        ->CreateObjectGroup(Helper::ToWString(newName));
+                }
+                else
+                {
+                    Display::Console::Log("Failed To Create ObjectGroup, Because Not ActiveWorld");
+                }
+                ImGui::CloseCurrentPopup();
+                strcpy_s(Name, defaultName);
+                mPopupGroup = nullptr;
+            }
+            ImGui::SameLine();
+            if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+            {
+                ImGui::CloseCurrentPopup();
+                strcpy_s(Name, defaultName);
+                mPopupGroup = nullptr;
+            }
+            ImGui::EndPopup();
+        }
+    }
+
     void HierarchyViewer::ShowAddObjectPopup()
     {
         std::string id = "Add Object";
@@ -210,6 +267,10 @@ namespace Editor
                 if (mPopupGroup)
                 {
                     mPopupGroup->CreateObject(Helper::ToWString(newName), Helper::ToWString(newTag));
+                }
+                else
+                {
+                    Display::Console::Log("Failed To Create Object, Because Nullptr Ref To ObjectGroup");
                 }
                 ImGui::CloseCurrentPopup();
                 strcpy_s(Name, defaultName);

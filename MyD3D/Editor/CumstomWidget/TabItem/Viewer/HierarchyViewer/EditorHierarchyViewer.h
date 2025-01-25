@@ -43,6 +43,11 @@ namespace Editor
         int mbAddingObjIndex = -1;
     public: 
         /////////////////////////////////////////////
+        // World Popup
+        /////////////////////////////////////////////
+        bool isAddObjectGroupPopupOpen = false;
+        void ShowAddObjectGroupPopup();
+        /////////////////////////////////////////////
         // ObjectGroup Popup
         /////////////////////////////////////////////
         ObjectGroup* mPopupGroup = nullptr;

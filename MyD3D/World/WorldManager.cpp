@@ -2,10 +2,7 @@
 #include "WorldManager.h"
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
-
-#include <fstream>
 
 WorldManager::WorldManager(ViewportScene* _pViewport)
 	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr)
@@ -14,7 +11,7 @@ WorldManager::WorldManager(ViewportScene* _pViewport)
 
 WorldManager::~WorldManager()
 {
-    SAFE_DELETE_MAP(mWorlds);
+    SAFE_DELETE_VECTOR(mWorldArray);
 }
 
 void WorldManager::Start()
@@ -27,80 +24,120 @@ void WorldManager::Start()
 void WorldManager::Tick()
 {
 	UpdateWorld();
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, Tick())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, Tick());
+		}
 	}
 }
 
 void WorldManager::FixedUpdate()
 {
-	if (mCurrActiveWorld) {
-        UPDATE_ENTITY(mCurrActiveWorld, FixedUpdate());
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, FixedUpdate());
+		}
 	}
 }
 
 void WorldManager::PreUpdate()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, PreUpdate())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, PreUpdate());
+		}
 	}
 }
 
 void WorldManager::Update()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, Update())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, Update());
+		}
 	}
 }
 
 void WorldManager::PostUpdate()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, PostUpdate())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, PostUpdate());
+		}
 	}
 }
 
 void WorldManager::PreRender()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, PreRender())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, PreRender());
+		}
 	}
 }
 
 void WorldManager::Render()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, Render())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, Render());
+		}
 	}
 }
 
 void WorldManager::PostRender()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, PostRender())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, PostRender());
+		}
 	}
 }
 
 void WorldManager::EditorUpdate()
 {
 	UpdateWorld();
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, EditorUpdate())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, EditorUpdate());
+		}
 	}
 }
 
 void WorldManager::EditorRender()
 {
-	if (mCurrActiveWorld) {
-		UPDATE_ENTITY(mCurrActiveWorld, EditorRender())
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			UPDATE_ENTITY(world, EditorRender());
+		}
 	}
 }
 
 void WorldManager::UpdateWorld()
 {
-	for (auto itr = mWorlds.begin(); itr != mWorlds.end();)
+	for (auto itr = mWorldArray.begin(); itr != mWorldArray.end();)
 	{
-		World* pWorld = (*itr).second;
+		World* pWorld = *itr;
 		if (ENTITY_IS_DESTROY(pWorld))
 		{
 			if (mCurrActiveWorld == pWorld)
@@ -118,7 +155,7 @@ void WorldManager::UpdateWorld()
 			}
 			if(pWorld)
 				delete pWorld;
-			itr = mWorlds.erase(itr);
+			itr = mWorldArray.erase(itr);
 			continue;
 		}
 		// 생성
@@ -147,15 +184,15 @@ void WorldManager::UpdateWorld()
 
 World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _tag, bool isEmpty)
 {
-	auto itr = Helper::FindMap(_name, mWorlds);
-	if (itr != nullptr)
+	auto world = FindWorld(_name);
+	if (world != nullptr)
 	{
-		return *itr;
+		return world;
 	}
 	else
 	{
 		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
-		mWorlds[_name] = instance;
+		mWorldArray.push_back(instance);
 		instance->OnCreate();
 		if (isEmpty == false)
 		{
@@ -165,24 +202,14 @@ World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _t
 	}
 }
 
-void WorldManager::AddWorld(World* _world)
-{
-	mWorlds[_world->GetName()] = _world;
-}
-
-World* WorldManager::GetActiveWorld()
-{
-	return mCurrActiveWorld;
-}
-
 BOOL WorldManager::DestroyWorld(const std::wstring& _name)
 {
-	auto itr = Helper::FindMap(_name, mWorlds);
-	if (itr != nullptr)
+	auto world = FindWorld(_name);
+	if (world != nullptr)
 	{
-		(*itr)->SetDestroy();
+		world->SetDestroy();
 		// 삭제하는 월드가 변경해야하는 월드면 nullptr로 바꿔준다.
-		if (*itr == mNextActiveWorld)
+		if (world == mNextActiveWorld)
 		{
 			mNextActiveWorld = nullptr;
 		}
@@ -193,10 +220,10 @@ BOOL WorldManager::DestroyWorld(const std::wstring& _name)
 
 BOOL WorldManager::SetActiveWorld(const std::wstring& _name)
 {
-	auto itr = Helper::FindMap(_name, mWorlds);
-    if (itr != nullptr)
+	auto world = FindWorld(_name);
+    if (world != nullptr)
     {
-        return SetActiveWorld(*itr);
+        return SetActiveWorld(world);
     }
     return FALSE;
 }
@@ -209,5 +236,14 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
         return TRUE;
     }
     return FALSE;
+}
+
+World* WorldManager::FindWorld(const std::wstring _name)
+{
+	auto itr = FIND_CONTAINER(mWorldArray,
+		[&_name](World* _world) {
+			return (_world->GetName() == _name);
+		});
+	return (FIND_SUCCESS(itr, mWorldArray)) ? (*itr) : nullptr;
 }
 

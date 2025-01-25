@@ -14,7 +14,8 @@ namespace Editor
         virtual void Render() override;
         void RenderGizmo();
     public:
-        void SetFocusObject(IEditorObject* _object);
+        static void SetFocusObject(IEditorObject* _object);
+        static bool IsFocusObject(IEditorObject* _object);
         static IEditorObject* GetFocusObject();
     private:
         static IEditorObject* mFocusObject;

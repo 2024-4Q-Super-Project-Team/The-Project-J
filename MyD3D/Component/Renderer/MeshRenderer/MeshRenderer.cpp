@@ -21,7 +21,6 @@ MeshRenderer::MeshRenderer(Object* _owner)
 
 MeshRenderer::~MeshRenderer()
 {
-    SAFE_DELETE(mMateiral)
 }
 
 void MeshRenderer::Start()

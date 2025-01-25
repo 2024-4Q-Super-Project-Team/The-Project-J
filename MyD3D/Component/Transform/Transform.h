@@ -43,6 +43,17 @@ public:
 
 public:
     inline Transform* GetParent() const { return mParent; }
+    inline Transform* GetRootParent() { return mParent != nullptr? GetRootParent() : this; }
+    inline bool       IsBelong(Transform* _dest)
+    {
+        if (this == nullptr || mParent == nullptr)
+            return false; // 부모가 없거나 자신이 nullptr이면 속해 있지 않음
+
+        if (mParent == _dest)
+            return true; // 부모가 _dest와 같으면 속해 있음
+
+        return mParent->IsBelong(_dest); // 재귀적으로 부모 계층 확인
+    }
     inline Transform* GetChild(UINT _index = 0) {
         if (_index >= mChildren.size()) return nullptr; // 범위를 벗어나면 nullptr 반환
         return mChildren[_index];
@@ -73,13 +84,9 @@ public:
     // Scale to Vector3
     Vector3			scale;
 private:
-    // ====================================
-    //
     // 위치 정보============================
     Matrix			mLocalMatrix; // 상대좌표
     Matrix			mWorldMatrix; // 월드좌표
-    // ====================================
-    //
     // 계층 정보============================
     Transform* mRootParent;
     Transform* mParent;

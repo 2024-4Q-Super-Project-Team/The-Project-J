@@ -6,7 +6,6 @@
 #include <iostream>
 #include <fstream>
 #include <wrl/client.h> 
-#include <concepts>
 #include <type_traits>
 #include <string>
 #include <string_view>
@@ -95,8 +94,6 @@ using json = nlohmann::json;
 #include "AudioSystem/AudioFramework.h"
 
 #include "Object/Object.h"
-#include "ObjectGroup/ObjectGroup.h"
-
 #include "World/World.h"
 #include "World/WorldManager.h"
 

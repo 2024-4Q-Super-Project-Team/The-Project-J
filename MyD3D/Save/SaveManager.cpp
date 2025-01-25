@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "SaveManager.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
@@ -24,21 +23,17 @@ void SaveManager::Save()
 
 		for (const auto& world : worlds)
 		{
-			worldsJson += world.second->Serialize();
+			worldsJson += world->Serialize();
 
-			auto objectGroups = world.second->GetObjectGroups();
-			for (const auto& group : objectGroups)
+			auto& ObjectArray = world->GetObjectArray();
+			for (const auto& object : ObjectArray)
 			{
-				groupsJson += group->Serialize();
+				objectsJson += object->Serialize();
 
-				for (const auto& object : group->GetObjects())
-				{
-					objectsJson += object->Serialize();
-
-					for (const auto& component : object->GetComponents<Component>())
-						componentsJson += component->Serialize();
-				}
+				for (const auto& component : object->GetComponents<Component>())
+					componentsJson += component->Serialize();
 			}
+			
 		}
 		std::ofstream file1(filePath + Helper::ToString(viewport->GetName()) + "-worlds" + ".json");
 		file1 << worldsJson.dump(4);
@@ -64,22 +59,15 @@ void SaveManager::Load()
 
 	for (auto& viewport : viewports)
 	{
-		auto& worlds = viewport->GetWorldManager()->GetWorlds();
+		//auto& worlds = viewport->GetWorldManager()->GetWorlds();
 
-		json defaultsJson, worldsJson, groupsJson, objectsJson, componentsJson;
+		json defaultsJson, worldsJson, objectsJson, componentsJson;
 
 		std::ifstream worldsFile(filePath + Helper::ToString(viewport->GetName()) + "-worlds.json");
 		if (worldsFile.is_open())
 		{
 			worldsFile >> worldsJson;
 			worldsFile.close();
-		}
-
-		std::ifstream groupsFile(filePath + Helper::ToString(viewport->GetName()) + "-objectGroups.json");
-		if (groupsFile.is_open())
-		{
-			groupsFile >> groupsJson;
-			groupsFile.close();
 		}
 
 		std::ifstream objectsFile(filePath + Helper::ToString(viewport->GetName()) + "-objects.json");
@@ -100,20 +88,9 @@ void SaveManager::Load()
 		{
 			//월드 생성 
 			std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
-			World* world = new World(viewport->GetWorldManager()->GetViewportScene(), worldName, L"", false);
-			viewport->GetWorldManager()->AddWorld(world);
-
+			World* world = viewport->GetWorldManager()->CreateWorld(worldName, L"", true);
 			world->SetId(worldJson["id"].get<unsigned int>());
-			world->Deserialize(worldJson); //이 안에서 속한 그룹 생성 (id, 이름 설정)
-		}
-
-
-		for (auto& groupJson : groupsJson)
-		{
-			unsigned int id = groupJson["id"].get<unsigned int>();
-			ObjectGroup* group = static_cast<ObjectGroup*>(Engine::SaveBase::mMap[id]);
-			if (group)
-				group->Deserialize(groupJson);
+			world->Deserialize(worldJson);
 		}
 
 		for (auto& objectJson : objectsJson)

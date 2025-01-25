@@ -33,7 +33,7 @@ void EditorDragNDrop::Render()
     if (isDragging == TRUE && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
     {
         isDragging = false; // 드래그 상태 해제
-        mItemState = {};
+        mItemState.Clear();
     }
 }
 
@@ -41,16 +41,25 @@ BOOL EditorDragNDrop::ReceiveDragAndDropObjectData(const char* _uid, Object** _p
 {
     BOOL isOk = FALSE;
     ImGui::PushID(_uid);
+    if (isDragging)
+    {
+        if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+        {
+            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
+            {
+                *_pObject = EditorDragNDrop::mItemState.mObjectPtr;
+                EditorDragNDrop::mItemState.Clear();
+                isDragging = false;
+                isOk = TRUE;
+            }
+        }
+    }
     if (isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
     {
         if (_pObject)
         {
-            *_pObject = EditorDragNDrop::mItemState.mObjectPtr;
-            EditorDragNDrop::mItemState.Clear();
-            isDragging = false;
-            isOk = TRUE;
+            
         }
-        isDragging = false;
     }
     ImGui::PopID();
 

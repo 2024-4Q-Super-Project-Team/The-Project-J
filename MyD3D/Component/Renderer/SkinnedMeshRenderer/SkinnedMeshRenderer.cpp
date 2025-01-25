@@ -22,7 +22,6 @@ SkinnedMeshRenderer::SkinnedMeshRenderer(Object* _owner)
 
 SkinnedMeshRenderer::~SkinnedMeshRenderer()
 {
-    SAFE_DELETE(mMateiral)
 }
 
 void SkinnedMeshRenderer::Start()

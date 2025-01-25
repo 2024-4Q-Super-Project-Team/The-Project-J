@@ -22,7 +22,6 @@
 #include "Manager/GameManager.h"
 
 class Component;
-class ObjectGroup;
 
 class Object
     : public Engine::Entity
@@ -71,20 +70,20 @@ public:
     //가지고 있는 모든 컴포넌트를 반환합니다.
     std::vector<Component*> GetAllComponents();
 public:
-  	json Serialize();
-    void Deserialize(json& j);
+    void SetWorld(World* _world);
 public:
     Transform* const transform;
-public:
-    inline ObjectGroup* GetOwnerObjectGroup() { return mOwnerGroup; }
-    inline void SetOwnerGroup(ObjectGroup* _pObjectGroup) { mOwnerGroup = _pObjectGroup; }
 protected:
-    ObjectGroup* mOwnerGroup;
+    World* mOwnerWorld = nullptr;
     std::vector<Component*> mComponentArray[ComponentSize];
 public:
+    inline World* GetOwnerWorld() { return mOwnerWorld; }
+public:
+    json Serialize();
+    void Deserialize(json& j);
+public:
+    bool isNodeOpen = false; // 하이라키뷰 트리노드가 열려있는지 선택된 여부
     virtual void EditorRendering(EditorViewerType _viewerType) override;
-private:
-    Matrix identity = Matrix::Identity;
 };
 
 template <class T, typename... Args>

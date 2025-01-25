@@ -6,7 +6,6 @@
 #include "Graphics/GraphicsManager.h"
 
 #include "World/World.h"
-#include "World/Light/LightSystem.h"
 
 std::queue<D3DBitmapRenderTarget*>  Light::mShadowRenderTargetPool;
 

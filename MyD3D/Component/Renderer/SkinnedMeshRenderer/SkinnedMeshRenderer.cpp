@@ -297,7 +297,7 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
 json SkinnedMeshRenderer::Serialize()
 {
     json ret;
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["name"] = "MeshRenderer";
 
     ret["mesh handle"] = mMeshHandle.Serialize();
@@ -316,6 +316,8 @@ json SkinnedMeshRenderer::Serialize()
 
     ret["property"] = mprop;
     ret["root"] = mRootBone->gameObject->GetId();
+
+    ret["use map"] = mMatCBuffer.UseMapFlag;
 
     return ret;
 }
@@ -342,6 +344,8 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     mMatCBuffer.MatProp.RoughnessScale = mProp["roughness"].get<float>();
     mMatCBuffer.MatProp.MetallicScale = mProp["metallic"].get<float>();
     mMatCBuffer.MatProp.AmbienOcclusionScale = mProp["ao"].get<float>();
+
+    mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
 
     Object* rootObj = static_cast<Object*>(Engine::SaveBase::mMap[j["root"].get<unsigned int>()]);
     mRootBone = rootObj->transform;

@@ -85,6 +85,8 @@ using json = nlohmann::json;
 #include "Helper/Input/Input.h"
 #include "Helper/Math/Math.h"
 #include "Helper/Math/Random.h"
+#include "Helper/Dotween/DotTween.h"
+#include "Helper/Dotween/EasingFunction.h"
 
 #include "Graphics/Graphics.h"
 #include "Graphics/ConstantBuffer.h"

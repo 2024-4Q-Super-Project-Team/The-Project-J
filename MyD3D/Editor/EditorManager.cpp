@@ -106,6 +106,12 @@ void EditorManager::EditorFocusRender()
             {
                 mCurrentGizmoOperation = ImGuizmo::SCALE;
             }
+            if (ImGui::Button("Turn!"))
+            {
+                // 여기에 Dotween 활용, 한바퀴 돌게
+                IEditorObject* focusObject = Editor::InspectorViewer::GetFocusObject();
+                static_cast<Object*>(focusObject)->transform->Rotate360(2.0f, Dotween::EasingEffect::Linear);
+            }
             ImGui::End();
         }
 

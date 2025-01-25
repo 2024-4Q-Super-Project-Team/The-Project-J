@@ -291,3 +291,63 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
     }
     EDITOR_COLOR_POP(1);
 }
+
+void Transform::LookAt(Transform* _dest, float duration, Dotween::EasingEffect easingEffect)
+{
+    Vector3 targetPosition = _dest->GetWorldPosition();
+    float elapsedTime = 0.0f;
+
+    while (elapsedTime < duration)
+    {
+        float t = elapsedTime / duration;
+        UpdateLookAt(targetPosition, t, easingEffect);
+        elapsedTime += 0.016f; // 60 FPS 기준
+    }
+
+    UpdateLookAt(targetPosition, 1.0f, easingEffect);
+}
+
+void Transform::UpdateLookAt(const Vector3& targetPosition, float t, Dotween::EasingEffect easingEffect)
+{
+    Vector3 currentPosition = GetWorldPosition();
+    Vector3 direction = targetPosition - currentPosition;
+    direction.Normalize();
+
+    // 목표 방향으로 회전하는 Quaternion 계산
+    Quaternion targetRotation = Quaternion::CreateFromYawPitchRoll(atan2(direction.x, direction.z), asin(direction.y), 0.0f);
+
+    // 현재 회전과 목표 회전 사이를 보간
+    Quaternion currentRotation = rotation;
+    rotation = Quaternion::Slerp(currentRotation, targetRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+
+    UpdateMatrix();
+}
+
+void Transform::Rotate360(float duration, Dotween::EasingEffect easingEffect)
+{
+    float elapsedTime = 0.0f;
+
+    // UpdateRotation 함수를 일정 시간 동안 호출하여 부드럽게 회전
+    while (elapsedTime < duration)
+    {
+        float t = elapsedTime / duration;
+        UpdateRotation(t, easingEffect);
+        elapsedTime += 0.016f;
+    }
+
+    // 한 바퀴 회전
+    UpdateRotation(1.0f, easingEffect);
+}
+
+void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
+{
+    // 2PI(360도) 회전
+    Quaternion startRotation = rotation;
+    Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_2PI);
+
+    // 현재 회전과 목표 회전 사이 보간
+    rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+
+    // 행렬 업데이트
+    UpdateMatrix();
+}

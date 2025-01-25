@@ -439,8 +439,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
             EditorManager::GetGizmoOperation(), ImGuizmo::MODE::LOCAL, *modelMatrix.m))
         {
             if (isFirstManipulate)
-            {
-                Display::Console::Log("Manipulating... : ");              
+            {         
                 previousModelMatrixStack.push_back({ focusObject, transform->GetWorldMatrix() });
                 isFirstManipulate = false;
 

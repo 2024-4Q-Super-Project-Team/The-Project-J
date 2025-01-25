@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -162,6 +162,7 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.h" />
     <ClInclude Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.h" />
@@ -183,6 +184,7 @@
     <ClInclude Include="Editor\Widgets\Extra\EditorCheckBox.h" />
     <ClInclude Include="Editor\Widgets\Extra\EditorInputVector.h" />
     <ClInclude Include="Editor\Widgets\Extra\EditorStaticText.h" />
+    <ClInclude Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Component\Controller\PlayerController.h" />
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h" />
@@ -290,6 +292,7 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.cpp" />
     <ClCompile Include="Editor\CumstomWidget\TabItem\EditorDebug\EditorDebugger.cpp" />
@@ -311,6 +314,7 @@
     <ClCompile Include="Editor\Widgets\Extra\EditorCheckBox.cpp" />
     <ClCompile Include="Editor\Widgets\Extra\EditorInputVector.cpp" />
     <ClCompile Include="Editor\Widgets\Extra\EditorStaticText.cpp" />
+    <ClCompile Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Component\Controller\PlayerController.cpp" />
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp" />

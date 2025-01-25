@@ -111,6 +111,11 @@ void WorldManager::UpdateWorld()
 			{
 				mNextActiveWorld = nullptr;
 			}
+			// 인스펙터 포커스 확인
+			if (EditorManager::mInspectorViewer &&
+				EditorManager::mInspectorViewer->GetFocusObject() == pWorld) {
+				EditorManager::mInspectorViewer->SetFocusObject(nullptr);
+			}
 			if(pWorld)
 				delete pWorld;
 			itr = mWorlds.erase(itr);

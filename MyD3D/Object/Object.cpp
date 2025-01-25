@@ -162,6 +162,10 @@ void Object::PreRender()
 
 void Object::Render()
 {
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
@@ -218,11 +222,6 @@ void Object::PostRender()
             child->gameObject->PostRender();
         }
     }
-    if (!transform->GetParent())
-    {
-        transform->UpdateMatrix();
-    }
-        
 }
 
 // 에디터 업데이트는 활성화 여부와 관계없이 업데이트 되어야 한다
@@ -483,57 +482,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
 
                     ImGui::EndPopup();
                 }
-            }
-            break;
-        }
-    }
-
-    case EditorViewerType::GUIZMO:
-    {
-        auto pos = EditorManager::mFocusViewport->GetIWindow()->GetPosition();
-        auto size = EditorManager::mFocusViewport->GetIWindow()->GetSize();
-        ImGuiIO& io = ImGui::GetIO();
-
-        ImGuizmo::SetOrthographic(false);
-
-        ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
-
-        Matrix& viewMatrix = EditorManager::mEditorCamera.mViewMatrix;
-        Matrix& projectionMatrix = EditorManager::mEditorCamera.mProjectionMatrix;
-        Matrix  modelMatrix = transform->GetWorldMatrix();
-        static std::vector<std::pair<IEditorObject*, Matrix>> previousModelMatrixStack; // ctrl + z 용 이전 모델행렬 저장, 행렬에 대응하는 Object와 같이.
-        static bool isFirstManipulate = true;
-        float viewManipulateRight = io.DisplaySize.x;
-        float viewManipulateTop = 0;
-
-        IEditorObject* focusObject = Editor::InspectorViewer::GetFocusObject();
-
-        if (ImGuizmo::Manipulate(*viewMatrix.m, *projectionMatrix.m,
-            EditorManager::GetGizmoOperation(), ImGuizmo::MODE::LOCAL, *modelMatrix.m))
-        {
-            if (isFirstManipulate)
-            {
-                Display::Console::Log("Manipulating... : ");              
-                previousModelMatrixStack.push_back({ focusObject, transform->GetWorldMatrix() });
-                isFirstManipulate = false;
-
-            }
-            transform->SetWorldMatrix(modelMatrix);
-        }
-
-        if (!ImGuizmo::IsUsing()) {
-            isFirstManipulate = true;
-        }
-
-        if (!previousModelMatrixStack.empty())
-        {
-            if (Input::IsKeyHold(Key::LCONTROL) && Input::IsKeyDown('Z'))
-            {
-                auto [focusObject, matrix] = previousModelMatrixStack.back();
-                previousModelMatrixStack.pop_back();
-                static_cast<Object*>(focusObject)->transform->SetWorldMatrix(matrix);
-                Display::Console::Log("ctrl z, set to previous", "\n");
-                Display::Console::Log("Stack size :", previousModelMatrixStack.size(), "\n");
             }
         }
         break;

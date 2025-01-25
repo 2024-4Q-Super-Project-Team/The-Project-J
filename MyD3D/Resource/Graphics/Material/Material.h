@@ -35,8 +35,9 @@ public:
     eRasterizerStateType    mRasterMode = eRasterizerStateType::BACKFACE_CULLING;
 public:
     // 기본 머티리얼  
-    static MaterialResource* DefaultMaterial;
-    static void InitDefaultMaterial();
+    static MaterialResource*    DefaultMaterial;
+    static MaterialResource*    GetDefaultMaterial();
+    static void                 FreeDefaultMaterial();
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

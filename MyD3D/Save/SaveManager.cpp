@@ -54,6 +54,7 @@ void SaveManager::Save()
 }
 void SaveManager::Load()
 {
+	ResourceManager::Reload();
 	auto viewports = ViewportManager::GetViewports();
 
 	for (auto& viewport : viewports)

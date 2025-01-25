@@ -34,5 +34,6 @@ public:
 public:
     static SkyBox* DefaultSkyBox;
     static SkyBox* GetDefaultSkyBox();
+    static void    FreeDefaultSkyBox();
 };
 

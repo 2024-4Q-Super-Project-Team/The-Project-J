@@ -33,7 +33,7 @@ void SkyBox::Draw(Matrix& _view, Matrix& _projection, FLOAT _far)
 
         GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&cb);
 
-        auto pMesh = MeshResource::SkyCubeMesh;
+        auto pMesh = MeshResource::GetSkyCubeMesh();
         if (pMesh)
         {
             pMesh->Bind();
@@ -92,35 +92,46 @@ SkyBox* SkyBox::GetDefaultSkyBox()
             handle[Environment].mResourceType = eResourceType::Texture2DResource;
             handle[Environment].mMainKey = L"Default_SkyBox_EnvironmentTexture";
             handle[Environment].mPath = L"resource/texture/Skybox/DefaultSkyIBLMapEnvHDR.dds";
-            ResourceManager::RegisterResourceHandle(handle[Environment]);
-            ResourceManager::Alloc_Resource<Texture2DResource>(handle[Environment]);
+            DefaultSkyBox->mSkyBoxTexture2D[Environment] = new Texture2DResource(handle[Environment]);
+            DefaultSkyBox->mSkyBoxTexture2D[Environment]->Texture->SetBindStage(eShaderStage::PS);
+            DefaultSkyBox->mSkyBoxTexture2D[Environment]->Texture->SetBindSlot(20);
         }
         {
             handle[Diffuse].mResourceType = eResourceType::Texture2DResource;
             handle[Diffuse].mMainKey = L"Default_SkyBox_DiffuseTexture";
             handle[Diffuse].mPath = L"resource/texture/Skybox/DefaultSkyIBLMapDiffuseHDR.dds";
-            ResourceManager::RegisterResourceHandle(handle[Diffuse]);
-            ResourceManager::Alloc_Resource<Texture2DResource>(handle[Diffuse]);
+            DefaultSkyBox->mSkyBoxTexture2D[Diffuse] = new Texture2DResource(handle[Diffuse]);
+            DefaultSkyBox->mSkyBoxTexture2D[Diffuse]->Texture->SetBindStage(eShaderStage::PS);
+            DefaultSkyBox->mSkyBoxTexture2D[Diffuse]->Texture->SetBindSlot(21);
         }
         {
             handle[Specular].mResourceType = eResourceType::Texture2DResource;
             handle[Specular].mMainKey = L"Default_SkyBox_SpecularTexture";
             handle[Specular].mPath = L"resource/texture/Skybox/DefaultSkyIBLMapSpecularHDR.dds";
-            ResourceManager::RegisterResourceHandle(handle[Specular]);
-            ResourceManager::Alloc_Resource<Texture2DResource>(handle[Specular]);
+            DefaultSkyBox->mSkyBoxTexture2D[Specular] = new Texture2DResource(handle[Specular]);
+            DefaultSkyBox->mSkyBoxTexture2D[Specular]->Texture->SetBindStage(eShaderStage::PS);
+            DefaultSkyBox->mSkyBoxTexture2D[Specular]->Texture->SetBindSlot(22);
         }
         {
             handle[BLDFLookUpTable].mResourceType = eResourceType::Texture2DResource;
             handle[BLDFLookUpTable].mMainKey = L"Default_SkyBox_BLDFLookUpTableTexture";
             handle[BLDFLookUpTable].mPath = L"resource/texture/Skybox/DefaultSkyIBLMapBrdf.dds";
-            ResourceManager::RegisterResourceHandle(handle[BLDFLookUpTable]);
-            ResourceManager::Alloc_Resource<Texture2DResource>(handle[BLDFLookUpTable]);
+            DefaultSkyBox->mSkyBoxTexture2D[BLDFLookUpTable] = new Texture2DResource(handle[BLDFLookUpTable]);
+            DefaultSkyBox->mSkyBoxTexture2D[BLDFLookUpTable]->Texture->SetBindStage(eShaderStage::PS);
+            DefaultSkyBox->mSkyBoxTexture2D[BLDFLookUpTable]->Texture->SetBindSlot(23);
         }
-
-        DefaultSkyBox->SetEnvironmentTexture(handle[Environment]);
-        DefaultSkyBox->SetDiffuseTexture(handle[Diffuse]);
-        DefaultSkyBox->SetSpecularture(handle[Specular]);
-        DefaultSkyBox->SetLookUpTableTexture(handle[BLDFLookUpTable]);
     }
     return DefaultSkyBox;
+}
+
+void SkyBox::FreeDefaultSkyBox()
+{
+    if (DefaultSkyBox)
+    {
+        SAFE_DELETE(DefaultSkyBox->mSkyBoxTexture2D[0]);
+        SAFE_DELETE(DefaultSkyBox->mSkyBoxTexture2D[1]);
+        SAFE_DELETE(DefaultSkyBox->mSkyBoxTexture2D[2]);
+        SAFE_DELETE(DefaultSkyBox->mSkyBoxTexture2D[3]);
+        SAFE_DELETE(DefaultSkyBox);
+    }
 }

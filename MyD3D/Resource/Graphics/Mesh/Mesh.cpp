@@ -65,151 +65,163 @@ void MeshResource::Bind()
     }
 }
 
-void MeshResource::InitSkyCubeMesh()
+MeshResource* MeshResource::GetSkyCubeMesh()
 {
-    // 스카이 큐브의 Vertex 데이터
-    std::vector<Vertex> vertices = {
-        Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, 1, 1 }),
-        Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
-        Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, 1, 1 }),
-        Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
+    if (!SkyCubeMesh)
+    {
+        // 스카이 큐브의 Vertex 데이터
+        std::vector<Vertex> vertices = {
+            Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, 1, 1 }),
+            Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
+            Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, 1, 1 }),
+            Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, 1, 1 }),
 
-        Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
 
-        Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, 1 }),
 
-        Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
-        Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, -1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { -1, -1, 1 }),
+            Vertex({ 1, 1, -1, 1 },     { 1, 1, 1, 1 },     { -1, -1, 1 }),
 
-        Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { 1, -1, 1 }),
-        Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
-        Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { 1, -1, 1 }),
-        Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
+            Vertex({ -1, -1, -1, 1 },   { 1, 1, 1, 1 },     { 1, -1, 1 }),
+            Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
+            Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { 1, -1, 1 }),
+            Vertex({ -1, 1, -1, 1 },    { 1, 1, 1, 1 },     { 1, -1, 1 }),
 
-        Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, -1 }),
-        Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }),
-        Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, -1, -1 }),
-        Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }),
-    };
+            Vertex({ 1, 1, 1, 1 },      { 1, 1, 1, 1 },     { -1, -1, -1 }),
+            Vertex({ -1, 1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }),
+            Vertex({ -1, -1, 1, 1 },    { 1, 1, 1, 1 },     { -1, -1, -1 }),
+            Vertex({ 1, -1, 1, 1 },     { 1, 1, 1, 1 },     { -1, -1, -1 }),
+        };
 
-    std::vector<UINT> indices = {
-    3, 2, 1, 3, 1, 0,  // Front face
-    7, 6, 5, 7, 5, 4,  // Back face
-    11, 10, 9, 11, 9, 8,  // Left face
-    15, 14, 13, 15, 13, 12,  // Right face
-    19, 18, 17, 19, 17, 16,  // Top face
-    23, 22, 21, 23, 21, 20   // Bottom face
-    };
+        std::vector<UINT> indices = {
+        3, 2, 1, 3, 1, 0,  // Front face
+        7, 6, 5, 7, 5, 4,  // Back face
+        11, 10, 9, 11, 9, 8,  // Left face
+        15, 14, 13, 15, 13, 12,  // Right face
+        19, 18, 17, 19, 17, 16,  // Top face
+        23, 22, 21, 23, 21, 20   // Bottom face
+        };
 
 
-    // 스카이 큐브 메쉬 생성
-    ResourceHandle handle = { eResourceType::MeshResource, L"Default_SkyCube_Mesh", L"", L""};
-    SkyCubeMesh = new MeshResource(handle, vertices, indices);
-    SkyCubeMesh->Create();
+        // 스카이 큐브 메쉬 생성
+        ResourceHandle handle = { eResourceType::MeshResource, L"Default_SkyCube_Mesh", L"", L"" };
+        SkyCubeMesh = new MeshResource(handle, vertices, indices);
+        SkyCubeMesh->Create();
+    }
+    return SkyCubeMesh;
 }
 
 
-void MeshResource::InitCubeMesh()
+MeshResource* MeshResource::GetCubeMesh()
 {
-    // 큐브의 Vertex 데이터
-    std::vector<Vertex> vertices = {
-        // Front face
-        Vertex({-1, -1,  1, 1}, {1, 0, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
-        Vertex({ 1, -1,  1, 1}, {0, 1, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
-        Vertex({ 1,  1,  1, 1}, {0, 0, 1, 1}, { 0,  0,  1}, { 1,  0,  0}),
-        Vertex({-1,  1,  1, 1}, {1, 1, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
+    if (!CubeMesh)
+    {
+        // 큐브의 Vertex 데이터
+        std::vector<Vertex> vertices = {
+            // Front face
+            Vertex({-1, -1,  1, 1}, {1, 0, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
+            Vertex({ 1, -1,  1, 1}, {0, 1, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
+            Vertex({ 1,  1,  1, 1}, {0, 0, 1, 1}, { 0,  0,  1}, { 1,  0,  0}),
+            Vertex({-1,  1,  1, 1}, {1, 1, 0, 1}, { 0,  0,  1}, { 1,  0,  0}),
 
-        // Back face
-        Vertex({-1, -1, -1, 1}, {1, 0, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
-        Vertex({ 1, -1, -1, 1}, {0, 1, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
-        Vertex({ 1,  1, -1, 1}, {1, 1, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
-        Vertex({-1,  1, -1, 1}, {0, 0, 0, 1}, { 0,  0, -1}, {-1,  0,  0}),
+            // Back face
+            Vertex({-1, -1, -1, 1}, {1, 0, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
+            Vertex({ 1, -1, -1, 1}, {0, 1, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
+            Vertex({ 1,  1, -1, 1}, {1, 1, 1, 1}, { 0,  0, -1}, {-1,  0,  0}),
+            Vertex({-1,  1, -1, 1}, {0, 0, 0, 1}, { 0,  0, -1}, {-1,  0,  0}),
 
-        // Left face
-        Vertex({-1, -1, -1, 1}, {1, 0, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
-        Vertex({-1, -1,  1, 1}, {0, 1, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
-        Vertex({-1,  1,  1, 1}, {0, 0, 1, 1}, {-1,  0,  0}, { 0,  0, -1}),
-        Vertex({-1,  1, -1, 1}, {1, 1, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
+            // Left face
+            Vertex({-1, -1, -1, 1}, {1, 0, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
+            Vertex({-1, -1,  1, 1}, {0, 1, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
+            Vertex({-1,  1,  1, 1}, {0, 0, 1, 1}, {-1,  0,  0}, { 0,  0, -1}),
+            Vertex({-1,  1, -1, 1}, {1, 1, 0, 1}, {-1,  0,  0}, { 0,  0, -1}),
 
-        // Right face
-        Vertex({ 1, -1, -1, 1}, {1, 0, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
-        Vertex({ 1, -1,  1, 1}, {0, 1, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
-        Vertex({ 1,  1,  1, 1}, {1, 1, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
-        Vertex({ 1,  1, -1, 1}, {0, 0, 0, 1}, { 1,  0,  0}, { 0,  0,  1}),
+            // Right face
+            Vertex({ 1, -1, -1, 1}, {1, 0, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
+            Vertex({ 1, -1,  1, 1}, {0, 1, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
+            Vertex({ 1,  1,  1, 1}, {1, 1, 1, 1}, { 1,  0,  0}, { 0,  0,  1}),
+            Vertex({ 1,  1, -1, 1}, {0, 0, 0, 1}, { 1,  0,  0}, { 0,  0,  1}),
 
-        // Top face
-        Vertex({-1,  1, -1, 1}, {1, 0, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
-        Vertex({-1,  1,  1, 1}, {0, 1, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
-        Vertex({ 1,  1,  1, 1}, {0, 0, 1, 1}, { 0,  1,  0}, { 1,  0,  0}),
-        Vertex({ 1,  1, -1, 1}, {1, 1, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
+            // Top face
+            Vertex({-1,  1, -1, 1}, {1, 0, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
+            Vertex({-1,  1,  1, 1}, {0, 1, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
+            Vertex({ 1,  1,  1, 1}, {0, 0, 1, 1}, { 0,  1,  0}, { 1,  0,  0}),
+            Vertex({ 1,  1, -1, 1}, {1, 1, 0, 1}, { 0,  1,  0}, { 1,  0,  0}),
 
-        // Bottom face
-        Vertex({-1, -1, -1, 1}, {1, 0, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
-        Vertex({-1, -1,  1, 1}, {0, 1, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
-        Vertex({ 1, -1,  1, 1}, {1, 1, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
-        Vertex({ 1, -1, -1, 1}, {0, 0, 0, 1}, { 0, -1,  0}, { 1,  0,  0}),
-    };
+            // Bottom face
+            Vertex({-1, -1, -1, 1}, {1, 0, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
+            Vertex({-1, -1,  1, 1}, {0, 1, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
+            Vertex({ 1, -1,  1, 1}, {1, 1, 1, 1}, { 0, -1,  0}, { 1,  0,  0}),
+            Vertex({ 1, -1, -1, 1}, {0, 0, 0, 1}, { 0, -1,  0}, { 1,  0,  0}),
+        };
 
-    // 큐브의 Index 데이터
-    std::vector<UINT> indices = {
-        // Front face
-        0, 1, 2, 0, 2, 3,
-        // Back face
-        4, 5, 6, 4, 6, 7,
-        // Left face
-        8, 9, 10, 8, 10, 11,
-        // Right face
-        12, 13, 14, 12, 14, 15,
-        // Top face
-        16, 17, 18, 16, 18, 19,
-        // Bottom face
-        20, 21, 22, 20, 22, 23
-    };
+        // 큐브의 Index 데이터
+        std::vector<UINT> indices = {
+            // Front face
+            0, 1, 2, 0, 2, 3,
+            // Back face
+            4, 5, 6, 4, 6, 7,
+            // Left face
+            8, 9, 10, 8, 10, 11,
+            // Right face
+            12, 13, 14, 12, 14, 15,
+            // Top face
+            16, 17, 18, 16, 18, 19,
+            // Bottom face
+            20, 21, 22, 20, 22, 23
+        };
 
-    ResourceHandle handle = { eResourceType::MeshResource, L"Default_Cube_Mesh", L"", L"" };
-    CubeMesh = new MeshResource(handle, vertices, indices);
-    CubeMesh->Create();
+        ResourceHandle handle = { eResourceType::MeshResource, L"Default_Cube_Mesh", L"", L"" };
+        CubeMesh = new MeshResource(handle, vertices, indices);
+        CubeMesh->Create();
+    }
+    return CubeMesh;
 }
 
-void MeshResource::InitPlainMesh()
+MeshResource* MeshResource::GetPlainMesh()
 {
-    // 평면의 Vertex 데이터
-    std::vector<Vertex> vertices = {
-        // 앞면 정점 (노멀: {0, 0, 1})
-        Vertex({-1, -1, 0, 1}, {1, 0, 0, 1}, {0, 0, 1}, {1, 0, 0}),
-        Vertex({ 1, -1, 0, 1}, {0, 1, 0, 1}, {0, 0, 1}, {1, 0, 0}),
-        Vertex({ 1,  1, 0, 1}, {0, 0, 1, 1}, {0, 0, 1}, {1, 0, 0}),
-        Vertex({-1,  1, 0, 1}, {1, 1, 0, 1}, {0, 0, 1}, {1, 0, 0}),
+    if (!PlainMesh)
+    {
+        // 평면의 Vertex 데이터
+        std::vector<Vertex> vertices = {
+            // 앞면 정점 (노멀: {0, 0, 1})
+            Vertex({-1, -1, 0, 1}, {1, 0, 0, 1}, {0, 0, 1}, {1, 0, 0}),
+            Vertex({ 1, -1, 0, 1}, {0, 1, 0, 1}, {0, 0, 1}, {1, 0, 0}),
+            Vertex({ 1,  1, 0, 1}, {0, 0, 1, 1}, {0, 0, 1}, {1, 0, 0}),
+            Vertex({-1,  1, 0, 1}, {1, 1, 0, 1}, {0, 0, 1}, {1, 0, 0}),
 
-        // 뒷면 정점 (노멀: {0, 0, -1})
-        Vertex({-1, -1, 0, 1}, {1, 0, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
-        Vertex({ 1, -1, 0, 1}, {0, 1, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
-        Vertex({ 1,  1, 0, 1}, {0, 0, 1, 1}, {0, 0, -1}, {-1, 0, 0}),
-        Vertex({-1,  1, 0, 1}, {1, 1, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
-    };
+            // 뒷면 정점 (노멀: {0, 0, -1})
+            Vertex({-1, -1, 0, 1}, {1, 0, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
+            Vertex({ 1, -1, 0, 1}, {0, 1, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
+            Vertex({ 1,  1, 0, 1}, {0, 0, 1, 1}, {0, 0, -1}, {-1, 0, 0}),
+            Vertex({-1,  1, 0, 1}, {1, 1, 0, 1}, {0, 0, -1}, {-1, 0, 0}),
+        };
 
-    // 평면의 Index 데이터 (양면 정의)
-    std::vector<UINT> indices = {
-        // 앞면
-        0, 1, 2,
-        0, 2, 3,
-        // 뒷면
-        4, 6, 5,
-        4, 7, 6
-    };
+        // 평면의 Index 데이터 (양면 정의)
+        std::vector<UINT> indices = {
+            // 앞면
+            0, 1, 2,
+            0, 2, 3,
+            // 뒷면
+            4, 6, 5,
+            4, 7, 6
+        };
 
-    // 평면 메쉬 생성
-    ResourceHandle handle = { eResourceType::MeshResource, L"Default_Plain_Mesh", L"", L"" };
-    PlainMesh = new MeshResource(handle, vertices, indices);
-    PlainMesh->Create();
+        // 평면 메쉬 생성
+        ResourceHandle handle = { eResourceType::MeshResource, L"Default_Plain_Mesh", L"", L"" };
+        PlainMesh = new MeshResource(handle, vertices, indices);
+        PlainMesh->Create();
+    }
+    return PlainMesh;
 }
 
 void MeshResource::EditorRendering(EditorViewerType _viewerType)

@@ -78,10 +78,18 @@ void MaterialResource::SetCullingMode(eRasterizerStateType _type)
     mRasterMode = _type;
 }
 
-void MaterialResource::InitDefaultMaterial()
+MaterialResource* MaterialResource::GetDefaultMaterial()
 {
-    ResourceHandle handle = { eResourceType::MaterialResource, L"Default_Materail", L"", L"" };
-    DefaultMaterial = new MaterialResource(handle);
+    if (!DefaultMaterial)
+    {
+        ResourceHandle handle = { eResourceType::MaterialResource, L"Default_Materail", L"", L"" };
+        DefaultMaterial = new MaterialResource(handle);
+    }
+    return DefaultMaterial;
+}
+
+void MaterialResource::FreeDefaultMaterial()
+{
 }
 
 #define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \

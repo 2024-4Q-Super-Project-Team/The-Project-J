@@ -5,7 +5,7 @@
 #include "World/WorldManager.h"
 #include "World/World.h"
 #include "Object/Object.h"
-#include "Save/SaveManager.h"
+
 
 namespace Editor
 {
@@ -19,12 +19,6 @@ namespace Editor
     {
         if (mRefWorldManager)
         {
-            bool saveClicked = ImGui::Button("Save");
-            if (saveClicked)
-            {
-                SaveWorld();
-            }
-
             World* pCurWorld = mRefWorldManager->GetActiveWorld();
             ImGui::Text("Focus World");
             RenderWorld(pCurWorld);
@@ -145,10 +139,6 @@ namespace Editor
                 }
             }
         }
-    }
-    void HierarchyViewer::SaveWorld()
-    {
-        SaveManager::Save();
     }
     void HierarchyViewer::SetFocusInspector(InspectorViewer* _pInspector)
     {

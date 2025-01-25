@@ -14,6 +14,7 @@ public:
 	~WorldManager();
 public:
 	void Start();
+	void Reset();
 public:
 	virtual void Tick() override;
 	virtual void FixedUpdate() override;

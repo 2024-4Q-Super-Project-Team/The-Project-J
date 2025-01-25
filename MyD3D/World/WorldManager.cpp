@@ -12,6 +12,8 @@ WorldManager::WorldManager(ViewportScene* _pViewport)
 WorldManager::~WorldManager()
 {
     SAFE_DELETE_VECTOR(mWorldArray);
+	mCurrActiveWorld = nullptr;
+	mNextActiveWorld = nullptr;
 }
 
 void WorldManager::Start()
@@ -19,6 +21,13 @@ void WorldManager::Start()
 	if (mCurrActiveWorld) {
 		mCurrActiveWorld->Start();
 	}
+}
+
+void WorldManager::Reset()
+{
+	SAFE_DELETE_VECTOR(mWorldArray);
+	mCurrActiveWorld = nullptr;
+	mNextActiveWorld = nullptr;
 }
 
 void WorldManager::Tick()

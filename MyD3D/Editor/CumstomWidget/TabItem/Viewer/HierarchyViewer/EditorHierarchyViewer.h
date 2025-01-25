@@ -21,7 +21,6 @@ namespace Editor
     private:
         void RenderWorld(World* _pWorld);
         void RenderObject(Object* _pObject);
-        void SaveWorld();
     public:
         inline auto GetFocusInpectorViwer() { return mRefInspector; }
         inline auto GetFocusWorldManager()  { return mRefWorldManager; }

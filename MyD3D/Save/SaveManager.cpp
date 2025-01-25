@@ -52,14 +52,13 @@ void SaveManager::Save()
 		file4.close();
 	}
 }
-
 void SaveManager::Load()
 {
 	auto viewports = ViewportManager::GetViewports();
 
 	for (auto& viewport : viewports)
 	{
-		//auto& worlds = viewport->GetWorldManager()->GetWorlds();
+		viewport->GetWorldManager()->Reset();
 
 		json defaultsJson, worldsJson, objectsJson, componentsJson;
 

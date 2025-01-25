@@ -380,7 +380,19 @@ void Object::EditorRendering(EditorViewerType _viewerType)
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
+    {
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable(GetEID(), false, flags))
+        {
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                EditorManager::GetInspectorViewer()->SetFocusObject(this);
+            }
+        }
+        EDITOR_COLOR_POP(1);
         break;
+    } 
     case EditorViewerType::HIERARCHY:
         break;
     case EditorViewerType::INSPECTOR:
@@ -449,7 +461,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
 
                     if (isTreeOpen)
                     {
-                        component->EditorRendering(EditorViewerType::DEFAULT);
+                        component->EditorRendering(EditorViewerType::INSPECTOR);
                         ImGui::TreePop();
                     }
                    

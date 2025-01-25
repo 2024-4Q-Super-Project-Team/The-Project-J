@@ -90,7 +90,14 @@ namespace Editor
     {
         std::string name = Helper::ToString(_pObjectGroup->GetName());
         std::string ptr = "##" + std::to_string(reinterpret_cast<uintptr_t>(_pObjectGroup));
-        bool isSelected = ImGui::TreeNodeEx((name + ptr).c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+        std::string widgetID = name + ptr;
+        bool isSelected = ImGui::TreeNodeEx((widgetID).c_str(), ImGuiTreeNodeFlags_OpenOnArrow);
+
+        Object* receiveObject = nullptr;
+        if (EditorDragNDrop::ReceiveDragAndDropObjectData(widgetID.c_str(), &receiveObject))
+        {
+            
+        }
 
         // 오른쪽 클릭을 감지하고 팝업 메뉴를 열기
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
@@ -121,6 +128,11 @@ namespace Editor
             {
                 // 부모가 있으면 최상단 부모가 안에서 알아서 그려줄거므로 패스
                 if (obj->transform->GetParent()) continue;
+                std::string objID = Helper::ToString(obj->GetName()) + "##" + std::to_string(reinterpret_cast<uintptr_t>(obj));
+               
+                // Drag&Drop
+                //EditorDragNDrop::ReceiveDragAndDropObjectData((objID).c_str(), &obj);
+                
                 RenderObject(obj, _pObjectGroup);
             }
             ImGui::TreePop();
@@ -138,12 +150,17 @@ namespace Editor
         {
             flags |= ImGuiTreeNodeFlags_Selected; // 선택 상태 플래그 추가
         }
+
         ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
         bool isSelected = ImGui::TreeNodeEx((name + ptr).c_str(), flags);
         ImGui::PopStyleColor(1);
 
+        EditorItemState state;
+        state.mObjectPtr = _pObject;
+        state.mName = name;
+        EditorDragNDrop::SendDragAndDropData((name + ptr).c_str(), state);
         // 왼쪽 클릭 - 인스펙터 포커싱
-        if (mRefInspector && ImGui::IsItemClicked(ImGuiMouseButton_Left))
+        if (mRefInspector &&ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
         {
             EditorManager::mInspectorViewer->SetFocusObject(_pObject);
             EditorManager::mGuizmoHandler->mManipulater->SetFocusObjedct(_pObject);

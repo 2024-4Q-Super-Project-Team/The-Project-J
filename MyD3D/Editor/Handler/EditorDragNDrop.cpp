@@ -36,3 +36,23 @@ void EditorDragNDrop::Render()
         mItemState = {};
     }
 }
+
+BOOL EditorDragNDrop::ReceiveDragAndDropObjectData(const char* _uid, Object** _pObject)
+{
+    BOOL isOk = FALSE;
+    ImGui::PushID(_uid);
+    if (isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+    {
+        if (_pObject)
+        {
+            *_pObject = EditorDragNDrop::mItemState.mObjectPtr;
+            EditorDragNDrop::mItemState.Clear();
+            isDragging = false;
+            isOk = TRUE;
+        }
+        isDragging = false;
+    }
+    ImGui::PopID();
+
+    return isOk;
+}

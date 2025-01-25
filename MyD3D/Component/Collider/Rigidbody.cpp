@@ -44,6 +44,12 @@ void Rigidbody::Start()
 
 	SetMass(mMass);
 	SetIsKinematic(mIsKinematic);
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 void Rigidbody::Tick()
@@ -134,7 +140,7 @@ void Rigidbody::EditorRender()
 {
 }
 
-void Rigidbody::SetMaterial(std::wstring _name)
+void Rigidbody::SetMaterial(std::string _name)
 {
 	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
 
@@ -203,6 +209,17 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 
 	ImGui::Text("isDynamic: "); ImGui::SameLine;
 	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+
+	std::vector<const char*> ccharMaterial;
+	for (auto& mat : mMaterials)
+	{
+		ccharMaterial.push_back(mat.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mMaterialIdx, ccharMaterial.data(), static_cast<int>(ccharMaterial.size())))
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+	}
 
 	if(mIsDynamic)
 	{

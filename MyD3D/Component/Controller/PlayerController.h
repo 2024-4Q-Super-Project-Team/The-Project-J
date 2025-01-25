@@ -25,8 +25,7 @@ public:
     virtual void Deserialize(json& j);
 
 public:
-    void SetMaterial(std::wstring _name);
-    //std::vector<std::string> materialList; //TODO
+    void SetMaterial(std::string _name);
 private:
 	static PxControllerManager* ControllerManager;
 	PxCapsuleController* mCapsuleController;
@@ -38,15 +37,16 @@ private:
     float mContactOffset = 0.1f;
     float mSlopeLimit = 0.707f;
     float mStepOffset = 0.5f;
-
+    int mMaterialIdx = 0;
     //Movement
 	float mMoveSpeed = 0.5f;
 	float mJumpSpeed = 30.f;
 	float mGravity = 9.8f;
 	PxVec3 mMoveDirection = PxVec3(0.f, 0.f, 0.f);
 
-    //DebugDraw
-    
+
+    std::vector<std::string> mMaterials;
+
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

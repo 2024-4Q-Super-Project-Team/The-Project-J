@@ -24,6 +24,9 @@ public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
 
+public:
+    void SetMaterial(std::wstring _name);
+    //std::vector<std::string> materialList; //TODO
 private:
 	static PxControllerManager* ControllerManager;
 	PxCapsuleController* mCapsuleController;

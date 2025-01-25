@@ -134,6 +134,18 @@ void Rigidbody::EditorRender()
 {
 }
 
+void Rigidbody::SetMaterial(std::wstring _name)
+{
+	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
+
+	PxShape* pxShapes[30];
+	int size = mRigidActor->getShapes(pxShapes, 30);
+	for (int i = 0; i < size; i++)
+	{
+		pxShapes[i]->setMaterials(&material, 1);
+	}
+}
+
 void Rigidbody::SetMass(float mass)
 {
 	if (!mRigidActor || !mIsDynamic) return;

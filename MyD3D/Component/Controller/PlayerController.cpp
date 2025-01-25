@@ -39,7 +39,6 @@ PlayerController::~PlayerController()
 
 void PlayerController::Start()
 {
-
 }
 
 void PlayerController::Tick()
@@ -129,6 +128,18 @@ void PlayerController::Deserialize(json& j)
 	mGravity = j["gravity"].get<float>();
 }
 
+void PlayerController::SetMaterial(std::wstring _name)
+{
+	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
+
+	PxShape* pxShapes[30];
+	int size = mCapsuleController->getActor()->getShapes(pxShapes, 30);
+	for (int i = 0; i < size; i++)
+	{
+		pxShapes[i]->setMaterials(&material, 1);
+	}
+}
+
 void PlayerController::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
@@ -174,6 +185,8 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 	ImGui::Text("Gravity : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
 
+	ImGui::Text("Mateiral : "); ImGui::SameLine;
+	
 
 	ImGui::Separator();
 }

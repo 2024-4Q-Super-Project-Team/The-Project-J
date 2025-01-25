@@ -26,6 +26,8 @@ public:
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
 
 public:
+    void SetMaterial(std::wstring _name); 
+
     void SetMass(float mass);
     void SetIsKinematic(bool b);
     void SetDisableGravity(bool b);

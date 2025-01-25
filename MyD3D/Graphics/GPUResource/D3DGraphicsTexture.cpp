@@ -16,6 +16,7 @@ D3DGraphicsTexture2D::D3DGraphicsTexture2D(D3D11_TEXTURE2D_DESC* _Desc)
         mDesc = (*_Desc);
     }
     Helper::HRT(Create(),"Create Fail D3DGraphicsTexture2D.");
+    mTex->GetDesc(&mDesc);
 }
 
 D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
@@ -26,7 +27,7 @@ D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
     {
         Helper::HRT(E_FAIL, "Nullpointer reference to ID3D11Texture2D.");
     }
-    _pTex->GetDesc(&mDesc);
+    mTex->GetDesc(&mDesc);
 }
 
 D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
@@ -350,6 +351,8 @@ HRESULT D3DGraphicsImg::Create()
             , Image.GetImageCount()
             , Image.GetMetadata()
             , &mSRV);
+        mWidth = Image.GetImages()->width;
+        mHeight = Image.GetImages()->height;
         return S_OK;
     }
     return E_FAIL;

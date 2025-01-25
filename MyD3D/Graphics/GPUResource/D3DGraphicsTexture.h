@@ -18,6 +18,8 @@ public:
     virtual HRESULT Reset() override;
 public:
     HRESULT Resize(UINT _width, UINT _height);
+    inline UINT GetWidth() { return mDesc.Width; }
+    inline UINT GetHeight() { return mDesc.Height; }
 public:
     ID3D11Texture2D* mTex;
     D3D11_TEXTURE2D_DESC mDesc;
@@ -33,6 +35,8 @@ public:
     HRESULT Resize(UINT _width, UINT _height);
 public:
     D3DGraphicsTexture2D* mRefTex = nullptr;
+    UINT mWidth;
+    UINT mHeight;
 };
 
 class D3DGraphicsRTV

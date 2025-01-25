@@ -24,36 +24,34 @@ void WidgetText::Update()
 {
 	m_pSpriteFont->SetLineSpacing(mTextInfo.line);
 	m_pSpriteFont->SetDefaultCharacter(mTextInfo.defaultText);
-
-	// 텍스트 박스 크기를 얻는 함수
-	RECT rect = m_pSpriteFont->MeasureDrawBounds(mTextInfo.msg, mPosition);
-	mTextInfo.textBox = Rect(rect.left, rect.top, rect.right, rect.bottom);
 }
 
-void WidgetText::Render()
+void WidgetText::Render(Vector2 _scale)
 {
-	m_pSpriteBatch->Begin(DirectX::SpriteSortMode_Deferred, nullptr, nullptr, nullptr, nullptr, nullptr);
-
 	if (bUseOutline)
 	{
-		OutlinedTextRender(mOutlineInfo.scale, mOutlineInfo.color);
+		OutlinedTextRender(_scale);
 	}
 
-	m_pSpriteFont->DrawString(m_pSpriteBatch, mTextInfo.msg, mPosition, mColor);
-	m_pSpriteBatch->End();
+	// 텍스트 박스 크기를 얻는 함수
+	RECT rect = m_pSpriteFont->MeasureDrawBounds(mTextInfo.msg, mPosition * _scale);
+	mTextInfo.textBox = Rect(rect.left, rect.top, rect.right, rect.bottom);
+
+
+	m_pSpriteFont->DrawString(UIManager::pSpriteBatch, mTextInfo.msg, mPosition * _scale, mColor, mRotate, Vector2(0.0f,0.0f), _scale.x);
 }
 
-void WidgetText::OutlinedTextRender(float _offset, Color _outlineColor) {
+void WidgetText::OutlinedTextRender(Vector2 _scale) {
 	
 	// 외곽선 오프셋 (4방향)
-	XMFLOAT2 offsets[] = {
-		{-_offset, 0.0f}, {_offset, 0.0f}, {0.0f, -_offset}, {0.0f, _offset}
+	Vector2 offsets[] = {
+		{-mOutlineInfo.offset, 0.0f}, {mOutlineInfo.offset, 0.0f}, {0.0f, -mOutlineInfo.offset}, {0.0f, mOutlineInfo.offset}
 	};
 
 	// 외곽선 그리기
 	for (auto& offset : offsets) {
-		XMFLOAT2 outlinePos = { mPosition.x + offset.x, mPosition.y + offset.y };
-		m_pSpriteFont->DrawString(m_pSpriteBatch, mTextInfo.msg, outlinePos, _outlineColor);
+		Vector2 outlinePos = Vector2(mPosition.x + offset.x, mPosition.y + offset.y) * _scale;
+		m_pSpriteFont->DrawString(UIManager::pSpriteBatch, mTextInfo.msg, outlinePos, mOutlineInfo.color, mRotate, Vector2(0.0f, 0.0f), _scale.x);
 	}
 }
 

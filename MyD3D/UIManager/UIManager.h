@@ -16,8 +16,10 @@ public:
 public:
     static void Tick();
     static void Update();
+    static void PostUpate();
     static void Render();
 
+    static void SetFocusViewport(ViewportScene* _pViewport);
 public:
     static std::vector<Widget*> GetWidgets() { return mWidgetContainer; };
     
@@ -33,8 +35,19 @@ public:
         return widget;
     }
 
+    static SpriteBatch* pSpriteBatch;
+
+protected:
     // TODO : find 함수 만들기
     // auto FindWidget(std::wstring _id);
 private:
+    static ViewportScene* mFocusViewport;
+
+    static Vector2  mFocusScreen;
+    static Vector2  mCurrScreen;
+    static Vector2  mScale;
+
     static std::vector<Widget*> mWidgetContainer;
+
+    static void SetScale() { mScale = mCurrScreen / mFocusScreen; }
 };

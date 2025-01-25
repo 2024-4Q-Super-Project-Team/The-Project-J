@@ -25,18 +25,29 @@ void WidgetImage::Init()
 	handle.mPath = mFilepath;
 	ResourceManager::RegisterResourceHandle(handle);
 	m_pTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
+
+	// 이미지 크기 얻기
+	mSize.x = m_pTexture->Texture->mWidth;
+	mSize.y = m_pTexture->Texture->mHeight;
+
+	//DebugRectangleoInit();
 }
 
 void WidgetImage::Update()
 {
-	m_pSpriteBatch->SetRotation(DXGI_MODE_ROTATION_IDENTITY);
+	//UIManager::pSpriteBatch->SetRotation(DXGI_MODE_ROTATION_IDENTITY);
 }
 
-void WidgetImage::Render()
+void WidgetImage::Render(Vector2 _scale)
 {
-	m_pSpriteBatch->Begin();
-	m_pSpriteBatch->Draw(m_pTexture->Texture->mSRV, mPosition, nullptr, mColor);
-	m_pSpriteBatch->End();
+	RECT rect{};
+	rect.left = mPosition.x * _scale.x;
+	rect.top = mPosition.y * _scale.y;
+	rect.right = rect.left + (mSize.x * _scale.x);
+	rect.bottom = rect.top + (mSize.y * _scale.y);
+
+	//DebugRectangleRender(Color(1,0,0));
+	UIManager::pSpriteBatch->Draw(m_pTexture->Texture->mSRV, rect, nullptr, mColor);
 }
 
 void WidgetImage::Release()

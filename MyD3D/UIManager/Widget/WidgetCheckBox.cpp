@@ -21,7 +21,7 @@ void WidgetCheckBox::Update()
 
 }
 
-void WidgetCheckBox::Render()
+void WidgetCheckBox::Render(Vector2 _scale)
 {
 
 }

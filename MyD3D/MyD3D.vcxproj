@@ -184,6 +184,8 @@
     <ClInclude Include="Editor\Widgets\Extra\EditorCheckBox.h" />
     <ClInclude Include="Editor\Widgets\Extra\EditorInputVector.h" />
     <ClInclude Include="Editor\Widgets\Extra\EditorStaticText.h" />
+    <ClInclude Include="Helper\Dotween\DotTween.h" />
+    <ClInclude Include="Helper\Dotween\EasingFunction.h" />
     <ClInclude Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Component\Controller\PlayerController.h" />
@@ -311,6 +313,8 @@
     <ClCompile Include="Editor\Widgets\Extra\EditorCheckBox.cpp" />
     <ClCompile Include="Editor\Widgets\Extra\EditorInputVector.cpp" />
     <ClCompile Include="Editor\Widgets\Extra\EditorStaticText.cpp" />
+    <ClCompile Include="Helper\Dotween\DotTween.cpp" />
+    <ClCompile Include="Helper\Dotween\EasingFunction.cpp" />
     <ClCompile Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Component\Controller\PlayerController.cpp" />

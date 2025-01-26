@@ -61,6 +61,8 @@ void ResourceManager::SaveResources()
     for (ResourceHandle resource : mLoadResourceList)
     {
         saveJson += resource.Serialize();
+
+        GetResource<FBXModelResource>(resource)->SaveJson();
     }
 
     std::ofstream file(mSaveFilePath + "resources.json");
@@ -98,6 +100,8 @@ void ResourceManager::Alloc_All_Resource()
     for (ResourceHandle handle : mLoadResourceList)
     {
         LoadFileFromHandle(handle);
+
+        GetResource<FBXModelResource>(handle)->LoadJson();
     }
 }
 

@@ -37,6 +37,9 @@ public:
     static MeshResource* GetSkyCubeMesh();
     static MeshResource* GetCubeMesh();
     static MeshResource* GetPlainMesh();
+public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

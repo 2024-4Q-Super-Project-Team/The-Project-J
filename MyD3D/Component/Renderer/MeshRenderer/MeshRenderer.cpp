@@ -93,7 +93,6 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
 
 void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
-    
     if (mMesh)
     {
     // 머티리얼 바인딩
@@ -254,8 +253,8 @@ void MeshRenderer::Deserialize(json& j)
     mMeshHandle.Deserialize(j["mesh handle"]);
     mMaterialHandle.Deserialize(j["material handle"]);
 
-    mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-    mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
+    SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
+    SetMaterial(mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
 
     json mProp = j["property"];
 
@@ -273,6 +272,19 @@ void MeshRenderer::Deserialize(json& j)
     mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
 }
 
+#define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
+if (mMateiral->mMaterialMapTexture[typeIndex]) \
+{ \
+    bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
+    ImGui::Separator();\
+    if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
+        mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
+    } \
+    if (ImGui::TreeNodeEx((std::string(label) + mMateiral->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
+        mMateiral->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
+        ImGui::TreePop();\
+    }\
+}\
 
 void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
@@ -311,7 +323,7 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
         {
             mMateiral->EditorRendering(EditorViewerType::DEFAULT);
             name = Helper::ToString(mMateiral->GetKey());
-            uid = mMateiral->GetEID();
+            widgetID = mMateiral->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                 ImGui::Text("Diffuse : ");
@@ -328,15 +340,43 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
                 ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
                 for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
-                    if (mMateiral->mMaterialMapTexture[type])
+                    eMaterialMapType mapType = (eMaterialMapType)type;
+
+                    switch (mapType)
                     {
-                        bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
-                        if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
-                        {
-                            mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
-                        }
-                        mMateiral->mMaterialMapTexture[type]->EditorRendering(EditorViewerType::DEFAULT);
-                        ImGui::Separator();
+                    case eMaterialMapType::DIFFUSE:
+                    {
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                        break;
+                    case eMaterialMapType::SPECULAR:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        break;
+                    case eMaterialMapType::AMBIENT:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        break;
+                    case eMaterialMapType::EMISSIVE:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        break;
+                    case eMaterialMapType::NORMAL:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        break;
+                    case eMaterialMapType::ROUGHNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        break;
+                    case eMaterialMapType::OPACITY:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        break;
+                    case eMaterialMapType::METALNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        break;
+                    case eMaterialMapType::AMBIENT_OCCLUSION:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        break;
+                    case eMaterialMapType::SIZE:
+                        break;
+                    default:
+                        break;
+                    }
                     }
                 }
                 ImGui::TreePop();
@@ -352,15 +392,18 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
         {
             SetMaterial(mMaterialHandle);
         }
+        ImGui::Separator();
     }
-
-    ImGui::Separator();
-
-    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-    if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+    //////////////////////////////////////////////////////////////////////
+    // Lighting Properties
+    //////////////////////////////////////////////////////////////////////
     {
-        ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
-        ImGui::TreePop();
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Lighting Properties" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
+            ImGui::TreePop();
+        }
     }
     EDITOR_COLOR_POP(1);
 }

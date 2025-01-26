@@ -21,5 +21,8 @@ public:
 	BOOL				mUseLoop;		// 루프 재생 여부
 	eAudioListenMode	mListenMode;	// 사운드 모드
 public:
+	virtual json Serialize();
+	virtual void Deserialize(json& j);
+public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

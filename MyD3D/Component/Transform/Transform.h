@@ -1,5 +1,7 @@
 #pragma once
 #include "Component/Component.h"
+#include "Helper/Dotween/DotTween.h"
+#include "Helper/Dotween/EasingFunction.h"
 
 enum eTransformType
 {
@@ -96,9 +98,17 @@ private:
 
 public:
     void EditorRendering(EditorViewerType _viewerType);
+
+// dotween 함수
 public:
-    void LookAt(Transform* _dest);
-    //dotween함수
+    // dotween 함수
+    void LookAt(Transform* _dest, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+    void Rotate360(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+
+private:
+    void UpdateLookAt(const Vector3& targetPosition, float t, Dotween::EasingEffect easingEffect);
+    void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
+    
 
 
 };

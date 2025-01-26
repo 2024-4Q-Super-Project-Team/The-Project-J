@@ -34,6 +34,15 @@ BOOL AnimationResource::AddChannel(AnimationNode* _pChannel)
     return FALSE;
 }
 
+json AnimationResource::Serialize()
+{
+    return json();
+}
+
+void AnimationResource::Deserialize(json& j)
+{
+}
+
 void AnimationResource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

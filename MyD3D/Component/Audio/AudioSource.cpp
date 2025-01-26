@@ -68,14 +68,14 @@ void AudioSource::EditorRender()
 
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
-	std::shared_ptr<AudioResource> pAudio = GetAudioFromTable(_key);
-	if (pAudio)
+	if (mAudioTable.find(_key) != mAudioTable.end())
 	{
-		mActiveAudio = pAudio.get();
+		mActiveHandle = mAudioTable[_key];
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
 	}
 }
 
-BOOL AudioSource::AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio)
+BOOL AudioSource::AddAudio(const std::wstring& _key, ResourceHandle _srcAudio)
 {
 	auto itr = mAudioTable.find(_key);
 	if (FIND_FAILED(itr, mAudioTable))
@@ -84,20 +84,11 @@ BOOL AudioSource::AddAudio(const std::wstring& _key, std::shared_ptr<AudioResour
 		// ActiveAudio가 없으면 편의상 넣어준다.
 		if (mActiveAudio == nullptr)
 		{
-			mActiveAudio = _srcAudio.get();
+			mActiveHandle = _srcAudio;
+			mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
 		}
 	}
 	return FALSE;
-}
-
-std::shared_ptr<AudioResource> AudioSource::GetAudioFromTable(const std::wstring& _key)
-{
-	auto itr = Helper::FindMap(_key, mAudioTable);
-	if (itr)
-	{
-		return *itr;
-	}
-	return nullptr;
 }
 
 bool AudioSource::IsPlaying()
@@ -156,13 +147,42 @@ void AudioSource::SetSurround(bool _isSuround)
 
 json AudioSource::Serialize()
 {
-	//TODO
-	return json();
+	json ret;
+
+	ret["id"] = GetId();
+	ret["name"] = "AudioSource";
+
+	ret["active audio"] = mActiveHandle.Serialize();
+
+	json tableJson;
+	for (auto& audio : mAudioTable)
+	{
+		tableJson["key"] = audio.first;
+		tableJson["handle"] = audio.second.Serialize();
+	}
+
+	ret["table"] += tableJson;
+
+	return ret;
 }
 
 void AudioSource::Deserialize(json& j)
 {
-	//TODO
+	SetId(j["id"].get<unsigned int>());
+
+	mActiveHandle.Deserialize(j["active audio"]);
+	mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
+
+	json tableJson = j["table"];
+	for (json& audioJson : tableJson)
+	{
+		std::wstring key = Helper::ToWString(audioJson["key"].get<std::string>());
+		ResourceHandle handle;
+		handle.Deserialize(audioJson["handle"]);
+
+		mAudioTable[key] = handle;
+	}
+
 }
 
 void AudioSource::EditorRendering(EditorViewerType _viewerType)

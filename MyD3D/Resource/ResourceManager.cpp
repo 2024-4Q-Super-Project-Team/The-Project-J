@@ -53,21 +53,42 @@ void ResourceManager::Reload()
     Reset();    // 리셋
     LoadResources();
     Alloc_All_Resource(); // 전부 Alloc
+
+    std::ifstream audioFile(mSaveFilePath + "audios.json");
+    json audioJson;
+    if (audioFile.is_open())
+    {
+        audioFile >> audioJson;
+        audioFile.close();
+    }
+
+    for (json& j : audioJson)
+    {
+        std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
+        ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
+        auto audio = GetResource<AudioResource>(handle);
+        audio->Deserialize(j);
+    }
 }
 
 void ResourceManager::SaveResources()
 {
-    json saveJson;
-    for (ResourceHandle resource : mLoadResourceList)
+    json handleSaveJson;
+    json audioSaveJson;
+    for (ResourceHandle resourceHandle : mLoadResourceList)
     {
-        saveJson += resource.Serialize();
-
-        GetResource<FBXModelResource>(resource)->SaveJson();
+        handleSaveJson += resourceHandle.Serialize();
+        GetResource<FBXModelResource>(resourceHandle)->SaveJson();
+        audioSaveJson += GetResource<AudioResource>(resourceHandle)->Serialize();
     }
 
     std::ofstream file(mSaveFilePath + "resources.json");
-    file << saveJson.dump(4);
+    file << handleSaveJson.dump(4);
     file.close();
+
+    std::ofstream file2(mSaveFilePath + "audios.json");
+    file2 << audioSaveJson.dump(4);
+    file2.close();
 }
 
 void ResourceManager::LoadResources()
@@ -93,15 +114,12 @@ void ResourceManager::LoadResources()
 
 void ResourceManager::Alloc_All_Resource()
 {
-    //for (int i = 0; i < mLoadResourceList.size(); ++i)
-    //{
-    //    LoadFileFromHandle(mLoadResourceList[i]);
-    //}
     for (ResourceHandle handle : mLoadResourceList)
     {
         LoadFileFromHandle(handle);
 
-        GetResource<FBXModelResource>(handle)->LoadJson();
+        auto fbx = GetResource<FBXModelResource>(handle);
+        if(fbx) fbx->LoadJson();
     }
 }
 

@@ -6,6 +6,12 @@ Resource::Resource(ResourceHandle _handle)
 {
 }
 
+Resource::~Resource()
+{
+	if (Editor::InspectorViewer::IsFocusObject(this))
+		Editor::InspectorViewer::SetFocusObject(nullptr);
+}
+
 void Resource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

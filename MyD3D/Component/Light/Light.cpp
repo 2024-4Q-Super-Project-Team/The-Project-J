@@ -46,6 +46,8 @@ Light::Light(Object* _owner)
     ShadowSRV->SetBindStage(eShaderStage::PS);
 
     mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
+
+    pTexture->mTex->Release();
 }
 
 Light::~Light()

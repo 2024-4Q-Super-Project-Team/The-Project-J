@@ -131,6 +131,8 @@ void ResourceManager::Alloc_Resource(ResourceHandle _handle)
     auto itr = table.find(_handle);
     if (FIND_SUCCESS(itr, table))
     {
+        if (itr->second != nullptr)
+            return;
         Resource* pResource;
         ALLOC_RESOURCE_FROM_ENUM_TYPE(FBXModelResource)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(Texture2DResource)

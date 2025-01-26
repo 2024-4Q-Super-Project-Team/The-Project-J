@@ -12,6 +12,7 @@ Texture2DResource::Texture2DResource(ResourceHandle _handle)
 
 Texture2DResource::~Texture2DResource()
 {
+	Texture->Reset();
 	SAFE_RELEASE(Texture);
 }
 

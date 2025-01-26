@@ -97,7 +97,7 @@ class D3DGraphicsImg
 {
 public:
     explicit D3DGraphicsImg(std::wstring_view _path);
-    virtual ~D3DGraphicsImg() = default;
+    virtual ~D3DGraphicsImg() ;
 public:
     virtual void Release() override;
     virtual HRESULT Create() override;

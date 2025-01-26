@@ -71,7 +71,7 @@ class Resource
 public:
     explicit Resource(ResourceHandle _handle);
     explicit Resource() = default;
-    virtual ~Resource() = default;
+    virtual ~Resource();
 public:
     inline const auto& GetHandle()  { return mHandle; }
     inline const auto& GetKey()     { return mHandle.GetKey(); }

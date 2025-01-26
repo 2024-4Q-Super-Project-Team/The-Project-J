@@ -1,7 +1,7 @@
 #pragma once
 #include "Component/Component.h"
 
-#define maxParticleCount 3000
+#define maxParticleCount 9000
 
 
 class Texture2DResource;
@@ -46,10 +46,9 @@ private:
 	void DefaultFogMove();
 
 	//Update
-	void FromBufferToGPU();
-	void FromGPUToBuffer();
+	void FromGPUToHost();
 private:
-	unsigned int mParticleCount = 100;
+	unsigned int mParticleCount = 9000;
 
 	PxPBDParticleSystem* mParticleSystem;
 	PxParticleBuffer* mParticleBuffer;
@@ -74,6 +73,6 @@ private:
 	Texture2DResource*  mTexture;
 	int mTextureSize = 5;
 
-	class D3DGraphicsVertexBuffer* mVertexBuffer{};
+	class D3DGraphicsVertexBuffer* mVertexBuffer = nullptr;
 };
 

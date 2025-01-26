@@ -26,29 +26,28 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 {
     SetEID(Helper::ToString(_name.data()));
     mNeedResourceHandleTable.reserve(30);
-    if (!isEmpty)
-    {
-        mPickingRay = new PickingRay;
 
-        PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
-        sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
-        sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
-        sceneDesc.filterShader = CustomFilterShader;
-        //sceneDesc.simulationEventCallback = mEventCallback;
-            // GPU 가속 설정 (필수)
-        //sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
-        //sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
-        //sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+    mPickingRay = new PickingRay;
 
-        mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+    PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
+    sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
+    sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
+    sceneDesc.filterShader = CustomFilterShader;
+    //sceneDesc.simulationEventCallback = mEventCallback;
+        // GPU 가속 설정 (필수)
+    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+    sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+    sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
-        PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
-        if (pvdClient) {
-            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-            pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-        }
+    mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+
+    PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
+    if (pvdClient) {
+        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
+        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
+        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
     }
+
 }
 
 World::~World()

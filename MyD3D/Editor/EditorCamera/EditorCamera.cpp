@@ -176,7 +176,7 @@ void EditorCamera::ExcuteDrawList()
         if (mSize.Length() > 0.05f)
         {
             mMainRenderTarget->BeginDraw();
-            mMainRenderTarget->Clear();
+            mMainRenderTarget->Clear(ColorF::Gray());
 
             DrawShadow();
 

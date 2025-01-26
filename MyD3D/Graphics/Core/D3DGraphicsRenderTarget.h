@@ -17,13 +17,14 @@ public:
 public:
     virtual void BeginDraw();
     virtual void Clear();
+    virtual void Clear(FLOAT* _color);
     virtual void EndDraw() = 0;
 public:
     BOOL SetTarget();
     void Reset();
     virtual void Resize(UINT _width, UINT _height) = 0;
 public:
-    inline FLOAT SetClearColor(FLOAT* _color) { memcpy(mClearColor, _color, sizeof(FLOAT) * 3); }
+    inline void SetClearColor(FLOAT* _color) { memcpy(mClearColor, _color, sizeof(FLOAT) * 3); }
 public:
     inline BOOL             IsBinding()     { return isBinding; }
     inline UINT             GetWidth()      { return mWidth; }

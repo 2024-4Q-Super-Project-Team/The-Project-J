@@ -27,6 +27,7 @@ public:
     float r, g, b, a;
     // Static Func
 public:
+	static ColorF Gray(float _alpha = 1.0f) { return ColorF(0.3f, 0.3f, 0.3f, _alpha); }
 	static ColorF Black(float _alpha = 1.0f) { return ColorF(0.0f, 0.0f, 0.0f, _alpha); }
 	static ColorF White(float _alpha = 1.0f) { return ColorF(1.0f, 1.0f, 1.0f, _alpha); }
 	static ColorF Red(float _alpha = 1.0f) { return ColorF(1.0f, 0.0f, 0.0f, _alpha); }

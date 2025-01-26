@@ -184,8 +184,34 @@ void WorldManager::UpdateWorld()
                 mCurrActiveWorld->OnDisable();
 			mCurrActiveWorld = mNextActiveWorld;
 			mCurrActiveWorld->OnEnable();
-			mCurrActiveWorld->Start();
 			mNextActiveWorld = nullptr;
+			if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+			UpdateResources();
+		}
+	}
+}
+
+void WorldManager::UpdateResources()
+{
+	Editor::InspectorViewer::SetFocusObject(nullptr);
+	ResourceManager::Free_All_Resource();
+	std::vector<std::wstring> keyTable;
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			for (auto& key : world->mNeedResourceHandleTable)
+			{
+				keyTable.push_back(key);
+			}
+		}
+	}
+	for (auto& key : keyTable)
+	{
+		auto [result, handle] = ResourceManager::GetResourceHandleFromMainKey(key);
+		if (result)
+		{
+			ResourceManager::Alloc_Resource(handle);
 		}
 	}
 }

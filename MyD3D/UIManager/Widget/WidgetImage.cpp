@@ -24,7 +24,7 @@ void WidgetImage::Init()
 
 	handle.mPath = mFilepath;
 	ResourceManager::RegisterResourceHandle(handle);
-	m_pTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
+	m_pTexture = ResourceManager::GetResource<Texture2DResource>(handle);
 }
 
 void WidgetImage::Update()

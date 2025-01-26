@@ -47,7 +47,7 @@ public:
 	Object* FindObject(std::wstring_view _name);
 	void	ShiftObject(Object* _dstObject);
 	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
-	std::vector<ResourceHandle> mNeedResourceHandleTable;
+	std::unordered_set<std::wstring> mNeedResourceHandleTable;
 private:
 	bool				 isPersistance = false;
 	ViewportScene* const mOwnerScene;

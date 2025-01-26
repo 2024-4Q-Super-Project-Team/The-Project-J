@@ -14,7 +14,7 @@ SkinnedMeshRenderer::SkinnedMeshRenderer(Object* _owner)
     : RendererComponent(_owner)
     , mMesh(nullptr)
     , mRootBone(nullptr)
-    , mMateiral(nullptr)
+    , mMaterial(nullptr)
 {
     SetEID("SkinnedMeshRenderer");
     mType = eComponentType::SKINNED_MESH_RENDERER;
@@ -26,6 +26,8 @@ SkinnedMeshRenderer::~SkinnedMeshRenderer()
 
 void SkinnedMeshRenderer::Start()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
 }
 
 void SkinnedMeshRenderer::Tick()
@@ -62,9 +64,16 @@ void SkinnedMeshRenderer::PostRender()
 
 void SkinnedMeshRenderer::EditorUpdate()
 {
-    if (ViewportManager::GetActiveViewport() == nullptr) return;
-    if (ViewportManager::GetActiveViewport()->GetWorldManager() == nullptr) return;
-    ViewportManager::GetActiveViewport()->GetWorldManager()->GetActiveWorld()->mNeedResourceHandleTable.push_back(mMeshHandle);
+    if (mMesh)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
+    }
+    if (mMaterial)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(mMaterialHandle.GetParentkey());
+    }
 }
 
 void SkinnedMeshRenderer::EditorRender()
@@ -122,9 +131,9 @@ void SkinnedMeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
     if (mMesh)
     {
         // 머티리얼 바인딩
-        if (mMateiral)
+        if (mMaterial)
         {
-            mMateiral->Bind();
+            mMaterial->Bind();
             GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
         }
         mMesh->Bind();
@@ -173,14 +182,14 @@ MeshResource* SkinnedMeshRenderer::GetMesh()
 
 MaterialResource* SkinnedMeshRenderer::GetMaterial()
 {
-    return mMateiral;
+    return mMaterial;
 }
 
 eBlendModeType SkinnedMeshRenderer::GetBlendMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mBlendMode;
+        return mMaterial->mBlendMode;
     }
     return eBlendModeType::OPAQUE_BLEND;
 }
@@ -192,9 +201,9 @@ Vector3 SkinnedMeshRenderer::GetDistanceFromCamera(Camera* _camera)
 
 eRasterizerStateType SkinnedMeshRenderer::GetCullingMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mRasterMode;
+        return mMaterial->mRasterMode;
     }
     return eRasterizerStateType::BACKFACE_CULLING;
 }
@@ -226,10 +235,10 @@ void SkinnedMeshRenderer::SetMaterial(ResourceHandle _handle)
         auto MatResource = ResourceManager::GetResource<MaterialResource>(_handle);
         if (MatResource)
         {
-            mMateiral = MatResource;
-            mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+            mMaterial = MatResource;
+            mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
         }
-        mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+        mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
         
     }
 }
@@ -239,8 +248,8 @@ void SkinnedMeshRenderer::SetMaterial(MaterialResource* _pResource)
     if (_pResource)
     {
         mMaterialHandle = _pResource->GetHandle();
-        mMateiral = _pResource;
-        mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+        mMaterial = _pResource;
+        mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
     }
 }
 
@@ -293,6 +302,24 @@ void SkinnedMeshRenderer::CalculateBoneTransform()
     }
 }
 
+void _CALLBACK SkinnedMeshRenderer::OnEnable()
+{
+    Start();
+    return void _CALLBACK();
+}
+
+void _CALLBACK SkinnedMeshRenderer::OnDisable()
+{
+    mMesh = nullptr;
+    mMaterial = nullptr;
+    return void _CALLBACK();
+}
+
+void _CALLBACK SkinnedMeshRenderer::OnDestroy()
+{
+    return void _CALLBACK();
+}
+
 json SkinnedMeshRenderer::Serialize()
 {
     json ret;
@@ -329,7 +356,7 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     mMaterialHandle.Deserialize(j["material handle"]);
 
     mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-    mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
+    mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
 
     json mProp = j["property"];
 
@@ -351,15 +378,15 @@ void SkinnedMeshRenderer::Deserialize(json& j)
 }
 
 #define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
-if (mMateiral->mMaterialMapTexture[typeIndex]) \
+if (mMaterial->mMaterialMapTexture[typeIndex]) \
 { \
     bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
     ImGui::Separator();\
     if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
         mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
     } \
-    if (ImGui::TreeNodeEx((std::string(label) + mMateiral->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
-        mMateiral->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
+    if (ImGui::TreeNodeEx((std::string(label) + mMaterial->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
+        mMaterial->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
         ImGui::TreePop();\
     }\
 }\
@@ -405,11 +432,11 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
         std::string widgetID = "NULL Material";
         std::string name = "NULL Material";
 
-        if (mMateiral)
+        if (mMaterial)
         {
-            mMateiral->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMateiral->GetKey());
-            widgetID = mMateiral->GetEID();
+            mMaterial->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mMaterial->GetKey());
+            widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                 ImGui::Text("Diffuse : ");

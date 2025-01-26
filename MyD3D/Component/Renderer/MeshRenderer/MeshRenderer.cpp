@@ -1,19 +1,17 @@
 #include "pch.h"
 #include "MeshRenderer.h"
+#include "World/World.h"
 #include "Object/Object.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
-#include "Resource/Graphics/FBXModel/FBXModel.h"
-#include "Resource/Graphics/Mesh/Mesh.h"
-#include "Resource/Graphics/Material/Material.h"
-#include "Resource/Graphics/Texture/Texture.h"
+#include "Resource/ResourceManager.h"
 // Editor
 #include "Editor/Handler/EditorDragNDrop.h"
 
 MeshRenderer::MeshRenderer(Object* _owner)
     : RendererComponent(_owner)
     , mMesh(nullptr)
-    , mMateiral(nullptr)
+    , mMaterial(nullptr)
 {
     SetEID("MeshRenderer");
     mType = eComponentType::MESH_RENDERER;
@@ -25,6 +23,8 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Start()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
 }
 
 void MeshRenderer::Tick()
@@ -61,6 +61,16 @@ void MeshRenderer::PostRender()
 
 void MeshRenderer::EditorUpdate()
 {
+    if (mMesh)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
+    }
+    if (mMaterial)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(mMaterialHandle.GetParentkey());
+    }
 }
 
 void MeshRenderer::EditorRender()
@@ -95,20 +105,20 @@ void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
     if (mMesh)
     {
-    // 머티리얼 바인딩
-    if (mMateiral)
-    {
-        mMateiral->Bind();
-        GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
-    }
-    // 메쉬 바인딩
-    mMesh->Bind();
-    mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-    mTransformMatrices.View         = XMMatrixTranspose(_view);
-    mTransformMatrices.Projection   = XMMatrixTranspose(_projection);
-    // 트랜스폼 상수 버퍼 바인딩
-    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
-    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+        // 머티리얼 바인딩
+        if (mMaterial)
+        {
+            mMaterial->Bind();
+            GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
+        }
+        // 메쉬 바인딩
+        mMesh->Bind();
+        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+        mTransformMatrices.View = XMMatrixTranspose(_view);
+        mTransformMatrices.Projection = XMMatrixTranspose(_projection);
+        // 트랜스폼 상수 버퍼 바인딩
+        GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
 
@@ -166,8 +176,8 @@ void MeshRenderer::SetMaterial(ResourceHandle _handle)
         auto MatResource = ResourceManager::GetResource<MaterialResource>(_handle);
         if (MatResource)
         {
-            mMateiral = MatResource;
-            mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+            mMaterial = MatResource;
+            mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
             for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
             {
                 if (MatResource->mMaterialMapTexture[i])
@@ -183,8 +193,8 @@ void MeshRenderer::SetMaterial(MaterialResource* _pResource)
     if (_pResource)
     {
         mMaterialHandle = _pResource->GetHandle();
-        mMateiral = _pResource;
-        mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+        mMaterial = _pResource;
+        mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
     }
 }
 
@@ -194,14 +204,14 @@ MeshResource* MeshRenderer::GetMesh()
 }
 MaterialResource* MeshRenderer::GetMaterial()
 {
-    return mMateiral;
+    return mMaterial;
 }
 
 eBlendModeType MeshRenderer::GetBlendMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mBlendMode;
+        return mMaterial->mBlendMode;
     }
     return eBlendModeType::OPAQUE_BLEND;
 }
@@ -213,11 +223,29 @@ Vector3 MeshRenderer::GetDistanceFromCamera(Camera* _camera)
 
 eRasterizerStateType MeshRenderer::GetCullingMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mRasterMode;
+        return mMaterial->mRasterMode;
     }
     return eRasterizerStateType::BACKFACE_CULLING;
+}
+
+void _CALLBACK MeshRenderer::OnEnable()
+{
+    Start();
+    return void _CALLBACK();
+}
+
+void _CALLBACK MeshRenderer::OnDisable()
+{
+    mMesh = nullptr;
+    mMaterial = nullptr;
+    return void _CALLBACK();
+}
+
+void _CALLBACK MeshRenderer::OnDestroy()
+{
+    return void _CALLBACK();
 }
 
 json MeshRenderer::Serialize()
@@ -254,7 +282,7 @@ void MeshRenderer::Deserialize(json& j)
     mMaterialHandle.Deserialize(j["material handle"]);
 
     SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
-    SetMaterial(mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
+    SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
 
     json mProp = j["property"];
 
@@ -273,15 +301,15 @@ void MeshRenderer::Deserialize(json& j)
 }
 
 #define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
-if (mMateiral->mMaterialMapTexture[typeIndex]) \
+if (mMaterial->mMaterialMapTexture[typeIndex]) \
 { \
     bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
     ImGui::Separator();\
     if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
         mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
     } \
-    if (ImGui::TreeNodeEx((std::string(label) + mMateiral->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
-        mMateiral->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
+    if (ImGui::TreeNodeEx((std::string(label) + mMaterial->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
+        mMaterial->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
         ImGui::TreePop();\
     }\
 }\
@@ -319,11 +347,11 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
     {
         std::string widgetID = "NULL Material";
         std::string name = "NULL Material";
-        if (mMateiral)
+        if (mMaterial)
         {
-            mMateiral->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMateiral->GetKey());
-            widgetID = mMateiral->GetEID();
+            mMaterial->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mMaterial->GetKey());
+            widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                 ImGui::Text("Diffuse : ");

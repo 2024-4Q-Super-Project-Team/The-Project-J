@@ -21,8 +21,16 @@ class ResourceHandle
     : public Engine::SaveBase
 {
 public:
-    ResourceHandle(eResourceType _type, const std::wstring& _mainKey, const std::wstring& _subKey, const std::wstring& _path)
-        : mResourceType(_type), mMainKey(_mainKey), mSubKey(_subKey), mPath(_path) {}
+    ResourceHandle(eResourceType _type, 
+        const std::wstring& _mainKey,
+        const std::wstring& _subKey,
+        const std::wstring& _path,
+        const std::wstring& _parentKey = L"")
+        : mResourceType(_type)
+        , mMainKey(_mainKey)
+        , mSubKey(_subKey)
+        , mPath(_path)
+        , mParentHandleKey(_parentKey) {}
     ResourceHandle() = default;
     ResourceHandle(const ResourceHandle&) = default;  // 복사 생성자
     ResourceHandle(ResourceHandle&&) noexcept = default; // 이동 생성자
@@ -34,12 +42,13 @@ public:
     std::wstring    mSubKey = L"";		                    // 메쉬의 경우, fbxModel내에서 사용하는 key값을 통해 불러와야 하므로, fbxModel내에서 사용하는 key값을 저장한다.
     std::wstring    mPath = L"";			                // 리소스를 불러오기 위한 경로(FBX모델안에 있는 메쉬의 경우, 이 값은 fbx의 경로다.)
 
-    std::wstring    mParentHandleKey;
+    std::wstring    mParentHandleKey = L"";
 public:
     inline const auto& GetResourceType()    const { return mResourceType; }
     inline const auto& GetKey()             const { return mMainKey; }
     inline const auto& GetSubKey()          const { return mSubKey; }
     inline const auto& GetPath()            const { return mPath; }
+    inline const auto& GetParentkey()       const { return mParentHandleKey; }
     bool operator==(const ResourceHandle& other) const {
         return mMainKey == other.mMainKey && mPath == other.mPath;
     }

@@ -71,4 +71,6 @@ struct FBXResource
     ModelNode* RootNode;
     std::vector<ModelNode*> ModelNodeArray;
     std::unordered_map<std::wstring, ModelNode*> ModelNodeTable;
+    // Texture
+    std::vector<ResourceHandle> TextureHandleTable;
 };

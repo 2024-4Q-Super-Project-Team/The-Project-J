@@ -30,6 +30,7 @@ public:
 public:
 	// 월드의 생성, 삭제, 전환을 해준다.
 	void UpdateWorld();
+	void UpdateResources();
 public:
 	World*	CreateWorld(const std::wstring& _name, std::wstring_view _tag = L"", bool isEmpty = false);
 	BOOL	DestroyWorld(const std::wstring& _name);

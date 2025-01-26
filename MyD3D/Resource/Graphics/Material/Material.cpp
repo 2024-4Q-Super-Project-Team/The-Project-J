@@ -25,8 +25,7 @@ void MaterialResource::Create()
     {
         if (mMaterialMapTextureHandle[i].GetPath() != L"")
         {
-            ResourceManager::RegisterResourceHandle(mMaterialMapTextureHandle[i]);
-            mMaterialMapTexture[i] = ResourceManager::Alloc_Resource<Texture2DResource>(mMaterialMapTextureHandle[i]);
+            mMaterialMapTexture[i] = ResourceManager::GetResource<Texture2DResource>(mMaterialMapTextureHandle[i]);
             if (mMaterialMapTexture[i])
             {
                 mMaterialMapTexture[i]->Texture->SetBindStage(eShaderStage::PS);

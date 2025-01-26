@@ -19,7 +19,6 @@ PxFilterFlags CustomFilterShader(
     return PxFilterFlag::eDEFAULT;
 }
 
-
 World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty)
     : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
@@ -180,6 +179,7 @@ void World::PostRender()
 
 void World::EditorUpdate()
 {
+    mNeedResourceHandleTable.clear();
     UpdateObject();
     for (Object* object : mObjectArray)
     {
@@ -336,7 +336,6 @@ void World::EditorRendering(EditorViewerType _viewerType)
     {
         case EditorViewerType::DEFAULT:
         {
-           
             std::string widgetID = name + ptr;
             if (mOwnerScene->GetWorldManager()->GetActiveWorld() == this)
             {
@@ -393,7 +392,7 @@ void World::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Text("Pre Load Resource List :");
                 for (auto itr = mNeedResourceHandleTable.begin(); itr != mNeedResourceHandleTable.end(); ++itr)
                 {
-                    ImGui::Text(Helper::ToString((*itr).GetKey() + L" : " + (*itr).GetPath()).c_str());
+                    ImGui::Text(Helper::ToString(*itr).c_str());
                 }
             }
             break;

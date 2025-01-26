@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "AudioSource.h"
 #include "Resource/AudioResource/AudioResource.h"
+#include "World/World.h"
 
 AudioSource::AudioSource(Object* _owner)
 	: Component(_owner)
 	, mActiveAudio(nullptr)
 	, mAudioChannel(new AudioChannel)
 {
+	SetEID("AudioSource");
 	mType = eComponentType::AUDIO_SOURCE;
 }
 
@@ -16,6 +18,14 @@ AudioSource::~AudioSource()
 
 void AudioSource::Start()
 {
+	if (mActiveAudio == nullptr)
+	{
+		auto itr = Helper::FindMap(mActiveKey, mAudioTable);
+		if (itr)
+		{
+			mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
+		}
+	}
 }
 
 void AudioSource::Tick()
@@ -60,6 +70,11 @@ void AudioSource::PostRender()
 
 void AudioSource::EditorUpdate()
 {
+	for (auto& [key, handle] : mAudioTable)
+	{
+		gameObject->GetOwnerWorld()->
+			mNeedResourceHandleTable.insert(handle.GetParentkey());
+	}
 }
 
 void AudioSource::EditorRender()
@@ -68,10 +83,11 @@ void AudioSource::EditorRender()
 
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
-	if (mAudioTable.find(_key) != mAudioTable.end())
+	auto itr = Helper::FindMap(_key, mAudioTable);
+	if (itr)
 	{
-		mActiveHandle = mAudioTable[_key];
-		mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
+		mActiveKey = _key;
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
 	}
 }
 
@@ -84,12 +100,13 @@ BOOL AudioSource::AddAudio(const std::wstring& _key, ResourceHandle _srcAudio)
 		// ActiveAudio가 없으면 편의상 넣어준다.
 		if (mActiveAudio == nullptr)
 		{
-			mActiveHandle = _srcAudio;
-			mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
+			mActiveKey = _key;
+			mActiveAudio = ResourceManager::GetResource<AudioResource>(_srcAudio);
 		}
 	}
 	return FALSE;
 }
+
 
 bool AudioSource::IsPlaying()
 {
@@ -145,6 +162,23 @@ void AudioSource::SetSurround(bool _isSuround)
 	mAudioChannel->SetSurround(_isSuround);
 }
 
+void _CALLBACK AudioSource::OnEnable()
+{
+	Start();
+	return void _CALLBACK();
+}
+
+void _CALLBACK AudioSource::OnDisable()
+{
+	mActiveAudio = nullptr;
+	return void _CALLBACK();
+}
+
+void _CALLBACK AudioSource::OnDestroy()
+{
+	return void _CALLBACK();
+}
+
 json AudioSource::Serialize()
 {
 	json ret;
@@ -152,7 +186,7 @@ json AudioSource::Serialize()
 	ret["id"] = GetId();
 	ret["name"] = "AudioSource";
 
-	ret["active audio"] = mActiveHandle.Serialize();
+	ret["active audio"] = Helper::ToString(mActiveKey);
 
 	json tableJson;
 	for (auto& audio : mAudioTable)
@@ -170,8 +204,7 @@ void AudioSource::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mActiveHandle.Deserialize(j["active audio"]);
-	mActiveAudio = ResourceManager::GetResource<AudioResource>(mActiveHandle);
+	mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
 
 	json tableJson = j["table"];
 	for (json& audioJson : tableJson)

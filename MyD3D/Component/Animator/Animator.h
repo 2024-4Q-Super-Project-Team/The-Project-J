@@ -1,5 +1,6 @@
 #pragma once
 #include "Component/Component.h"
+#include "Component/Renderer/Renderer.h"
 
 class AnimationResource;
 class AnimationNode;
@@ -29,7 +30,11 @@ public:
 public:
     void SetAnimation(ResourceHandle _handle);
     void SetAnimation(AnimationResource* _pAnim);
-
+public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
@@ -41,7 +46,7 @@ private:
 private:
     ResourceHandle      mAnimationHandle;
     AnimationResource*  mActiveAnimation;
-    bool  isPlaying;
+    BOOL  isPlaying;
     float mDuration;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;

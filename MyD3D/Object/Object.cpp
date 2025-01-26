@@ -396,12 +396,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
     {
     case EditorViewerType::DEFAULT:
     {
-        auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
-        bool isSelected = false;
-        if (Editor::InspectorViewer::IsFocusObject(this))
-        {
-            isSelected = true;
-        }
+        bool isSelected = Editor::InspectorViewer::IsFocusObject(this);
         std::string symbol = "::: ";
         if (transform->GetChildren().empty() == false)
         {
@@ -420,6 +415,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT);
         }
         std::string widgetID = symbol + name + uid;
+        auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
         if (ImGui::Selectable((widgetID).c_str(), isSelected, flags))
         {
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Animator.h"
+#include "World/World.h"
 #include "Object/Object.h"
 #include "Resource/ResourceManager.h"
 
@@ -8,6 +9,7 @@ Animator::Animator(Object* _owner)
     : Component(_owner)
     , isPlaying(true)
 {
+    SetEID("Animator");
     mType = eComponentType::ANIMAITOR;
 }
 
@@ -17,6 +19,11 @@ Animator::~Animator()
 
 void Animator::Start()
 {
+    if (mActiveAnimation == nullptr)
+    {
+        mActiveAnimation
+            = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
+    }
 }
 
 void Animator::Tick()
@@ -67,6 +74,11 @@ void Animator::PostRender()
 
 void Animator::EditorUpdate()
 {
+    if (mActiveAnimation)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(mAnimationHandle.GetParentkey());
+    }
 }
 
 void Animator::EditorRender()
@@ -94,8 +106,26 @@ void Animator::SetAnimation(AnimationResource* _pAnim)
     }
 }
 
+void _CALLBACK Animator::OnEnable()
+{
+    Start();
+    return void _CALLBACK();
+}
+
+void _CALLBACK Animator::OnDisable()
+{
+    mActiveAnimation = nullptr;
+    return void _CALLBACK();
+}
+
+void _CALLBACK Animator::OnDestroy()
+{
+    return void _CALLBACK();
+}
+
 json Animator::Serialize()
 {
+    // JSON_TODO  
     json ret;
     ret["id"] = GetId();
     ret["name"] = "Animator";
@@ -191,36 +221,31 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
 
 void Animator::EditorRendering(EditorViewerType _viewerType)
 {
-	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("Animator" + uid).c_str(), EDITOR_FLAG_MAIN))
-	{
-        //////////////////////////////////////////////////////////////////////
-        // Mesh
-        //////////////////////////////////////////////////////////////////////
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    //////////////////////////////////////////////////////////////////////
+    // Mesh
+    //////////////////////////////////////////////////////////////////////
+    {
+        std::string widgetID = "NULL Animation";
+        std::string name = "NULL Animation";
+        if (mActiveAnimation)
         {
-            std::string widgetID = "NULL Animation";
-            std::string name = "NULL Animation";
-            if (mActiveAnimation)
-            {
-                mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
-                name = Helper::ToString(mActiveAnimation->GetKey());
-                widgetID = mActiveAnimation->GetEID();
-            }
-            else
-            {
-                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
-                EDITOR_COLOR_POP(1);
-            }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
-            {
-                SetAnimation(mAnimationHandle);
-            }
+            mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mActiveAnimation->GetKey());
+            widgetID = mActiveAnimation->GetEID();
         }
-        ImGui::Separator();
-        ImGui::Text("Duration : %f", mDuration);
-		
-		ImGui::TreePop();
-	}
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
+        }
+        if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
+        {
+            SetAnimation(mAnimationHandle);
+        }
+    }
+    ImGui::Separator();
+    ImGui::Text("Duration : %f", mDuration);
 }
 

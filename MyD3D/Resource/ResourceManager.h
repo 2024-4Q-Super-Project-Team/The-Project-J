@@ -28,8 +28,7 @@ public:
     template <typename TYPE>
     static TYPE*    GetResource(ResourceHandle _handle);
     // 리소스를 할당합니다.
-    template <typename TYPE>
-    static TYPE*    Alloc_Resource(ResourceHandle _handle);
+    static void     Alloc_Resource(ResourceHandle _handle);
     static void     Alloc_All_Resource();
     // 리소스를 해제합니다.
     static BOOL     Free_Resource(ResourceHandle _handle);
@@ -78,26 +77,6 @@ inline TYPE* ResourceManager::GetResource(ResourceHandle _handle)
             return pResource;
         }
         return nullptr;
-    }
-    return nullptr;
-}
-
-// 이미 있으면 삭제하고 다시 넣는게 맞는듯 <- ㅂㅅ
-template<typename TYPE>
-inline TYPE* ResourceManager::Alloc_Resource(ResourceHandle _handle)
-{
-    auto& table = GetResourceTable(_handle.GetResourceType());
-    auto itr = table.find(_handle);
-    if (FIND_SUCCESS(itr, table))
-    {
-        if (itr->second)
-        {
-            return dynamic_cast<TYPE*>(itr->second);
-        }
-        TYPE* pResource = new TYPE(_handle);
-        table[_handle] = pResource;
-        Display::Console::Log("Alloc_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
-        return pResource;
     }
     return nullptr;
 }

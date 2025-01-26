@@ -39,33 +39,39 @@ void Editor::ResourceViewer::Render()
 		if (ImGui::TreeNodeEx((ResourceName).c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_Selected))
 		{
 			auto& table = ResourceManager::GetResourceTable((eResourceType)i);
-			for (auto& resource : table)
+			for (auto& [handle, resource] : table)
 			{
-				std::string treeName = (ResourceName + " : " + Helper::ToString(resource.first.GetKey())).c_str();
-
-				if (resource.second == nullptr)
+				bool isSelected = InspectorViewer::IsFocusObject(resource);
+				std::string widgetID = ResourceName + " : " + (Helper::ToString(handle.GetKey())).c_str();
+				if (resource)
 				{
-					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_NULL);
+					isSelected ?
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE_SELECTED) :
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE);
 				}
 				else
 				{
-					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+					isSelected ?
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL_SELECTED) :
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
 				}
-			
-				if (ImGui::TreeNodeEx((treeName + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+				
+				auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
+				if (ImGui::Selectable((widgetID + uid).c_str(), isSelected, flags))
 				{
-					if (resource.second == nullptr)
+					if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 					{
-						//ImGui::Selectable(GetEID(), false, flags);
-						ImGui::Text("NULL Resource");
+						Editor::InspectorViewer::SetFocusObject(resource);
 					}
-					else
-					{
-						resource.second->EditorRendering(EditorViewerType::DEFAULT);
-					}
-					ImGui::TreePop();
 				}
 				EDITOR_COLOR_POP(1);
+				////////////////////////////////////////////////////////////////////////////
+				// Drag & Drop
+				////////////////////////////////////////////////////////////////////////////
+				EditorItemState state;
+				state.mResourcePtr = resource;
+				state.mName = Helper::ToString(handle.GetKey());
+				EditorDragNDrop::SendDragAndDropData((widgetID + uid).c_str(), state);
 			}
 			ImGui::TreePop();
 		}

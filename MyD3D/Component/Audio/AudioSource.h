@@ -1,5 +1,6 @@
 #pragma once
 #include "Component/Component.h"
+#include "Component/Renderer/Renderer.h"
 
 class AudioResource;
 class AudioChannel;
@@ -39,14 +40,18 @@ public:
     // 3D 입체 음향을 사용합니다
     void SetSurround(bool _isSuround);
 public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
     // 현재 재생 예정, 혹은 재생 중인 오디오
-    ResourceHandle mActiveHandle;
-    AudioResource* mActiveAudio; 
+    std::wstring    mActiveKey;
+    AudioResource*  mActiveAudio; 
     // 해당 오디오 리소스를 재생해주는 공간
-    AudioChannel* mAudioChannel;
+    AudioChannel*   mAudioChannel;
     // 현재 등록된 오디오을 관리하는 테이블
     std::unordered_map<std::wstring, ResourceHandle> mAudioTable;
 public:

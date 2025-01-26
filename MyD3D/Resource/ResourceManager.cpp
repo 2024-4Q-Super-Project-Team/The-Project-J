@@ -114,6 +114,25 @@ void ResourceManager::LoadResources()
 
     SkyBox::GetDefaultSkyBox();
 }
+#define ALLOC_RESOURCE_FROM_ENUM_TYPE(type)\
+if (_handle.GetResourceType() == eResourceType::type) {\
+pResource = new type(_handle);\
+table[_handle] = pResource;\
+}\
+
+void ResourceManager::Alloc_Resource(ResourceHandle _handle)
+{
+    auto& table = GetResourceTable(_handle.GetResourceType());
+    auto itr = table.find(_handle);
+    if (FIND_SUCCESS(itr, table))
+    {
+        Resource* pResource;
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(FBXModelResource)
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(Texture2DResource)
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(AudioResource)
+        Display::Console::Log("Alloc_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+    }
+}
 
 void ResourceManager::Alloc_All_Resource()
 {
@@ -249,7 +268,7 @@ std::unordered_set<ResourceHandle>& ResourceManager::GetLoadResourceList()
 #define REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(type) \
 if(_handle.GetResourceType() == eResourceType::type)\
 if(ResourceManager::RegisterResourceHandle(_handle)){\
-ResourceManager::Alloc_Resource<type>(_handle);\
+ResourceManager::Alloc_Resource(_handle);\
 ResourceManager::GetLoadResourceList().insert(_handle);\
 return TRUE; \
 } else { \

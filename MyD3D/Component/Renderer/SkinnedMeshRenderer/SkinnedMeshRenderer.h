@@ -48,6 +48,10 @@ private:
     void BoneMapping(Transform* currentBone);
     void CalculateBoneTransform();
 public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
@@ -57,7 +61,7 @@ private:
     ResourceHandle    mMeshHandle;
     ResourceHandle    mMaterialHandle;
     MeshResource*     mMesh;  
-    MaterialResource* mMateiral;
+    MaterialResource* mMaterial;
     Transform*        mRootBone; 
 
     std::unordered_map<std::wstring, Transform*> mBoneMappingTable; // º» ÀÌ¸§°ú Æ®·£½ºÆû ¸ÅÄª

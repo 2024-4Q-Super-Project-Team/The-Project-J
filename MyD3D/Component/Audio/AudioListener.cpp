@@ -6,6 +6,7 @@ AudioListener* AudioListener::mMainListener = nullptr;
 AudioListener::AudioListener(Object* _owner)
 	: Component(_owner)
 {
+	SetEID("AudioListener");
 	mType = eComponentType::AUDIO_LISTENER;
 }
 
@@ -102,10 +103,6 @@ void AudioListener::Deserialize(json& j)
 void AudioListener::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("AudioListener" + uid).c_str(), EDITOR_FLAG_MAIN))
-	{
-		ImGui::Text("Distance Attenuation Scale : ");
-		ImGui::DragFloat((uid + "Distance Attenuation Scale").c_str(), &mDistanceAttenuationScale, 0.01f, 0.0f, 1.0f);
-		ImGui::TreePop();
-	}
+	ImGui::Text("Distance Attenuation Scale : ");
+	ImGui::DragFloat((uid + "Distance Attenuation Scale").c_str(), &mDistanceAttenuationScale, 0.01f, 0.0f, 1.0f);
 }

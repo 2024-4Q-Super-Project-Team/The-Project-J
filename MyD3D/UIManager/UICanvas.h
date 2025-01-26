@@ -4,6 +4,7 @@
 #include "UIManager/Widget/WidgetText.h"
 
 #include "Component/Component.h"
+#include "World/World.h"
 
 class UICanvas
     : public Component
@@ -18,11 +19,12 @@ private:
     std::vector<Widget*> mWidgets;
 
     template <class T>
-    void AddWidget(std::wstring _id, std::wstring _filepath)
+    void AddWidget(std::wstring _name)
     {
         static_assert(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
-        T* widget = new T();
-        widget->SetTexture(_id, _filepath);
+        Object* widgetObject = gameObject->GetOwnerWorld()->CreateObject(gameObject->GetName() + L"_" + _name);
+        T* widget = widgetObject->AddComponent<T>();
+        widgetObject->transform->SetParent(gameObject->transform);
         mWidgets.push_back(widget);
 
         return widget;

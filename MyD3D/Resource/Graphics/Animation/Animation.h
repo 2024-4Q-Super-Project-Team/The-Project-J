@@ -24,6 +24,9 @@ private:
     float mFramePerSecond;
     std::unordered_map<std::wstring, AnimationNode*> mChannels;
 public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
+public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 // 애니메이션을 구성하는 각 노드의 정보들

@@ -38,6 +38,9 @@ public:
     static MaterialResource*    DefaultMaterial;
     static MaterialResource*    GetDefaultMaterial();
     static void                 FreeDefaultMaterial();
+public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

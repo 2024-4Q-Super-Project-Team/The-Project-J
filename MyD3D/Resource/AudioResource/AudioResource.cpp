@@ -38,6 +38,15 @@ void AudioResource::SetSoundMode(eAudioListenMode _soundMode)
 	}
 }
 
+json AudioResource::Serialize()
+{
+    return json();
+}
+
+void AudioResource::Deserialize(json& j)
+{
+}
+
 void AudioResource::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

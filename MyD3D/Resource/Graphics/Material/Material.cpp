@@ -92,6 +92,48 @@ void MaterialResource::FreeDefaultMaterial()
 {
 }
 
+json MaterialResource::Serialize()
+{
+    json ret;
+
+    json mprop;
+    ColorF diffuse = mMaterialProperty.DiffuseRGB;
+    ColorF ambient = mMaterialProperty.AmbientRGB;
+    ColorF specular = mMaterialProperty.SpecularRGB;
+    mprop["diffuse"] = { diffuse.r,diffuse.g, diffuse.b, diffuse.a };
+    mprop["ambient"] = { ambient.r, ambient.g, ambient.b, ambient.a };
+    mprop["specular"] = { specular.r, specular.g, specular.b, specular.a };
+    mprop["roughness"] = mMaterialProperty.RoughnessScale;
+    mprop["metallic"] = mMaterialProperty.MetallicScale;
+    mprop["ao"] = mMaterialProperty.AmbienOcclusionScale;
+
+    ret["property"] = mprop;
+
+    ret["blend type"] = mBlendMode;
+    ret["rs type"] = mRasterMode;
+
+    return ret;
+}
+
+void MaterialResource::Deserialize(json& j)
+{
+    json mProp = j["property"];
+
+    for (int i = 0; i < 4; i++)
+    {
+        mMaterialProperty.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
+        mMaterialProperty.AmbientRGB[i] = mProp["ambient"][i].get<float>();
+        mMaterialProperty.SpecularRGB[i] = mProp["specular"][i].get<float>();
+    }
+
+    mMaterialProperty.RoughnessScale = mProp["roughness"].get<float>();
+    mMaterialProperty.MetallicScale = mProp["metallic"].get<float>();
+    mMaterialProperty.AmbienOcclusionScale = mProp["ao"].get<float>();
+
+    mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
+    mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
+}
+
 #define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \
 if (mMaterialMapTexture[(UINT)typeEnum]) \
 { \

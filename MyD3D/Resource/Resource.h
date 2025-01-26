@@ -57,7 +57,7 @@ namespace std {
 }
 
 class Resource
-    : public IEditorObject
+    : public IEditorObject, public Engine::SaveBase
 {
 public:
     explicit Resource(ResourceHandle _handle);
@@ -70,6 +70,9 @@ public:
     inline const auto& GetPath()    { return mHandle.GetPath(); }
 public:
     virtual void Create() {}
+public:
+    virtual json Serialize() = 0;
+    virtual void Deserialize(json& j) = 0;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 protected:

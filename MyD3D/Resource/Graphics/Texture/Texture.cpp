@@ -15,6 +15,15 @@ Texture2DResource::~Texture2DResource()
 	SAFE_RELEASE(Texture);
 }
 
+json Texture2DResource::Serialize()
+{
+	return json();
+}
+
+void Texture2DResource::Deserialize(json& j)
+{
+}
+
 void Texture2DResource::EditorRendering(EditorViewerType _viewerType)
 {
 	//std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

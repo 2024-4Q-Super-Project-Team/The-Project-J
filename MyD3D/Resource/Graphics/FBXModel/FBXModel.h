@@ -40,6 +40,11 @@ public:
 
     PrefabResource* mModelPrefab;
 public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
+    void SaveJson();
+    void LoadJson();
+public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

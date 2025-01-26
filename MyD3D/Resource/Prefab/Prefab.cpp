@@ -171,6 +171,15 @@ void PrefabResource::SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pMode
     }
 }
 
+json PrefabResource::Serialize()
+{
+    return json();
+}
+
+void PrefabResource::Deserialize(json& j)
+{
+}
+
 void PrefabResource::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

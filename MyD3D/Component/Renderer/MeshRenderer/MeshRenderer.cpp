@@ -253,8 +253,8 @@ void MeshRenderer::Deserialize(json& j)
     mMeshHandle.Deserialize(j["mesh handle"]);
     mMaterialHandle.Deserialize(j["material handle"]);
 
-    mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-    mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
+    SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
+    SetMaterial(mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
 
     json mProp = j["property"];
 

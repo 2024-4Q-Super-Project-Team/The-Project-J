@@ -179,7 +179,6 @@ void World::PostRender()
 
 void World::EditorUpdate()
 {
-    mNeedResourceHandleTable.clear();
     UpdateObject();
     for (Object* object : mObjectArray)
     {

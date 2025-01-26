@@ -25,9 +25,29 @@ void Editor::ResourceViewer::Render()
 	//////////////////////////////////////////////////////////////////////////////////////
 	auto& loadList = ResourceManager::GetLoadResourceList();
 	ImGui::Text("Load Resource List");
-	for (ResourceHandle handle : loadList)
+	for (auto handle = loadList.begin(); handle != loadList.end();)
 	{
-		ImGui::Text(Helper::ToString(handle.GetKey() + L" : " + handle.GetPath()).c_str());
+		auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+		std::string widgetID = Helper::ToString(handle->GetKey() + L" : " + handle->GetPath());
+		if (ImGui::Selectable((widgetID).c_str(), false, flags))
+		{
+
+		}
+		// 오른쪽 클릭 - 팝업 메뉴 오픈
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+			ImGui::OpenPopup(("##" + widgetID).c_str());
+		}
+		if (ImGui::BeginPopup(("##" + widgetID).c_str()))
+		{
+			if (ImGui::MenuItem("Delete")) {
+				handle = loadList.erase(handle);
+				ImGui::EndPopup();
+				continue;
+			}
+			ImGui::EndPopup();
+		}
+		++handle;
 	}
 	ImGui::Separator();
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -136,4 +156,8 @@ void Editor::ResourceViewer::Render()
 		//	ImGui::EndPopup();
 		//}
 	}
+}
+
+void Editor::ResourceViewer::LoadResourceListPopup()
+{
 }

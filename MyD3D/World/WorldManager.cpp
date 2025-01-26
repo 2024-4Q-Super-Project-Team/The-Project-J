@@ -125,6 +125,8 @@ void WorldManager::EditorUpdate()
 	// 에디터에서는 다른 월드 오브젝트도 삭제할 수 있으므로 다 돌아봐야한다.
 	for (auto& world : mWorldArray)
 	{
+		if(world == mCurrActiveWorld || world->IsPersistance())
+			world->mNeedResourceHandleTable.clear();
 		world->EditorUpdate();
 	}
 }
@@ -182,11 +184,15 @@ void WorldManager::UpdateWorld()
 		{
             if(mCurrActiveWorld)
                 mCurrActiveWorld->OnDisable();
+
 			mCurrActiveWorld = mNextActiveWorld;
+
+			if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+				UpdateResources();
+
 			mCurrActiveWorld->OnEnable();
+
 			mNextActiveWorld = nullptr;
-			if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
-			UpdateResources();
 		}
 	}
 }

@@ -91,12 +91,13 @@ void MaterialResource::FreeDefaultMaterial()
 
 json MaterialResource::Serialize()
 {
-    json ret;
+    
 
-    json mprop;
     ColorF diffuse = mMaterialProperty.DiffuseRGB;
     ColorF ambient = mMaterialProperty.AmbientRGB;
     ColorF specular = mMaterialProperty.SpecularRGB;
+
+    json mprop;
     mprop["diffuse"] = { diffuse.r,diffuse.g, diffuse.b, diffuse.a };
     mprop["ambient"] = { ambient.r, ambient.g, ambient.b, ambient.a };
     mprop["specular"] = { specular.r, specular.g, specular.b, specular.a };
@@ -104,8 +105,18 @@ json MaterialResource::Serialize()
     mprop["metallic"] = mMaterialProperty.MetallicScale;
     mprop["ao"] = mMaterialProperty.AmbienOcclusionScale;
 
-    ret["property"] = mprop;
+    json ret;
+    ret["diffuse map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Serialize();
+    ret["specular map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Serialize();
+    ret["ambient map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Serialize();
+    ret["emissive map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Serialize();
+    ret["normal map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Serialize();
+    ret["roughness map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Serialize();
+    ret["opacity map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Serialize();
+    ret["metalness map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Serialize();
+    ret["ambientocclusion map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Serialize();
 
+    ret["property"] = mprop;
     ret["blend type"] = mBlendMode;
     ret["rs type"] = mRasterMode;
 
@@ -115,6 +126,16 @@ json MaterialResource::Serialize()
 void MaterialResource::Deserialize(json& j)
 {
     json mProp = j["property"];
+
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
+    mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
 
     for (int i = 0; i < 4; i++)
     {

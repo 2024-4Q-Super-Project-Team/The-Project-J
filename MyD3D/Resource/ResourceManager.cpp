@@ -18,7 +18,7 @@ BOOL ResourceManager::Initialize()
 
     // 여기서 json을 읽어 mLoadResourceList에 핸들정보를 담는다.
     // 그리고 로드한다.
-    Reload();
+    LoadResources();
 
     MeshResource::GetSkyCubeMesh();
     MeshResource::GetCubeMesh();
@@ -48,10 +48,7 @@ void ResourceManager::Reset()
 
 void ResourceManager::Reload()
 {
-    // 리셋 -> json 다시 불러오기 -> 전부 Alloc
-    
     Reset();    // 리셋
-    LoadResources();
     Alloc_All_Resource(); // 전부 Alloc
 
     std::ifstream audioFile(mSaveFilePath + "audios.json");
@@ -96,6 +93,8 @@ void ResourceManager::SaveResources()
 
 void ResourceManager::LoadResources()
 {
+    Reset();
+
     std::ifstream loadFile(mSaveFilePath + "resources.json");
 
     json loadJson;
@@ -112,8 +111,11 @@ void ResourceManager::LoadResources()
         mLoadResourceList.insert(handle);
     }
 
+    Alloc_All_Resource();
+
     SkyBox::GetDefaultSkyBox();
 }
+
 #define ALLOC_RESOURCE_FROM_ENUM_TYPE(type)\
 if (_handle.GetResourceType() == eResourceType::type) {\
 pResource = new type(_handle);\

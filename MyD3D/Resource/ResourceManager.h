@@ -7,10 +7,6 @@
 #include "Resource/Prefab/Prefab.h"
 #include "Resource/AudioResource/AudioResource.h"
 
-// JSON_TODO : 리소스 매니저의 리소스 로드 컨테이너 저장 필요 (mLoadResourceList)
-// 핸들 저장할 일 많으니까 그냥 핸들 자체에 
-// json저장 양식을 함수로 짜놓는 것도 나쁘지 않을듯 싶어요 ㅇㅅㅇ
-
 class ResourceManager
 {
 public:

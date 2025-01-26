@@ -98,6 +98,7 @@ void GameManager::UpdateGame()
 			ViewportManager::Start();
 			break;
 		case eEngineRunType::EDITOR_MODE:
+			ResourceManager::Reload();
 			// TODO : 모든 리소스 로드, JSON 리로드 등
 			break;
 		default:

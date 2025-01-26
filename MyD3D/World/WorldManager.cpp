@@ -122,12 +122,10 @@ void WorldManager::PostRender()
 void WorldManager::EditorUpdate()
 {
 	UpdateWorld();
+	// 에디터에서는 다른 월드 오브젝트도 삭제할 수 있으므로 다 돌아봐야한다.
 	for (auto& world : mWorldArray)
 	{
-		if (world == mCurrActiveWorld || world->IsPersistance())
-		{
-			UPDATE_ENTITY(world, EditorUpdate());
-		}
+		world->EditorUpdate();
 	}
 }
 
@@ -135,6 +133,7 @@ void WorldManager::EditorRender()
 {
 	for (auto& world : mWorldArray)
 	{
+		// 렌더는 다른 월드 오브젝트는 렌더할 필요 없으니 평소대로 한다.
 		if (world == mCurrActiveWorld || world->IsPersistance())
 		{
 			UPDATE_ENTITY(world, EditorRender());

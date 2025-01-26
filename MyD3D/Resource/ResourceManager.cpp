@@ -16,10 +16,11 @@ BOOL ResourceManager::Initialize()
 {
     FBXImporter::Initialize();
 
-    MeshResource::GetSkyCubeMesh();
-    MeshResource::GetCubeMesh();
-    MeshResource::GetPlainMesh();
-    MaterialResource::GetDefaultMaterial();
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
+    SkyBox::GetDefaultSkyBox();
 
     return TRUE;
 }
@@ -39,6 +40,14 @@ void ResourceManager::Reset()
         }
         table.clear();
     }
+    MeshResource::SkyCubeMesh = nullptr;
+    MeshResource::CubeMesh = nullptr;
+    MeshResource::PlainMesh = nullptr;
+    MaterialResource::DefaultMaterial = nullptr;
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
 }
 
 void ResourceManager::Reload()
@@ -108,7 +117,6 @@ void ResourceManager::LoadResources()
 
     Alloc_All_Resource();
 
-    SkyBox::GetDefaultSkyBox();
 }
 
 #define ALLOC_RESOURCE_FROM_ENUM_TYPE(type)\
@@ -169,6 +177,14 @@ void ResourceManager::Free_All_Resource()
             SAFE_DELETE(resource);
         }
     }
+    MeshResource::SkyCubeMesh = nullptr;
+    MeshResource::CubeMesh = nullptr;
+    MeshResource::PlainMesh = nullptr;
+    MaterialResource::DefaultMaterial = nullptr;
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
 }
 
 BOOL ResourceManager::RegisterResourceHandle(ResourceHandle _handle)

@@ -314,6 +314,7 @@ D3DGraphicsImg::D3DGraphicsImg(std::wstring_view _path)
 void D3DGraphicsImg::Release()
 {
     SAFE_RELEASE(mSRV);
+    SAFE_RELEASE(mRefTex);
     delete this;
 }
 

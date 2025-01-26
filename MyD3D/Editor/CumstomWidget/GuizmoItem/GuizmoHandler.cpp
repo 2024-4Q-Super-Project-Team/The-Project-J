@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GuizmoHandler.h"
 #include "Object/Object.h"
+#include "Save/SaveManager.h"
 
 namespace Editor
 {

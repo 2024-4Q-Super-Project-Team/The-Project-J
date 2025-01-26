@@ -91,7 +91,16 @@ void GameManager::UpdateGame()
 {
 	if (mCurrRunType != mNextRunType)
 	{
-		mCurrRunType = mNextRunType;
+		// 게임모드 -> 에디터모드 = 세이브를 다시 불러온다.
+		if (mCurrRunType == eEngineRunType::GAME_MODE && mNextRunType == eEngineRunType::EDITOR_MODE)
+		{
+			SaveManager::Load();
+		}
+		// 에디터모드 -> 게임모드 = 지금까지의 정보를 저장한다.
+		if (mCurrRunType == eEngineRunType::EDITOR_MODE && mNextRunType == eEngineRunType::GAME_MODE)
+		{
+			SaveManager::Save();
+		}
 		switch (mNextRunType)
 		{
 		case eEngineRunType::GAME_MODE:
@@ -104,6 +113,7 @@ void GameManager::UpdateGame()
 		default:
 			break;
 		}
+		mCurrRunType = mNextRunType;
 	}
 }
 

@@ -13,6 +13,8 @@ Light::Light(Object* _owner)
     : Component(_owner)
 	, mShadowResolution(4096.0f)
     , mShadowDistance(4096.0f)
+    , mShadowViewport(nullptr)
+    , mShadowRenderTarget(nullptr)
 {
     SetEID("Light");
     mType = eComponentType::LIGHT;

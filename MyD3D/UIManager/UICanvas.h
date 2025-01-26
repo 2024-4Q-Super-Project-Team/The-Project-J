@@ -18,11 +18,11 @@ private:
     std::vector<Widget*> mWidgets;
 
     template <class T>
-    void AddWidget(std::wstring _id, std::wstring _filepath)
+    void AddWidget(std::wstring _id)
     {
         static_assert(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
         T* widget = new T();
-        widget->SetTexture(_id, _filepath);
+        widget->SetParents();
         mWidgets.push_back(widget);
 
         return widget;

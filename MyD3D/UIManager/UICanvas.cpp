@@ -18,11 +18,11 @@ void UICanvas::PushDrawList()
 	if (!mWidgets.empty())
 		return;
 
-	for (auto& e : mWidgets)
+	for (auto& widget : mWidgets)
 	{
-		if (e->IsActive())
+		if (widget->IsActive())
 		{
-			UIManager::mDrawWidgetList.push_back(e);
+			UIManager::mDrawWidgetList.push_back(widget);
 		}
 	}
 }

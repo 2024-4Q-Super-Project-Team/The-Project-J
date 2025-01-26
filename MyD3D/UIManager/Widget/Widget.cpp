@@ -28,20 +28,9 @@ Widget::~Widget()
 	}
 }
 
-void Widget::SetTexture(std::wstring _id, std::wstring _path)
+void Widget::SetTexture(ResourceHandle _handle)
 {
-	ResourceHandle handle;
-	handle.mResourceType = eResourceType::Texture2DResource;
-	handle.mMainKey = _id;
-
-	if (_path.empty())
-		return;
-
-	handle.mPath = _path;
-	ResourceManager::RegisterResourceHandle(handle);
-	m_pTexture = ResourceManager::Alloc_Resource<Texture2DResource>(handle);
-
-	mID = _id;
+	m_pTexture = ResourceManager::GetResource<Texture2DResource>(_handle);
 
 	// 이미지 크기 설정
 	gameObject->transform->scale.x = m_pTexture->Texture->mWidth;

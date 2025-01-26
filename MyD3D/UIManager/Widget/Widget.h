@@ -26,7 +26,7 @@ public:
 	virtual ~Widget();
 public:
 	// 기본 정보 설정
-	void SetTexture(std::wstring _id, std::wstring _path);
+	void SetTexture(ResourceHandle _handle);
 	// 그래픽 정보 설정
 	void SetAlpha(FLOAT _alpha)	{ mAlpha = Clamp(_alpha, 0.0f, 1.0f); }
 	void SetColor(Color _color)	{ mColor = _color; }

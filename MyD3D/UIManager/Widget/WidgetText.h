@@ -5,7 +5,7 @@ class WidgetText
 	: public Widget
 {
 public:
-	WidgetText(Object* _owner);
+	explicit WidgetText(Object* _owner);
 	virtual ~WidgetText();
 public:
 	virtual void DrawWidget(Vector2 _scale)	override;

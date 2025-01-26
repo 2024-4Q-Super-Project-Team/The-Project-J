@@ -55,7 +55,7 @@ void UIManager::Render()
 
 	for (auto& widget : mDrawWidgetList)
 	{
-		widget->Draw(mScale);
+		widget->DrawWidget(mScale);
 	}
 
 	mDrawWidgetList.clear();

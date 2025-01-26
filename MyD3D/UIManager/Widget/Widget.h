@@ -14,7 +14,7 @@ enum class eUIType
 class IWidgetContext
 {
 public:
-	virtual void Draw(Vector2 _scale) = 0;
+	virtual void DrawWidget(Vector2 _scale) = 0;
 };
 
 class Widget

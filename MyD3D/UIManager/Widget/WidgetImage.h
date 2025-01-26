@@ -8,7 +8,6 @@ public:
 	explicit WidgetImage(Object* _owner);
 	virtual ~WidgetImage();
 public:
-	virtual void Draw(Vector2 _scale)	override;
-	virtual void Release()				override;
+	virtual void DrawWidget(Vector2 _scale)	override;
 };
 

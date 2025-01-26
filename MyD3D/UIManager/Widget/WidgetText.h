@@ -8,8 +8,7 @@ public:
 	WidgetText(Object* _owner);
 	virtual ~WidgetText();
 public:
-	virtual void Draw(Vector2 _scale)	override;
-	virtual void Release()				override;
+	virtual void DrawWidget(Vector2 _scale)	override;
 public:
 	void SetFont(std::wstring _path);
 	void SetTextLine(float _line);

@@ -10,10 +10,14 @@ WidgetText::WidgetText(Object* _owner)
 
 WidgetText::~WidgetText()
 {
-
+	if (m_pSpriteFont != nullptr)
+	{
+		delete m_pSpriteFont;
+		m_pSpriteFont = nullptr;
+	}
 }
 
-void WidgetText::Draw(Vector2 _scale)
+void WidgetText::DrawWidget(Vector2 _scale)
 {
 	Vector3 objPos = gameObject->transform->GetWorldPosition();
 
@@ -36,15 +40,6 @@ void WidgetText::OutlinedTextRender(Vector2 _scale, Vector3 _objPos) {
 	for (auto& offset : offsets) {
 		Vector2 outlinePos = Vector2(_objPos.x + offset.x, _objPos.y + offset.y) * _scale;
 		m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, outlinePos, mOutlineColor, 0.f, Vector2(0.0f, 0.0f), _scale.x);
-	}
-}
-
-void WidgetText::Release()
-{
-	if (m_pSpriteFont != nullptr)
-	{
-		delete m_pSpriteFont;
-		m_pSpriteFont = nullptr;
 	}
 }
 

@@ -9,10 +9,14 @@ WidgetImage::WidgetImage(Object* _owner)
 
 WidgetImage::~WidgetImage()
 {
-
+	if (m_pTexture != nullptr)
+	{
+		delete m_pTexture;
+		m_pTexture = nullptr;
+	}
 }
 
-void WidgetImage::Draw(Vector2 _scale)
+void WidgetImage::DrawWidget(Vector2 _scale)
 {
 	RECT rect{};
 	rect.left = gameObject->transform->position.x * _scale.x;
@@ -21,13 +25,4 @@ void WidgetImage::Draw(Vector2 _scale)
 	rect.bottom = rect.top + (gameObject->transform->scale.y * _scale.y);
 
 	UIManager::GetSpriteBatch()->Draw(m_pTexture->Texture->mSRV, rect, nullptr, mColor);
-}
-
-void WidgetImage::Release()
-{
-	if (m_pTexture != nullptr)
-	{
-		delete m_pTexture;
-		m_pTexture = nullptr;
-	}
 }

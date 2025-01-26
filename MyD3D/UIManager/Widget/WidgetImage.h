@@ -5,13 +5,10 @@ class WidgetImage
 	: public Widget
 {
 public:
-	WidgetImage();
-	virtual ~WidgetImage(); // 버츄얼로 돌려야되는데 왜 안됨?
+	explicit WidgetImage(Object* _owner);
+	virtual ~WidgetImage();
 public:
-	virtual void Init()					override;
-	virtual void Update()				override;
-	virtual void Render(Vector2 _scale)	override;
+	virtual void Draw(Vector2 _scale)	override;
 	virtual void Release()				override;
-private:
 };
 

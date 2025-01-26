@@ -1,40 +1,33 @@
 #pragma once
 #include "Widget.h"
 
-struct TextInfo
-{
-	float line = 15.f;
-	char defaultText = '_';
-	wchar_t msg[1024];
-	float mScale = 1.f;
-	Rect textBox{};
-};
-
 class WidgetText
 	: public Widget
 {
 public:
-	WidgetText();
-	virtual ~WidgetText(); // 버츄얼로 돌려야되는데 왜 안됨?
-
+	WidgetText(Object* _owner);
+	virtual ~WidgetText();
 public:
-	virtual void Init()					override;
-	virtual void Update()				override;
-	virtual void Render(Vector2 _scale)	override;
+	virtual void Draw(Vector2 _scale)	override;
 	virtual void Release()				override;
 public:
-	void SetTextLine(float _line) { mTextInfo.line = _line; }
-	void SetTextDefault(char _defaultText) { mTextInfo.defaultText = _defaultText; }
+	void SetFont(std::wstring _path);
+	void SetTextLine(float _line);
+	void SetTextDefault(char _defaultText);
 	void SetTextFormat(const wchar_t* _msg, ...);
+	void SetTextOutlineOffset(float _offset);
+	void SetTextOutlineColor(Color _color);
 public:
-
-	Rect			GetTextBox()	{ return mTextInfo.textBox; }
-	std::wstring	GetTextFormat()	{ return mTextInfo.msg; }
+	std::wstring GetTextFormat()	{ return mFormat; }
 private:
-	void OutlinedTextRender(Vector2 _scale);
-
 	SpriteFont* m_pSpriteFont = nullptr;
+	wchar_t mFormat[1024];	// 텍스트 포맷
 
-	TextInfo mTextInfo;
+	// 외곽선 렌더
+	void OutlinedTextRender(Vector2 _scale, Vector3 _objPos);
+	// 외곽선 관련 정보들
+	bool bUseOutline = false;
+	float mOutlineOffset = 1.f;
+	Color mOutlineColor{};
 };
 

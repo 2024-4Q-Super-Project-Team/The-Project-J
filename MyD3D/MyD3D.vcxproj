@@ -252,10 +252,9 @@
     <ClInclude Include="ThirdParty\imguizmo\ImGuizmo.h" />
     <ClInclude Include="ThirdParty\imguizmo\ImSequencer.h" />
     <ClInclude Include="ThirdParty\imguizmo\ImZoomSlider.h" />
+    <ClInclude Include="UIManager\UICanvas.h" />
     <ClInclude Include="UIManager\UIManager.h" />
     <ClInclude Include="UIManager\Widget\Widget.h" />
-    <ClInclude Include="UIManager\Widget\WidgetButton.h" />
-    <ClInclude Include="UIManager\Widget\WidgetCheckBox.h" />
     <ClInclude Include="UIManager\Widget\WidgetText.h" />
     <ClInclude Include="UIManager\Widget\WidgetImage.h" />
     <ClInclude Include="Component\Camera\SkyBox\SkyBox.h" />
@@ -377,10 +376,9 @@
     <ClCompile Include="ThirdParty\imguizmo\ImGradient.cpp" />
     <ClCompile Include="ThirdParty\imguizmo\ImGuizmo.cpp" />
     <ClCompile Include="ThirdParty\imguizmo\ImSequencer.cpp" />
+    <ClCompile Include="UIManager\UICanvas.cpp" />
     <ClCompile Include="UIManager\UIManager.cpp" />
     <ClCompile Include="UIManager\Widget\Widget.cpp" />
-    <ClCompile Include="UIManager\Widget\WidgetButton.cpp" />
-    <ClCompile Include="UIManager\Widget\WidgetCheckBox.cpp" />
     <ClCompile Include="UIManager\Widget\WidgetText.cpp" />
     <ClCompile Include="UIManager\Widget\WidgetImage.cpp" />
     <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp" />

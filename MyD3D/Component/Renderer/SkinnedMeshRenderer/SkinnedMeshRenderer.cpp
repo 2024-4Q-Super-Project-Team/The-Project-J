@@ -350,6 +350,20 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     mRootBone = rootObj->transform;
 }
 
+#define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
+if (mMateiral->mMaterialMapTexture[typeIndex]) \
+{ \
+    bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
+    ImGui::Separator();\
+    if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
+        mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
+    } \
+    if (ImGui::TreeNodeEx((std::string(label) + mMateiral->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
+        mMateiral->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
+        ImGui::TreePop();\
+    }\
+}\
+
 void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
@@ -412,15 +426,40 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
                 ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
                 for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
-                    if (mMateiral->mMaterialMapTexture[type])
+                    eMaterialMapType mapType = (eMaterialMapType)type;
+
+                    switch (mapType)
                     {
-                        bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
-                        if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
-                        {
-                            mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
-                        }
-                        mMateiral->mMaterialMapTexture[type]->EditorRendering(EditorViewerType::DEFAULT);
-                        ImGui::Separator();
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                        break;
+                    case eMaterialMapType::SPECULAR:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        break;
+                    case eMaterialMapType::AMBIENT:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        break;
+                    case eMaterialMapType::EMISSIVE:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        break;
+                    case eMaterialMapType::NORMAL:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        break;
+                    case eMaterialMapType::ROUGHNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        break;
+                    case eMaterialMapType::OPACITY:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        break;
+                    case eMaterialMapType::METALNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        break;
+                    case eMaterialMapType::AMBIENT_OCCLUSION:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        break;
+                    case eMaterialMapType::SIZE:
+                        break;
+                    default:
+                        break;
                     }
                 }
                 ImGui::TreePop();

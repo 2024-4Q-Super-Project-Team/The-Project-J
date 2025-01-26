@@ -162,6 +162,7 @@
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Editor\EditorCamera\EditorGridDrawer.h" />
     <ClInclude Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.h" />
@@ -292,6 +293,7 @@
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Editor\EditorCamera\EditorGridDrawer.cpp" />
     <ClCompile Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonLoader.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\File\EditorJsonWriter.cpp" />

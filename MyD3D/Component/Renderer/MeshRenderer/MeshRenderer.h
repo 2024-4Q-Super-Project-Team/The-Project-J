@@ -50,8 +50,8 @@ private:
     MeshResource*       mMesh; 
     MaterialResource*   mMateiral; 
 
-	TransformCBuffer mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
-    MaterialCBuffer  mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
+	TransformCBuffer    mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
+    MaterialCBuffer     mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
 public:

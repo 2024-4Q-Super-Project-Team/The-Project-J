@@ -345,7 +345,6 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
                     switch (mapType)
                     {
                     case eMaterialMapType::DIFFUSE:
-                    {
                         USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
                         break;
                     case eMaterialMapType::SPECULAR:
@@ -376,7 +375,6 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
                         break;
                     default:
                         break;
-                    }
                     }
                 }
                 ImGui::TreePop();

@@ -399,6 +399,9 @@
     <ClInclude Include="Save\SaveManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\EditorCamera\EditorGridDrawer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -768,6 +771,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Save\SaveManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorCamera\EditorGridDrawer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

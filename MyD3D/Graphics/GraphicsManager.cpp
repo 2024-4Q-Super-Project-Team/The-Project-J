@@ -104,7 +104,7 @@ void GraphicsManager::InitConstantBuffer()
         bufDesc.ByteWidth = sizeof(CameraCBuffer);
         mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
         mCBufferArray[slot]->SetBindSlot(slot);
-        mCBufferArray[slot]->SetBindStage(eShaderStage::PS);
+        mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);
         mCBufferArray[slot]->Bind();
     }
     // BoneMatrix
@@ -143,6 +143,7 @@ void GraphicsManager::InitShader()
         mVertexShaderArray[(UINT)eVertexShaderType::SPRITE] = new D3DGraphicsVertexShader(L"resource/shader/Sprite_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::SHADOW] = new D3DGraphicsVertexShader(L"resource/shader/Shadow_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::PARTICLE] = new D3DGraphicsVertexShader(L"resource/shader/Particle_VS.cso");
+        mVertexShaderArray[(UINT)eVertexShaderType::GRID] = new D3DGraphicsVertexShader(L"resource/shader/Grid_VS.cso");
 
     }
     {
@@ -156,6 +157,7 @@ void GraphicsManager::InitShader()
         mPixelShaderArray[(UINT)ePixelShaderType::SPRITE] = new D3DGraphicsPixelShader(L"resource/shader/Sprite_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::G_BUFFER] = new D3DGraphicsPixelShader(L"resource/shader/GBuffer_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::PARTICLE] = new D3DGraphicsPixelShader(L"resource/shader/Particle_PS.cso");
+        mPixelShaderArray[(UINT)ePixelShaderType::GRID] = new D3DGraphicsPixelShader(L"resource/shader/Grid_PS.cso");
 
     }
 }

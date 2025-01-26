@@ -396,8 +396,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
     {
     case EditorViewerType::DEFAULT:
     {
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
-        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
         bool isSelected = false;
         if (Editor::InspectorViewer::IsFocusObject(this))
         {
@@ -407,6 +406,18 @@ void Object::EditorRendering(EditorViewerType _viewerType)
         if (transform->GetChildren().empty() == false)
         {
             symbol = isNodeOpen ? "+ " : "- ";
+        }
+        if (isSelected)
+        {
+            GetState() == EntityState::Passive ?
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_DISABLE_SELECTED) :
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_SELECTED);
+        }
+        else
+        {
+            GetState() == EntityState::Passive ?
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_DISABLE) :
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT);
         }
         std::string widgetID = symbol + name + uid;
         if (ImGui::Selectable((widgetID).c_str(), isSelected, flags))
@@ -421,6 +432,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 isNodeOpen = isNodeOpen == true ? false : true;
             }
         }
+        EDITOR_COLOR_POP(1);
         /////////////////////////////////////////////////////////////////
         // Drag&Drop
         /////////////////////////////////////////////////////////////////
@@ -440,7 +452,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 isNodeOpen = true;
             }
         }
-        EDITOR_COLOR_POP(1);
         break;
     } 
     case EditorViewerType::HIERARCHY:

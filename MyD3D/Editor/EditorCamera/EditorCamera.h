@@ -5,6 +5,8 @@ class RendererComponent;
 class EditorCamera
 {
 public:
+    EditorCamera();
+public:
     void EditorUpdate();
     void EditorRender();
 public:

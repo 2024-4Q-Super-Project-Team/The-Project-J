@@ -6,6 +6,7 @@
 #include "Resource/Graphics/Texture/Texture.h"
 // Editor
 #include "Editor/EditorManager.h"
+
 MaterialResource* MaterialResource::DefaultMaterial;
 
 MaterialResource::MaterialResource(ResourceHandle _handle)

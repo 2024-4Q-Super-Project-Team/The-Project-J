@@ -12,6 +12,6 @@ namespace Editor
 	public:
 		virtual void Render() override;
 	public:
-		GuizmoManipulater* mManipulater = nullptr;
+		GuizmoManipulater*	mManipulater = nullptr;
 	};
 }

@@ -33,6 +33,13 @@ void D3DGraphicsRenderer::DrawCall(UINT _numIndex, UINT _startIndex, INT _baseVe
     else throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
 }
 
+void D3DGraphicsRenderer::DrawCall(IN UINT _numIndex, INT _baseVertex)
+{
+    if (mDeviceContext)
+        mDeviceContext->Draw(_numIndex, _baseVertex);
+    else throw std::runtime_error("NullReference Exeption : D3DGraphicsRenderer::mDeviceContext");
+}
+
 void D3DGraphicsRenderer::DrawVertexCall(IN UINT _vertexCount, IN UINT _startVertexLocation)
 {
     if (mDeviceContext)

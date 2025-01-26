@@ -14,6 +14,8 @@
     <FxCompile Include="resource\shader\Sprite_PS.hlsl" />
     <FxCompile Include="resource\shader\Sprite_VS.hlsl" />
     <FxCompile Include="resource\shader\Standard_VS.hlsl" />
+    <FxCompile Include="resource\shader\Grid_VS.hlsl" />
+    <FxCompile Include="resource\shader\Grid_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />

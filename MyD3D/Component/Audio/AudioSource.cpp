@@ -76,6 +76,10 @@ void AudioSource::EditorUpdate()
 	{
 		mActiveAudio = nullptr;
 	}
+}
+
+void AudioSource::EditorGlobalUpdate()
+{
 	for (auto& [key, handle] : mAudioTable)
 	{
 		gameObject->GetOwnerWorld()->

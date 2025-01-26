@@ -26,6 +26,7 @@ public:
     virtual void PostRender() override;
     // Editor Only
     virtual void EditorUpdate() override;
+    virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
     void SetAnimation(ResourceHandle _handle);

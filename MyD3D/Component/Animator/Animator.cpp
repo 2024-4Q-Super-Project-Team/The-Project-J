@@ -71,11 +71,12 @@ void Animator::PostRender()
 void Animator::EditorUpdate()
 {
     mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
-    if (mActiveAnimation)
-    {
-        gameObject->GetOwnerWorld()->
-            mNeedResourceHandleTable.insert(mAnimationHandle.GetParentkey());
-    }
+}
+
+void Animator::EditorGlobalUpdate()
+{
+    gameObject->GetOwnerWorld()->
+        mNeedResourceHandleTable.insert(mAnimationHandle.GetParentkey());
 }
 
 void Animator::EditorRender()

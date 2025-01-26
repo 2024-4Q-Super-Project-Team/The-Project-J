@@ -2,7 +2,7 @@
     {
         "material": {
             "ambient map handle": {
-                "id": 354,
+                "id": 297,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -10,7 +10,7 @@
                 "type": 8
             },
             "ambientocclusion map handle": {
-                "id": 360,
+                "id": 303,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -19,7 +19,7 @@
             },
             "blend type": 0,
             "diffuse map handle": {
-                "id": 352,
+                "id": 295,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -27,7 +27,7 @@
                 "type": 8
             },
             "emissive map handle": {
-                "id": 355,
+                "id": 298,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -35,7 +35,7 @@
                 "type": 8
             },
             "metalness map handle": {
-                "id": 359,
+                "id": 302,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -43,7 +43,7 @@
                 "type": 8
             },
             "normal map handle": {
-                "id": 356,
+                "id": 299,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -51,7 +51,7 @@
                 "type": 8
             },
             "opacity map handle": {
-                "id": 358,
+                "id": 301,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -82,7 +82,7 @@
                 ]
             },
             "roughness map handle": {
-                "id": 357,
+                "id": 300,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -91,7 +91,7 @@
             },
             "rs type": 1,
             "specular map handle": {
-                "id": 353,
+                "id": 296,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -104,7 +104,7 @@
     {
         "material": {
             "ambient map handle": {
-                "id": 363,
+                "id": 306,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -112,7 +112,7 @@
                 "type": 8
             },
             "ambientocclusion map handle": {
-                "id": 369,
+                "id": 312,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -121,7 +121,7 @@
             },
             "blend type": 0,
             "diffuse map handle": {
-                "id": 361,
+                "id": 304,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -129,7 +129,7 @@
                 "type": 8
             },
             "emissive map handle": {
-                "id": 364,
+                "id": 307,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -137,7 +137,7 @@
                 "type": 8
             },
             "metalness map handle": {
-                "id": 368,
+                "id": 311,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -145,7 +145,7 @@
                 "type": 8
             },
             "normal map handle": {
-                "id": 365,
+                "id": 308,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -153,7 +153,7 @@
                 "type": 8
             },
             "opacity map handle": {
-                "id": 367,
+                "id": 310,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -184,7 +184,7 @@
                 ]
             },
             "roughness map handle": {
-                "id": 366,
+                "id": 309,
                 "main key": "",
                 "parent": "",
                 "path": "",
@@ -193,7 +193,7 @@
             },
             "rs type": 1,
             "specular map handle": {
-                "id": 362,
+                "id": 305,
                 "main key": "",
                 "parent": "",
                 "path": "",

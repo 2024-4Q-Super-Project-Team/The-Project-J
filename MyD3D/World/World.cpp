@@ -179,7 +179,6 @@ void World::PostRender()
 
 void World::EditorUpdate()
 {
-    UpdateObject();
     for (Object* object : mObjectArray)
     {
         if (object->GetState() == EntityState::Active)
@@ -187,6 +186,15 @@ void World::EditorUpdate()
             if (object->transform->GetParent() == nullptr)
                 object->EditorUpdate();
         }
+    }
+}
+
+void World::EditorGlobalUpdate()
+{
+    for (Object* object : mObjectArray)
+    {
+        if (object->transform->GetParent() == nullptr)
+            object->EditorGlobalUpdate();
     }
 }
 

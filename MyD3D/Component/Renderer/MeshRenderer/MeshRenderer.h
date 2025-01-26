@@ -24,6 +24,7 @@ public:
     virtual void PostRender() override;
     // Editor Only
     virtual void EditorUpdate() override;
+    virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);

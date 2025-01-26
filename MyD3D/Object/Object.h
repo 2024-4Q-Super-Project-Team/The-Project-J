@@ -47,6 +47,7 @@ public:
     virtual void PostRender()	override;
 
     virtual void EditorUpdate()	override;
+    void EditorGlobalUpdate();
     virtual void EditorRender()	override;
 public:
     virtual void _CALLBACK OnEnable()  override;

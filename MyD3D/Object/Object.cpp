@@ -249,6 +249,26 @@ void Object::EditorUpdate()
         transform->UpdateMatrix();
 }
 
+void Object::EditorGlobalUpdate()
+{
+
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
+    {
+        for (auto& comp : mComponentArray[i])
+        {
+            comp->EditorGlobalUpdate();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorGlobalUpdate();
+        }
+    }
+}
+
 void Object::EditorRender()
 {
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)

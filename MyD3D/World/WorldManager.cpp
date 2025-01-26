@@ -5,7 +5,7 @@
 #include "Object/Object.h"
 
 WorldManager::WorldManager(ViewportScene* _pViewport)
-	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr)
+	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr), mStartWorld(nullptr)
 {
 }
 
@@ -18,8 +18,7 @@ WorldManager::~WorldManager()
 
 void WorldManager::Start()
 {
-	//UpdateResources();
-	mNextActiveWorld = mCurrActiveWorld;
+	mNextActiveWorld = mStartWorld;
 	mCurrActiveWorld = nullptr;
 	UpdateWorld();
 	if (mCurrActiveWorld) {
@@ -126,12 +125,24 @@ void WorldManager::PostRender()
 void WorldManager::EditorUpdate()
 {
 	UpdateWorld();
+	EditorGlobalUpdate();
 	// 에디터에서는 다른 월드 오브젝트도 삭제할 수 있으므로 다 돌아봐야한다.
 	for (auto& world : mWorldArray)
 	{
-		if(world == mCurrActiveWorld || world->IsPersistance())
-			world->mNeedResourceHandleTable.clear();
-		world->EditorUpdate();
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			world->EditorUpdate();
+		}
+	}
+}
+
+void WorldManager::EditorGlobalUpdate()
+{
+	for (auto& world : mWorldArray)
+	{
+		world->UpdateObject();
+		world->mNeedResourceHandleTable.clear();
+		world->EditorGlobalUpdate();
 	}
 }
 

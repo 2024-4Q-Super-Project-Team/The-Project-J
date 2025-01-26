@@ -24,6 +24,7 @@ public:
     virtual void PostRender() override;
     // Editor Only
     virtual void EditorUpdate() override;
+    virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
     void SetCurrentAudio(const std::wstring& _key);

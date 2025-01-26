@@ -66,16 +66,14 @@ void SkinnedMeshRenderer::EditorUpdate()
 {
     SetMesh(mMeshHandle);
     SetMaterial(mMaterialHandle);
-    if (mMesh)
-    {
-        gameObject->GetOwnerWorld()->
-            mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
-    }
-    if (mMaterial)
-    {
-        gameObject->GetOwnerWorld()->
-            mNeedResourceHandleTable.insert(mMaterialHandle.GetParentkey());
-    }
+}
+
+void SkinnedMeshRenderer::EditorGlobalUpdate()
+{
+    gameObject->GetOwnerWorld()->
+        mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
+    gameObject->GetOwnerWorld()->
+        mNeedResourceHandleTable.insert(mMaterialHandle.GetParentkey());
 }
 
 void SkinnedMeshRenderer::EditorRender()

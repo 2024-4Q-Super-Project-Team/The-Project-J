@@ -26,6 +26,7 @@ public:
 	virtual void PostRender() override;
 
 	virtual void EditorUpdate()	override;
+	void		 EditorGlobalUpdate();
 	virtual void EditorRender()	override;
 public:
 	// 월드의 생성, 삭제, 전환을 해준다.

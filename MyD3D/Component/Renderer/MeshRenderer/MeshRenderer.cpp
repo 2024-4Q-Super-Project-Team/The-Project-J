@@ -21,7 +21,6 @@ MeshRenderer::MeshRenderer(Object* _owner)
 
 MeshRenderer::~MeshRenderer()
 {
-    SAFE_DELETE(mMateiral)
 }
 
 void MeshRenderer::Start()
@@ -225,7 +224,7 @@ eRasterizerStateType MeshRenderer::GetCullingMode()
 json MeshRenderer::Serialize()
 {
     json ret;
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["name"] = "MeshRenderer";
     ret["mesh handle"] = mMeshHandle.Serialize();
     ret["material handle"] = mMaterialHandle.Serialize();
@@ -242,6 +241,8 @@ json MeshRenderer::Serialize()
     mprop["ao"] = mMatCBuffer.MatProp.AmbienOcclusionScale;
 
     ret["property"] = mprop;
+
+    ret["use map"] = mMatCBuffer.UseMapFlag;
 
     return ret;
 }
@@ -268,6 +269,8 @@ void MeshRenderer::Deserialize(json& j)
     mMatCBuffer.MatProp.RoughnessScale = mProp["roughness"].get<float>();
     mMatCBuffer.MatProp.MetallicScale = mProp["metallic"].get<float>();
     mMatCBuffer.MatProp.AmbienOcclusionScale = mProp["ao"].get<float>();
+
+    mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
 }
 
 

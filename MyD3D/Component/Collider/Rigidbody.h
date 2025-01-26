@@ -26,6 +26,8 @@ public:
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
 
 public:
+    void SetMaterial(std::string _name); 
+
     void SetMass(float mass);
     void SetIsKinematic(bool b);
     void SetDisableGravity(bool b);
@@ -39,10 +41,12 @@ private:
     bool mIsKinematic = false;
     bool mDisableGravity = false;
     float mMass = 1.f;
+    int mMaterialIdx = 0;
 
     bool mFreezePosition[3];
     bool mFreezeRotation[3];
-
+    
+    std::vector<std::string> mMaterials;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

@@ -5,7 +5,6 @@
 #include "World/WorldManager.h"
 #include "Editor/EditorManager.h"
 #include "ViewportScene/ViewportScene.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 #include "World/World.h"
 #include "Resource/Prefab/Prefab.h"
@@ -20,36 +19,28 @@ MonoBehaviour::MonoBehaviour(Object* _owner, const std::string& _eid)
 Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _tag)
 {
     World* curWorld = GameManager::GetCurrentWorld();
-	const std::vector<ObjectGroup*>& objectGroups = curWorld->GetObjectGroups();
-	for (auto group : objectGroups)
+	auto& objects = curWorld->GetObjectArray();
+	auto itr = FIND_CONTAINER(objects,
+		[&](Object* _obj) {
+			return (_obj->GetName() == _name.data() && _obj->GetTag() == _tag.data());
+		});
+	if (FIND_SUCCESS(itr, objects))
 	{
-		const std::list<Object*>& objects = group->GetObjects();
-		auto itr = FIND_CONTAINER(objects,
-			[&](Object* _obj) {
-				return (_obj->GetName() == _name.data() && _obj->GetTag() == _tag.data());
-			});
-		if (FIND_SUCCESS(itr, objects))
-		{
-			return (*itr);
-		}
+		return (*itr);
 	}
 	return nullptr;
 }
 Object* MonoBehaviour::FindObjectWithName(std::wstring_view _name)
 {
     World* curWorld = GameManager::GetCurrentWorld();
-	const std::vector<ObjectGroup*>& objectGroups = curWorld->GetObjectGroups();
-	for (auto group : objectGroups)
+	auto& objects = curWorld->GetObjectArray();
+	auto itr = FIND_CONTAINER(objects,
+		[&](Object* _obj) {
+			return (_obj->GetName() == _name.data());
+		});
+	if (FIND_SUCCESS(itr, objects))
 	{
-		const std::list<Object*>& objects = group->GetObjects();
-		auto itr = FIND_CONTAINER(objects,
-			[&](Object* _obj) {
-				return (_obj->GetName() == _name.data());
-			});
-		if (FIND_SUCCESS(itr, objects))
-		{
-			return (*itr);
-		}
+		return (*itr);
 	}
 	return nullptr;
 }
@@ -57,15 +48,11 @@ std::vector<Object*> MonoBehaviour::FindObjectsWithTag(std::wstring_view _tag)
 {
 	std::vector<Object*> tempArr;
     World* curWorld = GameManager::GetCurrentWorld();
-	const std::vector<ObjectGroup*>& objectGroups = curWorld->GetObjectGroups();
-	for (auto& group : objectGroups)
+	auto& objects = curWorld->GetObjectArray();
+	for (auto& object : objects)
 	{
-		const std::list<Object*>& objects = group->GetObjects();
-		for (auto& object : objects)
-		{
-			if (object->GetTag() == _tag.data())
-				tempArr.push_back(object);
-		}
+		if (object->GetTag() == _tag.data())
+			tempArr.push_back(object);
 	}
 	return tempArr;
 }
@@ -73,15 +60,11 @@ std::vector<Object*> MonoBehaviour::FindObjectsWithName(std::wstring_view _name)
 {
 	std::vector<Object*> tempArr;
     World* curWorld = GameManager::GetCurrentWorld();
-	const std::vector<ObjectGroup*>& objectGroups = curWorld->GetObjectGroups();
-	for (auto group : objectGroups)
+	auto& objects = curWorld->GetObjectArray();
+	for (auto& object : objects)
 	{
-		const std::list<Object*>& objects = group->GetObjects();
-		for (auto& object : objects)
-		{
-			if (object->GetName() == _name.data())
-				tempArr.push_back(object);
-		}
+		if (object->GetName() == _name.data())
+			tempArr.push_back(object);
 	}
 	return tempArr;
 }
@@ -90,38 +73,33 @@ Object* MonoBehaviour::Instantiate(PrefabResource* _pInstant)
 {
     if (_pInstant)
     {
-        std::list<Object*>                          cloneArray;
-        std::unordered_map<std::wstring, Object*>   cloneTable;
+		World* curWorld = GameManager::GetCurrentWorld();
+        std::list<Object*>	cloneArray;
+        std::unordered_map<std::wstring, Object*>	cloneTable;
 
         cloneTable.reserve(_pInstant->mObjectTable.size());
 
-        World*          curWorld = GameManager::GetCurrentWorld();
-        ObjectGroup*    destGroup = curWorld->GetObjectGroup(_pInstant->mGroupName);
+		if (curWorld)
+		{
+			for (auto itr = _pInstant->mObjectList.begin(); itr != _pInstant->mObjectList.end(); ++itr)
+			{
+				Object* clone = curWorld->CreateObject((*itr)->GetName(), (*itr)->GetTag());
+				cloneTable[clone->GetName()] = clone;
+				cloneArray.push_back(clone);
+			}
 
-        /// 그룹이 없으면 만든다.
-        if (destGroup == nullptr)
-        {
-            destGroup = curWorld->CreateObjectGroup(_pInstant->mGroupName);
-        }
+			auto clone = cloneArray.begin();
+			auto PrefabResource = _pInstant->mObjectList.begin();
 
-        for (auto itr = _pInstant->mObjectList.begin(); itr != _pInstant->mObjectList.end(); ++itr)
-        {
-            Object* clone = destGroup->CreateObject((*itr)->GetName(), (*itr)->GetTag());
-            cloneTable[clone->GetName()] = clone;
-            cloneArray.push_back(clone);
-        }
-
-        auto clone = cloneArray.begin();
-        auto PrefabResource = _pInstant->mObjectList.begin();
-
-        // 만들어둔 오브젝트 Clone(컴포넌트)
-        while (clone != cloneArray.end())
-        {
-            (*PrefabResource)->Clone((*clone), cloneTable);
-            clone++;
-            PrefabResource++;
-        }
-        return cloneArray.front();
+			// 만들어둔 오브젝트 Clone(컴포넌트)
+			while (clone != cloneArray.end())
+			{
+				(*PrefabResource)->Clone((*clone), cloneTable);
+				clone++;
+				PrefabResource++;
+			}
+			return cloneArray.front();
+		}
     }
     return nullptr;
 }
@@ -138,8 +116,12 @@ Object* MonoBehaviour::Instantiate(PrefabResource* _pInstant, Vector3 _position)
 
 Object* MonoBehaviour::CreateObject(std::wstring_view _name, std::wstring_view _tag)
 {
-    ObjectGroup* pObjectGroup = gameObject->GetOwnerObjectGroup();
-	return pObjectGroup->CreateObject(_name, _tag);
+	World* curWorld = GameManager::GetCurrentWorld();
+	if (curWorld)
+	{
+		return curWorld->CreateObject(_name, _tag);
+	}
+	return nullptr;
 }
 
 void MonoBehaviour::Destroy(Object* _object)

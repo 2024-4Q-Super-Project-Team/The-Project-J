@@ -4,7 +4,6 @@
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 #include "World/WorldManager.h"
-#include "ObjectGroup/ObjectGroup.h"
 
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
@@ -20,7 +19,7 @@ Rigidbody::~Rigidbody()
 {
 	if (mRigidActor)
 	{
-		gameObject->GetOwnerObjectGroup()->GetWorld()->RemovePxActor(mRigidActor);
+		gameObject->GetOwnerWorld()->RemovePxActor(mRigidActor);
 		mRigidActor->release();
 	}
 	
@@ -40,10 +39,16 @@ void Rigidbody::Start()
 	}
 	mRigidActor->userData = gameObject;
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
-	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
+	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
 	SetMass(mMass);
 	SetIsKinematic(mIsKinematic);
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 void Rigidbody::Tick()
@@ -134,6 +139,18 @@ void Rigidbody::EditorRender()
 {
 }
 
+void Rigidbody::SetMaterial(std::string _name)
+{
+	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
+
+	PxShape* pxShapes[30];
+	int size = mRigidActor->getShapes(pxShapes, 30);
+	for (int i = 0; i < size; i++)
+	{
+		pxShapes[i]->setMaterials(&material, 1);
+	}
+}
+
 void Rigidbody::SetMass(float mass)
 {
 	if (!mRigidActor || !mIsDynamic) return;
@@ -191,6 +208,17 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 
 	ImGui::Text("isDynamic: "); ImGui::SameLine;
 	ImGui::Checkbox(("##isDynamic" + uid).c_str(), (bool*)&mIsDynamic);
+
+	std::vector<const char*> ccharMaterial;
+	for (auto& mat : mMaterials)
+	{
+		ccharMaterial.push_back(mat.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mMaterialIdx, ccharMaterial.data(), static_cast<int>(ccharMaterial.size())))
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+	}
 
 	if(mIsDynamic)
 	{

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Object.h"
-#include "ObjectGroup/ObjectGroup.h"
+#include "World/World.h"
 #include "ViewportScene/ViewportManager.h"
 #include "ViewportScene/ViewportScene.h"
 #include "Editor/CumstomWidget/TabItem/Viewer/InspectorViewer/EditorInspectorViewer.h"
@@ -8,7 +8,6 @@
 Object::Object(std::wstring_view _name, std::wstring_view _tag)
     : Engine::Entity(_name, _tag)
     , transform(new Transform(this))
-    , mOwnerGroup(nullptr)
 {
     mComponentArray[static_cast<UINT>(eComponentType::Transform)].push_back(transform);
 }
@@ -19,12 +18,15 @@ Object::~Object()
     {
         SAFE_DELETE_VECTOR(compArr);
     }
+    if (Editor::InspectorViewer::IsFocusObject(this))
+        Editor::InspectorViewer::SetFocusObject(nullptr);
+    if (Editor::GuizmoManipulater::IsFocusObject(this))
+        Editor::GuizmoManipulater::SetFocusObjedct(nullptr);
 }
 
 Object::Object(const Object& _other)
     : Engine::Entity(_other.mName, _other.mTag)
     , transform(new Transform(this))
-    , mOwnerGroup(_other.mOwnerGroup)
 {
     mComponentArray[static_cast<UINT>(eComponentType::Transform)][0] = transform;
 }
@@ -332,6 +334,18 @@ std::vector<Component*> Object::GetAllComponents()
     return ret;
 }
 
+void Object::SetWorld(World* _world)
+{
+    if (_world)
+    {
+        if (mOwnerWorld != _world)
+        {
+            _world->ShiftObject(this);
+            mOwnerWorld = _world;
+        }
+    }
+}
+
 json Object::Serialize()
 {
     json ret;
@@ -377,10 +391,58 @@ void Object::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
     std::string name = Helper::ToString(GetName());
+
     switch (_viewerType)
     {
     case EditorViewerType::DEFAULT:
+    {
+        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        bool isSelected = false;
+        if (Editor::InspectorViewer::IsFocusObject(this))
+        {
+            isSelected = true;
+        }
+        std::string symbol = "::: ";
+        if (transform->GetChildren().empty() == false)
+        {
+            symbol = isNodeOpen ? "+ " : "- ";
+        }
+        std::string widgetID = symbol + name + uid;
+        if (ImGui::Selectable((widgetID).c_str(), isSelected, flags))
+        {
+            if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+            {
+                Editor::InspectorViewer::SetFocusObject(this);
+                Editor::GuizmoManipulater::SetFocusObjedct(this);
+            }
+            if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+            {
+                isNodeOpen = isNodeOpen == true ? false : true;
+            }
+        }
+        /////////////////////////////////////////////////////////////////
+        // Drag&Drop
+        /////////////////////////////////////////////////////////////////
+        EditorItemState state;
+        state.mObjectPtr = this;
+        state.mName = name;
+        EditorDragNDrop::SendDragAndDropData((widgetID).c_str(), state);
+
+        Object* receiveObject = nullptr;
+        if (EditorDragNDrop::ReceiveDragAndDropObjectData((widgetID).c_str(), &receiveObject))
+        {
+            // 자기자신이 아니거나 대상 오브젝트가 내 자식에 속해있지 않는 경우
+            if (receiveObject != this && 
+                transform->IsBelong(receiveObject->transform) == false)
+            {
+                receiveObject->transform->SetParent(transform);
+                isNodeOpen = true;
+            }
+        }
+        EDITOR_COLOR_POP(1);
         break;
+    } 
     case EditorViewerType::HIERARCHY:
         break;
     case EditorViewerType::INSPECTOR:
@@ -435,7 +497,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                     // 팝업 메뉴
                     if (ImGui::BeginPopup("Component Config"))
                     {
-                        if (ImGui::Button("Remove Component", ImVec2(200,50)))
+                        if (ImGui::Button("Remove Component", ImVec2(100,50)))
                         {
                             delete component;
                             itr = componentVec.erase(itr);
@@ -446,13 +508,11 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                         }
                         ImGui::EndPopup();
                     }
-
                     if (isTreeOpen)
                     {
-                        component->EditorRendering(EditorViewerType::DEFAULT);
+                        component->EditorRendering(EditorViewerType::INSPECTOR);
                         ImGui::TreePop();
                     }
-                   
                     ++itr;
                 }
             }

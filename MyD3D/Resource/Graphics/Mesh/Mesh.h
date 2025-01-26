@@ -34,9 +34,9 @@ public:
     static MeshResource* CubeMesh;
     static MeshResource* PlainMesh;
 public:
-    static void InitSkyCubeMesh();
-    static void InitCubeMesh();
-    static void InitPlainMesh();
+    static MeshResource* GetSkyCubeMesh();
+    static MeshResource* GetCubeMesh();
+    static MeshResource* GetPlainMesh();
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

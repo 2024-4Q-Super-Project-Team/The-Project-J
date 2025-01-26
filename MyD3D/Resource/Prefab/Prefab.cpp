@@ -9,7 +9,6 @@
 #include "ViewportScene/ViewportScene.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
-#include "ObjectGroup/ObjectGroup.h"
 
 PrefabResource::PrefabResource(ResourceHandle _handle)
     : Resource(_handle)
@@ -25,9 +24,15 @@ PrefabResource::PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel
     SetEID("Prefab : " + Helper::ToString(_handle.GetKey()));
     Object* mainObject = new Object(GetKey(), L"");
     AddObject(mainObject);
-    ModelNode* rootNode = _pModel->mRootNode;
-    AddObjectFromNode(mainObject, rootNode);
-    SetComponent(mainObject, _pModel);
+    if (_pModel)
+    {
+        ModelNode* rootNode = _pModel->mRootNode;
+        if (rootNode)
+        {
+            AddObjectFromNode(mainObject, rootNode);
+            SetComponent(mainObject, _pModel);
+        }
+    }
 }
 
 PrefabResource::~PrefabResource()
@@ -73,14 +78,11 @@ Object* PrefabResource::GetObjectFromName(const std::wstring& _name)
     }
 }
 
-void PrefabResource::SetGroupName(const std::wstring& _groupName)
+Object* PrefabResource::Instantiate(World* _dstWorld)
 {
-    mGroupName = _groupName;
-}
-
-Object* PrefabResource::InstantiateFromGroup(ObjectGroup* _group)
-{
-    if (_group)
+    World* dstWorld = _dstWorld == nullptr ? GameManager::GetCurrentWorld() : _dstWorld;
+   
+    if (dstWorld)
     {
         std::list<Object*>                          cloneArray;
         std::unordered_map<std::wstring, Object*>   cloneTable;
@@ -89,7 +91,7 @@ Object* PrefabResource::InstantiateFromGroup(ObjectGroup* _group)
 
         for (auto itr = mObjectList.begin(); itr != mObjectList.end(); ++itr)
         {
-            Object* clone = _group->CreateObject((*itr)->GetName(), (*itr)->GetTag());
+            Object* clone = dstWorld->CreateObject((*itr)->GetName(), (*itr)->GetTag());
             cloneTable[clone->GetName()] = clone;
             cloneArray.push_back(clone);
         }
@@ -202,48 +204,9 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
             ImVec2 buttonSize = ImVec2(120, 30); // 버튼 크기 
             if (ImGui::Button(("Clone" + uid).c_str(), buttonSize))
             {
-                ImGui::OpenPopup("Clone Prefab"); // 버튼 클릭 시 팝업 열기
-            }
-            if (ImGui::BeginPopup("Clone Prefab"))
-            {
-                if (EditorManager::mFocusViewport &&
-                    EditorManager::mFocusViewport->GetWorldManager() &&
-                    EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld())
-                {
-                    World* world = EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld();
-                    auto& groups = world->GetObjectGroups();
-                    if (groups.empty() != true)
-                    {
-                        std::vector<std::string> strComboList;
-                        std::vector<const char*> tCharComboList;
-                        for (auto& group : groups)
-                        {
-                            strComboList.push_back(Helper::ToString(group->GetName()));
-                            tCharComboList.push_back(strComboList.back().c_str());
-                        }
-                        static int GroupIndex = 0; // 선택된 리소스 타입 (인덱스)
-                        ImGui::Text("Object Group : ");
-                        ImGui::Combo((uid + "Clone Target Group").c_str(), &GroupIndex, tCharComboList.data(), tCharComboList.size());
-                        ImGui::Separator();
-                        buttonSize = ImVec2(70, 20); // 버튼 크기 
-                        if (ImGui::Button(("OK" + uid).c_str(), buttonSize))
-                        {
-                            InstantiateFromGroup(groups[GroupIndex]);
-                            GroupIndex = 0;
-                        }
-                        ImGui::SameLine();
-                        if (ImGui::Button(("NO" + uid).c_str(), buttonSize))
-                        {
-                            GroupIndex = 0;
-                            ImGui::CloseCurrentPopup();
-                        }
-                        // 팝업 내에서 마우스 오른쪽 클릭 시 팝업 닫기
-                        if (ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-                            ImGui::CloseCurrentPopup();
-                        }
-                    }
-                }
-                ImGui::EndPopup();
+                Instantiate(
+                    EditorManager::mFocusViewport->GetWorldManager()->GetActiveWorld()
+                );
             }
         }
         break;
@@ -251,11 +214,5 @@ void PrefabResource::EditorRendering(EditorViewerType _viewerType)
     default:
         break;
     }
-
-
-
-
-
-
 }
 

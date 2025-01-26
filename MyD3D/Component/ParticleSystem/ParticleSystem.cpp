@@ -2,7 +2,6 @@
 #include "ParticleSystem.h"
 #include "Physics/PhysicsManager.h"
 #include "World/World.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Graphics/GraphicsManager.h"
 #include "Resource/Graphics/Texture/Texture.h"
 
@@ -24,7 +23,7 @@ ParticleSystem::ParticleSystem(Object* _owner)
 	mParticleBuffer = GameManager::GetPhysicsManager()->GetPhysics()
 		->createParticleBuffer(maxParticleCount, 10, GameManager::GetPhysicsManager()->GetCudaManager());
 
-	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mParticleSystem);
+	gameObject->GetOwnerWorld()->AddPxActor(mParticleSystem);
 
 	//초기 설정 
 	SetMaterial();

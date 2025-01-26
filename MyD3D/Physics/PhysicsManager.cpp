@@ -21,7 +21,8 @@ void PhysicsManager::Initialize()
     if (!mPhysics)
         assert(mFoundation, "PxCreatePhysics failed");
 
-    mDefaultMaterial = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
+    mMaterials["Default"] = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
+    mMaterials[u8"¾óÀ½"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
 
    //PxCudaContextManagerDesc cudaContextManagerDesc;
    //mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
@@ -30,9 +31,17 @@ void PhysicsManager::Initialize()
 
 void PhysicsManager::Finalization()
 {
-    mDefaultMaterial->release();
+    for (auto& m : mMaterials)
+        m.second->release();
     mPhysics->release(); 
     mPvd->release();
     mFoundation->release();
     //mCudaContextManager->release();
+}
+
+PxMaterial* PhysicsManager::CreateMaterial(std::string name, float staticFriction, float dynamicFriction, float restituion)
+{
+    PxMaterial* newMat = mPhysics->createMaterial(staticFriction, dynamicFriction, restituion);
+    mMaterials[name] = newMat;
+    return newMat;
 }

@@ -2,6 +2,7 @@
 #include "EditorWorldRemover.h"
 #include "Editor/EditorManager.h"
 #include "World/WorldManager.h"
+#include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 
 Editor::WorldRemover::WorldRemover()
@@ -20,9 +21,9 @@ void Editor::WorldRemover::Render()
     {
         auto pFocusWorldManager = EditorManager::GetHierarchyViewer()->GetFocusWorldManager();
         auto pWorldContainer = pFocusWorldManager->GetWorlds();
-        for (auto& [name, world] : pWorldContainer)
+        for (auto& world : pWorldContainer)
         {
-            std::string worldName = Helper::ToString(name);
+            std::string worldName = Helper::ToString(world->GetName());
             if (ImGui::MenuItem((worldName + uid).c_str()))
             {
                 // 메시지 박스 표시
@@ -36,7 +37,7 @@ void Editor::WorldRemover::Render()
                 // 사용자의 선택 결과 처리
                 if (result == IDYES)
                 {
-                    pFocusWorldManager->DestroyWorld(name);
+                    pFocusWorldManager->DestroyWorld(world->GetName());
                 }
             }
         }

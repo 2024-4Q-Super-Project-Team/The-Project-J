@@ -2,6 +2,7 @@
 #include "EditorWorldChanger.h"
 #include "Editor/EditorManager.h"
 #include "World/WorldManager.h"
+#include "World/World.h"
 
 namespace Editor
 {
@@ -21,9 +22,9 @@ namespace Editor
         {
             auto pFocusWorldManager = EditorManager::GetHierarchyViewer()->GetFocusWorldManager();
             auto pWorldContainer = pFocusWorldManager->GetWorlds();
-            for (auto& [name, world] : pWorldContainer)
+            for (auto& world : pWorldContainer)
             {
-                std::string worldName = Helper::ToString(name);
+                std::string worldName = Helper::ToString(world->GetName());
                 if (ImGui::MenuItem((worldName + uid).c_str()))
                 {
                     pFocusWorldManager->SetActiveWorld(world);

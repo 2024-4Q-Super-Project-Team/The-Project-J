@@ -213,81 +213,160 @@ void Transform::Deserialize(json& j)
 void Transform::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    switch (_viewerType)
     {
-        ImGui::Text("Position : ");
-        ImGui::DragFloat3((uid + "Position").c_str(), &position.x, 0.1f);
-    }
+    case EditorViewerType::DEFAULT:
     {
-        // 쿼터니언에서 오일러로
-        Vector3 Euler = GetEulerAngles();
-        Vector3 EulerDegrees;
-        EulerDegrees.x = DirectX::XMConvertToDegrees(Euler.x);
-        EulerDegrees.y = DirectX::XMConvertToDegrees(Euler.y);
-        EulerDegrees.z = DirectX::XMConvertToDegrees(Euler.z);
-        ImGui::Text("Rotation : ");
-        bool isTrigger = ImGui::DragFloat3((uid + "Rotation").c_str(), &EulerDegrees.x, 0.1f);
-        if (isTrigger)
+        std::string ownerName = Helper::ToString(gameObject->GetName());
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+        if (ImGui::Selectable((GetEID() + ownerName).c_str(), false, flags))
         {
-            Euler.x = DirectX::XMConvertToRadians(EulerDegrees.x);
-            Euler.y = DirectX::XMConvertToRadians(EulerDegrees.y);
-            Euler.z = DirectX::XMConvertToRadians(EulerDegrees.z);
+        }
+        //EditorItemState state;
+        //state.mComponentPtr = this;
+        //state.mName = GetEID() + ownerName;
+        //EditorDragNDrop::SendDragAndDropData(GetEID(), state);
+        EDITOR_COLOR_POP(1);
+        break;
+    }
+    case EditorViewerType::HIERARCHY:
+        break;
+    case EditorViewerType::INSPECTOR: 
+    {
+        //////////////////////////////////////////////////
+        // Position, Rotation, Scale
+        //////////////////////////////////////////////////
+        {
+            ImGui::Text("Position : ");
+            ImGui::DragFloat3((uid + "Position").c_str(), &position.x, 0.1f);
+        }
+        {
+            // 쿼터니언에서 오일러로
+            Vector3 Euler = GetEulerAngles();
+            Vector3 EulerDegrees;
+            EulerDegrees.x = DirectX::XMConvertToDegrees(Euler.x);
+            EulerDegrees.y = DirectX::XMConvertToDegrees(Euler.y);
+            EulerDegrees.z = DirectX::XMConvertToDegrees(Euler.z);
+            ImGui::Text("Rotation : ");
+            bool isTrigger = ImGui::DragFloat3((uid + "Rotation").c_str(), &EulerDegrees.x, 0.1f);
+            if (isTrigger)
+            {
+                Euler.x = DirectX::XMConvertToRadians(EulerDegrees.x);
+                Euler.y = DirectX::XMConvertToRadians(EulerDegrees.y);
+                Euler.z = DirectX::XMConvertToRadians(EulerDegrees.z);
 
-            // 라디안에서 쿼터니언으로
-            SetEulerAngles(Euler);
-        }
-    }
-    {
-        ImGui::Text("Scale : ");
-        ImGui::DragFloat3((uid + "Scale").c_str(), &scale.x, 0.1f);
-    }
-    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-    if (ImGui::TreeNodeEx(("Matrix" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
-    {
-        {
-            ImGui::Text("Local Matrix");
-            Matrix& m = mLocalMatrix;
-            {
-                ImGui::Text("%.3f", m._11); ImGui::SameLine();
-                ImGui::Text("%.3f", m._12); ImGui::SameLine();
-                ImGui::Text("%.3f", m._13); ImGui::SameLine();
-                ImGui::Text("%.3f", m._14);
-                ImGui::Text("%.3f", m._21); ImGui::SameLine();
-                ImGui::Text("%.3f", m._22); ImGui::SameLine();
-                ImGui::Text("%.3f", m._23); ImGui::SameLine();
-                ImGui::Text("%.3f", m._24);
-                ImGui::Text("%.3f", m._31); ImGui::SameLine();
-                ImGui::Text("%.3f", m._32); ImGui::SameLine();
-                ImGui::Text("%.3f", m._33); ImGui::SameLine();
-                ImGui::Text("%.3f", m._34);
-                ImGui::Text("%.3f", m._41); ImGui::SameLine();
-                ImGui::Text("%.3f", m._42); ImGui::SameLine();
-                ImGui::Text("%.3f", m._43); ImGui::SameLine();
-                ImGui::Text("%.3f", m._44);
+                // 라디안에서 쿼터니언으로
+                SetEulerAngles(Euler);
             }
         }
         {
-            ImGui::Text("Wolrd Matrix");
-            Matrix& m = mWorldMatrix;
-            {
-                ImGui::Text("%.3f", m._11); ImGui::SameLine();
-                ImGui::Text("%.3f", m._12); ImGui::SameLine();
-                ImGui::Text("%.3f", m._13); ImGui::SameLine();
-                ImGui::Text("%.3f", m._14);
-                ImGui::Text("%.3f", m._21); ImGui::SameLine();
-                ImGui::Text("%.3f", m._22); ImGui::SameLine();
-                ImGui::Text("%.3f", m._23); ImGui::SameLine();
-                ImGui::Text("%.3f", m._24);
-                ImGui::Text("%.3f", m._31); ImGui::SameLine();
-                ImGui::Text("%.3f", m._32); ImGui::SameLine();
-                ImGui::Text("%.3f", m._33); ImGui::SameLine();
-                ImGui::Text("%.3f", m._34);
-                ImGui::Text("%.3f", m._41); ImGui::SameLine();
-                ImGui::Text("%.3f", m._42); ImGui::SameLine();
-                ImGui::Text("%.3f", m._43); ImGui::SameLine();
-                ImGui::Text("%.3f", m._44);
-            }
+            ImGui::Text("Scale : ");
+            ImGui::DragFloat3((uid + "Scale").c_str(), &scale.x, 0.1f);
         }
-        ImGui::TreePop();
+        ImGui::Separator();
+        //////////////////////////////////////////////////
+        // Parent, Child
+        //////////////////////////////////////////////////
+        {
+            {
+                ImGui::Text("Parent : ");
+
+                std::string widgetID = "NULL Parent";
+                Object* receiveParent = nullptr;
+                if (GetParent())
+                {
+                    std::string widgetID = GetParent()->GetEID();
+                    GetParent()->EditorRendering(EditorViewerType::DEFAULT);
+                }
+                else
+                {
+                    ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+                    ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+                    EDITOR_COLOR_POP(1);
+                }
+                if (EditorDragNDrop::ReceiveDragAndDropObjectData(widgetID.c_str(), &receiveParent))
+                {
+                    // 자신과 다를때만 
+                    if (receiveParent != gameObject)
+                    {
+                        SetParent(receiveParent->transform);
+                    }
+                }
+            }
+            {
+                ImGui::Text("Child : ");
+                if (GetChildren().empty() == false)
+                {
+                    for (Transform* child : GetChildren())
+                    {
+                        child->EditorRendering(EditorViewerType::DEFAULT);
+                    }
+                }
+                else
+                {
+                    ImGui::Text("NULL Children");
+                }
+            }
+            
+        }
+        ImGui::Separator();
+        //////////////////////////////////////////////////
+        // Matrix
+        //////////////////////////////////////////////////
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Matrix" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            {
+                ImGui::Text("Local Matrix");
+                Matrix& m = mLocalMatrix;
+                {
+                    ImGui::Text("%.3f", m._11); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._12); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._13); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._14);
+                    ImGui::Text("%.3f", m._21); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._22); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._23); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._24);
+                    ImGui::Text("%.3f", m._31); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._32); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._33); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._34);
+                    ImGui::Text("%.3f", m._41); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._42); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._43); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._44);
+                }
+            }
+            {
+                ImGui::Text("Wolrd Matrix");
+                Matrix& m = mWorldMatrix;
+                {
+                    ImGui::Text("%.3f", m._11); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._12); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._13); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._14);
+                    ImGui::Text("%.3f", m._21); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._22); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._23); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._24);
+                    ImGui::Text("%.3f", m._31); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._32); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._33); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._34);
+                    ImGui::Text("%.3f", m._41); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._42); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._43); ImGui::SameLine();
+                    ImGui::Text("%.3f", m._44);
+                }
+            }
+            ImGui::TreePop();
+        }
+        EDITOR_COLOR_POP(1);
+        break;
     }
-    EDITOR_COLOR_POP(1);
+    default:
+        break;
+    }
 }

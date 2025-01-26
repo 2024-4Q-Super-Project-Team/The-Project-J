@@ -49,6 +49,11 @@ void EditorManager::Render()
         // 에디터 윈도우 렌더링
         EditorWindowRender();
     }
+    if (pCurrentViewport == mFocusViewport)
+    {
+        // 포커스 윈도우(게임 씬) 렌더링
+        FocusWindowRender();
+    }
 }
 
 void EditorManager::EditorRender()
@@ -95,7 +100,8 @@ void EditorManager::EditorWindowRender()
 void EditorManager::FocusWindowRender()
 {
     // 에디터 모드일때만 렌더링
-    if (GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+    //if (GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+    if(true)
     {
         if (mFocusViewport)
         {

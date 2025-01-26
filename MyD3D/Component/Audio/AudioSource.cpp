@@ -18,13 +18,10 @@ AudioSource::~AudioSource()
 
 void AudioSource::Start()
 {
-	if (mActiveAudio == nullptr)
+	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
+	if (itr)
 	{
-		auto itr = Helper::FindMap(mActiveKey, mAudioTable);
-		if (itr)
-		{
-			mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
-		}
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
 	}
 }
 
@@ -70,6 +67,15 @@ void AudioSource::PostRender()
 
 void AudioSource::EditorUpdate()
 {
+	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
+	if (itr)
+	{
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
+	}
+	else
+	{
+		mActiveAudio = nullptr;
+	}
 	for (auto& [key, handle] : mAudioTable)
 	{
 		gameObject->GetOwnerWorld()->

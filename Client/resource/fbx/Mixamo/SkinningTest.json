@@ -1,7 +1,63 @@
 [
     {
         "material": {
+            "ambient map handle": {
+                "id": 354,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "ambientocclusion map handle": {
+                "id": 360,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
             "blend type": 0,
+            "diffuse map handle": {
+                "id": 352,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "emissive map handle": {
+                "id": 355,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "metalness map handle": {
+                "id": 359,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "normal map handle": {
+                "id": 356,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "opacity map handle": {
+                "id": 358,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
             "property": {
                 "ambient": [
                     0.0,
@@ -25,13 +81,85 @@
                     1.0
                 ]
             },
-            "rs type": 1
+            "roughness map handle": {
+                "id": 357,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "rs type": 1,
+            "specular map handle": {
+                "id": 353,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            }
         },
         "name": "Beta_HighLimbsGeoSG3"
     },
     {
         "material": {
+            "ambient map handle": {
+                "id": 363,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "ambientocclusion map handle": {
+                "id": 369,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
             "blend type": 0,
+            "diffuse map handle": {
+                "id": 361,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "emissive map handle": {
+                "id": 364,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "metalness map handle": {
+                "id": 368,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "normal map handle": {
+                "id": 365,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "opacity map handle": {
+                "id": 367,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
             "property": {
                 "ambient": [
                     0.0,
@@ -55,7 +183,23 @@
                     1.0
                 ]
             },
-            "rs type": 1
+            "roughness map handle": {
+                "id": 366,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            },
+            "rs type": 1,
+            "specular map handle": {
+                "id": 362,
+                "main key": "",
+                "parent": "",
+                "path": "",
+                "sub key": "",
+                "type": 8
+            }
         },
         "name": "Beta_Joints_MAT1"
     }

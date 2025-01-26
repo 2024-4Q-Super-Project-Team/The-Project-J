@@ -1,6 +1,6 @@
 [
     {
-        "id": 386,
+        "id": 682,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -24,7 +24,7 @@
     {
         "far": 30000.0,
         "fov angle": 1.5707963705062866,
-        "id": 388,
+        "id": 684,
         "name": "Camera",
         "near": 1.0,
         "ortho height": 10.0,
@@ -32,7 +32,7 @@
         "type": 0
     },
     {
-        "id": 389,
+        "id": 685,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -55,7 +55,7 @@
     },
     {
         "camera dist": 0.0,
-        "id": 390,
+        "id": 686,
         "light far": 15000.0,
         "light near": 50.0,
         "name": "Light",
@@ -63,8 +63,8 @@
             "cutoff": 0.0010000000474974513,
             "direction": [
                 0.0,
-                -0.8432249426841736,
-                0.5375609397888184,
+                0.0,
+                1.0,
                 0.0
             ],
             "radiance": [
@@ -83,7 +83,7 @@
         "up dist": 3000.0
     },
     {
-        "id": 391,
+        "id": 687,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -105,9 +105,9 @@
         ]
     },
     {
-        "id": 392,
+        "id": 688,
         "name": "Transform",
-        "parent": 373,
+        "parent": 669,
         "position": [
             0.0,
             0.0,
@@ -127,9 +127,9 @@
         ]
     },
     {
-        "id": 393,
+        "id": 689,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1798.3768310546875,
             201.7759552001953,
@@ -149,9 +149,9 @@
         ]
     },
     {
-        "id": 394,
+        "id": 690,
         "material handle": {
-            "id": 396,
+            "id": 692,
             "main key": "Map_001.fbx_stone_02.001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_stone_02.001.json",
@@ -159,7 +159,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 395,
+            "id": 691,
             "main key": "Map_001.fbx_0.014_0",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_0.014_0.json",
@@ -193,9 +193,9 @@
         "use map": 33
     },
     {
-        "id": 397,
+        "id": 693,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1847.75244140625,
             201.99429321289063,
@@ -215,9 +215,9 @@
         ]
     },
     {
-        "id": 398,
+        "id": 694,
         "material handle": {
-            "id": 400,
+            "id": 696,
             "main key": "Map_001.fbx_stone_03.001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_stone_03.001.json",
@@ -225,7 +225,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 399,
+            "id": 695,
             "main key": "Map_001.fbx_0.015_1",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_0.015_1.json",
@@ -259,9 +259,9 @@
         "use map": 1
     },
     {
-        "id": 401,
+        "id": 697,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1575.478515625,
             194.44834899902344,
@@ -281,9 +281,9 @@
         ]
     },
     {
-        "id": 402,
+        "id": 698,
         "material handle": {
-            "id": 404,
+            "id": 700,
             "main key": "Map_001.fbx_stone_01.001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_stone_01.001.json",
@@ -291,7 +291,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 403,
+            "id": 699,
             "main key": "Map_001.fbx_0.016_2",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_0.016_2.json",
@@ -325,9 +325,9 @@
         "use map": 33
     },
     {
-        "id": 405,
+        "id": 701,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1287.2802734375,
             194.92811584472656,
@@ -347,9 +347,9 @@
         ]
     },
     {
-        "id": 406,
+        "id": 702,
         "material handle": {
-            "id": 408,
+            "id": 704,
             "main key": "Map_001.fbx_T_Grass_001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_T_Grass_001.json",
@@ -357,7 +357,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 407,
+            "id": 703,
             "main key": "Map_001.fbx_0.011_3",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_0.011_3.json",
@@ -391,9 +391,9 @@
         "use map": 64
     },
     {
-        "id": 409,
+        "id": 705,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1491.5286865234375,
             214.32020568847656,
@@ -413,9 +413,9 @@
         ]
     },
     {
-        "id": 410,
+        "id": 706,
         "material handle": {
-            "id": 412,
+            "id": 708,
             "main key": "Map_001.fbx_land_01",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_land_01.json",
@@ -423,7 +423,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 411,
+            "id": 707,
             "main key": "Map_001.fbx_Cube.002_4",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Cube.002_4.json",
@@ -457,9 +457,9 @@
         "use map": 1
     },
     {
-        "id": 413,
+        "id": 709,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             1123.15234375,
             90.07261657714844,
@@ -479,9 +479,9 @@
         ]
     },
     {
-        "id": 414,
+        "id": 710,
         "material handle": {
-            "id": 416,
+            "id": 712,
             "main key": "Map_001.fbx_M_Grass_001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_M_Grass_001.json",
@@ -489,7 +489,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 415,
+            "id": 711,
             "main key": "Map_001.fbx_Plane.019_5",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.019_5.json",
@@ -523,9 +523,9 @@
         "use map": 1
     },
     {
-        "id": 417,
+        "id": 713,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             2985.135498046875,
             0.0,
@@ -545,9 +545,9 @@
         ]
     },
     {
-        "id": 418,
+        "id": 714,
         "material handle": {
-            "id": 420,
+            "id": 716,
             "main key": "Map_001.fbx_M_Grass_001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_M_Grass_001.json",
@@ -555,7 +555,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 419,
+            "id": 715,
             "main key": "Map_001.fbx_Plane.017_5",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.017_5.json",
@@ -589,9 +589,9 @@
         "use map": 1
     },
     {
-        "id": 421,
+        "id": 717,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -1133.4658203125,
             -0.47281980514526367,
@@ -611,9 +611,9 @@
         ]
     },
     {
-        "id": 422,
+        "id": 718,
         "material handle": {
-            "id": 424,
+            "id": 720,
             "main key": "Map_001.fbx_land_01",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_land_01.json",
@@ -621,7 +621,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 423,
+            "id": 719,
             "main key": "Map_001.fbx_Plane.024_4",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.024_4.json",
@@ -655,9 +655,9 @@
         "use map": 1
     },
     {
-        "id": 425,
+        "id": 721,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -71.94461822509766,
             -47.72542953491211,
@@ -677,9 +677,9 @@
         ]
     },
     {
-        "id": 426,
+        "id": 722,
         "material handle": {
-            "id": 428,
+            "id": 724,
             "main key": "Map_001.fbx_land_01",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_land_01.json",
@@ -687,7 +687,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 427,
+            "id": 723,
             "main key": "Map_001.fbx_Plane.025_4",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.025_4.json",
@@ -721,9 +721,9 @@
         "use map": 1
     },
     {
-        "id": 429,
+        "id": 725,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             -688.4180297851563,
             96.86024475097656,
@@ -743,9 +743,9 @@
         ]
     },
     {
-        "id": 430,
+        "id": 726,
         "material handle": {
-            "id": 433,
+            "id": 729,
             "main key": "Map_001.fbx_land_01",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_land_01.json",
@@ -753,7 +753,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 432,
+            "id": 728,
             "main key": "Map_001.fbx_Plane.066_4",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.066_4.json",
@@ -787,9 +787,9 @@
         "use map": 1
     },
     {
-        "id": 431,
+        "id": 727,
         "material handle": {
-            "id": 435,
+            "id": 731,
             "main key": "Map_001.fbx_M_Grass_001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_M_Grass_001.json",
@@ -797,7 +797,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 434,
+            "id": 730,
             "main key": "Map_001.fbx_Plane.066_5",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.066_5.json",
@@ -831,9 +831,9 @@
         "use map": 1
     },
     {
-        "id": 436,
+        "id": 732,
         "name": "Transform",
-        "parent": 374,
+        "parent": 670,
         "position": [
             0.0,
             0.0,
@@ -853,9 +853,9 @@
         ]
     },
     {
-        "id": 437,
+        "id": 733,
         "material handle": {
-            "id": 439,
+            "id": 735,
             "main key": "Map_001.fbx_T_Grass_001",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_T_Grass_001.json",
@@ -863,7 +863,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 438,
+            "id": 734,
             "main key": "Map_001.fbx_Plane.040_3",
             "parent": "Map_001.fbx",
             "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx_Plane.040_3.json",
@@ -897,7 +897,7 @@
         "use map": 64
     },
     {
-        "id": 512,
+        "id": 808,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -921,7 +921,7 @@
     {
         "far": 30000.0,
         "fov angle": 1.5707963705062866,
-        "id": 514,
+        "id": 810,
         "name": "Camera",
         "near": 1.0,
         "ortho height": 10.0,
@@ -929,7 +929,7 @@
         "type": 0
     },
     {
-        "id": 515,
+        "id": 811,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -952,7 +952,7 @@
     },
     {
         "camera dist": 0.0,
-        "id": 516,
+        "id": 812,
         "light far": 15000.0,
         "light near": 50.0,
         "name": "Light",
@@ -980,7 +980,7 @@
         "up dist": 3000.0
     },
     {
-        "id": 517,
+        "id": 813,
         "name": "Transform",
         "parent": 9999999,
         "position": [
@@ -1002,9 +1002,9 @@
         ]
     },
     {
-        "id": 518,
+        "id": 814,
         "name": "Transform",
-        "parent": 443,
+        "parent": 739,
         "position": [
             0.0,
             0.0,
@@ -1024,9 +1024,9 @@
         ]
     },
     {
-        "id": 519,
+        "id": 815,
         "name": "Transform",
-        "parent": 444,
+        "parent": 740,
         "position": [
             -7.727290721959434e-06,
             104.27487182617188,
@@ -1046,9 +1046,9 @@
         ]
     },
     {
-        "id": 520,
+        "id": 816,
         "name": "Transform",
-        "parent": 445,
+        "parent": 741,
         "position": [
             -4.255830687860396e-10,
             10.1824369430542,
@@ -1068,9 +1068,9 @@
         ]
     },
     {
-        "id": 521,
+        "id": 817,
         "name": "Transform",
-        "parent": 446,
+        "parent": 742,
         "position": [
             -9.328540667176707e-21,
             10.00267505645752,
@@ -1090,9 +1090,9 @@
         ]
     },
     {
-        "id": 522,
+        "id": 818,
         "name": "Transform",
-        "parent": 447,
+        "parent": 743,
         "position": [
             1.137543140602602e-14,
             9.322091102600098,
@@ -1112,9 +1112,9 @@
         ]
     },
     {
-        "id": 523,
+        "id": 819,
         "name": "Transform",
-        "parent": 448,
+        "parent": 744,
         "position": [
             4.147488463779325e-10,
             16.86532211303711,
@@ -1134,9 +1134,9 @@
         ]
     },
     {
-        "id": 524,
+        "id": 820,
         "name": "Transform",
-        "parent": 449,
+        "parent": 745,
         "position": [
             -1.0756748025642082e-07,
             9.341923713684082,
@@ -1156,9 +1156,9 @@
         ]
     },
     {
-        "id": 525,
+        "id": 821,
         "name": "Transform",
-        "parent": 450,
+        "parent": 746,
         "position": [
             9.856973974819994e-07,
             20.96278190612793,
@@ -1178,9 +1178,9 @@
         ]
     },
     {
-        "id": 526,
+        "id": 822,
         "name": "Transform",
-        "parent": 448,
+        "parent": 744,
         "position": [
             -4.56997013092041,
             11.195844650268555,
@@ -1200,9 +1200,9 @@
         ]
     },
     {
-        "id": 527,
+        "id": 823,
         "name": "Transform",
-        "parent": 452,
+        "parent": 748,
         "position": [
             3.151008091806912e-15,
             10.838175773620605,
@@ -1222,9 +1222,9 @@
         ]
     },
     {
-        "id": 528,
+        "id": 824,
         "name": "Transform",
-        "parent": 453,
+        "parent": 749,
         "position": [
             -9.964063352185804e-09,
             27.84151840209961,
@@ -1244,9 +1244,9 @@
         ]
     },
     {
-        "id": 529,
+        "id": 825,
         "name": "Transform",
-        "parent": 454,
+        "parent": 750,
         "position": [
             2.285859955009073e-05,
             28.328838348388672,
@@ -1266,9 +1266,9 @@
         ]
     },
     {
-        "id": 530,
+        "id": 826,
         "name": "Transform",
-        "parent": 455,
+        "parent": 751,
         "position": [
             2.681851863861084,
             2.4648051261901855,
@@ -1288,9 +1288,9 @@
         ]
     },
     {
-        "id": 531,
+        "id": 827,
         "name": "Transform",
-        "parent": 456,
+        "parent": 752,
         "position": [
             -1.5692586390492896e-14,
             4.188985347747803,
@@ -1310,9 +1310,9 @@
         ]
     },
     {
-        "id": 532,
+        "id": 828,
         "name": "Transform",
-        "parent": 457,
+        "parent": 753,
         "position": [
             -1.8376710133531475e-14,
             3.416271209716797,
@@ -1332,9 +1332,9 @@
         ]
     },
     {
-        "id": 533,
+        "id": 829,
         "name": "Transform",
-        "parent": 458,
+        "parent": 754,
         "position": [
             -1.4209324973699262e-14,
             2.574977397918701,
@@ -1354,9 +1354,9 @@
         ]
     },
     {
-        "id": 534,
+        "id": 830,
         "name": "Transform",
-        "parent": 455,
+        "parent": 751,
         "position": [
             2.2598350048065186,
             9.108283042907715,
@@ -1376,9 +1376,9 @@
         ]
     },
     {
-        "id": 535,
+        "id": 831,
         "name": "Transform",
-        "parent": 460,
+        "parent": 756,
         "position": [
             -8.564062138486164e-15,
             3.700000047683716,
@@ -1398,9 +1398,9 @@
         ]
     },
     {
-        "id": 536,
+        "id": 832,
         "name": "Transform",
-        "parent": 461,
+        "parent": 757,
         "position": [
             -3.4287107658279026e-13,
             2.8499999046325684,
@@ -1420,9 +1420,9 @@
         ]
     },
     {
-        "id": 537,
+        "id": 833,
         "name": "Transform",
-        "parent": 462,
+        "parent": 758,
         "position": [
             7.906754135970917e-13,
             2.772190570831299,
@@ -1442,9 +1442,9 @@
         ]
     },
     {
-        "id": 538,
+        "id": 834,
         "name": "Transform",
-        "parent": 455,
+        "parent": 751,
         "position": [
             -2.3687323846388608e-05,
             9.532501220703125,
@@ -1464,9 +1464,9 @@
         ]
     },
     {
-        "id": 539,
+        "id": 835,
         "name": "Transform",
-        "parent": 464,
+        "parent": 760,
         "position": [
             -1.0026188389179909e-14,
             3.700000047683716,
@@ -1486,9 +1486,9 @@
         ]
     },
     {
-        "id": 540,
+        "id": 836,
         "name": "Transform",
-        "parent": 465,
+        "parent": 761,
         "position": [
             -2.5163898742519564e-13,
             2.950000047683716,
@@ -1508,9 +1508,9 @@
         ]
     },
     {
-        "id": 541,
+        "id": 837,
         "name": "Transform",
-        "parent": 466,
+        "parent": 762,
         "position": [
             1.1329193740907892e-13,
             2.9466288089752197,
@@ -1530,9 +1530,9 @@
         ]
     },
     {
-        "id": 542,
+        "id": 838,
         "name": "Transform",
-        "parent": 455,
+        "parent": 751,
         "position": [
             -1.8651331663131714,
             9.103591918945313,
@@ -1552,9 +1552,9 @@
         ]
     },
     {
-        "id": 543,
+        "id": 839,
         "name": "Transform",
-        "parent": 468,
+        "parent": 764,
         "position": [
             -5.1494656520649496e-15,
             3.379272937774658,
@@ -1574,9 +1574,9 @@
         ]
     },
     {
-        "id": 544,
+        "id": 840,
         "name": "Transform",
-        "parent": 469,
+        "parent": 765,
         "position": [
             2.6225075171366907e-13,
             2.8896846771240234,
@@ -1596,9 +1596,9 @@
         ]
     },
     {
-        "id": 545,
+        "id": 841,
         "name": "Transform",
-        "parent": 470,
+        "parent": 766,
         "position": [
             4.719501157067485e-13,
             2.6388156414031982,
@@ -1618,9 +1618,9 @@
         ]
     },
     {
-        "id": 546,
+        "id": 842,
         "name": "Transform",
-        "parent": 455,
+        "parent": 751,
         "position": [
             -3.8062775135040283,
             8.076676368713379,
@@ -1640,9 +1640,9 @@
         ]
     },
     {
-        "id": 547,
+        "id": 843,
         "name": "Transform",
-        "parent": 472,
+        "parent": 768,
         "position": [
             -1.071511755463151e-14,
             3.5999999046325684,
@@ -1662,9 +1662,9 @@
         ]
     },
     {
-        "id": 548,
+        "id": 844,
         "name": "Transform",
-        "parent": 473,
+        "parent": 769,
         "position": [
             -5.2800266329283696e-14,
             2.0999999046325684,
@@ -1684,9 +1684,9 @@
         ]
     },
     {
-        "id": 549,
+        "id": 845,
         "name": "Transform",
-        "parent": 474,
+        "parent": 770,
         "position": [
             1.295905657089369e-13,
             2.11578106880188,
@@ -1706,9 +1706,9 @@
         ]
     },
     {
-        "id": 550,
+        "id": 846,
         "name": "Transform",
-        "parent": 448,
+        "parent": 744,
         "position": [
             4.570446014404297,
             11.19564437866211,
@@ -1728,9 +1728,9 @@
         ]
     },
     {
-        "id": 551,
+        "id": 847,
         "name": "Transform",
-        "parent": 476,
+        "parent": 772,
         "position": [
             -2.6006848567451625e-15,
             10.837705612182617,
@@ -1750,9 +1750,9 @@
         ]
     },
     {
-        "id": 552,
+        "id": 848,
         "name": "Transform",
-        "parent": 477,
+        "parent": 773,
         "position": [
             9.038045682143673e-15,
             27.841522216796875,
@@ -1772,9 +1772,9 @@
         ]
     },
     {
-        "id": 553,
+        "id": 849,
         "name": "Transform",
-        "parent": 478,
+        "parent": 774,
         "position": [
             5.438735115603777e-06,
             28.328834533691406,
@@ -1794,9 +1794,9 @@
         ]
     },
     {
-        "id": 554,
+        "id": 850,
         "name": "Transform",
-        "parent": 479,
+        "parent": 775,
         "position": [
             -2.6817314624786377,
             2.4661448001861572,
@@ -1816,9 +1816,9 @@
         ]
     },
     {
-        "id": 555,
+        "id": 851,
         "name": "Transform",
-        "parent": 480,
+        "parent": 776,
         "position": [
             -8.920065004019463e-15,
             4.187094688415527,
@@ -1838,9 +1838,9 @@
         ]
     },
     {
-        "id": 556,
+        "id": 852,
         "name": "Transform",
-        "parent": 481,
+        "parent": 777,
         "position": [
             -1.28233482555131e-15,
             3.4183883666992188,
@@ -1860,9 +1860,9 @@
         ]
     },
     {
-        "id": 557,
+        "id": 853,
         "name": "Transform",
-        "parent": 482,
+        "parent": 778,
         "position": [
             1.646228184153109e-14,
             2.5805814266204834,
@@ -1882,9 +1882,9 @@
         ]
     },
     {
-        "id": 558,
+        "id": 854,
         "name": "Transform",
-        "parent": 479,
+        "parent": 775,
         "position": [
             -2.2598628997802734,
             9.109309196472168,
@@ -1904,9 +1904,9 @@
         ]
     },
     {
-        "id": 559,
+        "id": 855,
         "name": "Transform",
-        "parent": 484,
+        "parent": 780,
         "position": [
             -6.429325659102619e-15,
             3.700000047683716,
@@ -1926,9 +1926,9 @@
         ]
     },
     {
-        "id": 560,
+        "id": 856,
         "name": "Transform",
-        "parent": 485,
+        "parent": 781,
         "position": [
             -7.177584806887516e-13,
             2.8499999046325684,
@@ -1948,9 +1948,9 @@
         ]
     },
     {
-        "id": 561,
+        "id": 857,
         "name": "Transform",
-        "parent": 486,
+        "parent": 782,
         "position": [
             8.58972723678797e-13,
             2.7748656272888184,
@@ -1970,9 +1970,9 @@
         ]
     },
     {
-        "id": 562,
+        "id": 858,
         "name": "Transform",
-        "parent": 479,
+        "parent": 775,
         "position": [
             -3.66043605026789e-05,
             9.533401489257813,
@@ -1992,9 +1992,9 @@
         ]
     },
     {
-        "id": 563,
+        "id": 859,
         "name": "Transform",
-        "parent": 488,
+        "parent": 784,
         "position": [
             -1.8484327787062502e-15,
             3.700000047683716,
@@ -2014,9 +2014,9 @@
         ]
     },
     {
-        "id": 564,
+        "id": 860,
         "name": "Transform",
-        "parent": 489,
+        "parent": 785,
         "position": [
             -2.870734899795835e-12,
             2.950000047683716,
@@ -2036,9 +2036,9 @@
         ]
     },
     {
-        "id": 565,
+        "id": 861,
         "name": "Transform",
-        "parent": 490,
+        "parent": 786,
         "position": [
             -8.712009412492616e-12,
             2.9528634548187256,
@@ -2058,9 +2058,9 @@
         ]
     },
     {
-        "id": 566,
+        "id": 862,
         "name": "Transform",
-        "parent": 479,
+        "parent": 775,
         "position": [
             1.8650810718536377,
             9.104528427124023,
@@ -2080,9 +2080,9 @@
         ]
     },
     {
-        "id": 567,
+        "id": 863,
         "name": "Transform",
-        "parent": 492,
+        "parent": 788,
         "position": [
             -3.88070050608689e-15,
             3.1500000953674316,
@@ -2102,9 +2102,9 @@
         ]
     },
     {
-        "id": 568,
+        "id": 864,
         "name": "Transform",
-        "parent": 493,
+        "parent": 789,
         "position": [
             2.6432892354932847e-06,
             2.950000047683716,
@@ -2124,9 +2124,9 @@
         ]
     },
     {
-        "id": 569,
+        "id": 865,
         "name": "Transform",
-        "parent": 494,
+        "parent": 790,
         "position": [
             -2.327433139726054e-05,
             2.6443164348602295,
@@ -2146,9 +2146,9 @@
         ]
     },
     {
-        "id": 570,
+        "id": 866,
         "name": "Transform",
-        "parent": 479,
+        "parent": 775,
         "position": [
             3.8062632083892822,
             8.077778816223145,
@@ -2168,9 +2168,9 @@
         ]
     },
     {
-        "id": 571,
+        "id": 867,
         "name": "Transform",
-        "parent": 496,
+        "parent": 792,
         "position": [
             -3.894070497642826e-15,
             3.5999999046325684,
@@ -2190,9 +2190,9 @@
         ]
     },
     {
-        "id": 572,
+        "id": 868,
         "name": "Transform",
-        "parent": 497,
+        "parent": 793,
         "position": [
             2.4071784604680346e-13,
             2.1000001430511475,
@@ -2212,9 +2212,9 @@
         ]
     },
     {
-        "id": 573,
+        "id": 869,
         "name": "Transform",
-        "parent": 498,
+        "parent": 794,
         "position": [
             1.1037364598676103e-12,
             2.1255314350128174,
@@ -2234,9 +2234,9 @@
         ]
     },
     {
-        "id": 574,
+        "id": 870,
         "name": "Transform",
-        "parent": 445,
+        "parent": 741,
         "position": [
             -8.207789421081543,
             -6.771764278411865,
@@ -2256,9 +2256,9 @@
         ]
     },
     {
-        "id": 575,
+        "id": 871,
         "name": "Transform",
-        "parent": 500,
+        "parent": 796,
         "position": [
             6.19727558159866e-09,
             44.371463775634766,
@@ -2278,9 +2278,9 @@
         ]
     },
     {
-        "id": 576,
+        "id": 872,
         "name": "Transform",
-        "parent": 501,
+        "parent": 797,
         "position": [
             -5.538293379458992e-09,
             44.52781295776367,
@@ -2300,9 +2300,9 @@
         ]
     },
     {
-        "id": 577,
+        "id": 873,
         "name": "Transform",
-        "parent": 502,
+        "parent": 798,
         "position": [
             -1.2271307237634319e-15,
             13.816865921020508,
@@ -2322,9 +2322,9 @@
         ]
     },
     {
-        "id": 578,
+        "id": 874,
         "name": "Transform",
-        "parent": 503,
+        "parent": 799,
         "position": [
             -3.372542412320782e-16,
             9.278120994567871,
@@ -2344,9 +2344,9 @@
         ]
     },
     {
-        "id": 579,
+        "id": 875,
         "name": "Transform",
-        "parent": 445,
+        "parent": 741,
         "position": [
             8.207788467407227,
             -6.77180290222168,
@@ -2366,9 +2366,9 @@
         ]
     },
     {
-        "id": 580,
+        "id": 876,
         "name": "Transform",
-        "parent": 505,
+        "parent": 801,
         "position": [
             6.4682672551441556e-09,
             44.37139129638672,
@@ -2388,9 +2388,9 @@
         ]
     },
     {
-        "id": 581,
+        "id": 877,
         "name": "Transform",
-        "parent": 506,
+        "parent": 802,
         "position": [
             -5.547779569070599e-09,
             44.52784729003906,
@@ -2410,9 +2410,9 @@
         ]
     },
     {
-        "id": 582,
+        "id": 878,
         "name": "Transform",
-        "parent": 507,
+        "parent": 803,
         "position": [
             2.379745841574535e-15,
             13.816864967346191,
@@ -2432,9 +2432,9 @@
         ]
     },
     {
-        "id": 583,
+        "id": 879,
         "name": "Transform",
-        "parent": 508,
+        "parent": 804,
         "position": [
             -4.354517634240043e-17,
             9.27813720703125,
@@ -2454,9 +2454,9 @@
         ]
     },
     {
-        "id": 584,
+        "id": 880,
         "name": "Transform",
-        "parent": 444,
+        "parent": 740,
         "position": [
             0.0,
             0.0,
@@ -2476,9 +2476,9 @@
         ]
     },
     {
-        "id": 585,
+        "id": 881,
         "material handle": {
-            "id": 587,
+            "id": 883,
             "main key": "SkinningTest.fbx_Beta_HighLimbsGeoSG3",
             "parent": "SkinningTest.fbx",
             "path": "resource\\fbx\\Mixamo\\SkinningTest.fbx_Beta_HighLimbsGeoSG3.json",
@@ -2486,7 +2486,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 586,
+            "id": 882,
             "main key": "SkinningTest.fbx_Beta_Surface_0",
             "parent": "SkinningTest.fbx",
             "path": "resource\\fbx\\Mixamo\\SkinningTest.fbx_Beta_Surface_0.json",
@@ -2517,13 +2517,13 @@
                 1.0
             ]
         },
-        "root": 444,
+        "root": 740,
         "use map": 0
     },
     {
-        "id": 588,
+        "id": 884,
         "name": "Transform",
-        "parent": 444,
+        "parent": 740,
         "position": [
             0.0,
             0.0,
@@ -2543,9 +2543,9 @@
         ]
     },
     {
-        "id": 589,
+        "id": 885,
         "material handle": {
-            "id": 591,
+            "id": 887,
             "main key": "SkinningTest.fbx_Beta_Joints_MAT1",
             "parent": "SkinningTest.fbx",
             "path": "resource\\fbx\\Mixamo\\SkinningTest.fbx_Beta_Joints_MAT1.json",
@@ -2553,7 +2553,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 590,
+            "id": 886,
             "main key": "SkinningTest.fbx_Beta_Joints_1",
             "parent": "SkinningTest.fbx",
             "path": "resource\\fbx\\Mixamo\\SkinningTest.fbx_Beta_Joints_1.json",
@@ -2584,7 +2584,7 @@
                 1.0
             ]
         },
-        "root": 444,
+        "root": 740,
         "use map": 0
     }
 ]

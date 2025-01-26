@@ -19,11 +19,7 @@ Animator::~Animator()
 
 void Animator::Start()
 {
-    if (mActiveAnimation == nullptr)
-    {
-        mActiveAnimation
-            = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
-    }
+    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
 }
 
 void Animator::Tick()
@@ -74,6 +70,7 @@ void Animator::PostRender()
 
 void Animator::EditorUpdate()
 {
+    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
     if (mActiveAnimation)
     {
         gameObject->GetOwnerWorld()->

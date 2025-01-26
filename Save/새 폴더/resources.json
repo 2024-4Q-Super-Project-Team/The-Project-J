@@ -1,6 +1,6 @@
 [
     {
-        "id": 296,
+        "id": 592,
         "main key": "Map_001.fbx",
         "parent": "",
         "path": "..\\..\\..\\..\\Downloads\\testFBX\\Map_001.fbm\\Map_001.fbx",
@@ -8,7 +8,7 @@
         "type": 0
     },
     {
-        "id": 351,
+        "id": 647,
         "main key": "SkinningTest.fbx",
         "parent": "",
         "path": "resource\\fbx\\Mixamo\\SkinningTest.fbx",

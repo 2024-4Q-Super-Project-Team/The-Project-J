@@ -18,6 +18,10 @@ WorldManager::~WorldManager()
 
 void WorldManager::Start()
 {
+	//UpdateResources();
+	mNextActiveWorld = mCurrActiveWorld;
+	mCurrActiveWorld = nullptr;
+	UpdateWorld();
 	if (mCurrActiveWorld) {
 		mCurrActiveWorld->Start();
 	}

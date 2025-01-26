@@ -64,6 +64,8 @@ void SkinnedMeshRenderer::PostRender()
 
 void SkinnedMeshRenderer::EditorUpdate()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
     if (mMesh)
     {
         gameObject->GetOwnerWorld()->

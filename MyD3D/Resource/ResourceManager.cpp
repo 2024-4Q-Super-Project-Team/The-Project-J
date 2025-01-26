@@ -16,10 +16,6 @@ BOOL ResourceManager::Initialize()
 {
     FBXImporter::Initialize();
 
-    // 여기서 json을 읽어 mLoadResourceList에 핸들정보를 담는다.
-    // 그리고 로드한다.
-    LoadResources();
-
     MeshResource::GetSkyCubeMesh();
     MeshResource::GetCubeMesh();
     MeshResource::GetPlainMesh();
@@ -43,29 +39,12 @@ void ResourceManager::Reset()
         }
         table.clear();
     }
-    SkyBox::FreeDefaultSkyBox();
 }
 
 void ResourceManager::Reload()
 {
     Reset();    // 리셋
     Alloc_All_Resource(); // 전부 Alloc
-
-    std::ifstream audioFile(mSaveFilePath + "audios.json");
-    json audioJson;
-    if (audioFile.is_open())
-    {
-        audioFile >> audioJson;
-        audioFile.close();
-    }
-
-    for (json& j : audioJson)
-    {
-        std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
-        ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
-        auto audio = GetResource<AudioResource>(handle);
-        audio->Deserialize(j);
-    }
 }
 
 void ResourceManager::SaveResources()
@@ -109,6 +88,22 @@ void ResourceManager::LoadResources()
         ResourceHandle handle;
         handle.Deserialize(j);
         mLoadResourceList.insert(handle);
+    }
+
+    std::ifstream audioFile(mSaveFilePath + "audios.json");
+    json audioJson;
+    if (audioFile.is_open())
+    {
+        audioFile >> audioJson;
+        audioFile.close();
+    }
+
+    for (json& j : audioJson)
+    {
+        std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
+        ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
+        auto audio = GetResource<AudioResource>(handle);
+        audio->Deserialize(j);
     }
 
     Alloc_All_Resource();

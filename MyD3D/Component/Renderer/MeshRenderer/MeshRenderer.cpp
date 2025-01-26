@@ -61,6 +61,8 @@ void MeshRenderer::PostRender()
 
 void MeshRenderer::EditorUpdate()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
     if (mMesh)
     {
         gameObject->GetOwnerWorld()->

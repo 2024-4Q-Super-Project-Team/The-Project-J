@@ -282,6 +282,16 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
     return FALSE;
 }
 
+BOOL WorldManager::SetStartWorld(World* _pWorld)
+{
+	if (_pWorld)
+	{
+		mStartWorld = _pWorld;
+		return TRUE;
+	}
+	return FALSE;
+}
+
 World* WorldManager::FindWorld(const std::wstring _name)
 {
 	auto itr = FIND_CONTAINER(mWorldArray,

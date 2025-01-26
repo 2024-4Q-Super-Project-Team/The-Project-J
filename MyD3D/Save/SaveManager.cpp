@@ -23,7 +23,10 @@ void SaveManager::Save()
 
 		for (const auto& world : worlds)
 		{
-			worldsJson += world->Serialize();
+			worldsJson["worlds"] += world->Serialize();
+
+			World* startWorld = viewport->GetWorldManager()->GetStartWorld();
+			worldsJson["start"] = startWorld ? startWorld->GetId() : NULLID;
 
 			auto& ObjectArray = world->GetObjectArray();
 			for (const auto& object : ObjectArray)
@@ -84,13 +87,21 @@ void SaveManager::Load()
 			componentsFile.close();
 		}
 
-		for (auto& worldJson : worldsJson)
+		if (!worldsJson.contains("worlds")) continue;
+		for (auto& worldJson : worldsJson["worlds"])
 		{
 			//월드 생성 
 			std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
 			World* world = viewport->GetWorldManager()->CreateWorld(worldName, L"", true);
 			world->SetId(worldJson["id"].get<unsigned int>());
 			world->Deserialize(worldJson);
+		}
+
+		unsigned int startWorldId = worldsJson["start"].get<unsigned int>();
+		if (startWorldId != NULLID)
+		{
+			World* startWorld = static_cast<World*>(Engine::SaveBase::mMap[startWorldId]);
+			viewport->GetWorldManager()->SetStartWorld(startWorld);
 		}
 
 		for (auto& objectJson : objectsJson)

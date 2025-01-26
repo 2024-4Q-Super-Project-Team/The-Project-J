@@ -402,6 +402,9 @@
     <ClInclude Include="Editor\EditorCamera\EditorGridDrawer.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -774,6 +777,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorCamera\EditorGridDrawer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

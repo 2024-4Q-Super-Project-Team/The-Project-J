@@ -19,6 +19,17 @@ namespace Editor
     {
         if (mRefWorldManager)
         {
+            World* pStartWorld = mRefWorldManager->GetStartWorld();
+            ImGui::Text("Start World: "); ImGui::SameLine();
+            if (pStartWorld)
+            {
+                ImGui::Text(Helper::ToString(pStartWorld->GetName()).c_str());
+                ImGui::Separator();
+            }
+            else
+                ImGui::Text("null");
+
+
             World* pCurWorld = mRefWorldManager->GetActiveWorld();
             ImGui::Text("Focus World");
             RenderWorld(pCurWorld);

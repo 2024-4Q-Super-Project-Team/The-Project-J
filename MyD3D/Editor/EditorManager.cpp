@@ -313,6 +313,7 @@ void EditorManager::InitMainMenuBar()
         pMenu_02->AddMenuItem(new Editor::WorldChanger());
         pMenu_02->AddMenuItem(new Editor::WorldCreator());
         pMenu_02->AddMenuItem(new Editor::WorldRemover());
+        pMenu_02->AddMenuItem(new Editor::StartWorldSetter());
     }
     {
         Editor::MenuNode* pMenu_03 = new Editor::MenuNode("Option");

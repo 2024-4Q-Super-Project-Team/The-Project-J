@@ -36,14 +36,17 @@ public:
 	BOOL	DestroyWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(World* _pWorld);
+	BOOL    SetStartWorld(World* _pWorld);
 	World*	FindWorld(const std::wstring _name);
 public:
     auto						GetViewportScene() const { return mOwnerScene; }
 	inline World*				GetActiveWorld() { return mCurrActiveWorld; }
+	inline World*				GetStartWorld() { return mStartWorld; }
 	inline std::vector<World*>& GetWorlds() { return mWorldArray; }
 private:
     ViewportScene* const    mOwnerScene;
 	World*	                mCurrActiveWorld;
 	World*	                mNextActiveWorld;
+	World*	                mStartWorld;
 	std::vector<World*>     mWorldArray;
 };

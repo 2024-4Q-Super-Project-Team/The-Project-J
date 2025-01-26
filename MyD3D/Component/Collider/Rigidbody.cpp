@@ -167,6 +167,7 @@ void Rigidbody::SetIsKinematic(bool b)
 
 void Rigidbody::SetDisableGravity(bool b)
 {
+	if (!mRigidActor) return;
 	mRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, b);
 }
 

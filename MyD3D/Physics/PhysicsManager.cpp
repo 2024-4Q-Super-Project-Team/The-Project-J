@@ -36,6 +36,7 @@ void PhysicsManager::Finalization()
     mPhysics->release(); 
     mPvd->release();
     mFoundation->release();
+    mCudaContextManager->releaseContext();
     //mCudaContextManager->release();
 }
 

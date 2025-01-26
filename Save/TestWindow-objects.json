@@ -45,6 +45,14 @@
             {
                 "id": 13,
                 "name": "Transform"
+            },
+            {
+                "id": 14,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 15,
+                "name": "SphereCollider"
             }
         ],
         "id": 5,
@@ -54,11 +62,11 @@
     {
         "components": [
             {
-                "id": 14,
+                "id": 16,
                 "name": "Transform"
             },
             {
-                "id": 15,
+                "id": 17,
                 "name": "MeshRenderer"
             }
         ],

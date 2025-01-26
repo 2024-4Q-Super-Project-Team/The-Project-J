@@ -34,7 +34,7 @@
     {
         "id": 10,
         "name": "Transform",
-        "parent": 9999999,
+        "parent": 2,
         "position": [
             0.0,
             0.0,
@@ -85,7 +85,7 @@
     {
         "id": 12,
         "name": "Transform",
-        "parent": 3,
+        "parent": 9999999,
         "position": [
             0.0,
             0.0,
@@ -111,23 +111,46 @@
         "position": [
             0.0,
             0.0,
-            -0.0
+            0.0
         ],
         "root parent": 9999999,
         "rotation": [
+            -0.0,
             0.0,
-            0.0,
-            0.0,
+            -0.0,
             1.0
         ],
         "scale": [
-            1.0,
-            1.0,
-            1.0
+            0.10000000149011612,
+            0.10000000149011612,
+            0.10000000149011612
         ]
     },
     {
         "id": 14,
+        "isDynamic": false,
+        "isKinematic": false,
+        "mass": 1.0,
+        "name": "Rigidbody"
+    },
+    {
+        "id": 15,
+        "isTrigger": false,
+        "name": "Transform",
+        "position": [
+            0.0,
+            149.3000030517578,
+            0.0
+        ],
+        "radius": 150.0,
+        "rotation": [
+            0.0,
+            4.099999904632568,
+            0.0
+        ]
+    },
+    {
+        "id": 16,
         "name": "Transform",
         "parent": 5,
         "position": [
@@ -149,9 +172,9 @@
         ]
     },
     {
-        "id": 15,
+        "id": 17,
         "material handle": {
-            "id": 17,
+            "id": 19,
             "main key": "monster.fbx_monster",
             "parent": "",
             "path": "..\\..\\Users\\sjndl\\Desktop\\GA6th4Q_Project\\Team_LastLight\\4_Resources\\modeling_test\\monster001\\monster.fbx_monster.json",
@@ -159,7 +182,7 @@
             "type": 2
         },
         "mesh handle": {
-            "id": 16,
+            "id": 18,
             "main key": "monster.fbx_NurbsPath.003_0",
             "parent": "",
             "path": "..\\..\\Users\\sjndl\\Desktop\\GA6th4Q_Project\\Team_LastLight\\4_Resources\\modeling_test\\monster001\\monster.fbx_NurbsPath.003_0.json",

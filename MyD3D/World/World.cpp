@@ -56,9 +56,9 @@ World::~World()
 
 void World::Start()
 {
-    for (auto& object : mObjectArray)
+    for (int i = 0; i < mObjectArray.size(); i++)
     {
-        object->Start();
+        mObjectArray[i]->Start();
     }
 }
 

@@ -33,6 +33,7 @@ Object::Object(const Object& _other)
 
 void Object::Start()
 {
+    Object* obj = this;
     for (int i = 0; i < (UINT)eComponentType::SIZE; ++i)
     {
         for (auto& comp : mComponentArray[i])

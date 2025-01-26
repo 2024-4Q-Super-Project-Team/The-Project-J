@@ -28,7 +28,7 @@ void Editor::ResourceViewer::Render()
 	for (auto handle = loadList.begin(); handle != loadList.end();)
 	{
 		auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-		std::string widgetID = Helper::ToString(handle->GetKey() + L" : " + handle->GetPath());
+		std::string widgetID = Helper::ToUTF8(handle->GetKey() + L" : " + handle->GetPath());
 		if (ImGui::Selectable((widgetID).c_str(), false, flags))
 		{
 
@@ -62,7 +62,7 @@ void Editor::ResourceViewer::Render()
 			for (auto& [handle, resource] : table)
 			{
 				bool isSelected = InspectorViewer::IsFocusObject(resource);
-				std::string widgetID = ResourceName + " : " + (Helper::ToString(handle.GetKey())).c_str();
+				std::string widgetID = ResourceName + " : " + (Helper::ToUTF8(handle.GetKey())).c_str();
 				if (resource)
 				{
 					isSelected ?
@@ -90,7 +90,7 @@ void Editor::ResourceViewer::Render()
 				////////////////////////////////////////////////////////////////////////////
 				EditorItemState state;
 				state.mResourcePtr = resource;
-				state.mName = Helper::ToString(handle.GetKey());
+				state.mName = Helper::ToUTF8(handle.GetKey());
 				EditorDragNDrop::SendDragAndDropData((widgetID + uid).c_str(), state);
 			}
 			ImGui::TreePop();

@@ -11,6 +11,7 @@ namespace Helper
     }
     std::wstring ToWString(const std::string& _str);
     std::string ToString(const std::wstring& _wstr);
+    std::string ToUTF8(const std::wstring& _wstr);
     // 키와 맵을 받아 find값을 포인터로 반환합니다.
     template <typename KEY, typename TYPE>
     TYPE* FindMap(const KEY& _key, std::unordered_map<KEY, TYPE>& _map)

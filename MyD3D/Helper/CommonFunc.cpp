@@ -22,6 +22,13 @@ namespace Helper
         str.assign(_wstr.begin(), _wstr.end());
         return str;
     }
+    std::string ToUTF8(const std::wstring& _wstr)
+    {
+        int utf8Size = WideCharToMultiByte(CP_UTF8, 0, _wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+        std::string utf8String(utf8Size, 0);
+        WideCharToMultiByte(CP_UTF8, 0, _wstr.c_str(), -1, &utf8String[0], utf8Size, nullptr, nullptr);
+        return utf8String;
+    }
     void DecomposeMatrix(const Matrix& mat, Vector3& position, Quaternion& rotation, Vector3& scale) {
         // Extract position
         position.x = mat.m[3][0];

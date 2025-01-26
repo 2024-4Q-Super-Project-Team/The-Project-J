@@ -1,1 +1,33 @@
-null
+[
+    {
+        "id": 1,
+        "name": "tt",
+        "objects": [
+            {
+                "id": 2,
+                "name": "Main_Camera",
+                "tag": "Main_Camera"
+            },
+            {
+                "id": 3,
+                "name": "Direction_Light",
+                "tag": "Direction_Light"
+            },
+            {
+                "id": 4,
+                "name": "monster.fbx_Prefab",
+                "tag": "monster.fbx_Prefab"
+            },
+            {
+                "id": 5,
+                "name": "RootNode",
+                "tag": "RootNode"
+            },
+            {
+                "id": 6,
+                "name": "NurbsPath.002",
+                "tag": "NurbsPath.002"
+            }
+        ]
+    }
+]

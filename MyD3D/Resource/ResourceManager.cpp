@@ -78,8 +78,11 @@ void ResourceManager::SaveResources()
     for (ResourceHandle resourceHandle : mLoadResourceList)
     {
         handleSaveJson += resourceHandle.Serialize();
-        GetResource<FBXModelResource>(resourceHandle)->SaveJson();
-        audioSaveJson += GetResource<AudioResource>(resourceHandle)->Serialize();
+        auto fbx = GetResource<FBXModelResource>(resourceHandle);
+        if(fbx) fbx->SaveJson();
+
+        auto audio = GetResource<AudioResource>(resourceHandle);
+        if(audio)  audioSaveJson += audio->Serialize();
     }
 
     std::ofstream file(mSaveFilePath + "resources.json");

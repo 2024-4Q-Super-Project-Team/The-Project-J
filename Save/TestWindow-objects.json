@@ -1,1 +1,69 @@
-null
+[
+    {
+        "components": [
+            {
+                "id": 7,
+                "name": "Transform"
+            },
+            {
+                "id": 8,
+                "name": "Camera"
+            }
+        ],
+        "id": 2,
+        "name": "Main_Camera",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 10,
+                "name": "Transform"
+            },
+            {
+                "id": 11,
+                "name": "Light"
+            }
+        ],
+        "id": 3,
+        "name": "Direction_Light",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 12,
+                "name": "Transform"
+            }
+        ],
+        "id": 4,
+        "name": "monster.fbx_Prefab",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 13,
+                "name": "Transform"
+            }
+        ],
+        "id": 5,
+        "name": "RootNode",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 14,
+                "name": "Transform"
+            },
+            {
+                "id": 15,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 6,
+        "name": "NurbsPath.002",
+        "tag": ""
+    }
+]

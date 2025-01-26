@@ -31,6 +31,11 @@ namespace Editor
         mFocusObject = _object;
     }
 
+    bool InspectorViewer::IsFocusObject(IEditorObject* _object)
+    {
+        return mFocusObject == _object;
+    }
+
     IEditorObject* InspectorViewer::GetFocusObject()
     {
         return mFocusObject;

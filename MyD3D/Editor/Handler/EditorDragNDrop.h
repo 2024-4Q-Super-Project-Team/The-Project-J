@@ -39,7 +39,7 @@ public:
     {
 		BOOL isOk = FALSE;
         ImGui::PushID(_uid);
-        if ( isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) )
+        if (isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left) )
         {
 			T* pData = dynamic_cast<T*>(EditorDragNDrop::mItemState.mResourcePtr);
 			if (pData)
@@ -49,7 +49,6 @@ public:
 				isDragging = false;
 				isOk = TRUE;
 			}
-            isDragging = false;
         }
         ImGui::PopID();
 
@@ -70,7 +69,6 @@ public:
 				isDragging = false;
 				isOk = TRUE;
 			}
-			isDragging = false;
 		}
 		ImGui::PopID();
 

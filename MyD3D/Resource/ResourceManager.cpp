@@ -4,6 +4,7 @@
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
 #include "Object/Object.h"
+#include "Component/Camera/SkyBox/SkyBox.h"
 
 std::unordered_map<ResourceHandle, Resource*>       ResourceManager::mHandleFromResourceMappingTable[static_cast<UINT>(eResourceType::SIZE)] = {};
 std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromMainKeyMappingTable;
@@ -18,6 +19,11 @@ BOOL ResourceManager::Initialize()
     // 여기서 json을 읽어 mLoadResourceList에 핸들정보를 담는다.
     // 그리고 로드한다.
     Reload();
+
+    MeshResource::GetSkyCubeMesh();
+    MeshResource::GetCubeMesh();
+    MeshResource::GetPlainMesh();
+    MaterialResource::GetDefaultMaterial();
 
     return TRUE;
 }
@@ -37,6 +43,7 @@ void ResourceManager::Reset()
         }
         table.clear();
     }
+    SkyBox::FreeDefaultSkyBox();
 }
 
 void ResourceManager::Reload()
@@ -46,20 +53,6 @@ void ResourceManager::Reload()
     Reset();    // 리셋
     LoadResources();
     Alloc_All_Resource(); // 전부 Alloc
-
-    // 스카이박스 메쉬
-    MeshResource::InitSkyCubeMesh();
-    PushResource<MeshResource>(MeshResource::SkyCubeMesh);
-    // 큐브 메쉬
-    MeshResource::InitCubeMesh();
-    PushResource<MeshResource>(MeshResource::CubeMesh);
-    // 플레인 메쉬
-    MeshResource::InitPlainMesh();
-    PushResource<MeshResource>(MeshResource::PlainMesh);
-    // 기본 머티리얼
-    MaterialResource::InitDefaultMaterial();
-    PushResource<MaterialResource>(MaterialResource::DefaultMaterial);
-
 }
 
 void ResourceManager::SaveResources()
@@ -92,6 +85,8 @@ void ResourceManager::LoadResources()
         handle.Deserialize(j);
         mLoadResourceList.insert(handle);
     }
+
+    SkyBox::GetDefaultSkyBox();
 }
 
 void ResourceManager::Alloc_All_Resource()

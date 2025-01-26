@@ -24,7 +24,10 @@ void EditorCamera::EditorUpdate()
 
 void EditorCamera::EditorRender()
 {
-    ExcuteDrawList();
+    if (GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+    {
+        ExcuteDrawList();
+    }
 }
 
 #define CAMERA_MOVE_ACCELERATION (mCameraMoveSpeed * Time::GetUnScaledDeltaTime())
@@ -65,19 +68,16 @@ void EditorCamera::UpdatePosition()
 
 void EditorCamera::UpdateRotation()
 {
-    if (Input::IsKeyHold(Key::LCONTROL))
+    if (Input::IsKeyHold(Key::LCONTROL) && (Input::IsMouseHold(Mouse::RIGHT) || Input::IsMouseHold(Mouse::MID)))
     {
-        if (Input::IsMouseHold(Mouse::RIGHT) || Input::IsMouseHold(Mouse::MID))
-        {
-            Input::ShowMouseCursor(false);
-            // 마우스 이동량 가져오기
-            float deltaX = Input::GetDeltaMousePos().x * mCameraRotateSpeed * Time::GetUnScaledDeltaTime();
-            float deltaY = -Input::GetDeltaMousePos().y * mCameraRotateSpeed * Time::GetUnScaledDeltaTime();
+        Input::ShowMouseCursor(false);
+        // 마우스 이동량 가져오기
+        float deltaX = Input::GetDeltaMousePos().x * mCameraRotateSpeed * Time::GetUnScaledDeltaTime();
+        float deltaY = -Input::GetDeltaMousePos().y * mCameraRotateSpeed * Time::GetUnScaledDeltaTime();
 
-            mDirection.x += deltaX;
-            mDirection.y += deltaY;
-            mDirection.y = Clamp(mDirection.y, -mCameraMaxAngle, mCameraMaxAngle);
-        }
+        mDirection.x += deltaX;
+        mDirection.y += deltaY;
+        mDirection.y = Clamp(mDirection.y, -mCameraMaxAngle, mCameraMaxAngle);
     }
     else
     {

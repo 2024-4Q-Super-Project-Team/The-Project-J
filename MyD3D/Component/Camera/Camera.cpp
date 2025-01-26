@@ -8,7 +8,6 @@
 
 #include "ViewportScene/ViewportScene.h"
 #include "World/World.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 #include "SkyBox/SkyBox.h"
 
@@ -35,7 +34,6 @@ Camera::Camera(Object* _owner, Vector2 _size)
 Camera::~Camera()
 {
     SAFE_RELEASE(mLocalViewport)
-    SAFE_RELEASE(mMainRenderTarget)
 }
 
 void Camera::Start()

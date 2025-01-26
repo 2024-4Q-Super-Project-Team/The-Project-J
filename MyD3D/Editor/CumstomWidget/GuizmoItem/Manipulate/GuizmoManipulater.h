@@ -15,10 +15,12 @@ namespace Editor
 	public:
 		void ProcessUndo();
 	public:
-		inline void SetFocusObjedct(Object* _pObject) { mFocusObject = _pObject; }
+		static inline void SetFocusObjedct(Object* _pObject) { mFocusObject = _pObject; }
+		static inline Object* GetFocusObject() { return mFocusObject; }
+		static inline bool IsFocusObject(Object* _object) { return mFocusObject == _object; }
 		inline void SetGizmoOperation(ImGuizmo::OPERATION operation) { mCurrentGizmoOperation = operation; }
 	private:
-		Object* mFocusObject = nullptr;
+		static Object* mFocusObject;
 		ImGuizmo::OPERATION mCurrentGizmoOperation = ImGuizmo::TRANSLATE;
 		bool isUsingManipulate = false;
 		bool CanUseManipulate = true;

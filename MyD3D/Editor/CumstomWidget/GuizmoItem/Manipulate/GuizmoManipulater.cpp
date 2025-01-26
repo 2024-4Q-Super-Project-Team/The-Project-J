@@ -7,6 +7,8 @@
 
 namespace Editor
 {
+    Object* GuizmoManipulater::mFocusObject = nullptr;
+
 	GuizmoManipulater::GuizmoManipulater()
 	{
 	}
@@ -20,7 +22,7 @@ namespace Editor
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
         ImGuizmo::SetOrthographic(false);
 
-        Matrix Matrix = mFocusObject->transform->GetWorldMatrix();
+        Matrix Matrix = mFocusObject->transform->GetLocalMatrix();
 
         if (CanUseManipulate)
         {
@@ -40,7 +42,7 @@ namespace Editor
             if (isUsingManipulate == false)
             {
                 isUsingManipulate = true;
-                UndoMatrixStack.push_back({ mFocusObject, mFocusObject->transform->GetWorldMatrix() });
+                UndoMatrixStack.push_back({ mFocusObject, mFocusObject->transform->GetLocalMatrix() });
             }
             //// Manipulate를 사용중에 ESC를 누르면 스택에서 빼고 취소
             //else if (isUsingManipulate == true)

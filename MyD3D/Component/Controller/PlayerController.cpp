@@ -4,7 +4,6 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
-#include "ObjectGroup/ObjectGroup.h"
 
 PxControllerManager* PlayerController::ControllerManager = nullptr;
 
@@ -14,7 +13,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mType = eComponentType::CONTROLLER;
 
 	if (ControllerManager == nullptr)
-		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerObjectGroup()->GetWorld()->GetPxScene());
+		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerWorld()->GetPxScene());
 
 	PxCapsuleControllerDesc capsuleDesc;
 	capsuleDesc.height = mHeight;

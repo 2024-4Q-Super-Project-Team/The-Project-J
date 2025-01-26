@@ -4,7 +4,7 @@
 class Object;
 class FBXModelResource;
 class ModelNode;
-class ObjectGroup;
+class World;
 
 class PrefabResource : public Resource
 {
@@ -15,12 +15,9 @@ public:
     virtual ~PrefabResource();
 public:
     Object* GetObjectFromName(const std::wstring& _name);
-    void    SetGroupName(const std::wstring& _groupName);  
 public:
-    Object* InstantiateFromGroup(ObjectGroup* _group);
+    Object* Instantiate(World* _dstWorld = nullptr);
 private:
-    // 그룹 이름. 나중에 클론 생성시 해당 그룹으로 복사함. 없으면 생성
-    std::wstring mGroupName;
     std::list<Object*> mObjectList;
     std::unordered_map<std::wstring, Object*> mObjectTable;
     friend class ResourceManager;

@@ -4,9 +4,8 @@
 #include "Helper/Entity/Entity.h"
 #include "Interface/SaveBase.h"
 
-class LightSystem;
 class ViewportScene;
-class ObjectGroup;
+class Object;
 class SkyBox;
 class Camera;
 
@@ -41,42 +40,47 @@ public:
 	virtual void _CALLBACK OnDisable()	override;
 public:
 	void InitWorldObject();
-    void UpdateGroup();
+    void UpdateObject();
 public:
-    // 오브젝트 그룹을 만듭니다.
-    ObjectGroup*    CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag = L"");
+	// 오브젝트를 생성하는 함수
+	Object* CreateObject(std::wstring_view _name, std::wstring_view _tag = L"");
+	Object* FindObject(std::wstring_view _name);
+	void	ShiftObject(Object* _dstObject);
+	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
+	std::vector<ResourceHandle> mNeedResourceHandleTable;
+private:
+	bool				 isPersistance = false;
+	ViewportScene* const mOwnerScene;
+	std::vector<Object*> mObjectArray;
+public:
+	inline auto& IsPersistance() { return isPersistance; }
+	inline auto& GetObjectArray() { return mObjectArray; }
+	inline auto GetOwnerViewportScene() const { return mOwnerScene; }
+//////////////////////////////////////////////////////////////////////////////
+// Json
+//////////////////////////////////////////////////////////////////////////////
+public:
+	json Serialize();
+	void Deserialize(json& j);
+//////////////////////////////////////////////////////////////////////////////
+// Physx
+//////////////////////////////////////////////////////////////////////////////
+public:
 	// Rigidbody을 PxScene에 추가합니다. 
 	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
 	void RemovePxActor(PxActor* actor) { mPxScene->removeActor(*actor); }
-    // 오브젝트 그룹을 호출한 월드로 옮깁니다. 속한 월드가 같으면 그냥 리턴
-    void		    ReceiveObjectGroup(ObjectGroup* _recvGroup);
-    // 오브젝트 그룹을 이름으로 검색합니다. 없을 시 nullptr 반환
-    ObjectGroup*    GetObjectGroup(std::wstring_view _name);
-    // 오브젝트 그룹 컨테이너를 반환
-    inline const std::vector<ObjectGroup*>& GetObjectGroups() { return mObjectGroups; }
 public:
-	//직렬화
-	json Serialize();
-	void Deserialize(json& j);
-	
-	json SerializeDefault();
-	void DeserializeDefault(json& j);
-	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
-	std::vector<ResourceHandle> mNeedResourceHandleTable;
-public:
-    inline auto GetOwnerViewportScene() const { return mOwnerScene; }
-    inline auto GetLightSystem() const { return mLightSystem; }
-	PxScene* GetPxScene() { return mPxScene; }
-	class PickingRay* GetPickingRay() { return mPickingRay; }
-private:
-	ViewportScene* const mOwnerScene;
-    std::vector<ObjectGroup*> mObjectGroups;
-    LightSystem* mLightSystem;
 	class PickingRay* mPickingRay;
-
 	PxScene* mPxScene;
 	class PhysicsEvent* mEventCallback;
 public:
+	PxScene* GetPxScene() { return mPxScene; }
+	class PickingRay* GetPickingRay() { return mPickingRay; }
+//////////////////////////////////////////////////////////////////////////////
+// Editor
+//////////////////////////////////////////////////////////////////////////////
+public:
+	bool isNodeOpen = false;
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

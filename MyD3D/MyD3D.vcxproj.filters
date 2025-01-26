@@ -57,9 +57,6 @@
     <ClInclude Include="World\World.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="ObjectGroup\ObjectGroup.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Object\Object.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -202,9 +199,6 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Graphics\RenderState.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="World\Light\LightSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Resource\Graphics\Mesh\Vertex.h">
@@ -446,9 +440,6 @@
     <ClCompile Include="World\World.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="ObjectGroup\ObjectGroup.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Object\Object.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -579,9 +570,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Graphics\RenderState.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="World\Light\LightSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\Graphics\Mesh\Vertex.cpp">

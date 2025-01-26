@@ -259,7 +259,6 @@
     <ClInclude Include="UIManager\Widget\WidgetCheckBox.h" />
     <ClInclude Include="UIManager\Widget\WidgetText.h" />
     <ClInclude Include="UIManager\Widget\WidgetImage.h" />
-    <ClInclude Include="World\Light\LightSystem.h" />
     <ClInclude Include="Component\Camera\SkyBox\SkyBox.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
     <ClInclude Include="World\WorldManager.h" />
@@ -267,7 +266,6 @@
     <ClInclude Include="Resource\Graphics\Material\Material.h" />
     <ClInclude Include="Resource\Graphics\Mesh\Mesh.h" />
     <ClInclude Include="Object\Object.h" />
-    <ClInclude Include="ObjectGroup\ObjectGroup.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource\Resource.h" />
     <ClInclude Include="Resource\Prefab\Prefab.h" />
@@ -387,7 +385,6 @@
     <ClCompile Include="UIManager\Widget\WidgetCheckBox.cpp" />
     <ClCompile Include="UIManager\Widget\WidgetText.cpp" />
     <ClCompile Include="UIManager\Widget\WidgetImage.cpp" />
-    <ClCompile Include="World\Light\LightSystem.cpp" />
     <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />
     <ClCompile Include="World\WorldManager.cpp" />
@@ -395,7 +392,6 @@
     <ClCompile Include="Resource\Graphics\Material\Material.cpp" />
     <ClCompile Include="Resource\Graphics\Mesh\Mesh.cpp" />
     <ClCompile Include="Object\Object.cpp" />
-    <ClCompile Include="ObjectGroup\ObjectGroup.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch.h</PrecompiledHeaderFile>

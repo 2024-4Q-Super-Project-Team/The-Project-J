@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "World.h"
-#include "World/Light/LightSystem.h"
+#include "World/WorldManager.h"
 #include "Manager/GameManager.h"
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 #include "ViewportScene/ViewportManager.h"
-#include "ObjectGroup/ObjectGroup.h"
 #include "Object/Object.h"
 #include "Component/Camera/Camera.h"
 
@@ -24,7 +23,6 @@ PxFilterFlags CustomFilterShader(
 World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty)
     : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
-    , mLightSystem(new LightSystem)
 {
     SetEID(Helper::ToString(_name.data()));
     mNeedResourceHandleTable.reserve(30);
@@ -42,7 +40,6 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
         //sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
         //sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
-
         mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
 
         PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
@@ -51,53 +48,89 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
             pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
             pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
         }
-
     }
 }
 
 World::~World()
 {
-    SAFE_DELETE_VECTOR(mObjectGroups);
-    SAFE_DELETE(mLightSystem);
+    SAFE_DELETE_VECTOR(mObjectArray);
     SAFE_DELETE(mPickingRay);
-    mPxScene->release();
-    
+    if (mPxScene)
+    {
+        mPxScene->release();
+        mPxScene = nullptr;
+    }
+    if (Editor::InspectorViewer::IsFocusObject(this))
+        Editor::InspectorViewer::SetFocusObject(nullptr);
 }
 
 void World::Start()
 {
-    for (auto& group : mObjectGroups)
+    for (auto& object : mObjectArray)
     {
-        group->Start();
+        object->Start();
     }
 }
 
 void World::Tick()
 {
-    UpdateGroup();
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Tick())
+    UpdateObject();
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Tick();
+        }
+    }
 }
 
 void World::FixedUpdate()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, FixedUpdate())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->FixedUpdate();
+        }
+    }
 }
 
 void World::PreUpdate()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PreUpdate())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PreUpdate();
+        }
+    }
 }
 
 void World::Update()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Update())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Update();
+        }
+    }
 }
 
 void World::PostUpdate()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostUpdate())
-
-
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PostUpdate();
+        }
+    }
     if (mPxScene)
     {
         mPxScene->simulate(Time::GetUnScaledDeltaTime());
@@ -108,83 +141,109 @@ void World::PostUpdate()
 
 void World::PreRender()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PreRender())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PreRender();
+        }
+    }
 }
 
 void World::Render()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Render())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Render();
+        }
+    }
 }
 
 void World::Draw(Camera* _camera)
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, Draw(_camera));
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->Draw(_camera);
+        }
+    }
 }
 
 void World::PostRender()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, PostRender())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->PostRender();
+        }
+    }
 }
 
 void World::EditorUpdate()
 {
-    UpdateGroup();
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorUpdate())
+    UpdateObject();
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->EditorUpdate();
+        }
+    }
 }
 
 void World::EditorRender()
 {
-    FOR_LOOP_ARRAY_ENTITY(mObjectGroups, EditorRender())
+    for (Object* object : mObjectArray)
+    {
+        if (object->GetState() == EntityState::Active)
+        {
+            if (object->transform->GetParent() == nullptr)
+                object->EditorRender();
+        }
+    }
 }
 
-ObjectGroup* World::CreateObjectGroup(std::wstring_view _name, std::wstring_view _tag)
+Object* World::CreateObject(std::wstring_view _name, std::wstring_view _tag)
 {
-    ObjectGroup* instance = GetObjectGroup(_name);
-    if (instance == nullptr)
-    {
-        instance = new ObjectGroup(_name, _tag);
-        mObjectGroups.push_back(instance);
-        instance->SetWorld(this);
-    }
+    Object* instance = new Object(_name, _tag);
+    instance->SetCreate();
+    instance->SetWorld(this);
     return instance;
 }
 
-void World::ReceiveObjectGroup(ObjectGroup* _recvGroup)
+Object* World::FindObject(std::wstring_view _name)
 {
-    if (_recvGroup == nullptr)
-        return;
-    ObjectGroup* instance = GetObjectGroup(_recvGroup->GetName());
-    // 받은 그룹이 현재 컨테이너에 없다면 그대로 옮겨온다.
-    if (instance == nullptr)
-    {
-        // 받은 그룹이 속한 월드의 그룹컨테이너에서 해당 그룹을 지우고 여기로 옮긴다.
-        auto itr = FIND_CONTAINER(_recvGroup->GetWorld()->mObjectGroups,
-            [&_recvGroup](ObjectGroup* _group) {
-                return (_recvGroup == _group);
-            });
-        if (FIND_SUCCESS(itr, mObjectGroups))
-        {
-            _recvGroup->GetWorld()->mObjectGroups.erase(itr);
-            mObjectGroups.push_back(_recvGroup);
-            // Create상태로 초기화시킨다.
-            _recvGroup->SetCreate();
-        }
-    }
-    // 이미 있으면 오브젝트들을 가져와서 뒤로 붙인다.
-    // 근데 여기서 의문은 오브젝트들을 비활성화해서 가져와야하나?
-    else
-    {
-        mObjectGroups.insert(mObjectGroups.end(), _recvGroup->GetWorld()->mObjectGroups.begin(), _recvGroup->GetWorld()->mObjectGroups.end());
-    }
+    auto itr = FIND_CONTAINER(mObjectArray,
+        [&_name](Object* _object) {
+            return (_object->GetName() == _name.data());
+        });
+    return (FIND_SUCCESS(itr, mObjectArray)) ? (*itr) : nullptr;
 }
 
-ObjectGroup* World::GetObjectGroup(std::wstring_view _name)
+void World::ShiftObject(Object* _dstObject)
 {
-    auto itr = FIND_CONTAINER(mObjectGroups,
-        [&_name](ObjectGroup* _group) {
-            return (_group->GetName() == _name.data());
-        });
-    return (FIND_SUCCESS(itr, mObjectGroups)) ? (*itr) : nullptr;
+    if(_dstObject->GetOwnerWorld()) 
+    {
+        World* dstWorld = _dstObject->GetOwnerWorld();
+        auto itr = FIND_CONTAINER(dstWorld->mObjectArray,
+            [&_dstObject](Object* _object) {
+                return (_object == _dstObject);
+            });
+        if (FIND_SUCCESS(itr, dstWorld->mObjectArray))
+        {
+            dstWorld->mObjectArray.erase(itr);
+        }
+    }
+    mObjectArray.push_back(_dstObject);
 }
 
 json World::Serialize()
@@ -193,120 +252,58 @@ json World::Serialize()
     ret["id"] = GiveId();
     ret["name"] = Helper::ToString(mName);
 
-    json objGroups = json::array();
-    for (auto group : mObjectGroups)
+    json objs = json::array();
+    for (auto& object : mObjectArray)
     {
-        json groupJson;
-        groupJson["id"] = group->GiveId();
-        groupJson["name"] = Helper::ToString(group->GetName());
-        objGroups += groupJson;
+        json objectJson;
+        objectJson["id"] = object->GiveId();
+        objectJson["name"] = Helper::ToString(object->GetName());
+        objectJson["tag"] = Helper::ToString(object->GetName());
+        objs += objectJson;
     }
-    ret["object groups"] = objGroups;
+    ret["objects"] = objs;
 
     return ret;
 }
 
 void World::Deserialize(json& j)
 {
-    for (auto& groupJson : j["object groups"])
+    for (auto& objectJson : j["objects"])
     {
-        std::wstring name = Helper::ToWString(groupJson["name"].get<std::string>());
-        ObjectGroup* group = CreateObjectGroup(name);
-        group->SetId(groupJson["id"].get<unsigned int>());
-    }
-}
-
-json World::SerializeDefault()
-{
-    json ret;
-    ret["id"] = GetId();
-    ret["name"] = Helper::ToString(GetName());
-
-
-    ObjectGroup* defaultGroup = GetObjectGroup(L"Default");
-
-    json groupJson;
-    groupJson["id"] = defaultGroup->GiveId();
-    groupJson["name"] = Helper::ToString(defaultGroup->GetName());
-    
-    json objectsJson;
-    for (Object* object : defaultGroup->GetObjects())
-    {
-        json objectJson;
-        objectJson["id"] = object->GiveId();
-        objectJson["name"] = Helper::ToString(object->GetName());
-        for (Component* component : object->GetAllComponents())
-        {
-            json compJson; 
-            compJson = component->Serialize();
-            objectJson["components"] += compJson;
-        }
-
-        objectsJson.push_back(objectJson);
-    }
-    groupJson["objects"] = objectsJson;
-    ret["groups"] = groupJson;
-
-    return ret;
-}
-
-void World::DeserializeDefault(json& j)
-{
-    ObjectGroup* defaultGroup = GetObjectGroup(L"Default");
-
-    json groupJson = j["groups"];
-    defaultGroup->SetId(groupJson["id"].get<unsigned int>());
-
-    for (json objJson : groupJson["objects"])
-    {
-        Object* obj = defaultGroup->GetObject(Helper::ToWString(objJson["name"].get<std::string>()));
-        obj->SetId(objJson["id"].get<unsigned int>());
-
-        for (json compJson : objJson["components"])
-        {
-            if (compJson["name"] == L"Transform")
-                obj->transform->Deserialize(compJson);
-
-            else if (compJson["name"] == L"Camera")
-            {
-                obj->GetComponent<Camera>()->Deserialize(compJson);
-            }
-            else if (compJson["name"] == L"Light")
-            {
-                obj->GetComponent<Light>()->Deserialize(compJson);
-            }
-        }
+        std::wstring name = Helper::ToWString(objectJson["name"].get<std::string>());
+        std::wstring tag = Helper::ToWString(objectJson["tag"].get<std::string>());
+        Object* instance = new Object(name, tag);
+        instance->SetId(objectJson["id"].get<unsigned int>());
+        instance->SetWorld(this);
     }
 }
 
 void _CALLBACK World::OnEnable()
 {
-    for (auto& group : mObjectGroups)
+    for (auto& object : mObjectArray)
     {
-        group->OnEnable();
+        object->OnEnable();
     }
     return void _CALLBACK();
 }
 
 void _CALLBACK World::OnDisable()
 {
-    for (auto& group : mObjectGroups)
+    for (auto& object : mObjectArray)
     {
-        group->OnDisable();
+        object->OnDisable();
     }
     return void _CALLBACK();
 }
 
 void World::InitWorldObject()
 {
-    // 월드 초기 생성시 기본적으로 제공하는 그룹과 오브젝트를 만들어준다.
-    ObjectGroup* defaultGroup = CreateObjectGroup(L"Default", L"Default");
     {
-        Object* mainCamera = defaultGroup->CreateObject(L"Main_Camera", L"Default");
+        Object* mainCamera = CreateObject(L"Main_Camera", L"Default");
         Camera* cameraComponent = mainCamera->AddComponent<Camera>();
     }
     {
-        Object* mainLight = defaultGroup->CreateObject(L"Direction_Light", L"Default");
+        Object* mainLight = CreateObject(L"Direction_Light", L"Default");
         Light* lightComponent = mainLight->AddComponent<Light>();
         Vector4 defaultDirection = Vector4(0.0f, 1.0f, 1.0f, 1.0f);
         defaultDirection.Normalize();
@@ -314,17 +311,20 @@ void World::InitWorldObject()
     }
 }
 
-void World::UpdateGroup()
+void World::UpdateObject()
 {
-    mNeedResourceHandleTable.clear();
     // 삭제 및 생성 처리
-    for (auto itr = mObjectGroups.begin(); itr != mObjectGroups.end();)
+    for (auto itr = mObjectArray.begin(); itr != mObjectArray.end();)
     {
         // 삭제
         if ((*itr)->GetState() == EntityState::Destroy)
         {
+            if (EditorManager::mInspectorViewer &&
+                EditorManager::mInspectorViewer->GetFocusObject() == *itr) {
+                EditorManager::mInspectorViewer->SetFocusObject(nullptr);
+            }
             SAFE_DELETE(*itr);
-            itr = mObjectGroups.erase(itr);
+            itr = mObjectArray.erase(itr);
             continue;
         }
         // 생성
@@ -334,22 +334,40 @@ void World::UpdateGroup()
         }
         ++itr;
     }
-    // 정렬 처리
-    std::sort(mObjectGroups.begin(), mObjectGroups.end(),
-        [](const ObjectGroup* left, const ObjectGroup* right) {
-            return left->GetOrder() < right->GetOrder(); // 오름차순
-        }
-    );
 }
 
 void World::EditorRendering(EditorViewerType _viewerType)
 {
-    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    std::string name = Helper::ToString(GetName());
+    std::string ptr = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
     switch (_viewerType)
     {
         case EditorViewerType::DEFAULT:
         {
+           
+            std::string widgetID = name + ptr;
+            if (mOwnerScene->GetWorldManager()->GetActiveWorld() == this)
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_WORLD_SELECTED);
+            }
+            else
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_WORLD);
+            }
+            
+            if (ImGui::Selectable((widgetID).c_str(), false, ImGuiSelectableFlags_AllowDoubleClick | ImGuiSelectableFlags_Highlight))
+            {
+                if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+                {
+                    Editor::InspectorViewer::SetFocusObject(this);
+                }
+                if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+                {
+                    isNodeOpen = isNodeOpen == true ? false : true;
+                }
+            }
+            EDITOR_COLOR_POP(1);
             break;
         }
         case EditorViewerType::HIERARCHY:
@@ -362,16 +380,19 @@ void World::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Text("World");
                 ImGui::Separator();
 
+                if (ImGui::Checkbox(("IsPersistance" + ptr).c_str(), &isPersistance));
+                ImGui::Separator();
+
                 static char buffer1[128] = "";
                 strcpy_s(buffer1, Helper::ToString(GetName()).c_str());
-                if (ImGui::InputText((uid + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {
+                if (ImGui::InputText((ptr + "InputName").c_str(), buffer1, IM_ARRAYSIZE(buffer1))) {
                     std::wstring newName = Helper::ToWString(std::string(buffer1));
                     SetName(newName);
                 }
                 static char buffer2[128] = "";
                 strcpy_s(buffer2, Helper::ToString(GetTag()).c_str());
                 ImGui::Text("Tag ");
-                if (ImGui::InputText((uid + "Tag").c_str(), buffer2, IM_ARRAYSIZE(buffer2))) {
+                if (ImGui::InputText((ptr + "Tag").c_str(), buffer2, IM_ARRAYSIZE(buffer2))) {
                     std::wstring newTag = Helper::ToWString(std::string(buffer2));
                     SetTag(newTag);
                 }

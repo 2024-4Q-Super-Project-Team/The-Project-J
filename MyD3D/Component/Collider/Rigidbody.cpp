@@ -4,7 +4,6 @@
 #include "World/World.h"
 #include "ViewportScene/ViewportScene.h"
 #include "World/WorldManager.h"
-#include "ObjectGroup/ObjectGroup.h"
 
 Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 {
@@ -20,7 +19,7 @@ Rigidbody::~Rigidbody()
 {
 	if (mRigidActor)
 	{
-		gameObject->GetOwnerObjectGroup()->GetWorld()->RemovePxActor(mRigidActor);
+		gameObject->GetOwnerWorld()->RemovePxActor(mRigidActor);
 		mRigidActor->release();
 	}
 	
@@ -40,7 +39,7 @@ void Rigidbody::Start()
 	}
 	mRigidActor->userData = gameObject;
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
-	gameObject->GetOwnerObjectGroup()->GetWorld()->AddPxActor(mRigidActor);
+	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
 	SetMass(mMass);
 	SetIsKinematic(mIsKinematic);

@@ -8,12 +8,13 @@ class World;
 class WorldManager
 	: public Engine::ICycleHandler
 {
-    using WorldHashMap = std::unordered_map<std::wstring, World*>;
+
 public:
 	WorldManager(ViewportScene* _pViewport);
 	~WorldManager();
 public:
 	void Start();
+	void Reset();
 public:
 	virtual void Tick() override;
 	virtual void FixedUpdate() override;
@@ -31,18 +32,17 @@ public:
 	void UpdateWorld();
 public:
 	World*	CreateWorld(const std::wstring& _name, std::wstring_view _tag = L"", bool isEmpty = false);
-	World*	CreateEmptyWorld(const std::wstring& _name, std::wstring_view _tag = L"");
-	void	AddWorld(World* _world);
-	World*	GetActiveWorld();
-	WorldHashMap& GetWorlds() { return mWorlds; }
 	BOOL	DestroyWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(const std::wstring& _name);
 	BOOL    SetActiveWorld(World* _pWorld);
+	World*	FindWorld(const std::wstring _name);
 public:
-    auto    GetViewportScene() const { return mOwnerScene; }
+    auto						GetViewportScene() const { return mOwnerScene; }
+	inline World*				GetActiveWorld() { return mCurrActiveWorld; }
+	inline std::vector<World*>& GetWorlds() { return mWorldArray; }
 private:
     ViewportScene* const    mOwnerScene;
 	World*	                mCurrActiveWorld;
 	World*	                mNextActiveWorld;
-    WorldHashMap            mWorlds;
+	std::vector<World*>     mWorldArray;
 };

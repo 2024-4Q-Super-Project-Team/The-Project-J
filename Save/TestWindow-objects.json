@@ -1,0 +1,74 @@
+[
+    {
+        "components": [
+            {
+                "id": 24,
+                "name": "Transform"
+            },
+            {
+                "id": 25,
+                "name": "Camera"
+            }
+        ],
+        "id": 20,
+        "name": "Main_Camera",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 27,
+                "name": "Transform"
+            },
+            {
+                "id": 28,
+                "name": "Light"
+            }
+        ],
+        "id": 21,
+        "name": "Direction_Light",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 29,
+                "name": "Transform"
+            },
+            {
+                "id": 30,
+                "name": "MeshRenderer"
+            },
+            {
+                "id": 31,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 32,
+                "name": "BoxCollider"
+            }
+        ],
+        "id": 22,
+        "name": "GameObject",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 35,
+                "name": "Transform"
+            },
+            {
+                "id": 36,
+                "name": "Rigidbody"
+            },
+            {
+                "id": 37,
+                "name": "SphereCollider"
+            }
+        ],
+        "id": 23,
+        "name": "m",
+        "tag": ""
+    }
+]

@@ -76,6 +76,9 @@ void SphereCollider::EditorUpdate()
 	{
 		EditorManager::mEditorCamera.PushWireList(this);
 	}
+	SetRadius();
+	SetRotation();
+	SetPosition();
 }
 
 void SphereCollider::EditorRender()
@@ -121,7 +124,7 @@ void SphereCollider::Deserialize(json& j)
 
 	SetRadius();
 	SetRotation();
-	SetLocalPosition();
+	SetPosition();
 
 	mBS.Center = mPosition;
 	mBS.Radius = mRadius;
@@ -133,17 +136,24 @@ void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 
 void SphereCollider::DrawWire()
 {
-	// 원본 구체(로컬 좌표계 기준)
-	DirectX::BoundingSphere localSphere = mBS;
-	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
-	DirectX::BoundingSphere transformedSphere;
-	localSphere.Transform(transformedSphere, worldMatrix);
-	Debug::Draw(DebugRenderer::GetBatch(), transformedSphere, mBaseColor);
+	Debug::Draw(DebugRenderer::GetBatch(), mBS, mBaseColor);
+}
+
+void SphereCollider::SetPosition()
+{
+	PxTransform currentTransform = mShape->getLocalPose();
+	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
+	mBS.Center = gameObject->transform->GetWorldPosition() + mPosition;
+}
+
+void SphereCollider::SetRotation()
+{
 }
 
 void SphereCollider::SetRadius()
 {
-	mGeometry.radius = mRadius;
+	mGeometry.radius = gameObject->transform->scale.x * mRadius;
+	mBS.Radius = gameObject->transform->scale.x * mRadius;
 }
 
 void SphereCollider::EditorRendering(EditorViewerType _type)
@@ -151,21 +161,14 @@ void SphereCollider::EditorRendering(EditorViewerType _type)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
 	ImGui::Text("Position : ");
-	if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
-	{
-		SetLocalPosition();
-		mBS.Center = mPosition;
-	}
+	ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f);
 
 	ImGui::Text("Rotation : ");
 	ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f);
 
-
 	ImGui::Text("Radius : ");
-	if (ImGui::DragFloat((uid + "Radius").c_str(), &mRadius, 0.1f, 0.f, 100.f))
-	{
-		mBS.Radius = mRadius;
-	}
+	ImGui::DragFloat((uid + "Radius").c_str(), &mRadius, 0.1f, 0.f, 100.f);
+
 
 	ImGui::Separator();
 

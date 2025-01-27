@@ -29,7 +29,9 @@ public:
 
     virtual MeshResource* GetMesh() { return nullptr; }
     virtual MaterialResource* GetMaterial() { return nullptr; }
-
+public:
+    virtual void SetPosition();
+    virtual void SetRotation();
     void SetRadius();
 private:
     const float mInitialRadius = 1.f;

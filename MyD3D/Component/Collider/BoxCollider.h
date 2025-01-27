@@ -31,6 +31,8 @@ public:
     virtual MeshResource* GetMesh() { return nullptr; }
     virtual MaterialResource* GetMaterial() { return nullptr; }
 public:
+    virtual void SetPosition();
+    virtual void SetRotation();
     void SetExtents();
 private:
     const Vector3 mInitialSize = { 1, 1, 1 };

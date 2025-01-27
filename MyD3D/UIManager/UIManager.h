@@ -1,12 +1,6 @@
 #pragma once
 
-#include "UIManager/Widget/WidgetCheckBox.h"
-#include "UIManager/Widget/WidgetText.h"
-#include "UIManager/Widget/WidgetButton.h"
-#include "UIManager/Widget/WidgetImage.h"
-
 class Widget;
-class Camera;
 
 class UIManager
 {
@@ -14,27 +8,24 @@ public:
     static BOOL Initialize();
     static void Finalization();
 public:
-    static void Tick();
     static void Update();
     static void Render();
-
 public:
-    static std::vector<Widget*> GetWidgets() { return mWidgetContainer; };
-    
-    template <class T>
-    static T* AddWidget(std::wstring _id, std::wstring _filepath)
-    {
-        static_assert(std::is_base_of<Widget, T>::value, "AddWidget_Fail");
-        T* widget = new T();
-        widget->SetID(_id);
-        widget->SetFilepath(_filepath);
-        mWidgetContainer.push_back(widget);
-
-        return widget;
-    }
-
-    // TODO : find 함수 만들기
-    // auto FindWidget(std::wstring _id);
+    // 드로우할 위젯 모음
+    static std::vector <Widget*> mDrawWidgetList;
+    // 뷰포트 얻는 함수
+    static void SetFocusViewport(ViewportScene* _pViewport);
+    // Get 함수
+    static SpriteBatch* GetSpriteBatch()    { return m_pSpriteBatch; }
 private:
-    static std::vector<Widget*> mWidgetContainer;
+    static SpriteBatch* m_pSpriteBatch;                // 스프라이트 배치
+
+    static ViewportScene* m_pFocusViewport;            // 뷰 포트
+
+    static Vector2  mFocusScreen;                    // 원래 스크린 사이즈
+    static Vector2  mCurrScreen;                     // 현재 스크린 사이즈
+    static Vector2  mScale;                          // 화면 비율
+
+    // 화면 비율 설정 함수
+    static void SetScale() { mScale = mCurrScreen / mFocusScreen; }
 };

@@ -25,6 +25,6 @@ public:
     inline FLOAT GetHeight() { return mViewport.Height; }
     inline FLOAT GetOffsetX() { return mViewport.TopLeftX; }
     inline FLOAT GetOffsetY() { return mViewport.TopLeftY; }
-private:
+public:
     D3D11_VIEWPORT mViewport;
 };

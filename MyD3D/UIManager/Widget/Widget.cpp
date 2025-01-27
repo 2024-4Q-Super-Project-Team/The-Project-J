@@ -3,7 +3,7 @@
 
 #include "UIManager/UIManager.h"
 
-/*	
+/*
 	DXGI_MODE_ROTATION
 
 	DXGI_MODE_ROTATION_UNSPECIFIED = 0,
@@ -13,38 +13,26 @@
 	DXGI_MODE_ROTATION_ROTATE270 = 4
 */
 
-Widget::Widget()
+Widget::Widget(Object* _owner)
+	: Component(_owner)
 {
 
 }
 
 Widget::~Widget()
 {
-
-}
-
-void Widget::Init()
-{
-	m_pSpriteBatch = new SpriteBatch(D3DGraphicsRenderer::GetDevicecontext());
-}
-
-void Widget::Update()
-{
-
-}
-
-void Widget::Release()
-{
 	if (m_pTexture != nullptr)
 	{
 		delete m_pTexture;
 		m_pTexture = nullptr;
 	}
-
-	if (m_pSpriteBatch != nullptr)
-	{
-		delete m_pSpriteBatch;
-		m_pSpriteBatch = nullptr;
-	}
 }
 
+void Widget::SetTexture(ResourceHandle _handle)
+{
+	m_pTexture = ResourceManager::GetResource<Texture2DResource>(_handle);
+
+	// 이미지 크기 설정
+	gameObject->transform->scale.x = m_pTexture->Texture->mWidth;
+	gameObject->transform->scale.y = m_pTexture->Texture->mHeight;
+}

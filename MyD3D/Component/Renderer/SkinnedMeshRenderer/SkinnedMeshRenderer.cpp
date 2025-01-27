@@ -350,29 +350,48 @@ void SkinnedMeshRenderer::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
 
-    mMeshHandle.Deserialize(j["mesh handle"]);
-    mMaterialHandle.Deserialize(j["material handle"]);
-
-    mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-    mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
-
-    json mProp = j["property"];
-
-    for (int i = 0; i < 4; i++)
+    if (j.contains("mesh handle"))
     {
-        mMatCBuffer.MatProp.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
-        mMatCBuffer.MatProp.AmbientRGB[i] = mProp["ambient"][i].get<float>();
-        mMatCBuffer.MatProp.SpecularRGB[i] = mProp["specular"][i].get<float>();
+        mMeshHandle.Deserialize(j["mesh handle"]);
+        SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
     }
 
-    mMatCBuffer.MatProp.RoughnessScale = mProp["roughness"].get<float>();
-    mMatCBuffer.MatProp.MetallicScale = mProp["metallic"].get<float>();
-    mMatCBuffer.MatProp.AmbienOcclusionScale = mProp["ao"].get<float>();
+    if (j.contains("material handle"))
+    {
+        mMaterialHandle.Deserialize(j["material handle"]);
+        SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
+    }
 
-    mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
+    if (j.contains("Property"))
+    {
+        json propJson = j["property"];
 
-    Object* rootObj = static_cast<Object*>(Engine::SaveBase::mMap[j["root"].get<unsigned int>()]);
-    mRootBone = rootObj->transform;
+        for (int i = 0; i < 4; i++)
+        {
+            if (propJson.contains("diffuse") && propJson["diffuse"].size() == 4)
+                mMatCBuffer.MatProp.DiffuseRGB[i] = propJson["diffuse"][i].get<float>();
+            if (propJson.contains("ambient") && propJson["ambient"].size() == 4)
+                mMatCBuffer.MatProp.AmbientRGB[i] = propJson["ambient"][i].get<float>();
+            if (propJson.contains("specular") && propJson["specular"].size() == 4)
+                mMatCBuffer.MatProp.SpecularRGB[i] = propJson["specular"][i].get<float>();
+        }
+
+        if (propJson.contains("roughness"))
+            mMatCBuffer.MatProp.RoughnessScale = propJson["roughness"].get<float>();
+        if (propJson.contains("metallic"))
+            mMatCBuffer.MatProp.MetallicScale = propJson["metallic"].get<float>();
+        if (propJson.contains("ao"))
+            mMatCBuffer.MatProp.AmbienOcclusionScale = propJson["ao"].get<float>();
+    }
+
+    if (j.contains("use map"))
+        mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
+
+    if (j.contains("root"))
+    {
+        Object* rootObj = static_cast<Object*>(Engine::SaveBase::mMap[j["root"].get<unsigned int>()]);
+        mRootBone = rootObj->transform;
+    }
 }
 
 #define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \

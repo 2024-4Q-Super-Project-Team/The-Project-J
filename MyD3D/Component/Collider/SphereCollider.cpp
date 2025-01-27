@@ -100,15 +100,24 @@ void SphereCollider::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mIsTrigger = j["isTrigger"].get<bool>();
-	mPosition.x = j["position"][0].get<float>();
-	mPosition.y = j["position"][1].get<float>();
-	mPosition.z = j["position"][2].get<float>();
-	mRotation.x = j["rotation"][0].get<float>();
-	mRotation.y = j["rotation"][1].get<float>();
-	mRotation.z = j["rotation"][2].get<float>();
-	mRadius = j["radius"].get<float>();
+	if(j.contains("isTrigger"))
+		mIsTrigger = j["isTrigger"].get<bool>();
 
+	if (j.contains("position"))
+	{
+		mPosition.x = j["position"][0].get<float>();
+		mPosition.y = j["position"][1].get<float>();
+		mPosition.z = j["position"][2].get<float>();
+	}
+	if (j.contains("rotation"))
+	{
+		mRotation.x = j["rotation"][0].get<float>();
+		mRotation.y = j["rotation"][1].get<float>();
+		mRotation.z = j["rotation"][2].get<float>();
+	}
+
+	if(j.contains("radius"))
+		mRadius = j["radius"].get<float>();
 
 	SetRadius();
 	SetRotation();

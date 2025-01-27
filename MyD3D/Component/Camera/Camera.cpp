@@ -398,12 +398,19 @@ json Camera::Serialize()
 void Camera::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
-    mFovAngle = j["fov angle"].get<float>();
-    mProjectionNear = j["near"].get<float>();
-    mProjectionFar = j["far"].get<float>();
-    mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
-    mOrthoWidth = j["ortho width"].get<float>();
-    mOrthoHeight = j["ortho height"].get<float>();
+
+    if(j.contains("fov angle"))
+        mFovAngle = j["fov angle"].get<float>();
+    if (j.contains("near"))
+        mProjectionNear = j["near"].get<float>();
+    if (j.contains("far"))
+        mProjectionFar = j["far"].get<float>();
+    if (j.contains("type"))
+        mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
+    if (j.contains("ortho width"))
+        mOrthoWidth = j["ortho width"].get<float>();
+    if (j.contains("ortho height"))
+        mOrthoHeight = j["ortho height"].get<float>();
 }
 
 Vector3 Camera::GetDistance(Transform* _transform)

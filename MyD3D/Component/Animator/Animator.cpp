@@ -136,8 +136,10 @@ json Animator::Serialize()
 void Animator::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
-    mAnimationHandle.Deserialize(j["active animation"]);
-    mFrameRateScale = j["frame rate scale"].get<FLOAT>();
+    if(j.contains("active animation handle"))
+        mAnimationHandle.Deserialize(j["active animation handle"]);
+    if (j.contains("frame rate scale"))
+        mFrameRateScale = j["frame rate scale"].get<FLOAT>();
 }
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)

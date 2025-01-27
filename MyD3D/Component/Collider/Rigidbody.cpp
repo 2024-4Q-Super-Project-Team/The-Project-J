@@ -201,10 +201,12 @@ void Rigidbody::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	bool why = j.contains("isDynamic");
-	mIsDynamic = j["isDynamic"].get<bool>();
-	mIsKinematic = j["isKinematic"].get<bool>();
-	mMass = j["mass"].get<float>();
+	if (j.contains("isDynamic"))
+		mIsDynamic = j["isDynamic"].get<bool>();
+	if (j.contains("isKinematic"))
+		mIsKinematic = j["isKinematic"].get<bool>();
+	if (j.contains("mass"))
+		mMass = j["mass"].get<float>();
 }
 
 void Rigidbody::EditorRendering(EditorViewerType _type)

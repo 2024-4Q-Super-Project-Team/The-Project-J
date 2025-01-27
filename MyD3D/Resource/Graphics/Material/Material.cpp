@@ -125,31 +125,51 @@ json MaterialResource::Serialize()
 
 void MaterialResource::Deserialize(json& j)
 {
-    json mProp = j["property"];
-
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
-    mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
-
-    for (int i = 0; i < 4; i++)
+    if (j.contains("property"))
     {
-        mMaterialProperty.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
-        mMaterialProperty.AmbientRGB[i] = mProp["ambient"][i].get<float>();
-        mMaterialProperty.SpecularRGB[i] = mProp["specular"][i].get<float>();
+        json propJson = j["property"];
+
+        if(propJson.contains("diffuse map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
+        if (propJson.contains("specular map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
+        if (propJson.contains("ambient map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
+        if(propJson.contains("emissive map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
+        if(propJson.contains("normal map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
+        if(propJson.contains("roughness map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
+        if(propJson.contains("opacity map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
+        if(propJson.contains("metalness map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
+        if(propJson.contains("ambientocclusion map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if(propJson.contains("diffuse"))
+                mMaterialProperty.DiffuseRGB[i] = propJson["diffuse"][i].get<float>();
+            if (propJson.contains("ambient"))
+                mMaterialProperty.AmbientRGB[i] = propJson["ambient"][i].get<float>();
+            if (propJson.contains("specular"))
+                mMaterialProperty.SpecularRGB[i] = propJson["specular"][i].get<float>();
+        }
+
+        if(propJson.contains("roughness"))
+            mMaterialProperty.RoughnessScale = propJson["roughness"].get<float>();
+        if (propJson.contains("metallic"))
+            mMaterialProperty.MetallicScale = propJson["metallic"].get<float>();
+        if (propJson.contains("ao"))
+            mMaterialProperty.AmbienOcclusionScale = propJson["ao"].get<float>();
     }
-
-    mMaterialProperty.RoughnessScale = mProp["roughness"].get<float>();
-    mMaterialProperty.MetallicScale = mProp["metallic"].get<float>();
-    mMaterialProperty.AmbienOcclusionScale = mProp["ao"].get<float>();
-
-    mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
-    mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
+    
+    if (j.contains("blend type"))
+        mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
+    if (j.contains("rs type"))
+        mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
 }
 
 #define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \

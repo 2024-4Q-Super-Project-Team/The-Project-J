@@ -214,18 +214,26 @@ void AudioSource::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
+	if(j.contains("active audio"))
+		mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
 
-	json tableJson = j["table"];
-	for (json& audioJson : tableJson)
+	if (j.contains("table"))
 	{
-		std::wstring key = Helper::ToWString(audioJson["key"].get<std::string>());
-		ResourceHandle handle;
-		handle.Deserialize(audioJson["handle"]);
-
-		mAudioTable[key] = handle;
+		json tableJson = j["table"];
+		for (json& audioJson : tableJson)
+		{
+			if (audioJson.contains("key"))
+			{
+				std::wstring key = Helper::ToWString(audioJson["key"].get<std::string>());
+				if (audioJson.contains("handle"))
+				{
+					ResourceHandle handle;
+					handle.Deserialize(audioJson["handle"]);
+					mAudioTable[key] = handle;
+				}
+			}
+		}
 	}
-
 }
 
 void AudioSource::EditorRendering(EditorViewerType _viewerType)

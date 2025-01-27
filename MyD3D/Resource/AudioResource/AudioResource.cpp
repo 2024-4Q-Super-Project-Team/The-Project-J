@@ -38,7 +38,6 @@ void AudioResource::SetSoundMode(eAudioListenMode _soundMode)
 json AudioResource::Serialize()
 {
     json ret;
-    ret["key"] = mHandle.mMainKey;
     ret["id"] = GiveId();
     ret["loop"] = mUseLoop;
     ret["mode"] = mListenMode;
@@ -49,8 +48,11 @@ json AudioResource::Serialize()
 void AudioResource::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
-    mUseLoop = j["loop"].get<bool>();
-    mListenMode = (eAudioListenMode)j["mode"].get<int>();
+
+    if (j.contains("loop"))
+        mUseLoop = j["loop"].get<bool>();
+    if (j.contains("mode"))
+        mListenMode = (eAudioListenMode)j["mode"].get<int>();
 }
 
 void AudioResource::EditorRendering(EditorViewerType _viewerType)

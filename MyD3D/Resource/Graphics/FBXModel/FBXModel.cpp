@@ -94,10 +94,13 @@ void FBXModelResource::Deserialize(json& j)
 {
 	for (json& matJ : j)
 	{
-		std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
-		auto mat = mMaterialTable[name];
-		if(mat)
-			mat->Deserialize(matJ["material"]);
+		if (matJ.contains("name"))
+		{
+			std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
+			auto mat = mMaterialTable[name];
+			if (mat && matJ.contains("material"))
+				mat->Deserialize(matJ["material"]);
+		}
 	}
 }
 

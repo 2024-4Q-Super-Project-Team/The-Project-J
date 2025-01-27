@@ -199,6 +199,9 @@ std::shared_ptr<D3DBitmapRenderTarget> ViewportScene::GetDeferredRenderTarget()
 
 void ViewportScene::ResizeSharedResourceView()
 {
+    // 축소화 하면 터져서 임시로...
+    if (GetFocus() != mWindow->GetHandle())
+        return;
     auto size = mWindow->GetSize();
     if (size.x != 0 && size.y != 0)
     {

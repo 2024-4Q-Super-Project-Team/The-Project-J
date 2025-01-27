@@ -10,7 +10,7 @@ std::unordered_map<ResourceHandle, Resource*>       ResourceManager::mHandleFrom
 std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromMainKeyMappingTable;
 std::unordered_map<std::wstring, ResourceHandle>    ResourceManager::mHandleFromPathMappingTable;
 std::unordered_set<ResourceHandle>                  ResourceManager::mLoadResourceList;
-std::string                                         ResourceManager::mSaveFilePath = "../Save/";
+std::string                                         ResourceManager::mSaveFilePath = "Save/";
 
 BOOL ResourceManager::Initialize()
 {

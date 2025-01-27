@@ -8,6 +8,8 @@
 Animator::Animator(Object* _owner)
     : Component(_owner)
     , isPlaying(true)
+    , mDuration(0.0f)
+    , mFrameRateScale(1.0f)
 {
     SetEID("Animator");
     mType = eComponentType::ANIMAITOR;
@@ -122,20 +124,20 @@ void _CALLBACK Animator::OnDestroy()
 }
 
 json Animator::Serialize()
-{
-    // JSON_TODO  
+{ 
     json ret;
     ret["id"] = GetId();
     ret["name"] = "Animator";
-
-    ret["active animation"] = mActiveAnimation->GetKey();
-
+    ret["active animation handle"] = mAnimationHandle.Serialize();
+    ret["frame rate scale"] = mFrameRateScale;
     return ret;
 }
 
 void Animator::Deserialize(json& j)
 {
-    //TODO
+    SetId(j["id"].get<unsigned int>());
+    mAnimationHandle.Deserialize(j["active animation"]);
+    mFrameRateScale = j["frame rate scale"].get<FLOAT>();
 }
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)

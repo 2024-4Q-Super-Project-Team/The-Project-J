@@ -191,6 +191,23 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
     {
         Resource::EditorRendering(_viewerType);
 
+        {
+            ImGui::Text("Diffuse : ");
+            ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMaterialProperty.DiffuseRGB.r);
+            ImGui::Text("Ambient : ");
+            ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMaterialProperty.AmbientRGB.r);
+            ImGui::Text("Specular : ");
+            ImGui::ColorEdit3((uid + "Specular").c_str(), &mMaterialProperty.SpecularRGB.r);
+            ImGui::Text("Roughness Scale : ");
+            ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMaterialProperty.RoughnessScale, 0.01f, 0.0f, 1.0f);
+            ImGui::Text("Metallic Scale : ");
+            ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMaterialProperty.MetallicScale, 0.01f, 0.0f, 1.0f);
+            ImGui::Text("AmbienOcclusion Scale : ");
+            ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMaterialProperty.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+        }
+
+        ImGui::Separator();
+
         {   // 블렌드 타입
             const char* renderMode[] = { "Opaque", "Transparent" };
             int SelectIndex = (int)mBlendMode; // 현재 선택된 항목 (인덱스)
@@ -293,7 +310,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //void Material::SetMaterial(MaterialResource* _pMaterial)
 //{
 //    mMaterialResource = _pMaterial;
-//    mMatCBuffer.MatProp = _pMaterial->mMaterialProperty;
+//    mMaterialProperty = _pMaterial->mMaterialProperty;
 //   
 //}
 //
@@ -352,17 +369,17 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
 //        ImGui::Text(("Material : " + name).c_str());
 //        ImGui::Text("Diffuse : ");
-//        ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
+//        ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMaterialProperty.DiffuseRGB.r);
 //        ImGui::Text("Ambient : ");
-//        ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
+//        ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMaterialProperty.AmbientRGB.r);
 //        ImGui::Text("Specular : ");
-//        ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
+//        ImGui::ColorEdit3((uid + "Specular").c_str(), &mMaterialProperty.SpecularRGB.r);
 //        ImGui::Text("Roughness Scale : ");
-//        ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMaterialProperty.RoughnessScale, 0.01f, 0.0f, 1.0f);
 //        ImGui::Text("Metallic Scale : ");
-//        ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMaterialProperty.MetallicScale, 0.01f, 0.0f, 1.0f);
 //        ImGui::Text("AmbienOcclusion Scale : ");
-//        ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMaterialProperty.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
 //        EDITOR_COLOR_POP(1);
 //        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
 //        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)

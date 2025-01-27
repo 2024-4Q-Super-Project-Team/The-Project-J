@@ -238,8 +238,6 @@ void SkinnedMeshRenderer::SetMaterial(ResourceHandle _handle)
             mMaterial = MatResource;
             mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
         }
-        mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
-        
     }
 }
 
@@ -439,19 +437,7 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
             widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
-                ImGui::Text("Diffuse : ");
-                ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
-                ImGui::Text("Ambient : ");
-                ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
-                ImGui::Text("Specular : ");
-                ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
-                ImGui::Text("Roughness Scale : ");
-                ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
-                ImGui::Text("Metallic Scale : ");
-                ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
-                ImGui::Text("AmbienOcclusion Scale : ");
-                ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
-                for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+               for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
                     eMaterialMapType mapType = (eMaterialMapType)type;
 

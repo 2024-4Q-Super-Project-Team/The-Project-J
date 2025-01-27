@@ -43,12 +43,13 @@ private:
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
-
+    // TODO : AudioSource처럼 테이블로 두고 관리하는게 낫지 않을까? 라는 생각
 private:
     ResourceHandle      mAnimationHandle;
     AnimationResource*  mActiveAnimation;
     BOOL  isPlaying;
-    float mDuration;
+    FLOAT mDuration;
+    FLOAT mFrameRateScale;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

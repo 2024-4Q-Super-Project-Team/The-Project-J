@@ -13,6 +13,12 @@ Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 
 	gameObject->transform->UpdateMatrix();
 	gameObject->transform->UpdatePxTransform();
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 Rigidbody::~Rigidbody()
@@ -43,12 +49,6 @@ void Rigidbody::Start()
 
 	SetMass(mMass);
 	SetIsKinematic(mIsKinematic);
-
-	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
-	for (auto& material : materials)
-	{
-		mMaterials.push_back(material.first.c_str());
-	}
 
 	auto& colliders = gameObject->GetComponents<Collider>();
 	for (auto& collider : colliders)

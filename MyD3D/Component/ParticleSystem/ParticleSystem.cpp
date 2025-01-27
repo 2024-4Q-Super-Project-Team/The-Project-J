@@ -20,10 +20,10 @@ ParticleSystem::ParticleSystem(Object* _owner)
 	mParticleSystem = GameManager::GetPhysicsManager()->GetPhysics()
 		->createPBDParticleSystem(*GameManager::GetPhysicsManager()->GetCudaManager(), 96);
 
+	gameObject->GetOwnerWorld()->AddPxActor(mParticleSystem);
+
 	mParticleBuffer = GameManager::GetPhysicsManager()->GetPhysics()
 		->createParticleBuffer(9000, 10, GameManager::GetPhysicsManager()->GetCudaManager());
-
-	gameObject->GetOwnerWorld()->AddPxActor(mParticleSystem);
 
 	// PxPBDMaterial 积己
 	PxPBDMaterial* defaultMat = GameManager::GetPhysicsManager()->GetPhysics()
@@ -157,6 +157,7 @@ void ParticleSystem::Update()
 
 void ParticleSystem::PostUpdate()
 {
+
 }
 
 void ParticleSystem::PreRender()
@@ -266,12 +267,14 @@ Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)
 
 void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
-	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_POINTLIST);
+	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//// 府家胶 官牢爹
 	GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
 	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
 	GraphicsManager::GetPixelShader(ePixelShaderType::PARTICLE)->Bind();
+	mTexture->Texture->SetBindSlot(25);
+	mTexture->Texture->SetBindStage(eShaderStage::PS);
 	mTexture->Texture->Bind();
 	
 	TransformCBuffer cb;
@@ -288,7 +291,7 @@ void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 	
 	D3DGraphicsRenderer::DrawVertexCall(mParticleCount, 0);
 	
-	D3DGraphicsRenderer::SetTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
 }
 

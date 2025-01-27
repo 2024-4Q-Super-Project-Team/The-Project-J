@@ -10,8 +10,11 @@
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 
 #include "Component/Camera/SkyBox/SkyBox.h"
+#include "EditorGridDrawer.h"
 
-
+EditorCamera::EditorCamera()
+{
+}
 
 void EditorCamera::EditorUpdate()
 {
@@ -173,12 +176,13 @@ void EditorCamera::ExcuteDrawList()
         if (mSize.Length() > 0.05f)
         {
             mMainRenderTarget->BeginDraw();
-            mMainRenderTarget->Clear();
+            mMainRenderTarget->Clear(ColorF::Gray());
 
             DrawShadow();
 
             mMainViewport->Bind();
 
+            EditorGridDrawer::DrawGrid();
             DrawObject();
 
             if (mIsSkyBoxRendering)
@@ -312,8 +316,13 @@ void EditorCamera::EditorRendering(EditorViewerType _viewerType)
     ImGui::Separator();
     ImGui::Text("Camera MoveSpeed : ");
     ImGui::SliderFloat((uid + "MoveSpeed").c_str(), &mCameraMoveSpeed, 1.0f, 10000.0f);
+    ImGui::Text("Camera RotateSpeed : ");
+    ImGui::SliderFloat((uid + "RotateSpeed").c_str(), &mCameraRotateSpeed, 1.0f, 20.0f);
     ImGui::Separator();
     ImGui::Checkbox(("Rendering SkyBox" + uid).c_str(), &mIsSkyBoxRendering);
     ImGui::Checkbox(("Rendering Collider" + uid).c_str(), &mIsColliderRendering);
+    ImGui::Separator();
+    //ImGui::SliderFloat((uid + "GridSize").c_str(), &Editor::GuizmoGridDrawer::mGridSize, 1.0f, 100000.0f);
+    ImGui::Separator();
 }
 

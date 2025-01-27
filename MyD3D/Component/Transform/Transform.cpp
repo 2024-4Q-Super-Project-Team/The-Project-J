@@ -184,18 +184,26 @@ void Transform::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
 
-    position.x = j["position"][0].get<float>();
-    position.y = j["position"][1].get<float>();
-    position.z = j["position"][2].get<float>();
+    if (j.contains("position") && j["position"].size() == 3)
+    {
+        position.x = j["position"][0].get<float>();
+        position.y = j["position"][1].get<float>();
+        position.z = j["position"][2].get<float>();
+    }
+    if (j.contains("rotation") && j["rotation"].size() == 4)
+    {
+        rotation.x = j["rotation"][0].get<float>();
+        rotation.y = j["rotation"][1].get<float>();
+        rotation.z = j["rotation"][2].get<float>();
+        rotation.w = j["rotation"][3].get<float>();
+    }
 
-    rotation.x = j["rotation"][0].get<float>();
-    rotation.y = j["rotation"][1].get<float>();
-    rotation.z = j["rotation"][2].get<float>();
-    rotation.w = j["rotation"][3].get<float>();
-
-    scale.x = j["scale"][0].get<float>();
-    scale.y = j["scale"][1].get<float>();
-    scale.z = j["scale"][2].get<float>();
+    if (j.contains("scale") && j["scale"].size() == 3)
+    {
+        scale.x = j["scale"][0].get<float>();
+        scale.y = j["scale"][1].get<float>();
+        scale.z = j["scale"][2].get<float>();
+    }
 
     unsigned int rootId = j["root parent"].get<unsigned int>();
     if (rootId == NULLID)

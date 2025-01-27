@@ -7,7 +7,6 @@ bool Collider::bDrawMode = false;
 Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;
-
 	mIsTrigger = false;
 }
 
@@ -21,13 +20,6 @@ Collider::~Collider()
 
 void Collider::Start()
 {
-	//Collider는 Rigidbody가 있어야 동작하므로 Rigidbody가 없으면 만들어줍니다. 
-	if (gameObject->GetComponent<Rigidbody>() == nullptr)
-	{
-		Rigidbody* rigid = new Rigidbody(gameObject);
-		mRefRigidbody = gameObject->EditorAddComponent<Rigidbody>();
-	}
-	AddShapeToRigidbody();
 }
 
 void Collider::Tick()

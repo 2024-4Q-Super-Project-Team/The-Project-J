@@ -1,12 +1,14 @@
 #include "pch.h"
 #include "AudioSource.h"
 #include "Resource/AudioResource/AudioResource.h"
+#include "World/World.h"
 
 AudioSource::AudioSource(Object* _owner)
 	: Component(_owner)
 	, mActiveAudio(nullptr)
 	, mAudioChannel(new AudioChannel)
 {
+	SetEID("AudioSource");
 	mType = eComponentType::AUDIO_SOURCE;
 }
 
@@ -16,6 +18,11 @@ AudioSource::~AudioSource()
 
 void AudioSource::Start()
 {
+	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
+	if (itr)
+	{
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
+	}
 }
 
 void AudioSource::Tick()
@@ -60,6 +67,24 @@ void AudioSource::PostRender()
 
 void AudioSource::EditorUpdate()
 {
+	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
+	if (itr)
+	{
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
+	}
+	else
+	{
+		mActiveAudio = nullptr;
+	}
+}
+
+void AudioSource::EditorGlobalUpdate()
+{
+	for (auto& [key, handle] : mAudioTable)
+	{
+		gameObject->GetOwnerWorld()->
+			mNeedResourceHandleTable.insert(handle.GetParentkey());
+	}
 }
 
 void AudioSource::EditorRender()
@@ -68,14 +93,15 @@ void AudioSource::EditorRender()
 
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
-	std::shared_ptr<AudioResource> pAudio = GetAudioFromTable(_key);
-	if (pAudio)
+	auto itr = Helper::FindMap(_key, mAudioTable);
+	if (itr)
 	{
-		mActiveAudio = pAudio.get();
+		mActiveKey = _key;
+		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
 	}
 }
 
-BOOL AudioSource::AddAudio(const std::wstring& _key, std::shared_ptr<AudioResource> _srcAudio)
+BOOL AudioSource::AddAudio(const std::wstring& _key, ResourceHandle _srcAudio)
 {
 	auto itr = mAudioTable.find(_key);
 	if (FIND_FAILED(itr, mAudioTable))
@@ -84,21 +110,13 @@ BOOL AudioSource::AddAudio(const std::wstring& _key, std::shared_ptr<AudioResour
 		// ActiveAudio가 없으면 편의상 넣어준다.
 		if (mActiveAudio == nullptr)
 		{
-			mActiveAudio = _srcAudio.get();
+			mActiveKey = _key;
+			mActiveAudio = ResourceManager::GetResource<AudioResource>(_srcAudio);
 		}
 	}
 	return FALSE;
 }
 
-std::shared_ptr<AudioResource> AudioSource::GetAudioFromTable(const std::wstring& _key)
-{
-	auto itr = Helper::FindMap(_key, mAudioTable);
-	if (itr)
-	{
-		return *itr;
-	}
-	return nullptr;
-}
 
 bool AudioSource::IsPlaying()
 {
@@ -154,15 +172,68 @@ void AudioSource::SetSurround(bool _isSuround)
 	mAudioChannel->SetSurround(_isSuround);
 }
 
+void _CALLBACK AudioSource::OnEnable()
+{
+	Start();
+	return void _CALLBACK();
+}
+
+void _CALLBACK AudioSource::OnDisable()
+{
+	mActiveAudio = nullptr;
+	return void _CALLBACK();
+}
+
+void _CALLBACK AudioSource::OnDestroy()
+{
+	return void _CALLBACK();
+}
+
 json AudioSource::Serialize()
 {
-	//TODO
-	return json();
+	json ret;
+
+	ret["id"] = GetId();
+	ret["name"] = "AudioSource";
+
+	ret["active audio"] = Helper::ToString(mActiveKey);
+
+	json tableJson;
+	for (auto& audio : mAudioTable)
+	{
+		tableJson["key"] = audio.first;
+		tableJson["handle"] = audio.second.Serialize();
+	}
+
+	ret["table"] += tableJson;
+
+	return ret;
 }
 
 void AudioSource::Deserialize(json& j)
 {
-	//TODO
+	SetId(j["id"].get<unsigned int>());
+
+	if(j.contains("active audio"))
+		mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
+
+	if (j.contains("table"))
+	{
+		json tableJson = j["table"];
+		for (json& audioJson : tableJson)
+		{
+			if (audioJson.contains("key"))
+			{
+				std::wstring key = Helper::ToWString(audioJson["key"].get<std::string>());
+				if (audioJson.contains("handle"))
+				{
+					ResourceHandle handle;
+					handle.Deserialize(audioJson["handle"]);
+					mAudioTable[key] = handle;
+				}
+			}
+		}
+	}
 }
 
 void AudioSource::EditorRendering(EditorViewerType _viewerType)

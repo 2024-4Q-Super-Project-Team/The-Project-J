@@ -25,18 +25,25 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
     mModelNodeArray  = std::move(pModel->ModelNodeArray);
     mModelNodeTable  = std::move(pModel->ModelNodeTable);
     mRootNode       = pModel->RootNode;
-    pModel->Clear();
-
+   
+	for (auto& handle : pModel->TextureHandleTable)
+	{
+		ResourceManager::RegisterResourceHandle(handle);
+		ResourceManager::Alloc_Resource(handle);
+	}
 	for (auto& resource : mMaterialArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 	for (auto& resource : mMeshArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 	for (auto& resource : mAnimationArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 
@@ -44,6 +51,8 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
 	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", _handle.GetPath()};
 	mModelPrefab = new PrefabResource(handle, this);
 	ResourceManager::PushResource(mModelPrefab);
+
+	pModel->Clear();
 }
 
 FBXModelResource::~FBXModelResource()
@@ -85,10 +94,13 @@ void FBXModelResource::Deserialize(json& j)
 {
 	for (json& matJ : j)
 	{
-		std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
-		auto mat = mMaterialTable[name];
-		if(mat)
-			mat->Deserialize(matJ["material"]);
+		if (matJ.contains("name"))
+		{
+			std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
+			auto mat = mMaterialTable[name];
+			if (mat && matJ.contains("material"))
+				mat->Deserialize(matJ["material"]);
+		}
 	}
 }
 

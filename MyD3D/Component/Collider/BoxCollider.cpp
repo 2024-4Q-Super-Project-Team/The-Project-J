@@ -104,24 +104,35 @@ void BoxCollider::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mIsTrigger = j["isTrigger"].get<bool>();
-	mPosition.x = j["position"][0].get<float>();
-	mPosition.y = j["position"][1].get<float>();
-	mPosition.z = j["position"][2].get<float>();
-	mRotation.x = j["rotation"][0].get<float>();
-	mRotation.y = j["rotation"][1].get<float>();
-	mRotation.z = j["rotation"][2].get<float>();
-	mExtents.x = j["extents"][0].get<float>();
-	mExtents.y = j["extents"][1].get<float>();
-	mExtents.z = j["extents"][2].get<float>();
+	if(j.contains("isTrigger"))
+		mIsTrigger = j["isTrigger"].get<bool>();
 
-	SetExtents();
-	SetRotation();
-	SetLocalPosition();
+	if (j.contains("position"))
+	{
+		mPosition.x = j["position"][0].get<float>();
+		mPosition.y = j["position"][1].get<float>();
+		mPosition.z = j["position"][2].get<float>();
+		SetLocalPosition();
+		mOBB.Center = mPosition;
+	}
+	if (j.contains("rotation"))
+	{
+		mRotation.x = j["rotation"][0].get<float>();
+		mRotation.y = j["rotation"][1].get<float>();
+		mRotation.z = j["rotation"][2].get<float>();
+		SetRotation();
+		mOBB.Orientation = mQuatRotation;
+	}
+	if (j.contains("extents"))
+	{
+		mExtents.x = j["extents"][0].get<float>();
+		mExtents.y = j["extents"][1].get<float>();
+		mExtents.z = j["extents"][2].get<float>();
+		SetExtents();
+		mOBB.Extents = mExtents;
+	}
 
-	mOBB.Center = mPosition;
-	mOBB.Orientation = mQuatRotation;
-	mOBB.Extents = mExtents;
+	
 }
 
 void BoxCollider::DrawWire()

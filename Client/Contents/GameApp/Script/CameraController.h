@@ -8,6 +8,7 @@ public:
     void Update();
 public:
     virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
 public:
     SerializeField(FLOAT, mMoveSpeed, 100.0f);
     SerializeField(FLOAT, sensitivity, 5.0f);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Component/Component.h"
+#include "Component/Renderer/Renderer.h"
 
 class AnimationResource;
 class AnimationNode;
@@ -25,11 +26,16 @@ public:
     virtual void PostRender() override;
     // Editor Only
     virtual void EditorUpdate() override;
+    virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
     void SetAnimation(ResourceHandle _handle);
     void SetAnimation(AnimationResource* _pAnim);
-
+public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
@@ -37,12 +43,13 @@ private:
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
-
+    // TODO : AudioSource처럼 테이블로 두고 관리하는게 낫지 않을까? 라는 생각
 private:
     ResourceHandle      mAnimationHandle;
     AnimationResource*  mActiveAnimation;
-    bool  isPlaying;
-    float mDuration;
+    BOOL  isPlaying;
+    FLOAT mDuration;
+    FLOAT mFrameRateScale;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

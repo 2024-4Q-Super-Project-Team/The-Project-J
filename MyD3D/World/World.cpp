@@ -19,7 +19,6 @@ PxFilterFlags CustomFilterShader(
     return PxFilterFlag::eDEFAULT;
 }
 
-
 World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_view _tag, bool isEmpty)
     : Entity(_name, _tag)
     , mOwnerScene(_pViewport)
@@ -34,20 +33,12 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = CustomFilterShader;
     //sceneDesc.simulationEventCallback = mEventCallback;
-        // GPU 가속 설정 (필수)
-    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
-    sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
-    sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
+        // GPU 가속 설정
+    //sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+    //sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+    //sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
     mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
-
-    PxPvdSceneClient* pvdClient = mPxScene->getScenePvdClient();
-    if (pvdClient) {
-        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONSTRAINTS, true);
-        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_CONTACTS, true);
-        pvdClient->setScenePvdFlag(PxPvdSceneFlag::eTRANSMIT_SCENEQUERIES, true);
-    }
-
 }
 
 World::~World()
@@ -65,9 +56,9 @@ World::~World()
 
 void World::Start()
 {
-    for (auto& object : mObjectArray)
+    for (int i = 0; i < mObjectArray.size(); i++)
     {
-        object->Start();
+        mObjectArray[i]->Start();
     }
 }
 
@@ -188,7 +179,6 @@ void World::PostRender()
 
 void World::EditorUpdate()
 {
-    UpdateObject();
     for (Object* object : mObjectArray)
     {
         if (object->GetState() == EntityState::Active)
@@ -196,6 +186,15 @@ void World::EditorUpdate()
             if (object->transform->GetParent() == nullptr)
                 object->EditorUpdate();
         }
+    }
+}
+
+void World::EditorGlobalUpdate()
+{
+    for (Object* object : mObjectArray)
+    {
+        if (object->transform->GetParent() == nullptr)
+            object->EditorGlobalUpdate();
     }
 }
 
@@ -250,7 +249,7 @@ json World::Serialize()
     json ret;
     ret["id"] = GiveId();
     ret["name"] = Helper::ToString(mName);
-
+    ret["is persistnace"] = isPersistance;
     json objs = json::array();
     for (auto& object : mObjectArray)
     {
@@ -344,7 +343,6 @@ void World::EditorRendering(EditorViewerType _viewerType)
     {
         case EditorViewerType::DEFAULT:
         {
-           
             std::string widgetID = name + ptr;
             if (mOwnerScene->GetWorldManager()->GetActiveWorld() == this)
             {
@@ -401,7 +399,7 @@ void World::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Text("Pre Load Resource List :");
                 for (auto itr = mNeedResourceHandleTable.begin(); itr != mNeedResourceHandleTable.end(); ++itr)
                 {
-                    ImGui::Text(Helper::ToString((*itr).GetKey() + L" : " + (*itr).GetPath()).c_str());
+                    ImGui::Text(Helper::ToString(*itr).c_str());
                 }
             }
             break;

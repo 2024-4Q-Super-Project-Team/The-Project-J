@@ -47,6 +47,7 @@ public:
     virtual void PostRender()	override;
 
     virtual void EditorUpdate()	override;
+    void EditorGlobalUpdate();
     virtual void EditorRender()	override;
 public:
     virtual void _CALLBACK OnEnable()  override;
@@ -57,8 +58,8 @@ public:
     void Clone(Object* _pDest, std::unordered_map<std::wstring, Object*>& _objTable);
 public:
     // 컴포넌트를 생성한 후 반환하는 함수. 가변인자를 통해 추가적인 인자를 전달할 수 있음.
-    template <class T, typename... Args>
-    T* AddComponent(Args&&... args);
+    template <class T>
+    T* AddComponent(bool _isStart = true);
     // 특정 타입의 컴포넌트가 있으면 그 컴포넌트 중 제일 첫 번째 컴포넌트가 반환됨. 없으면 nullptr반환
     template <class T>
     T* EditorAddComponent();
@@ -86,16 +87,16 @@ public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 
-template <class T, typename... Args>
-T* Object::AddComponent(Args&&... args)
+template <class T>
+T* Object::AddComponent(bool _isStart)
 {
     static_assert(std::is_base_of<Component, T>::value, "AddComponent_Fail");
-    T* component = new T(this, std::forward<Args>(args)...);
+    T* component = new T(this);
     eComponentType type = component->GetType();
     int index = static_cast<UINT>(type);
     mComponentArray[index].push_back(component);
 
-    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+    if (GameManager::GetRunType() == eEngineRunType::GAME_MODE && _isStart)
     {
         // JSON_TODO : 이거 컴포넌트 추가도 Addcomponent로 하지 말아주세요 ㅠㅠ
         component->Start();

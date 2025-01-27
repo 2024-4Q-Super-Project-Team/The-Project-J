@@ -3,6 +3,8 @@
 #include "ViewportScene/ViewportManager.h"
 #include "Manager/GameManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Editor/EditorCamera/EditorGridDrawer.h"
+
 
 EditorCamera                    EditorManager::mEditorCamera;
 ViewportScene*                  EditorManager::mFocusViewport = nullptr;
@@ -27,10 +29,9 @@ void EditorManager::Initialize()
     mResourceViewer = new Editor::ResourceViewer();
     mHierarchyViewer = new Editor::HierarchyViewer();
     mInspectorViewer = new Editor::InspectorViewer();
-
+    EditorGridDrawer::SetGrid(300, 10);
     InitMainMenuBar();
     InitMainWindow();
-
     // 컨텍스트 활성화
     ImGui::SetCurrentContext(mEditorContext);
 }
@@ -312,6 +313,7 @@ void EditorManager::InitMainMenuBar()
         pMenu_02->AddMenuItem(new Editor::WorldChanger());
         pMenu_02->AddMenuItem(new Editor::WorldCreator());
         pMenu_02->AddMenuItem(new Editor::WorldRemover());
+        pMenu_02->AddMenuItem(new Editor::StartWorldSetter());
     }
     {
         Editor::MenuNode* pMenu_03 = new Editor::MenuNode("Option");

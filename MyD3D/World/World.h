@@ -32,6 +32,7 @@ public:
 	virtual void PostRender()	override;
 
 	virtual void EditorUpdate()	override;
+	void EditorGlobalUpdate();
 	virtual void EditorRender()	override;
 public:
 	virtual void _CALLBACK OnCreate()	override {};
@@ -46,16 +47,18 @@ public:
 	Object* CreateObject(std::wstring_view _name, std::wstring_view _tag = L"");
 	Object* FindObject(std::wstring_view _name);
 	void	ShiftObject(Object* _dstObject);
+
 	// 월드가 필요로하는 리소스를 미리 로드하기 위한 테이블
-	std::vector<ResourceHandle> mNeedResourceHandleTable;
+	std::unordered_set<std::wstring> mNeedResourceHandleTable;
 private:
 	bool				 isPersistance = false;
 	ViewportScene* const mOwnerScene;
 	std::vector<Object*> mObjectArray;
 public:
+	inline auto IsPersistance(bool _bIsPersistance) { return isPersistance = _bIsPersistance; }
 	inline auto& IsPersistance() { return isPersistance; }
 	inline auto& GetObjectArray() { return mObjectArray; }
-	inline auto GetOwnerViewportScene() const { return mOwnerScene; }
+	inline auto  GetOwnerViewportScene() const { return mOwnerScene; }
 //////////////////////////////////////////////////////////////////////////////
 // Json
 //////////////////////////////////////////////////////////////////////////////

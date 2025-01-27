@@ -62,6 +62,7 @@ public:
 	virtual void PostRender() = 0;
 	// Editor Only
 	virtual void EditorUpdate() = 0;
+	virtual void EditorGlobalUpdate() {};
 	virtual void EditorRender() = 0;
 public:
 	virtual void _CALLBACK OnEnable() {};

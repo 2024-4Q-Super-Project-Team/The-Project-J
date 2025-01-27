@@ -24,6 +24,7 @@ public:
     virtual void PostRender() override;
     // Editor Only
     virtual void EditorUpdate() override;
+    virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable);
@@ -42,16 +43,20 @@ public:
     virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
     virtual eRasterizerStateType GetCullingMode() override;
 public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:
     ResourceHandle      mMeshHandle;
     ResourceHandle      mMaterialHandle;
     MeshResource*       mMesh; 
-    MaterialResource*   mMateiral; 
+    MaterialResource*   mMaterial; 
 
-	TransformCBuffer mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
-    MaterialCBuffer  mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
+	TransformCBuffer    mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
+    MaterialCBuffer     mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
 public:

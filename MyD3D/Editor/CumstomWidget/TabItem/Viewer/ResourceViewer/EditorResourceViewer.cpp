@@ -23,11 +23,41 @@ void Editor::ResourceViewer::Render()
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Resource Load List
 	//////////////////////////////////////////////////////////////////////////////////////
-	auto& loadList = ResourceManager::GetLoadResourceList();
 	ImGui::Text("Load Resource List");
-	for (ResourceHandle handle : loadList)
+	ImGui::SameLine(); // 같은 줄에 추가
+	float cursorX = ImGui::GetCursorPosX();
+	float contentWidth = ImGui::GetContentRegionAvail().x;
+
+	// 커서를 트리 노드 오른쪽 끝으로 이동
+	ImGui::SetCursorPosX(cursorX + contentWidth - 50); // 50은 버튼 크기 + 여백
+	if (ImGui::Button("Reload", ImVec2(50, 20))) // 리로딩 버튼
 	{
-		ImGui::Text(Helper::ToString(handle.GetKey() + L" : " + handle.GetPath()).c_str());
+		ResourceManager::Reload();
+	}
+	auto& loadList = ResourceManager::GetLoadResourceList();
+	for (auto handle = loadList.begin(); handle != loadList.end();)
+	{
+		auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+		std::string widgetID = Helper::ToUTF8(handle->GetKey() + L" : " + handle->GetPath());
+		if (ImGui::Selectable((widgetID).c_str(), false, flags))
+		{
+
+		}
+		// 오른쪽 클릭 - 팝업 메뉴 오픈
+		if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+		{
+			ImGui::OpenPopup(("##" + widgetID).c_str());
+		}
+		if (ImGui::BeginPopup(("##" + widgetID).c_str()))
+		{
+			if (ImGui::MenuItem("Delete")) {
+				handle = loadList.erase(handle);
+				ImGui::EndPopup();
+				continue;
+			}
+			ImGui::EndPopup();
+		}
+		++handle;
 	}
 	ImGui::Separator();
 	//////////////////////////////////////////////////////////////////////////////////////
@@ -39,33 +69,39 @@ void Editor::ResourceViewer::Render()
 		if (ImGui::TreeNodeEx((ResourceName).c_str(), ImGuiTreeNodeFlags_Framed | ImGuiTreeNodeFlags_Selected))
 		{
 			auto& table = ResourceManager::GetResourceTable((eResourceType)i);
-			for (auto& resource : table)
+			for (auto& [handle, resource] : table)
 			{
-				std::string treeName = (ResourceName + " : " + Helper::ToString(resource.first.GetKey())).c_str();
-
-				if (resource.second == nullptr)
+				bool isSelected = InspectorViewer::IsFocusObject(resource);
+				std::string widgetID = ResourceName + " : " + (Helper::ToUTF8(handle.GetKey())).c_str();
+				if (resource)
 				{
-					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_NULL);
+					isSelected ?
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE_SELECTED) :
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE);
 				}
 				else
 				{
-					ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+					isSelected ?
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL_SELECTED) :
+						ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
 				}
-			
-				if (ImGui::TreeNodeEx((treeName + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+				
+				auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
+				if (ImGui::Selectable((widgetID + uid).c_str(), isSelected, flags))
 				{
-					if (resource.second == nullptr)
+					if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
 					{
-						//ImGui::Selectable(GetEID(), false, flags);
-						ImGui::Text("NULL Resource");
+						Editor::InspectorViewer::SetFocusObject(resource);
 					}
-					else
-					{
-						resource.second->EditorRendering(EditorViewerType::DEFAULT);
-					}
-					ImGui::TreePop();
 				}
 				EDITOR_COLOR_POP(1);
+				////////////////////////////////////////////////////////////////////////////
+				// Drag & Drop
+				////////////////////////////////////////////////////////////////////////////
+				EditorItemState state;
+				state.mResourcePtr = resource;
+				state.mName = Helper::ToUTF8(handle.GetKey());
+				EditorDragNDrop::SendDragAndDropData((widgetID + uid).c_str(), state);
 			}
 			ImGui::TreePop();
 		}
@@ -130,4 +166,8 @@ void Editor::ResourceViewer::Render()
 		//	ImGui::EndPopup();
 		//}
 	}
+}
+
+void Editor::ResourceViewer::LoadResourceListPopup()
+{
 }

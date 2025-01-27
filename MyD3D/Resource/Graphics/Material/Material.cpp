@@ -6,15 +6,13 @@
 #include "Resource/Graphics/Texture/Texture.h"
 // Editor
 #include "Editor/EditorManager.h"
+
 MaterialResource* MaterialResource::DefaultMaterial;
 
 MaterialResource::MaterialResource(ResourceHandle _handle)
     : Resource(_handle)
 {
     SetEID("Mateiral : " + Helper::ToString(_handle.GetKey()));
-    // JSON_TODO : 핸들의 Path경로에 Json파일이 있는지 확인
-    // 있으면 해당 JSON의 값을 쓰고
-    // 없으면 JSON을 만들고 기본 값 사용
 }
 
 MaterialResource::~MaterialResource()
@@ -27,8 +25,7 @@ void MaterialResource::Create()
     {
         if (mMaterialMapTextureHandle[i].GetPath() != L"")
         {
-            ResourceManager::RegisterResourceHandle(mMaterialMapTextureHandle[i]);
-            mMaterialMapTexture[i] = ResourceManager::Alloc_Resource<Texture2DResource>(mMaterialMapTextureHandle[i]);
+            mMaterialMapTexture[i] = ResourceManager::GetResource<Texture2DResource>(mMaterialMapTextureHandle[i]);
             if (mMaterialMapTexture[i])
             {
                 mMaterialMapTexture[i]->Texture->SetBindStage(eShaderStage::PS);
@@ -94,12 +91,13 @@ void MaterialResource::FreeDefaultMaterial()
 
 json MaterialResource::Serialize()
 {
-    json ret;
+    
 
-    json mprop;
     ColorF diffuse = mMaterialProperty.DiffuseRGB;
     ColorF ambient = mMaterialProperty.AmbientRGB;
     ColorF specular = mMaterialProperty.SpecularRGB;
+
+    json mprop;
     mprop["diffuse"] = { diffuse.r,diffuse.g, diffuse.b, diffuse.a };
     mprop["ambient"] = { ambient.r, ambient.g, ambient.b, ambient.a };
     mprop["specular"] = { specular.r, specular.g, specular.b, specular.a };
@@ -107,8 +105,18 @@ json MaterialResource::Serialize()
     mprop["metallic"] = mMaterialProperty.MetallicScale;
     mprop["ao"] = mMaterialProperty.AmbienOcclusionScale;
 
-    ret["property"] = mprop;
+    json ret;
+    ret["diffuse map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Serialize();
+    ret["specular map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Serialize();
+    ret["ambient map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Serialize();
+    ret["emissive map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Serialize();
+    ret["normal map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Serialize();
+    ret["roughness map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Serialize();
+    ret["opacity map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Serialize();
+    ret["metalness map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Serialize();
+    ret["ambientocclusion map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Serialize();
 
+    ret["property"] = mprop;
     ret["blend type"] = mBlendMode;
     ret["rs type"] = mRasterMode;
 
@@ -117,21 +125,51 @@ json MaterialResource::Serialize()
 
 void MaterialResource::Deserialize(json& j)
 {
-    json mProp = j["property"];
-
-    for (int i = 0; i < 4; i++)
+    if (j.contains("property"))
     {
-        mMaterialProperty.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
-        mMaterialProperty.AmbientRGB[i] = mProp["ambient"][i].get<float>();
-        mMaterialProperty.SpecularRGB[i] = mProp["specular"][i].get<float>();
+        json propJson = j["property"];
+
+        if(propJson.contains("diffuse map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
+        if (propJson.contains("specular map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
+        if (propJson.contains("ambient map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
+        if(propJson.contains("emissive map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
+        if(propJson.contains("normal map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
+        if(propJson.contains("roughness map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
+        if(propJson.contains("opacity map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
+        if(propJson.contains("metalness map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
+        if(propJson.contains("ambientocclusion map handle"))
+            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
+
+        for (int i = 0; i < 4; i++)
+        {
+            if(propJson.contains("diffuse"))
+                mMaterialProperty.DiffuseRGB[i] = propJson["diffuse"][i].get<float>();
+            if (propJson.contains("ambient"))
+                mMaterialProperty.AmbientRGB[i] = propJson["ambient"][i].get<float>();
+            if (propJson.contains("specular"))
+                mMaterialProperty.SpecularRGB[i] = propJson["specular"][i].get<float>();
+        }
+
+        if(propJson.contains("roughness"))
+            mMaterialProperty.RoughnessScale = propJson["roughness"].get<float>();
+        if (propJson.contains("metallic"))
+            mMaterialProperty.MetallicScale = propJson["metallic"].get<float>();
+        if (propJson.contains("ao"))
+            mMaterialProperty.AmbienOcclusionScale = propJson["ao"].get<float>();
     }
-
-    mMaterialProperty.RoughnessScale = mProp["roughness"].get<float>();
-    mMaterialProperty.MetallicScale = mProp["metallic"].get<float>();
-    mMaterialProperty.AmbienOcclusionScale = mProp["ao"].get<float>();
-
-    mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
-    mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
+    
+    if (j.contains("blend type"))
+        mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
+    if (j.contains("rs type"))
+        mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
 }
 
 #define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \
@@ -172,6 +210,23 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
     case EditorViewerType::INSPECTOR:
     {
         Resource::EditorRendering(_viewerType);
+
+        {
+            ImGui::Text("Diffuse : ");
+            ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMaterialProperty.DiffuseRGB.r);
+            ImGui::Text("Ambient : ");
+            ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMaterialProperty.AmbientRGB.r);
+            ImGui::Text("Specular : ");
+            ImGui::ColorEdit3((uid + "Specular").c_str(), &mMaterialProperty.SpecularRGB.r);
+            ImGui::Text("Roughness Scale : ");
+            ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMaterialProperty.RoughnessScale, 0.01f, 0.0f, 1.0f);
+            ImGui::Text("Metallic Scale : ");
+            ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMaterialProperty.MetallicScale, 0.01f, 0.0f, 1.0f);
+            ImGui::Text("AmbienOcclusion Scale : ");
+            ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMaterialProperty.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+        }
+
+        ImGui::Separator();
 
         {   // 블렌드 타입
             const char* renderMode[] = { "Opaque", "Transparent" };
@@ -275,7 +330,7 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //void Material::SetMaterial(MaterialResource* _pMaterial)
 //{
 //    mMaterialResource = _pMaterial;
-//    mMatCBuffer.MatProp = _pMaterial->mMaterialProperty;
+//    mMaterialProperty = _pMaterial->mMaterialProperty;
 //   
 //}
 //
@@ -334,17 +389,17 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 //        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
 //        ImGui::Text(("Material : " + name).c_str());
 //        ImGui::Text("Diffuse : ");
-//        ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
+//        ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMaterialProperty.DiffuseRGB.r);
 //        ImGui::Text("Ambient : ");
-//        ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
+//        ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMaterialProperty.AmbientRGB.r);
 //        ImGui::Text("Specular : ");
-//        ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
+//        ImGui::ColorEdit3((uid + "Specular").c_str(), &mMaterialProperty.SpecularRGB.r);
 //        ImGui::Text("Roughness Scale : ");
-//        ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMaterialProperty.RoughnessScale, 0.01f, 0.0f, 1.0f);
 //        ImGui::Text("Metallic Scale : ");
-//        ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMaterialProperty.MetallicScale, 0.01f, 0.0f, 1.0f);
 //        ImGui::Text("AmbienOcclusion Scale : ");
-//        ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
+//        ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMaterialProperty.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
 //        EDITOR_COLOR_POP(1);
 //        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
 //        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)

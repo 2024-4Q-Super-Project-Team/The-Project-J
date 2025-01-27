@@ -6,20 +6,26 @@ Resource::Resource(ResourceHandle _handle)
 {
 }
 
+Resource::~Resource()
+{
+	if (Editor::InspectorViewer::IsFocusObject(this))
+		Editor::InspectorViewer::SetFocusObject(nullptr);
+}
+
 void Resource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
 	if (ImGui::TreeNodeEx(("Resource Handle Info" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
 	{
-		ImGui::Text(("Main Key : " + Helper::ToString(mHandle.GetKey())).c_str());
+		ImGui::Text(("Main Key : " + Helper::ToUTF8(mHandle.GetKey())).c_str());
 		if (mHandle.GetSubKey().empty() == false)
 		{
-			ImGui::Text(("Sub Key : " + Helper::ToString(mHandle.GetSubKey())).c_str());
+			ImGui::Text(("Sub Key : " + Helper::ToUTF8(mHandle.GetSubKey())).c_str());
 		}
 		if (mHandle.GetPath().empty() == false)
 		{
-			ImGui::Text(("Path : " + Helper::ToString(mHandle.GetPath())).c_str());
+			ImGui::Text(("Path : " + Helper::ToUTF8(mHandle.GetPath())).c_str());
 		}
 		ImGui::TreePop();
 	}

@@ -1,0 +1,1020 @@
+[
+    {
+        "components": [
+            {
+                "id": 682,
+                "name": "Transform"
+            },
+            {
+                "id": 683,
+                "name": "Camera"
+            }
+        ],
+        "id": 667,
+        "name": "Main_Camera",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 685,
+                "name": "Transform"
+            },
+            {
+                "id": 686,
+                "name": "Light"
+            }
+        ],
+        "id": 668,
+        "name": "Direction_Light",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 687,
+                "name": "Transform"
+            }
+        ],
+        "id": 669,
+        "name": "Map_001.fbx_Prefab",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 688,
+                "name": "Transform"
+            }
+        ],
+        "id": 670,
+        "name": "RootNode",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 689,
+                "name": "Transform"
+            },
+            {
+                "id": 690,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 671,
+        "name": "0",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 693,
+                "name": "Transform"
+            },
+            {
+                "id": 694,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 672,
+        "name": "0.001",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 697,
+                "name": "Transform"
+            },
+            {
+                "id": 698,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 673,
+        "name": "0.002",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 701,
+                "name": "Transform"
+            },
+            {
+                "id": 702,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 674,
+        "name": "463",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 705,
+                "name": "Transform"
+            },
+            {
+                "id": 706,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 675,
+        "name": "Cube.001",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 709,
+                "name": "Transform"
+            },
+            {
+                "id": 710,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 676,
+        "name": "Plane.011",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 713,
+                "name": "Transform"
+            },
+            {
+                "id": 714,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 677,
+        "name": "Plane.012",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 717,
+                "name": "Transform"
+            },
+            {
+                "id": 718,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 678,
+        "name": "Plane.017",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 721,
+                "name": "Transform"
+            },
+            {
+                "id": 722,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 679,
+        "name": "Plane.018",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 725,
+                "name": "Transform"
+            },
+            {
+                "id": 726,
+                "name": "MeshRenderer"
+            },
+            {
+                "id": 727,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 680,
+        "name": "Plane.020",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 732,
+                "name": "Transform"
+            },
+            {
+                "id": 733,
+                "name": "MeshRenderer"
+            }
+        ],
+        "id": 681,
+        "name": "Plane.040",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 808,
+                "name": "Transform"
+            },
+            {
+                "id": 809,
+                "name": "Camera"
+            }
+        ],
+        "id": 737,
+        "name": "Main_Camera",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 811,
+                "name": "Transform"
+            },
+            {
+                "id": 812,
+                "name": "Light"
+            }
+        ],
+        "id": 738,
+        "name": "Direction_Light",
+        "tag": "Default"
+    },
+    {
+        "components": [
+            {
+                "id": 813,
+                "name": "Transform"
+            }
+        ],
+        "id": 739,
+        "name": "SkinningTest.fbx_Prefab",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 814,
+                "name": "Transform"
+            }
+        ],
+        "id": 740,
+        "name": "RootNode",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 815,
+                "name": "Transform"
+            }
+        ],
+        "id": 741,
+        "name": "mixamorig:Hips",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 816,
+                "name": "Transform"
+            }
+        ],
+        "id": 742,
+        "name": "mixamorig:Spine",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 817,
+                "name": "Transform"
+            }
+        ],
+        "id": 743,
+        "name": "mixamorig:Spine1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 818,
+                "name": "Transform"
+            }
+        ],
+        "id": 744,
+        "name": "mixamorig:Spine2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 819,
+                "name": "Transform"
+            }
+        ],
+        "id": 745,
+        "name": "mixamorig:Neck",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 820,
+                "name": "Transform"
+            }
+        ],
+        "id": 746,
+        "name": "mixamorig:Head",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 821,
+                "name": "Transform"
+            }
+        ],
+        "id": 747,
+        "name": "mixamorig:HeadTop_End",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 822,
+                "name": "Transform"
+            }
+        ],
+        "id": 748,
+        "name": "mixamorig:RightShoulder",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 823,
+                "name": "Transform"
+            }
+        ],
+        "id": 749,
+        "name": "mixamorig:RightArm",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 824,
+                "name": "Transform"
+            }
+        ],
+        "id": 750,
+        "name": "mixamorig:RightForeArm",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 825,
+                "name": "Transform"
+            }
+        ],
+        "id": 751,
+        "name": "mixamorig:RightHand",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 826,
+                "name": "Transform"
+            }
+        ],
+        "id": 752,
+        "name": "mixamorig:RightHandThumb1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 827,
+                "name": "Transform"
+            }
+        ],
+        "id": 753,
+        "name": "mixamorig:RightHandThumb2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 828,
+                "name": "Transform"
+            }
+        ],
+        "id": 754,
+        "name": "mixamorig:RightHandThumb3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 829,
+                "name": "Transform"
+            }
+        ],
+        "id": 755,
+        "name": "mixamorig:RightHandThumb4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 830,
+                "name": "Transform"
+            }
+        ],
+        "id": 756,
+        "name": "mixamorig:RightHandIndex1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 831,
+                "name": "Transform"
+            }
+        ],
+        "id": 757,
+        "name": "mixamorig:RightHandIndex2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 832,
+                "name": "Transform"
+            }
+        ],
+        "id": 758,
+        "name": "mixamorig:RightHandIndex3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 833,
+                "name": "Transform"
+            }
+        ],
+        "id": 759,
+        "name": "mixamorig:RightHandIndex4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 834,
+                "name": "Transform"
+            }
+        ],
+        "id": 760,
+        "name": "mixamorig:RightHandMiddle1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 835,
+                "name": "Transform"
+            }
+        ],
+        "id": 761,
+        "name": "mixamorig:RightHandMiddle2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 836,
+                "name": "Transform"
+            }
+        ],
+        "id": 762,
+        "name": "mixamorig:RightHandMiddle3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 837,
+                "name": "Transform"
+            }
+        ],
+        "id": 763,
+        "name": "mixamorig:RightHandMiddle4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 838,
+                "name": "Transform"
+            }
+        ],
+        "id": 764,
+        "name": "mixamorig:RightHandRing1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 839,
+                "name": "Transform"
+            }
+        ],
+        "id": 765,
+        "name": "mixamorig:RightHandRing2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 840,
+                "name": "Transform"
+            }
+        ],
+        "id": 766,
+        "name": "mixamorig:RightHandRing3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 841,
+                "name": "Transform"
+            }
+        ],
+        "id": 767,
+        "name": "mixamorig:RightHandRing4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 842,
+                "name": "Transform"
+            }
+        ],
+        "id": 768,
+        "name": "mixamorig:RightHandPinky1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 843,
+                "name": "Transform"
+            }
+        ],
+        "id": 769,
+        "name": "mixamorig:RightHandPinky2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 844,
+                "name": "Transform"
+            }
+        ],
+        "id": 770,
+        "name": "mixamorig:RightHandPinky3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 845,
+                "name": "Transform"
+            }
+        ],
+        "id": 771,
+        "name": "mixamorig:RightHandPinky4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 846,
+                "name": "Transform"
+            }
+        ],
+        "id": 772,
+        "name": "mixamorig:LeftShoulder",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 847,
+                "name": "Transform"
+            }
+        ],
+        "id": 773,
+        "name": "mixamorig:LeftArm",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 848,
+                "name": "Transform"
+            }
+        ],
+        "id": 774,
+        "name": "mixamorig:LeftForeArm",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 849,
+                "name": "Transform"
+            }
+        ],
+        "id": 775,
+        "name": "mixamorig:LeftHand",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 850,
+                "name": "Transform"
+            }
+        ],
+        "id": 776,
+        "name": "mixamorig:LeftHandThumb1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 851,
+                "name": "Transform"
+            }
+        ],
+        "id": 777,
+        "name": "mixamorig:LeftHandThumb2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 852,
+                "name": "Transform"
+            }
+        ],
+        "id": 778,
+        "name": "mixamorig:LeftHandThumb3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 853,
+                "name": "Transform"
+            }
+        ],
+        "id": 779,
+        "name": "mixamorig:LeftHandThumb4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 854,
+                "name": "Transform"
+            }
+        ],
+        "id": 780,
+        "name": "mixamorig:LeftHandIndex1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 855,
+                "name": "Transform"
+            }
+        ],
+        "id": 781,
+        "name": "mixamorig:LeftHandIndex2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 856,
+                "name": "Transform"
+            }
+        ],
+        "id": 782,
+        "name": "mixamorig:LeftHandIndex3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 857,
+                "name": "Transform"
+            }
+        ],
+        "id": 783,
+        "name": "mixamorig:LeftHandIndex4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 858,
+                "name": "Transform"
+            }
+        ],
+        "id": 784,
+        "name": "mixamorig:LeftHandMiddle1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 859,
+                "name": "Transform"
+            }
+        ],
+        "id": 785,
+        "name": "mixamorig:LeftHandMiddle2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 860,
+                "name": "Transform"
+            }
+        ],
+        "id": 786,
+        "name": "mixamorig:LeftHandMiddle3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 861,
+                "name": "Transform"
+            }
+        ],
+        "id": 787,
+        "name": "mixamorig:LeftHandMiddle4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 862,
+                "name": "Transform"
+            }
+        ],
+        "id": 788,
+        "name": "mixamorig:LeftHandRing1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 863,
+                "name": "Transform"
+            }
+        ],
+        "id": 789,
+        "name": "mixamorig:LeftHandRing2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 864,
+                "name": "Transform"
+            }
+        ],
+        "id": 790,
+        "name": "mixamorig:LeftHandRing3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 865,
+                "name": "Transform"
+            }
+        ],
+        "id": 791,
+        "name": "mixamorig:LeftHandRing4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 866,
+                "name": "Transform"
+            }
+        ],
+        "id": 792,
+        "name": "mixamorig:LeftHandPinky1",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 867,
+                "name": "Transform"
+            }
+        ],
+        "id": 793,
+        "name": "mixamorig:LeftHandPinky2",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 868,
+                "name": "Transform"
+            }
+        ],
+        "id": 794,
+        "name": "mixamorig:LeftHandPinky3",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 869,
+                "name": "Transform"
+            }
+        ],
+        "id": 795,
+        "name": "mixamorig:LeftHandPinky4",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 870,
+                "name": "Transform"
+            }
+        ],
+        "id": 796,
+        "name": "mixamorig:RightUpLeg",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 871,
+                "name": "Transform"
+            }
+        ],
+        "id": 797,
+        "name": "mixamorig:RightLeg",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 872,
+                "name": "Transform"
+            }
+        ],
+        "id": 798,
+        "name": "mixamorig:RightFoot",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 873,
+                "name": "Transform"
+            }
+        ],
+        "id": 799,
+        "name": "mixamorig:RightToeBase",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 874,
+                "name": "Transform"
+            }
+        ],
+        "id": 800,
+        "name": "mixamorig:RightToe_End",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 875,
+                "name": "Transform"
+            }
+        ],
+        "id": 801,
+        "name": "mixamorig:LeftUpLeg",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 876,
+                "name": "Transform"
+            }
+        ],
+        "id": 802,
+        "name": "mixamorig:LeftLeg",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 877,
+                "name": "Transform"
+            }
+        ],
+        "id": 803,
+        "name": "mixamorig:LeftFoot",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 878,
+                "name": "Transform"
+            }
+        ],
+        "id": 804,
+        "name": "mixamorig:LeftToeBase",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 879,
+                "name": "Transform"
+            }
+        ],
+        "id": 805,
+        "name": "mixamorig:LeftToe_End",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 880,
+                "name": "Transform"
+            },
+            {
+                "id": 881,
+                "name": "SkinnedMeshRenderer"
+            }
+        ],
+        "id": 806,
+        "name": "Beta_Surface",
+        "tag": ""
+    },
+    {
+        "components": [
+            {
+                "id": 884,
+                "name": "Transform"
+            },
+            {
+                "id": 885,
+                "name": "SkinnedMeshRenderer"
+            }
+        ],
+        "id": 807,
+        "name": "Beta_Joints",
+        "tag": ""
+    }
+]

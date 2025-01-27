@@ -49,6 +49,12 @@ void Rigidbody::Start()
 	{
 		mMaterials.push_back(material.first.c_str());
 	}
+
+	auto& colliders = gameObject->GetComponents<Collider>();
+	for (auto& collider : colliders)
+	{
+		collider->AddShapeToRigidbody();
+	}
 }
 
 void Rigidbody::Tick()
@@ -167,6 +173,7 @@ void Rigidbody::SetIsKinematic(bool b)
 
 void Rigidbody::SetDisableGravity(bool b)
 {
+	if (!mRigidActor) return;
 	mRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, b);
 }
 
@@ -194,10 +201,12 @@ void Rigidbody::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	bool why = j.contains("isDynamic");
-	mIsDynamic = j["isDynamic"].get<bool>();
-	mIsKinematic = j["isKinematic"].get<bool>();
-	mMass = j["mass"].get<float>();
+	if (j.contains("isDynamic"))
+		mIsDynamic = j["isDynamic"].get<bool>();
+	if (j.contains("isKinematic"))
+		mIsKinematic = j["isKinematic"].get<bool>();
+	if (j.contains("mass"))
+		mMass = j["mass"].get<float>();
 }
 
 void Rigidbody::EditorRendering(EditorViewerType _type)

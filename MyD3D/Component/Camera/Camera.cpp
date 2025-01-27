@@ -92,6 +92,7 @@ void Camera::Render()
 
 void Camera::Draw(Camera* _camera)
 {
+    _camera->PushWireList(this);
 }
 
 void Camera::PostRender()
@@ -100,10 +101,16 @@ void Camera::PostRender()
 
 void Camera::EditorUpdate()
 {
+    if (EditorManager::mEditorCamera.mIsColliderRendering)
+    {
+        UpdateCamera();
+        EditorManager::mEditorCamera.PushWireList(this);
+    }
 }
 
 void Camera::EditorRender()
 {
+    
 }
 
 void Camera::SetCameraSize(Vector2 _sizeScale)
@@ -189,7 +196,7 @@ void Camera::UpdateZSort()
         });
 }
 
-void Camera::DrawShadow()
+void Camera::DrawShadowList()
 {
     GraphicsManager::GetRasterizerState(eRasterizerStateType::BACKFACE_CULLING)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();
@@ -220,7 +227,7 @@ void Camera::DrawShadow()
     }
 }
 
-void Camera::DrawForward()
+void Camera::DrawForwardList()
 {
     GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
@@ -247,7 +254,7 @@ void Camera::DrawForward()
     GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
 }
 
-void Camera::DrawDeferred()
+void Camera::DrawDeferredList()
 {
     // Deferred Pass
     // 디퍼드는 Opaque만 디퍼드로 그린다. 알파큐는 포워드로 그려야함
@@ -295,7 +302,7 @@ void Camera::DrawDeferred()
     mDeferredRenderTarget->ResetAllSRV();
 }
 
-void Camera::DrawWire()
+void Camera::DrawWireList()
 {
     DebugRenderer::BeginDraw();
     DebugRenderer::UpdateViewProjection(mViewMatrix, mProjectionMatrix);
@@ -338,7 +345,7 @@ void Camera::ExcuteDrawList()
                 ////////////////////////////////////////////////////
                 // 그림자 연산
                 ////////////////////////////////////////////////////
-                DrawShadow();
+                DrawShadowList();
 
                 mMainViewport->Bind();  // 메인 윈도우와 대응되는 뷰포트
 
@@ -346,10 +353,10 @@ void Camera::ExcuteDrawList()
                 switch (mCameraRenderType)
                 {
                 case CameraRenderType::Forward:
-                    DrawForward();
+                    DrawForwardList();
                     break;
                 case CameraRenderType::Deferred:
-                    DrawDeferred();
+                    DrawDeferredList();
                     break;
                 default:
                     break;
@@ -371,7 +378,7 @@ void Camera::ExcuteDrawList()
             ////////////////////////////////////////////////////
             // WireFrame Draw
             ////////////////////////////////////////////////////
-            DrawWire();
+            DrawWireList();
         }
     }
     // 조명 리스트를 초기화한다.
@@ -398,12 +405,36 @@ json Camera::Serialize()
 void Camera::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
-    mFovAngle = j["fov angle"].get<float>();
-    mProjectionNear = j["near"].get<float>();
-    mProjectionFar = j["far"].get<float>();
-    mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
-    mOrthoWidth = j["ortho width"].get<float>();
-    mOrthoHeight = j["ortho height"].get<float>();
+
+    if(j.contains("fov angle"))
+        mFovAngle = j["fov angle"].get<float>();
+    if (j.contains("near"))
+        mProjectionNear = j["near"].get<float>();
+    if (j.contains("far"))
+        mProjectionFar = j["far"].get<float>();
+    if (j.contains("type"))
+        mProjectionType = static_cast<ProjectionType>(j["type"].get<int>());
+    if (j.contains("ortho width"))
+        mOrthoWidth = j["ortho width"].get<float>();
+    if (j.contains("ortho height"))
+        mOrthoHeight = j["ortho height"].get<float>();
+}
+
+void Camera::DrawWire()
+{
+    DirectX::BoundingFrustum localFrostum;
+    DirectX::BoundingFrustum WorldFrostum;
+    // Frustum 생성
+    DirectX::BoundingFrustum::CreateFromMatrix(localFrostum, mProjectionMatrix);
+    // 월드 변환 행렬
+    XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
+    XMMATRIX viewMatrix = mViewMatrix;
+    // Frustum을 월드 좌표로 변환
+    localFrostum.Transform(WorldFrostum, XMMatrixInverse(nullptr, viewMatrix));
+    WorldFrostum.Near = mProjectionNear;
+    WorldFrostum.Far = mProjectionFar;
+
+    Debug::Draw(DebugRenderer::GetBatch(), WorldFrostum, Colors::Blue); // BoundingFrustum
 }
 
 Vector3 Camera::GetDistance(Transform* _transform)

@@ -5,7 +5,7 @@
 #include "Object/Object.h"
 
 WorldManager::WorldManager(ViewportScene* _pViewport)
-	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr)
+	: mOwnerScene(_pViewport), mCurrActiveWorld(nullptr), mNextActiveWorld(nullptr), mStartWorld(nullptr)
 {
 }
 
@@ -18,6 +18,9 @@ WorldManager::~WorldManager()
 
 void WorldManager::Start()
 {
+	mNextActiveWorld = mStartWorld;
+	mCurrActiveWorld = nullptr;
+	UpdateWorld();
 	if (mCurrActiveWorld) {
 		mCurrActiveWorld->Start();
 	}
@@ -122,10 +125,24 @@ void WorldManager::PostRender()
 void WorldManager::EditorUpdate()
 {
 	UpdateWorld();
+	EditorGlobalUpdate();
 	// 에디터에서는 다른 월드 오브젝트도 삭제할 수 있으므로 다 돌아봐야한다.
 	for (auto& world : mWorldArray)
 	{
-		world->EditorUpdate();
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			world->EditorUpdate();
+		}
+	}
+}
+
+void WorldManager::EditorGlobalUpdate()
+{
+	for (auto& world : mWorldArray)
+	{
+		world->UpdateObject();
+		world->mNeedResourceHandleTable.clear();
+		world->EditorGlobalUpdate();
 	}
 }
 
@@ -182,10 +199,40 @@ void WorldManager::UpdateWorld()
 		{
             if(mCurrActiveWorld)
                 mCurrActiveWorld->OnDisable();
+
 			mCurrActiveWorld = mNextActiveWorld;
+
+			if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+				UpdateResources();
+
 			mCurrActiveWorld->OnEnable();
-			mCurrActiveWorld->Start();
+
 			mNextActiveWorld = nullptr;
+		}
+	}
+}
+
+void WorldManager::UpdateResources()
+{
+	Editor::InspectorViewer::SetFocusObject(nullptr);
+	ResourceManager::Free_All_Resource();
+	std::vector<std::wstring> keyTable;
+	for (auto& world : mWorldArray)
+	{
+		if (world == mCurrActiveWorld || world->IsPersistance())
+		{
+			for (auto& key : world->mNeedResourceHandleTable)
+			{
+				keyTable.push_back(key);
+			}
+		}
+	}
+	for (auto& key : keyTable)
+	{
+		auto [result, handle] = ResourceManager::GetResourceHandleFromMainKey(key);
+		if (result)
+		{
+			ResourceManager::Alloc_Resource(handle);
 		}
 	}
 }
@@ -244,6 +291,16 @@ BOOL WorldManager::SetActiveWorld(World* _pWorld)
         return TRUE;
     }
     return FALSE;
+}
+
+BOOL WorldManager::SetStartWorld(World* _pWorld)
+{
+	if (_pWorld)
+	{
+		mStartWorld = _pWorld;
+		return TRUE;
+	}
+	return FALSE;
 }
 
 World* WorldManager::FindWorld(const std::wstring _name)

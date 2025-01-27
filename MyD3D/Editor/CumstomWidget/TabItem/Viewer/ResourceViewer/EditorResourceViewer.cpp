@@ -23,8 +23,18 @@ void Editor::ResourceViewer::Render()
 	//////////////////////////////////////////////////////////////////////////////////////
 	// Resource Load List
 	//////////////////////////////////////////////////////////////////////////////////////
-	auto& loadList = ResourceManager::GetLoadResourceList();
 	ImGui::Text("Load Resource List");
+	ImGui::SameLine(); // 같은 줄에 추가
+	float cursorX = ImGui::GetCursorPosX();
+	float contentWidth = ImGui::GetContentRegionAvail().x;
+
+	// 커서를 트리 노드 오른쪽 끝으로 이동
+	ImGui::SetCursorPosX(cursorX + contentWidth - 50); // 50은 버튼 크기 + 여백
+	if (ImGui::Button("Reload", ImVec2(50, 20))) // 리로딩 버튼
+	{
+		ResourceManager::Reload();
+	}
+	auto& loadList = ResourceManager::GetLoadResourceList();
 	for (auto handle = loadList.begin(); handle != loadList.end();)
 	{
 		auto flags = ImGuiSelectableFlags_AllowDoubleClick;

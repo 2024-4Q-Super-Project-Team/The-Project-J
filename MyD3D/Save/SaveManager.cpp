@@ -93,6 +93,7 @@ void SaveManager::Load()
 			//월드 생성 
 			std::wstring worldName = Helper::ToWString(worldJson["name"].get<std::string>());
 			World* world = viewport->GetWorldManager()->CreateWorld(worldName, L"", true);
+			world->IsPersistance(worldJson["is persistnace"].get<bool>());
 			world->SetId(worldJson["id"].get<unsigned int>());
 			world->Deserialize(worldJson);
 		}
@@ -102,6 +103,7 @@ void SaveManager::Load()
 		{
 			World* startWorld = static_cast<World*>(Engine::SaveBase::mMap[startWorldId]);
 			viewport->GetWorldManager()->SetStartWorld(startWorld);
+			viewport->GetWorldManager()->SetActiveWorld(startWorld);
 		}
 
 		for (auto& objectJson : objectsJson)

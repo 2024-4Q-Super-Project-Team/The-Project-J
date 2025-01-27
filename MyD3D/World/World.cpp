@@ -249,7 +249,7 @@ json World::Serialize()
     json ret;
     ret["id"] = GiveId();
     ret["name"] = Helper::ToString(mName);
-
+    ret["is persistnace"] = isPersistance;
     json objs = json::array();
     for (auto& object : mObjectArray)
     {

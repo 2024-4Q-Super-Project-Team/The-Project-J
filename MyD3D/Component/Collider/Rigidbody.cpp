@@ -49,6 +49,12 @@ void Rigidbody::Start()
 	{
 		mMaterials.push_back(material.first.c_str());
 	}
+
+	auto& colliders = gameObject->GetComponents<Collider>();
+	for (auto& collider : colliders)
+	{
+		collider->AddShapeToRigidbody();
+	}
 }
 
 void Rigidbody::Tick()

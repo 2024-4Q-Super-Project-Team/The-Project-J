@@ -1,5 +1,5 @@
 #pragma once
-#include "Component/Component.h"
+#include "Component/Renderer/Renderer.h"
 
 class D3DBitmapRenderTarget;
 class D3DGraphicsViewport;
@@ -26,6 +26,7 @@ enum class CameraRenderType
 
 class Camera
     : public Component
+    , public IRenderContext
 {
 public:
     explicit Camera(Object* _owner, Vector2 _size = Vector2::Zero);
@@ -59,13 +60,20 @@ private:
     void UpdateViewport();
     void UpdateZSort();
 private:
-    void DrawShadow();
-    void DrawForward();
-    void DrawDeferred();
-    void DrawWire();
+    void DrawShadowList();
+    void DrawForwardList();
+    void DrawDeferredList();
+    void DrawWireList();
     void DrawSwapChain();
     // 렌더 큐의 Draw 작업 수행
     void ExcuteDrawList();
+public:
+    virtual Vector3                 GetDistanceFromCamera(Camera* _camera) override { return Vector3(0, 0, 0); };
+    virtual eBlendModeType          GetBlendMode() override { return eBlendModeType::OPAQUE_BLEND; };
+    virtual eRasterizerStateType    GetCullingMode() override { return eRasterizerStateType::NONE_CULLING; };
+    virtual void                    DrawObject(Matrix& _view, Matrix& _projection) override {};
+    virtual void                    DrawShadow(Light* _pLight) override {};
+    virtual void                    DrawWire() override;
 public:
     Vector3 GetDistance(Transform* _transform);
 public:

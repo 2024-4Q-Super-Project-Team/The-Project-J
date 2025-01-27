@@ -62,6 +62,14 @@ namespace Editor
                 {
                     mManipulater->SetGizmoOperation(ImGuizmo::SCALE);
                 }
+                if (ImGui::Button("Turn!", buttonSize))
+                {
+                    mManipulater->RotateFocusObject();
+                }
+				if (ImGui::Button("LookAt", buttonSize))
+				{
+					mManipulater->LookAtTargetObject();
+				}
                 ImGui::End();
             }
         }

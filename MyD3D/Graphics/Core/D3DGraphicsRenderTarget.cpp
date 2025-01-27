@@ -188,13 +188,13 @@ void D3DHwndRenderTarget::Resize(UINT _width, UINT _height)
         mHeight = (UINT)(sizeRect.bottom - sizeRect.top);
     }
 
-    Helper::HRT(mSwapChain->ResizeBuffers(
+    mSwapChain->ResizeBuffers(
         0,              // 버퍼 수 (0은 기존 값을 유지)
         mWidth,       // 새 가로 크기
         mHeight,      // 새 세로 크기
         DXGI_FORMAT_UNKNOWN, // 기존 포맷 유지
         0               // 플래그
-    ));
+    );
     { // 백버퍼 RTV 생성
         ID3D11Texture2D* pD3DTex2D = nullptr;
         Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));

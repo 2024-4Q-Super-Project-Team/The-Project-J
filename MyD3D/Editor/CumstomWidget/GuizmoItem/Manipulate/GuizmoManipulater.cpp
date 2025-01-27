@@ -77,4 +77,21 @@ namespace Editor
             UndoMatrixStack.pop_back();
         }
     }
+
+    void GuizmoManipulater::RotateFocusObject()
+    {
+        if (mFocusObject)
+        {
+            mFocusObject->transform->Rotate180(2.0f, Dotween::EasingEffect::InOutQuad);
+        }
+    }
+
+	void GuizmoManipulater::LookAtTargetObject()
+	{
+		if (mFocusObject)
+		{
+            Vector3 targetPosition(10.0f, 0.0f, 10.0f); // ÀÓÀÇ·Î  
+			mFocusObject->transform->LookAt(targetPosition, 2.0f, Dotween::EasingEffect::InOutQuad);
+		}
+	}
 }

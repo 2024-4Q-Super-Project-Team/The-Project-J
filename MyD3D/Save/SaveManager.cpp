@@ -7,7 +7,7 @@
 #include "ViewportScene/ViewportManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-std::string SaveManager::filePath = "../Save/";
+std::string SaveManager::filePath = "Save/";
 
 void SaveManager::Save()
 {

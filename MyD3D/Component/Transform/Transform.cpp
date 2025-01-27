@@ -80,6 +80,41 @@ void Transform::PostRender()
 
 void Transform::EditorUpdate()
 {
+	// Dotween 테스트용으로 일단 여기에 돌림. 회전
+    if (isRotating)
+    {
+        rotationElapsedTime += Time::GetScaledDeltaTime();
+        float t = rotationElapsedTime / rotationDuration;           // 버튼 누르고 지난 시간 / duration
+		UpdateRotation(t, easingEffect);							// t가 1이 될 때까지 회전
+        Display::Console::Log("Transform Updating... : " , rotationElapsedTime);
+        Display::Console::Log(rotationElapsedTime, "\n");
+
+        if (rotationElapsedTime >= rotationDuration)
+        {
+            isRotating = false;                 // 회전 완료
+			rotationElapsedTime = 0.0f;         // 초기화
+            Display::Console::Log("Rotate Finished, flag :  " ,isRotating,  "\n");
+            UpdateRotation(1.0f, easingEffect); // 최종 위치로 설정
+        }
+    }
+
+	// 바라보기
+    if (isLookingAt)
+    {
+        rotationElapsedTime += Time::GetScaledDeltaTime();
+        float t = rotationElapsedTime / rotationDuration;
+        UpdateLookAt(t, easingEffect);
+        Display::Console::Log("Transform Updating... : ", rotationElapsedTime);
+        Display::Console::Log(rotationElapsedTime, "\n");
+
+        if (rotationElapsedTime >= rotationDuration)
+        {
+            isLookingAt = false;               
+            rotationElapsedTime = 0.0f;         
+            Display::Console::Log("Rotate Finished, flag : ", isRotating, "\n");
+            UpdateLookAt(1.0f, easingEffect);  
+        }
+    }
 }
 
 void Transform::EditorRender()
@@ -379,62 +414,47 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
-void Transform::LookAt(Transform* _dest, float duration, Dotween::EasingEffect easingEffect)
+void Transform::Rotate180(float _duration, Dotween::EasingEffect _easingEffect)
 {
-    Vector3 targetPosition = _dest->GetWorldPosition();
-    float elapsedTime = 0.0f;
+    if (isRotating) return; // 이미 회전 중이면 중복 실행 X
 
-    while (elapsedTime < duration)
-    {
-        float t = elapsedTime / duration;
-        UpdateLookAt(targetPosition, t, easingEffect);
-        elapsedTime += 0.016f; // 60 FPS 기준
-    }
+    isRotating = true;
+    rotationDuration = _duration;
+    rotationElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
 
-    UpdateLookAt(targetPosition, 1.0f, easingEffect);
+    startRotation = rotation;
+    endRotation = startRotation * Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_PI); // 180도 회전
 }
 
-void Transform::UpdateLookAt(const Vector3& targetPosition, float t, Dotween::EasingEffect easingEffect)
+void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)
 {
-    Vector3 currentPosition = GetWorldPosition();
-    Vector3 direction = targetPosition - currentPosition;
+    if (isRotating) return; // 이미 회전 중이면 중복 실행 방지
+
+    isRotating = true;
+    rotationDuration = _duration;
+    rotationElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
+
+    startRotation = rotation;
+
+    Vector3 direction = targetPosition - position;
     direction.Normalize();
-
-    // 목표 방향으로 회전하는 Quaternion 계산
-    Quaternion targetRotation = Quaternion::CreateFromYawPitchRoll(atan2(direction.x, direction.z), asin(direction.y), 0.0f);
-
-    // 현재 회전과 목표 회전 사이를 보간
-    Quaternion currentRotation = rotation;
-    rotation = Quaternion::Slerp(currentRotation, targetRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-
-    UpdateMatrix();
-}
-
-void Transform::Rotate360(float duration, Dotween::EasingEffect easingEffect)
-{
-    float elapsedTime = 0.0f;
-
-    // UpdateRotation 함수를 일정 시간 동안 호출하여 부드럽게 회전
-    while (elapsedTime < duration)
-    {
-        float t = elapsedTime / duration;
-        UpdateRotation(t, easingEffect);
-        elapsedTime += 0.016f;
-    }
-
-    // 한 바퀴 회전
-    UpdateRotation(1.0f, easingEffect);
+    endRotation = Quaternion::LookRotation(direction, Vector3::Up);
 }
 
 void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
 {
-    // 2PI(360도) 회전
-    Quaternion startRotation = rotation;
-    Quaternion endRotation = Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_2PI);
-
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 
-    // 행렬 업데이트
+    UpdateMatrix();
+}
+
+void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
+{
+    // 현재 회전과 목표 회전 사이 보간
+    rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+
     UpdateMatrix();
 }

@@ -1,19 +1,17 @@
 #include "pch.h"
 #include "MeshRenderer.h"
+#include "World/World.h"
 #include "Object/Object.h"
 #include "Manager/GameManager.h"
 #include "Graphics/GraphicsManager.h"
-#include "Resource/Graphics/FBXModel/FBXModel.h"
-#include "Resource/Graphics/Mesh/Mesh.h"
-#include "Resource/Graphics/Material/Material.h"
-#include "Resource/Graphics/Texture/Texture.h"
+#include "Resource/ResourceManager.h"
 // Editor
 #include "Editor/Handler/EditorDragNDrop.h"
 
 MeshRenderer::MeshRenderer(Object* _owner)
     : RendererComponent(_owner)
     , mMesh(nullptr)
-    , mMateiral(nullptr)
+    , mMaterial(nullptr)
 {
     SetEID("MeshRenderer");
     mType = eComponentType::MESH_RENDERER;
@@ -25,6 +23,8 @@ MeshRenderer::~MeshRenderer()
 
 void MeshRenderer::Start()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
 }
 
 void MeshRenderer::Tick()
@@ -61,6 +61,16 @@ void MeshRenderer::PostRender()
 
 void MeshRenderer::EditorUpdate()
 {
+    SetMesh(mMeshHandle);
+    SetMaterial(mMaterialHandle);
+}
+
+void MeshRenderer::EditorGlobalUpdate()
+{
+    gameObject->GetOwnerWorld()->
+        mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
+    gameObject->GetOwnerWorld()->
+        mNeedResourceHandleTable.insert(mMaterialHandle.GetParentkey());
 }
 
 void MeshRenderer::EditorRender()
@@ -93,23 +103,22 @@ void MeshRenderer::Clone(Object* _owner, std::unordered_map<std::wstring, Object
 
 void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
 {
-    
     if (mMesh)
     {
-    // 머티리얼 바인딩
-    if (mMateiral)
-    {
-        mMateiral->Bind();
-        GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
-    }
-    // 메쉬 바인딩
-    mMesh->Bind();
-    mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-    mTransformMatrices.View         = XMMatrixTranspose(_view);
-    mTransformMatrices.Projection   = XMMatrixTranspose(_projection);
-    // 트랜스폼 상수 버퍼 바인딩
-    GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
-    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+        // 머티리얼 바인딩
+        if (mMaterial)
+        {
+            mMaterial->Bind();
+            GraphicsManager::GetConstantBuffer(eCBufferType::Material)->UpdateGPUResoure(&mMatCBuffer);
+        }
+        // 메쉬 바인딩
+        mMesh->Bind();
+        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+        mTransformMatrices.View = XMMatrixTranspose(_view);
+        mTransformMatrices.Projection = XMMatrixTranspose(_projection);
+        // 트랜스폼 상수 버퍼 바인딩
+        GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
 
@@ -167,15 +176,8 @@ void MeshRenderer::SetMaterial(ResourceHandle _handle)
         auto MatResource = ResourceManager::GetResource<MaterialResource>(_handle);
         if (MatResource)
         {
-            mMateiral = MatResource;
-            mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
-            for (int i = 0; i < MATERIAL_MAP_SIZE; ++i)
-            {
-                if (MatResource->mMaterialMapTexture[i])
-                {
-                    mMatCBuffer.SetUsingMap((eMaterialMapType)i, true);
-                }
-            }
+            mMaterial = MatResource;
+            mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
         }
     }
 }
@@ -184,8 +186,8 @@ void MeshRenderer::SetMaterial(MaterialResource* _pResource)
     if (_pResource)
     {
         mMaterialHandle = _pResource->GetHandle();
-        mMateiral = _pResource;
-        mMatCBuffer.MatProp = mMateiral->mMaterialProperty;
+        mMaterial = _pResource;
+        mMatCBuffer.MatProp = mMaterial->mMaterialProperty;
     }
 }
 
@@ -195,14 +197,14 @@ MeshResource* MeshRenderer::GetMesh()
 }
 MaterialResource* MeshRenderer::GetMaterial()
 {
-    return mMateiral;
+    return mMaterial;
 }
 
 eBlendModeType MeshRenderer::GetBlendMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mBlendMode;
+        return mMaterial->mBlendMode;
     }
     return eBlendModeType::OPAQUE_BLEND;
 }
@@ -214,11 +216,29 @@ Vector3 MeshRenderer::GetDistanceFromCamera(Camera* _camera)
 
 eRasterizerStateType MeshRenderer::GetCullingMode()
 {
-    if (mMateiral)
+    if (mMaterial)
     {
-        return mMateiral->mRasterMode;
+        return mMaterial->mRasterMode;
     }
     return eRasterizerStateType::BACKFACE_CULLING;
+}
+
+void _CALLBACK MeshRenderer::OnEnable()
+{
+    Start();
+    return void _CALLBACK();
+}
+
+void _CALLBACK MeshRenderer::OnDisable()
+{
+    mMesh = nullptr;
+    mMaterial = nullptr;
+    return void _CALLBACK();
+}
+
+void _CALLBACK MeshRenderer::OnDestroy()
+{
+    return void _CALLBACK();
 }
 
 json MeshRenderer::Serialize()
@@ -251,28 +271,57 @@ void MeshRenderer::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
 
-    mMeshHandle.Deserialize(j["mesh handle"]);
-    mMaterialHandle.Deserialize(j["material handle"]);
-
-    mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-    mMateiral = ResourceManager::GetResource<MaterialResource>(mMaterialHandle);
-
-    json mProp = j["property"];
-
-    for (int i = 0; i < 4; i++)
+    if (j.contains("mesh handle"))
     {
-        mMatCBuffer.MatProp.DiffuseRGB[i] = mProp["diffuse"][i].get<float>();
-        mMatCBuffer.MatProp.AmbientRGB[i] = mProp["ambient"][i].get<float>();
-        mMatCBuffer.MatProp.SpecularRGB[i] = mProp["specular"][i].get<float>();
+        mMeshHandle.Deserialize(j["mesh handle"]);
+        SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
+    }
+        
+    if (j.contains("material handle"))
+    {
+        mMaterialHandle.Deserialize(j["material handle"]);
+        SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
     }
 
-    mMatCBuffer.MatProp.RoughnessScale = mProp["roughness"].get<float>();
-    mMatCBuffer.MatProp.MetallicScale = mProp["metallic"].get<float>();
-    mMatCBuffer.MatProp.AmbienOcclusionScale = mProp["ao"].get<float>();
+    if (j.contains("Property"))
+    {
+        json propJson = j["property"];
 
-    mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
+        for (int i = 0; i < 4; i++)
+        {
+            if (propJson.contains("diffuse")&& propJson["diffuse"].size() == 4)
+                mMatCBuffer.MatProp.DiffuseRGB[i] = propJson["diffuse"][i].get<float>();
+            if (propJson.contains("ambient") && propJson["ambient"].size() == 4)
+                mMatCBuffer.MatProp.AmbientRGB[i] = propJson["ambient"][i].get<float>();
+            if (propJson.contains("specular") && propJson["specular"].size() == 4)
+                mMatCBuffer.MatProp.SpecularRGB[i] = propJson["specular"][i].get<float>();
+        }
+
+        if (propJson.contains("roughness"))
+            mMatCBuffer.MatProp.RoughnessScale = propJson["roughness"].get<float>();
+        if (propJson.contains("metallic"))
+            mMatCBuffer.MatProp.MetallicScale = propJson["metallic"].get<float>();
+        if (propJson.contains("ao"))
+            mMatCBuffer.MatProp.AmbienOcclusionScale = propJson["ao"].get<float>();
+    }
+
+    if (j.contains("use map"))
+        mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
 }
 
+#define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
+if (mMaterial->mMaterialMapTexture[typeIndex]) \
+{ \
+    bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
+    ImGui::Separator();\
+    if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
+        mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
+    } \
+    if (ImGui::TreeNodeEx((std::string(label) + mMaterial->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
+        mMaterial->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
+        ImGui::TreePop();\
+    }\
+}\
 
 void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
@@ -307,36 +356,50 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
     {
         std::string widgetID = "NULL Material";
         std::string name = "NULL Material";
-        if (mMateiral)
+        if (mMaterial)
         {
-            mMateiral->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMateiral->GetKey());
-            uid = mMateiral->GetEID();
+            mMaterial->EditorRendering(EditorViewerType::DEFAULT);
+            name = Helper::ToString(mMaterial->GetKey());
+            widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
-                ImGui::Text("Diffuse : ");
-                ImGui::ColorEdit3((uid + "Diffuse").c_str(), &mMatCBuffer.MatProp.DiffuseRGB.r);
-                ImGui::Text("Ambient : ");
-                ImGui::ColorEdit3((uid + "Ambient").c_str(), &mMatCBuffer.MatProp.AmbientRGB.r);
-                ImGui::Text("Specular : ");
-                ImGui::ColorEdit3((uid + "Specular").c_str(), &mMatCBuffer.MatProp.SpecularRGB.r);
-                ImGui::Text("Roughness Scale : ");
-                ImGui::DragFloat((uid + "Roughness Scale").c_str(), &mMatCBuffer.MatProp.RoughnessScale, 0.01f, 0.0f, 1.0f);
-                ImGui::Text("Metallic Scale : ");
-                ImGui::DragFloat((uid + "Metallic Scale").c_str(), &mMatCBuffer.MatProp.MetallicScale, 0.01f, 0.0f, 1.0f);
-                ImGui::Text("AmbienOcclusion Scale : ");
-                ImGui::DragFloat((uid + "AmbienOcclusion Scale").c_str(), &mMatCBuffer.MatProp.AmbienOcclusionScale, 0.01f, 0.0f, 1.0f);
                 for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
-                    if (mMateiral->mMaterialMapTexture[type])
+                    eMaterialMapType mapType = (eMaterialMapType)type;
+
+                    switch (mapType)
                     {
-                        bool UseMap = (bool)mMatCBuffer.GetUsingMap((eMaterialMapType)type);
-                        if (ImGui::Checkbox(("Using Map" + uid + std::to_string(type)).c_str(), (bool*)&UseMap))
-                        {
-                            mMatCBuffer.SetUsingMap((eMaterialMapType)type, UseMap);
-                        }
-                        mMateiral->mMaterialMapTexture[type]->EditorRendering(EditorViewerType::DEFAULT);
-                        ImGui::Separator();
+                    case eMaterialMapType::DIFFUSE:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                        break;
+                    case eMaterialMapType::SPECULAR:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        break;
+                    case eMaterialMapType::AMBIENT:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        break;
+                    case eMaterialMapType::EMISSIVE:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        break;
+                    case eMaterialMapType::NORMAL:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        break;
+                    case eMaterialMapType::ROUGHNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        break;
+                    case eMaterialMapType::OPACITY:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        break;
+                    case eMaterialMapType::METALNESS:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        break;
+                    case eMaterialMapType::AMBIENT_OCCLUSION:
+                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        break;
+                    case eMaterialMapType::SIZE:
+                        break;
+                    default:
+                        break;
                     }
                 }
                 ImGui::TreePop();
@@ -352,15 +415,18 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
         {
             SetMaterial(mMaterialHandle);
         }
+        ImGui::Separator();
     }
-
-    ImGui::Separator();
-
-    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-    if (ImGui::TreeNodeEx(("Lighting" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+    //////////////////////////////////////////////////////////////////////
+    // Lighting Properties
+    //////////////////////////////////////////////////////////////////////
     {
-        ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
-        ImGui::TreePop();
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Lighting Properties" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
+            ImGui::TreePop();
+        }
     }
     EDITOR_COLOR_POP(1);
 }

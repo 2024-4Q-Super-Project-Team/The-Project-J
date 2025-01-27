@@ -43,6 +43,18 @@ struct QUAD_VS_OUTPUT
     float2 uv : TEXCOORD;
 };
 
+struct GRID_VS_INPUT
+{
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+};
+
+struct GRID_VS_OUTPUT
+{
+    float4 pos      : SV_POSITION;
+    float4 color    : COLOR;
+};
+
 struct DEFERRED_PS_OUT
 {
     float4 albedo   : SV_Target0;

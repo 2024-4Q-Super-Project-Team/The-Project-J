@@ -44,6 +44,7 @@ enum class eVertexShaderType
     SPRITE,
     SHADOW,
     PARTICLE,
+    GRID,
     SIZE,
 };
 #define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
@@ -64,6 +65,7 @@ enum class ePixelShaderType
     SPRITE,
     G_BUFFER,
     PARTICLE,
+    GRID,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)

@@ -38,10 +38,19 @@ public:
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
 
-//회전 관련
 public:
     void SetEulerAngles(const Vector3& euler) { rotation = Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z); }
     Vector3 GetEulerAngles() const { return rotation.ToEuler(); }
+
+// Dotween 관련
+private:
+    bool isRotating = false;
+	bool isLookingAt = false;
+    float rotationDuration = 2.0f;
+    float rotationElapsedTime = 0.0f;
+    Dotween::EasingEffect easingEffect;
+    Quaternion startRotation;
+    Quaternion endRotation;
 
 public:
     inline Transform* GetParent() const { return mParent; }
@@ -102,11 +111,11 @@ public:
 // dotween 함수
 public:
     // dotween 함수
-    void LookAt(Transform* _dest, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
-    void Rotate360(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+    void Rotate180(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
 
 private:
-    void UpdateLookAt(const Vector3& targetPosition, float t, Dotween::EasingEffect easingEffect);
+    void UpdateLookAt(float t, Dotween::EasingEffect easingEffect);
     void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
     
 

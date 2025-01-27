@@ -19,6 +19,10 @@ namespace Editor
 		static inline Object* GetFocusObject() { return mFocusObject; }
 		static inline bool IsFocusObject(Object* _object) { return mFocusObject == _object; }
 		inline void SetGizmoOperation(ImGuizmo::OPERATION operation) { mCurrentGizmoOperation = operation; }
+		void RotateFocusObject();
+		void LookAtTargetObject();
+		
+
 	private:
 		static Object* mFocusObject;
 		ImGuizmo::OPERATION mCurrentGizmoOperation = ImGuizmo::TRANSLATE;

@@ -33,6 +33,7 @@ Object::Object(const Object& _other)
 
 void Object::Start()
 {
+    Object* obj = this;
     for (int i = 0; i < (UINT)eComponentType::SIZE; ++i)
     {
         for (auto& comp : mComponentArray[i])
@@ -248,6 +249,26 @@ void Object::EditorUpdate()
         transform->UpdateMatrix();
 }
 
+void Object::EditorGlobalUpdate()
+{
+
+    for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
+    {
+        for (auto& comp : mComponentArray[i])
+        {
+            comp->EditorGlobalUpdate();
+        }
+    }
+    const std::vector<Transform*>& children = transform->GetChildren();
+    for (Transform* child : children)
+    {
+        if (child->gameObject->GetState() == EntityState::Active)
+        {
+            child->gameObject->EditorGlobalUpdate();
+        }
+    }
+}
+
 void Object::EditorRender()
 {
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
@@ -396,19 +417,26 @@ void Object::EditorRendering(EditorViewerType _viewerType)
     {
     case EditorViewerType::DEFAULT:
     {
-        ImGui::PushStyleColor(ImGuiCol_Header, ImVec4(0.2f, 0.6f, 1.0f, 1.0f));
-        auto flags = ImGuiSelectableFlags_AllowDoubleClick;
-        bool isSelected = false;
-        if (Editor::InspectorViewer::IsFocusObject(this))
-        {
-            isSelected = true;
-        }
+        bool isSelected = Editor::InspectorViewer::IsFocusObject(this);
         std::string symbol = "::: ";
         if (transform->GetChildren().empty() == false)
         {
             symbol = isNodeOpen ? "+ " : "- ";
         }
+        if (isSelected)
+        {
+            GetState() == EntityState::Passive ?
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_DISABLE_SELECTED) :
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_SELECTED);
+        }
+        else
+        {
+            GetState() == EntityState::Passive ?
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT_DISABLE) :
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_OBJECT);
+        }
         std::string widgetID = symbol + name + uid;
+        auto flags = ImGuiSelectableFlags_Highlight | ImGuiSelectableFlags_AllowDoubleClick;
         if (ImGui::Selectable((widgetID).c_str(), isSelected, flags))
         {
             if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
@@ -421,6 +449,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 isNodeOpen = isNodeOpen == true ? false : true;
             }
         }
+        EDITOR_COLOR_POP(1);
         /////////////////////////////////////////////////////////////////
         // Drag&Drop
         /////////////////////////////////////////////////////////////////
@@ -440,7 +469,6 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 isNodeOpen = true;
             }
         }
-        EDITOR_COLOR_POP(1);
         break;
     } 
     case EditorViewerType::HIERARCHY:

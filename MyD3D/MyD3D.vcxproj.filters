@@ -351,12 +351,6 @@
     <ClInclude Include="UIManager\Widget\Widget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\Widget\WidgetButton.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
-    <ClInclude Include="UIManager\Widget\WidgetCheckBox.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -397,6 +391,15 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Save\SaveManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorCamera\EditorGridDrawer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="UIManager\UICanvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -725,12 +728,6 @@
     <ClCompile Include="UIManager\Widget\Widget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\Widget\WidgetButton.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="UIManager\Widget\WidgetCheckBox.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
@@ -768,6 +765,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Save\SaveManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorCamera\EditorGridDrawer.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="UIManager\UICanvas.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

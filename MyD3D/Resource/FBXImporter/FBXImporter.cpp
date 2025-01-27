@@ -42,9 +42,6 @@ FBXResource* FBXImporter::ImportFBXModel_All(const ResourceHandle& _handle)
         ProcessAnimation(pAiScene);
         ProcessModelNode(pAiScene->mRootNode, mFBXResource->RootNode);
     }
-    else
-    {
-    }
     return mFBXResource;
 }
 
@@ -68,7 +65,12 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
         std::filesystem::path ResultPath = (FBXPath.parent_path() / MainKey).wstring() + L".json";
         FBXPath = FBXPath.parent_path();
 
-        ResourceHandle handle = { eResourceType::MaterialResource, MainKey, Name, ResultPath };
+        ResourceHandle handle =
+        {
+            eResourceType::MaterialResource,
+            MainKey, Name, ResultPath,
+            mFBXResource->Handle.GetKey()
+        };
         MaterialResource* pMaterial = new MaterialResource(handle);
 
         aiString aiPath;
@@ -79,6 +81,7 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::DIFFUSE, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SPECULAR, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
@@ -91,42 +94,49 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::AMBIENT, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_EMISSIVE, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::EMISSIVE, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_NORMALS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::NORMAL, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_SHININESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::ROUGHNESS, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_OPACITY, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::OPACITY, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_METALNESS, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::METALNESS, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
             if (AI_SUCCESS == pAiMaterial->GetTexture(aiTextureType_AMBIENT_OCCLUSION, 0, &aiPath)) {
                 std::filesystem::path newTag = aiPath.C_Str();
                 std::filesystem::path newPath = FBXPath / newTag.filename();
                 ResourceHandle handle = { eResourceType::Texture2DResource, newTag.filename().wstring(), L"", newPath.wstring() };
                 pMaterial->SetMateirlaMapHandle(eMaterialMapType::AMBIENT_OCCLUSION, handle);
+                mFBXResource->TextureHandleTable.push_back(handle);
             }
         }
         // GetProperty
@@ -178,7 +188,6 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
                 }
             }
         }
-        pMaterial->Create();
         mFBXResource->MaterialArray.push_back(pMaterial);
         mFBXResource->MaterialTable[Name] = pMaterial;
     }
@@ -233,7 +242,12 @@ void FBXImporter::ProcessMesh(const aiScene* _pAiScene)
             }
         }
 
-        ResourceHandle handle = { eResourceType::MeshResource, MainKey, Name, ResultPath };
+        ResourceHandle handle =
+        {
+            eResourceType::MeshResource,
+            MainKey, Name, ResultPath,
+            mFBXResource->Handle.GetKey()
+        };
         MeshResource* pMesh = new MeshResource(handle, vertexs, indices);
 
         mFBXResource->MeshArray.push_back(pMesh);
@@ -241,7 +255,6 @@ void FBXImporter::ProcessMesh(const aiScene* _pAiScene)
         mFBXResource->MaterialIndexTable.push_back(MaterialIndex);
         // 메쉬에 본 데이터 저장
         ProcessBone(pAiMesh);
-        pMesh->Create();
     }
 }
 
@@ -295,7 +308,12 @@ void FBXImporter::ProcessAnimation(const aiScene* _pAiScene)
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
         std::filesystem::path ResultPath = (FBXPath.parent_path() / MainKey).wstring() + L".json";
 
-        ResourceHandle handle = { eResourceType::AnimationResource, MainKey, Name, ResultPath};
+        ResourceHandle handle = 
+        {
+            eResourceType::AnimationResource,
+            MainKey, Name, ResultPath,
+            mFBXResource->Handle.GetKey()
+        };
         AnimationResource* pAnim = new AnimationResource(handle);
         pAnim->SetFramePerSecond((float)pAiAnim->mTicksPerSecond);
         pAnim->SetTotalFrame((float)pAiAnim->mDuration);

@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GuizmoHandler.h"
 #include "Object/Object.h"
+#include "Save/SaveManager.h"
 
 namespace Editor
 {
@@ -61,6 +62,14 @@ namespace Editor
                 {
                     mManipulater->SetGizmoOperation(ImGuizmo::SCALE);
                 }
+                if (ImGui::Button("Turn!", buttonSize))
+                {
+                    mManipulater->RotateFocusObject();
+                }
+				if (ImGui::Button("LookAt", buttonSize))
+				{
+					mManipulater->LookAtTargetObject();
+				}
                 ImGui::End();
             }
         }

@@ -36,7 +36,8 @@ void PhysicsManager::Finalization()
     mPhysics->release(); 
     mPvd->release();
     mFoundation->release();
-    mCudaContextManager->release();
+    mCudaContextManager->releaseContext();
+    //mCudaContextManager->release();
 }
 
 PxMaterial* PhysicsManager::CreateMaterial(std::string name, float staticFriction, float dynamicFriction, float restituion)

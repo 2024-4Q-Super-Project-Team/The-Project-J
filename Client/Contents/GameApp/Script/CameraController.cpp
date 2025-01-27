@@ -137,5 +137,31 @@ void CameraController::Update()
 
 json CameraController::Serialize()
 {
-	return json();
+	json ret;
+
+	ret["id"] = GiveId();
+	ret["name"] = "CameraController";
+	ret["speed"] = mMoveSpeed.val;
+	ret["sensitivity"] = sensitivity.val;
+	ret["max angle"] = maxYAngle.val;
+
+	ret["cur angle"] = { CurrentAngles[0], CurrentAngles[1], CurrentAngles[2] };
+	ret["cur sub angle"] = { CurrentSubCameraAngles[0], CurrentSubCameraAngles[1], CurrentSubCameraAngles[2] };
+
+	return ret;
+}
+
+void CameraController::Deserialize(json& j)
+{
+	SetId(j["id"].get<unsigned int>());
+
+	mMoveSpeed.val = j["speed"].get<float>();
+	sensitivity.val = j["sensitivity"].get<float>();
+	maxYAngle.val = j["max angle"].get<float>();
+
+	for (int i = 0; i < 3; i++)
+	{
+		CurrentAngles[i] = j["cur angle"][i].get<float>();
+		CurrentSubCameraAngles[i] = j["cur sub angle"][i].get<float>();
+	}
 }

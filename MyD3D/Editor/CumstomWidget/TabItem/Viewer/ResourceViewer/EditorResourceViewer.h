@@ -15,5 +15,7 @@ namespace Editor
 		virtual void Render() override;
 	private:
 		std::vector<const char*> mResourceStringArray;
+		bool isLoadResorceListPopupOpen = false;
+		void LoadResourceListPopup();
 	};
 }

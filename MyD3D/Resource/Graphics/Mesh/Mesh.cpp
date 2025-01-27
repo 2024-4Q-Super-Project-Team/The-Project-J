@@ -224,6 +224,15 @@ MeshResource* MeshResource::GetPlainMesh()
     return PlainMesh;
 }
 
+json MeshResource::Serialize()
+{
+    return json();
+}
+
+void MeshResource::Deserialize(json& j)
+{
+}
+
 void MeshResource::EditorRendering(EditorViewerType _viewerType)
 {
     std::string name = Helper::ToString(GetKey());

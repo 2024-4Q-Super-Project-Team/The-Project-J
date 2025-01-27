@@ -1,0 +1,32 @@
+{
+    "start": 19,
+    "worlds": [
+        {
+            "id": 19,
+            "is persistnace": false,
+            "name": "test",
+            "objects": [
+                {
+                    "id": 20,
+                    "name": "Main_Camera",
+                    "tag": "Main_Camera"
+                },
+                {
+                    "id": 21,
+                    "name": "Direction_Light",
+                    "tag": "Direction_Light"
+                },
+                {
+                    "id": 22,
+                    "name": "GameObject",
+                    "tag": "GameObject"
+                },
+                {
+                    "id": 23,
+                    "name": "m",
+                    "tag": "m"
+                }
+            ]
+        }
+    ]
+}

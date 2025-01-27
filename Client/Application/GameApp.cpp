@@ -36,7 +36,6 @@ BOOL GameApp::OnPostInitialize()
         GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG
     }
-    //SaveManager::Load();
 
     return TRUE;
 }

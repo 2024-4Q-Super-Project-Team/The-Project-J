@@ -2,75 +2,80 @@
 #include "UIManager.h"
 
 #include "Widget/Widget.h"
-#include "Component/Camera/Camera.h"
 
 #include "Graphics/GraphicsManager.h"
+#include "ViewportScene/ViewportScene.h"
+#include "ViewportScene/ViewportManager.h"
 
-std::vector<Widget*> UIManager::mWidgetContainer = {};
+std::vector<Widget*>	UIManager::mDrawWidgetList{};
+SpriteBatch*			UIManager::m_pSpriteBatch = nullptr;
+ViewportScene*			UIManager::m_pFocusViewport = nullptr;
+Vector2					UIManager::mFocusScreen{};
+Vector2					UIManager::mCurrScreen{};
+Vector2					UIManager::mScale{1, 1};
 
 BOOL UIManager::Initialize()
 {
-	auto pImg = AddWidget<WidgetImage>(L"Cat_01", L"resource/texture/cat.dds");
-	pImg->SetPosition(Vector2(500, 150));
-
-	auto pText = AddWidget<WidgetText>(L"Text_01", L"resource/myfile.sfont");
-	pText->SetPosition(Vector2(500, 100));
-	pText->SetTextLine(14);
-	ColorF color = ColorF::CadetBlue();
-	pText->SetColor(Color(color.r, color.g, color.b));
-	pImg->SetColor(Color(color.r, color.g, color.b));
-	pText->SetOutline(true);
-
-	if (mWidgetContainer.empty())
-		return FALSE;
-
-	for (auto& widget : mWidgetContainer)
-	{
-		widget->Init();
-	}
-
-	pText->SetTextFormat(L"¾È³çÇÏ¼¼¿ë");
+	m_pSpriteBatch = new SpriteBatch(D3DGraphicsRenderer::GetDevicecontext());
 
 	return TRUE;
 }
 
 void UIManager::Finalization()
 {
-	if (mWidgetContainer.empty())
-		return;
-
-	for (auto& widget : mWidgetContainer)
+	if (m_pSpriteBatch)
 	{
-		widget->Release();
+		delete m_pSpriteBatch;
+		m_pSpriteBatch = nullptr;
 	}
 }
 
-void UIManager::Tick()
-{
-
-}
 
 void UIManager::Update()
 {
-	if (mWidgetContainer.empty())
-		return;
-
-	for (auto& widget : mWidgetContainer)
+	if (m_pFocusViewport)
 	{
-		widget->Update();
+		if (m_pFocusViewport->GetIWindow())
+		{
+			Display::IWindow* window = m_pFocusViewport->GetIWindow();
+			mCurrScreen = Vector2(window->GetSize().x, window->GetSize().y);
+
+			SetScale();
+		}
 	}
 }
 
 void UIManager::Render()
 {
-	if (mWidgetContainer.empty())
+	if (mDrawWidgetList.empty())
 		return;
 
-	for (auto& widget : mWidgetContainer)
+	m_pSpriteBatch->SetViewport(EditorManager::GetFocusViewport()->GetMainViewport()->mViewport);
+	m_pSpriteBatch->Begin();
+
+	for (auto& widget : mDrawWidgetList)
 	{
-		widget->Render();
+		widget->DrawWidget(mScale);
 	}
+
+	mDrawWidgetList.clear();
+
+	m_pSpriteBatch->End();
 
 	GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
 	GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->Bind();
+}
+
+void UIManager::SetFocusViewport(ViewportScene* _pViewport)
+{
+	if (_pViewport)
+	{
+		m_pFocusViewport = _pViewport;
+		if (m_pFocusViewport->GetIWindow())
+		{
+			POINT size = _pViewport->GetIWindow()->GetSize();
+			mFocusScreen.x =	(UINT)size.x;
+			mFocusScreen.y =	(UINT)size.y;
+		}
+	}
 }

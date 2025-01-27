@@ -33,8 +33,8 @@ public:
 
 protected:
     void SetIsTrigger();
-    virtual void SetLocalPosition();
-    virtual void SetRotation();
+    virtual void SetPosition() = 0;
+    virtual void SetRotation() = 0;
     void AddShapeToRigidbody();
 protected:
 	PxShape* mShape = nullptr;

@@ -5,6 +5,8 @@ class RendererComponent;
 class EditorCamera
 {
 public:
+    EditorCamera();
+public:
     void EditorUpdate();
     void EditorRender();
 public:
@@ -53,7 +55,7 @@ public:
 
     UINT                    mDrawedMeshCount;
     UINT                    mDrawedLightCount;
-    bool                    mIsSkyBoxRendering = TRUE;
+    bool                    mIsSkyBoxRendering = FALSE;
     bool                    mIsColliderRendering = TRUE;
 public:
     void EditorRendering(EditorViewerType _viewerType);

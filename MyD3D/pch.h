@@ -7,6 +7,7 @@
 #include <system_error>
 #include <iostream>
 #include <fstream>
+#include <filesystem>
 #include <wrl/client.h> 
 #include <type_traits>
 #include <string>
@@ -35,6 +36,7 @@
 #include <Directxtk/VertexTypes.h>
 #include <DirectXTex.h>
 #include <Psapi.h>
+#include <dxgidebug.h>
 using namespace DirectX;
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "d3dcompiler.lib")

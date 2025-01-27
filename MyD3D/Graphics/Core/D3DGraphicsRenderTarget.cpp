@@ -21,13 +21,18 @@ void D3DGraphicsRenderTarget::BeginDraw()
 
 void D3DGraphicsRenderTarget::Clear()
 {
+    Clear(mClearColor);
+}
+
+void D3DGraphicsRenderTarget::Clear(FLOAT* _color)
+{
     auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
     if (pDeviceContext)
     {
-        if (!mRenderTargetViews.empty()) 
+        if (!mRenderTargetViews.empty())
         {
             for (auto rtv : mRenderTargetViews)
-                pDeviceContext->ClearRenderTargetView(rtv->mRTV, mClearColor);
+                pDeviceContext->ClearRenderTargetView(rtv->mRTV, _color);
         }
         if (mDepthStencilView)
         {

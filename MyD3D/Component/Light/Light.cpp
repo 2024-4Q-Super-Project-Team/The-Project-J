@@ -13,6 +13,8 @@ Light::Light(Object* _owner)
     : Component(_owner)
 	, mShadowResolution(4096.0f)
     , mShadowDistance(4096.0f)
+    , mShadowViewport(nullptr)
+    , mShadowRenderTarget(nullptr)
 {
     SetEID("Light");
     mType = eComponentType::LIGHT;
@@ -44,6 +46,8 @@ Light::Light(Object* _owner)
     ShadowSRV->SetBindStage(eShaderStage::PS);
 
     mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
+
+    pTexture->mTex->Release();
 }
 
 Light::~Light()

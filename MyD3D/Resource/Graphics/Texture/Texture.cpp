@@ -12,7 +12,17 @@ Texture2DResource::Texture2DResource(ResourceHandle _handle)
 
 Texture2DResource::~Texture2DResource()
 {
+	Texture->Reset();
 	SAFE_RELEASE(Texture);
+}
+
+json Texture2DResource::Serialize()
+{
+	return json();
+}
+
+void Texture2DResource::Deserialize(json& j)
+{
 }
 
 void Texture2DResource::EditorRendering(EditorViewerType _viewerType)

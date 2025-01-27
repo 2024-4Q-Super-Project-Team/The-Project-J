@@ -25,18 +25,25 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
     mModelNodeArray  = std::move(pModel->ModelNodeArray);
     mModelNodeTable  = std::move(pModel->ModelNodeTable);
     mRootNode       = pModel->RootNode;
-    pModel->Clear();
-
+   
+	for (auto& handle : pModel->TextureHandleTable)
+	{
+		ResourceManager::RegisterResourceHandle(handle);
+		ResourceManager::Alloc_Resource(handle);
+	}
 	for (auto& resource : mMaterialArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 	for (auto& resource : mMeshArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 	for (auto& resource : mAnimationArray)
 	{
+		resource->Create();
 		ResourceManager::PushResource(resource);
 	}
 
@@ -44,6 +51,8 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
 	ResourceHandle handle = { eResourceType::PrefabResource, GetKey() + L"_Prefab", L"", _handle.GetPath()};
 	mModelPrefab = new PrefabResource(handle, this);
 	ResourceManager::PushResource(mModelPrefab);
+
+	pModel->Clear();
 }
 
 FBXModelResource::~FBXModelResource()
@@ -66,6 +75,63 @@ FBXModelResource::~FBXModelResource()
     SAFE_DELETE_ARRAY(mBoneArray);
     SAFE_DELETE_ARRAY(mModelNodeArray);
 	ResourceManager::Free_Resource(mModelPrefab->GetHandle());
+}
+
+json FBXModelResource::Serialize()
+{
+	json ret;
+	for (auto& mat : mMaterialTable)
+	{
+		json matJson;
+		matJson["name"] = Helper::ToString(mat.first);
+		matJson["material"] = mat.second->Serialize();
+		ret += matJson;
+	}
+	return ret;
+}
+
+void FBXModelResource::Deserialize(json& j)
+{
+	for (json& matJ : j)
+	{
+		if (matJ.contains("name"))
+		{
+			std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
+			auto mat = mMaterialTable[name];
+			if (mat && matJ.contains("material"))
+				mat->Deserialize(matJ["material"]);
+		}
+	}
+}
+
+void FBXModelResource::SaveJson()
+{
+	json fbxJson = Serialize();
+
+	std::string filePath = Helper::ToString(GetPath());
+	std::filesystem::path path(filePath);
+
+	std::string jsonFilePath = path.replace_extension("").string() + ".json";
+	std::ofstream fbxJsonFile(jsonFilePath);
+	fbxJsonFile << fbxJson.dump(4);
+	fbxJsonFile.close();
+}
+
+void FBXModelResource::LoadJson()
+{
+	std::string filePath = Helper::ToString(GetPath());
+	std::filesystem::path path(filePath);
+
+	std::string jsonFilePath = path.replace_extension("").string() + ".json";
+	std::ifstream loadFile(jsonFilePath);
+
+	json fbxJson;
+	if (loadFile.is_open())
+	{
+		loadFile >> fbxJson;
+		loadFile.close();
+	}
+	Deserialize(fbxJson);
 }
 
 void FBXModelResource::EditorRendering(EditorViewerType _viewerType)

@@ -6,17 +6,17 @@
 BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 {
 	SetEID("BoxCollider");
-	mGeometry = PxBoxGeometry(PxVec3(mInitialSize.x, mInitialSize.y, mInitialSize.z));
+
+	mExtents = mInitialSize;
+	mGeometry = PxBoxGeometry(PxVec3(mExtents.x / 2, mExtents.y / 2, mExtents.z / 2));
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	
 	mOBB.Center = gameObject->transform->position;
-	mOBB.Extents = mInitialSize;
 	mOBB.Orientation = Quaternion::Identity;
-
-	mExtents = mInitialSize;
+	mOBB.Extents = mExtents;
 }
 
 void BoxCollider::Start()
@@ -78,6 +78,10 @@ void BoxCollider::EditorUpdate()
 	{
 		EditorManager::mEditorCamera.PushWireList(this);
 	}
+
+	SetPosition();
+	SetRotation();
+	SetExtents();
 }
 
 void BoxCollider::EditorRender()
@@ -104,42 +108,73 @@ void BoxCollider::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mIsTrigger = j["isTrigger"].get<bool>();
-	mPosition.x = j["position"][0].get<float>();
-	mPosition.y = j["position"][1].get<float>();
-	mPosition.z = j["position"][2].get<float>();
-	mRotation.x = j["rotation"][0].get<float>();
-	mRotation.y = j["rotation"][1].get<float>();
-	mRotation.z = j["rotation"][2].get<float>();
-	mExtents.x = j["extents"][0].get<float>();
-	mExtents.y = j["extents"][1].get<float>();
-	mExtents.z = j["extents"][2].get<float>();
+	if(j.contains("isTrigger"))
+		mIsTrigger = j["isTrigger"].get<bool>();
+
+	if (j.contains("position"))
+	{
+		mPosition.x = j["position"][0].get<float>();
+		mPosition.y = j["position"][1].get<float>();
+		mPosition.z = j["position"][2].get<float>();
+		SetPosition();
+		mOBB.Center = mPosition;
+	}
+	if (j.contains("rotation"))
+	{
+		mRotation.x = j["rotation"][0].get<float>();
+		mRotation.y = j["rotation"][1].get<float>();
+		mRotation.z = j["rotation"][2].get<float>();
+		SetRotation();
+		mOBB.Orientation = mQuatRotation;
+	}
+	if (j.contains("extents"))
+	{
+		mExtents.x = j["extents"][0].get<float>();
+		mExtents.y = j["extents"][1].get<float>();
+		mExtents.z = j["extents"][2].get<float>();
+		SetExtents();
+		mOBB.Extents.x = gameObject->transform->scale.x * mExtents.x;
+		mOBB.Extents.y = gameObject->transform->scale.y * mExtents.y;
+		mOBB.Extents.z = gameObject->transform->scale.z * mExtents.z;
+	}
 
 	SetExtents();
 	SetRotation();
-	SetLocalPosition();
-
-	mOBB.Center = mPosition;
-	mOBB.Orientation = mQuatRotation;
-	mOBB.Extents = mExtents;
+	SetPosition();
 }
 
 void BoxCollider::DrawWire()
 {
-	// 원본 OBB(로컬 좌표계 기준)
-	DirectX::BoundingOrientedBox localOBB = mOBB;
-	// 월드 변환 행렬
-	XMMATRIX worldMatrix = gameObject->transform->GetWorldMatrix();
-	// 월드 좌표계로 변환된 OBB
-	DirectX::BoundingOrientedBox transformedOBB;
-	localOBB.Transform(transformedOBB, worldMatrix);
-	Debug::Draw(DebugRenderer::GetBatch(), transformedOBB, mBaseColor);
+	Debug::Draw(DebugRenderer::GetBatch(), mOBB, mBaseColor);
+}
+
+void BoxCollider::SetPosition()
+{
+	PxTransform currentTransform = mShape->getLocalPose();
+	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
+	mOBB.Center = gameObject->transform->GetWorldPosition() + mPosition;
+}
+
+void BoxCollider::SetRotation()
+{
+	PxTransform currentTransform = mShape->getLocalPose();
+	Vector3 rot = gameObject->transform->GetEulerAngles();
+	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
+	PxQuat pxRot;
+	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
+	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+	mOBB.Orientation = mQuatRotation;
 }
 
 void BoxCollider::SetExtents()
 {
-	mGeometry = (PxVec3(mExtents.x / 2.f, mExtents.y / 2.f, mExtents.z / 2.f));
+	Vector3 size = gameObject->transform->scale;
+	mGeometry = (PxVec3(size.x * mExtents.x / 2.f, size.y * mExtents.y / 2.f, size.z * mExtents.z / 2.f));
 	mShape->setGeometry(mGeometry);
+
+	mOBB.Extents.x = size.x * mExtents.x;
+	mOBB.Extents.y = size.y * mExtents.y;
+	mOBB.Extents.z = size.z * mExtents.z;
 }
 
 void BoxCollider::EditorRendering(EditorViewerType _type)
@@ -147,25 +182,13 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
 	ImGui::Text("Position : ");
-	if (ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -1000.f, 1000.f))
-	{
-		SetLocalPosition();
-		mOBB.Center = mPosition;
-	}
+	ImGui::DragFloat3((uid + "Position").c_str(), &mPosition.x, 0.1f, -90000.f, 90000.f);
 
 	ImGui::Text("Rotation : ");
-	if (ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f))
-	{
-		SetRotation();
-		mOBB.Orientation = mQuatRotation;
-	}
+	ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f);
 
 	ImGui::Text("Extents : ");
-	if (ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f))
-	{
-		SetExtents();
-		mOBB.Extents = mExtents;
-	}
+	ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f);
 
 	ImGui::Separator();
 
@@ -174,5 +197,4 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	{
 		SetIsTrigger();
 	}
-
 }

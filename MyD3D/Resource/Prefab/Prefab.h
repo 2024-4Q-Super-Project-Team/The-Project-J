@@ -28,5 +28,8 @@ private:
     void SetComponent(Object* _pObject, FBXModelResource* _pModel);
     void SetMeshRenderer(ModelNode* _pNode, FBXModelResource* _pModel);
 public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
+public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

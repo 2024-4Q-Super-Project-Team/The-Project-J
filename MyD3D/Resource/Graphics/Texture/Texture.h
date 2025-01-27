@@ -13,5 +13,8 @@ public:
 public:
     D3DGraphicsImg* Texture;
 public:
+    virtual json Serialize();
+    virtual void Deserialize(json& j);
+public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

@@ -7,7 +7,6 @@ bool Collider::bDrawMode = false;
 Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;
-
 	mIsTrigger = false;
 }
 
@@ -21,13 +20,6 @@ Collider::~Collider()
 
 void Collider::Start()
 {
-	//Collider는 Rigidbody가 있어야 동작하므로 Rigidbody가 없으면 만들어줍니다. 
-	if (gameObject->GetComponent<Rigidbody>() == nullptr)
-	{
-		Rigidbody* rigid = new Rigidbody(gameObject);
-		mRefRigidbody = gameObject->EditorAddComponent<Rigidbody>();
-	}
-	AddShapeToRigidbody();
 }
 
 void Collider::Tick()
@@ -71,20 +63,6 @@ Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
 	return _camera->GetDistance(gameObject->transform);
 }
 
-void Collider::SetLocalPosition()
-{
-	PxTransform currentTransform = mShape->getLocalPose();
-	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
-}
-
-void Collider::SetRotation()
-{
-	PxTransform currentTransform = mShape->getLocalPose();
-	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
-	PxQuat pxRot;
-	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
-	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
-}
 
 void Collider::AddShapeToRigidbody()
 {
@@ -93,7 +71,7 @@ void Collider::AddShapeToRigidbody()
 		mRefRigidbody->AddShape(mShape);
 
 	SetIsTrigger();
-	SetLocalPosition();
+	SetPosition();
 	SetRotation();
 }
 

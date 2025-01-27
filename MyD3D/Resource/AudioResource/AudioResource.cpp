@@ -7,9 +7,6 @@ AudioResource::AudioResource(ResourceHandle _handle)
     SetEID("Audio : " + Helper::ToString(_handle.GetKey()));
 	mAudioClip = new AudioClip(_handle.GetPath());
 	mAudioClip->Create();
-	// JSON_TODO : 핸들의 Path경로에 Json파일이 있는지 확인
-	// 있으면 해당 JSON의 값을 쓰고
-	// 없으면 JSON을 만들고 기본 값 사용
 
     SetLoop(mUseLoop);
     SetSoundMode(mListenMode);
@@ -36,6 +33,26 @@ void AudioResource::SetSoundMode(eAudioListenMode _soundMode)
 		mAudioClip->SetSoundMode(_soundMode);
 		mListenMode = _soundMode;
 	}
+}
+
+json AudioResource::Serialize()
+{
+    json ret;
+    ret["id"] = GiveId();
+    ret["loop"] = mUseLoop;
+    ret["mode"] = mListenMode;
+
+    return ret;
+}
+
+void AudioResource::Deserialize(json& j)
+{
+    SetId(j["id"].get<unsigned int>());
+
+    if (j.contains("loop"))
+        mUseLoop = j["loop"].get<bool>();
+    if (j.contains("mode"))
+        mListenMode = (eAudioListenMode)j["mode"].get<int>();
 }
 
 void AudioResource::EditorRendering(EditorViewerType _viewerType)

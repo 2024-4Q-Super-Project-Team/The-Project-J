@@ -122,15 +122,23 @@ void PlayerController::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	mHeight = j["height"].get<float>();
-	mRadius = j["radius"].get<float>();
-	mContactOffset = j["contactOffset"].get<float>();
-	mSlopeLimit = j["slopeLimit"].get<float>();
-	mStepOffset = j["stepOffset"].get<float>();
+	if(j.contains("height"))
+		mHeight = j["height"].get<float>();
+	if (j.contains("radius"))
+		mRadius = j["radius"].get<float>();
+	if (j.contains("contactOffset"))
+		mContactOffset = j["contactOffset"].get<float>();
+	if (j.contains("slopeLimit"))
+		mSlopeLimit = j["slopeLimit"].get<float>();
+	if (j.contains("stepOffset"))
+		mStepOffset = j["stepOffset"].get<float>();
 
-	mMoveSpeed = j["moveSpeed"].get<float>();
-	mJumpSpeed = j["jumpSpeed"].get<float>();
-	mGravity = j["gravity"].get<float>();
+	if (j.contains("moveSpeed"))
+		mMoveSpeed = j["moveSpeed"].get<float>();
+	if (j.contains("jumpSpeed"))
+		mJumpSpeed = j["jumpSpeed"].get<float>();
+	if (j.contains("gravity"))
+		mGravity = j["gravity"].get<float>();
 }
 
 void PlayerController::SetMaterial(std::string _name)

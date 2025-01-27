@@ -16,14 +16,11 @@ BOOL ResourceManager::Initialize()
 {
     FBXImporter::Initialize();
 
-    // 여기서 json을 읽어 mLoadResourceList에 핸들정보를 담는다.
-    // 그리고 로드한다.
-    Reload();
-
-    MeshResource::GetSkyCubeMesh();
-    MeshResource::GetCubeMesh();
-    MeshResource::GetPlainMesh();
-    MaterialResource::GetDefaultMaterial();
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
+    SkyBox::GetDefaultSkyBox();
 
     return TRUE;
 }
@@ -43,33 +40,49 @@ void ResourceManager::Reset()
         }
         table.clear();
     }
-    SkyBox::FreeDefaultSkyBox();
+    MeshResource::SkyCubeMesh = nullptr;
+    MeshResource::CubeMesh = nullptr;
+    MeshResource::PlainMesh = nullptr;
+    MaterialResource::DefaultMaterial = nullptr;
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
 }
 
 void ResourceManager::Reload()
 {
-    // 리셋 -> json 다시 불러오기 -> 전부 Alloc
-    
     Reset();    // 리셋
-    LoadResources();
     Alloc_All_Resource(); // 전부 Alloc
 }
 
 void ResourceManager::SaveResources()
 {
-    json saveJson;
-    for (ResourceHandle resource : mLoadResourceList)
+    json handleSaveJson;
+    json audioSaveJson;
+    for (ResourceHandle resourceHandle : mLoadResourceList)
     {
-        saveJson += resource.Serialize();
+        handleSaveJson += resourceHandle.Serialize();
+        auto fbx = GetResource<FBXModelResource>(resourceHandle);
+        if(fbx) fbx->SaveJson();
+
+        auto audio = GetResource<AudioResource>(resourceHandle);
+        if(audio)  audioSaveJson += audio->Serialize();
     }
 
     std::ofstream file(mSaveFilePath + "resources.json");
-    file << saveJson.dump(4);
+    file << handleSaveJson.dump(4);
     file.close();
+
+    std::ofstream file2(mSaveFilePath + "audios.json");
+    file2 << audioSaveJson.dump(4);
+    file2.close();
 }
 
 void ResourceManager::LoadResources()
 {
+    Reset();
+
     std::ifstream loadFile(mSaveFilePath + "resources.json");
 
     json loadJson;
@@ -86,18 +99,56 @@ void ResourceManager::LoadResources()
         mLoadResourceList.insert(handle);
     }
 
-    SkyBox::GetDefaultSkyBox();
+    std::ifstream audioFile(mSaveFilePath + "audios.json");
+    json audioJson;
+    if (audioFile.is_open())
+    {
+        audioFile >> audioJson;
+        audioFile.close();
+    }
+
+    for (json& j : audioJson)
+    {
+        std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
+        ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
+        auto audio = GetResource<AudioResource>(handle);
+        audio->Deserialize(j);
+    }
+
+    Alloc_All_Resource();
+
+}
+
+#define ALLOC_RESOURCE_FROM_ENUM_TYPE(type)\
+if (_handle.GetResourceType() == eResourceType::type) {\
+pResource = new type(_handle);\
+table[_handle] = pResource;\
+}\
+
+void ResourceManager::Alloc_Resource(ResourceHandle _handle)
+{
+    auto& table = GetResourceTable(_handle.GetResourceType());
+    auto itr = table.find(_handle);
+    if (FIND_SUCCESS(itr, table))
+    {
+        if (itr->second != nullptr)
+            return;
+        Resource* pResource;
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(FBXModelResource)
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(Texture2DResource)
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(AudioResource)
+        Display::Console::Log("Alloc_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+    }
 }
 
 void ResourceManager::Alloc_All_Resource()
 {
-    //for (int i = 0; i < mLoadResourceList.size(); ++i)
-    //{
-    //    LoadFileFromHandle(mLoadResourceList[i]);
-    //}
     for (ResourceHandle handle : mLoadResourceList)
     {
         LoadFileFromHandle(handle);
+
+        auto fbx = GetResource<FBXModelResource>(handle);
+        if(fbx) fbx->LoadJson();
     }
 }
 
@@ -128,6 +179,14 @@ void ResourceManager::Free_All_Resource()
             SAFE_DELETE(resource);
         }
     }
+    MeshResource::SkyCubeMesh = nullptr;
+    MeshResource::CubeMesh = nullptr;
+    MeshResource::PlainMesh = nullptr;
+    MaterialResource::DefaultMaterial = nullptr;
+    PushResource<MeshResource>(MeshResource::GetSkyCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetCubeMesh());
+    PushResource<MeshResource>(MeshResource::GetPlainMesh());
+    PushResource<MaterialResource>(MaterialResource::GetDefaultMaterial());
 }
 
 BOOL ResourceManager::RegisterResourceHandle(ResourceHandle _handle)
@@ -224,7 +283,7 @@ std::unordered_set<ResourceHandle>& ResourceManager::GetLoadResourceList()
 #define REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(type) \
 if(_handle.GetResourceType() == eResourceType::type)\
 if(ResourceManager::RegisterResourceHandle(_handle)){\
-ResourceManager::Alloc_Resource<type>(_handle);\
+ResourceManager::Alloc_Resource(_handle);\
 ResourceManager::GetLoadResourceList().insert(_handle);\
 return TRUE; \
 } else { \

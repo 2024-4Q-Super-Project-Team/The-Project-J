@@ -18,6 +18,7 @@
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
+#include <functional>
 
 // FMOD
 #include "ThirdParty/fmod/include/fmod.hpp"

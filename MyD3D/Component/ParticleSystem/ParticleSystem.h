@@ -6,6 +6,14 @@
 
 class Texture2DResource;
 
+struct funcArgs
+{
+	PxPBDParticleSystem* ps;
+	PxVec4* positions;
+	PxVec4* velocities;
+	int particleCount;
+};
+
 class ParticleSystem 
 	: public Component
 	, public IRenderContext
@@ -46,7 +54,11 @@ private:
 	//Init Or Renew
 	void SetMaterial();
 	void SetBuffers();
-	void DefaultFogMove();
+
+	void RegisterFunctions();
+
+private:
+	static void DefaultFogMove(funcArgs args);
 
 	//Update
 	void FromGPUToHost();
@@ -78,5 +90,9 @@ private:
 	int mTextureSize = 5;
 
 	class D3DGraphicsVertexBuffer* mVertexBuffer = nullptr;
+
+	int mFuncIdx = 0;
+	std::function<void(funcArgs)> mNowFunc;
+	static std::unordered_map<std::string, std::function<void(funcArgs)>> particleFuncMap;
 };
 

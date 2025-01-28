@@ -5,6 +5,8 @@
 #include "Graphics/GraphicsManager.h"
 #include "Resource/Graphics/Texture/Texture.h"
 
+std::unordered_map<std::string, std::function<void(funcArgs)>> ParticleSystem::particleFuncMap;
+
 ParticleSystem::ParticleSystem(Object* _owner)
     : Component(_owner)
 {
@@ -12,6 +14,8 @@ ParticleSystem::ParticleSystem(Object* _owner)
 
 	mParticleSystem = GameManager::GetPhysicsManager()->GetPhysics()
 		->createPBDParticleSystem(*GameManager::GetPhysicsManager()->GetCudaManager(), 96);
+	
+	RegisterFunctions();
 }
 
 ParticleSystem::~ParticleSystem()
@@ -32,7 +36,15 @@ void ParticleSystem::Start()
 
 	SetMaterial();
 
-	DefaultFogMove();
+	if (mNowFunc)
+	{
+		funcArgs args;
+		args.ps = mParticleSystem;
+		args.positions = mPositionsHost;
+		args.velocities = mVelocitiesHost;
+		args.particleCount = mParticleCount;
+		mNowFunc(args);
+	}
 
 	SetBuffers();
 }
@@ -64,7 +76,7 @@ void ParticleSystem::PreRender()
 
 	PxVec4* bufferPos = mParticleBuffer->getPositionInvMasses();
 	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyDtoHAsync(
-		mPositionsHost, (CUdeviceptr)bufferPos, sizeof(PxVec4) * mParticleCount, 0);
+		&mPositionsHost, (CUdeviceptr)bufferPos, sizeof(PxVec4) * mParticleCount, 0);
 
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -75,7 +87,7 @@ void ParticleSystem::PreRender()
 	GameManager::GetPhysicsManager()->GetCudaManager()->releaseContext();
 
 	if (SUCCEEDED(hr)) {
-		memcpy(mappedResource.pData, mPositionsHost, sizeof(PxVec4) * mParticleCount);
+		memcpy(mappedResource.pData, &mPositionsHost, sizeof(PxVec4) * mParticleCount);
 		D3DGraphicsRenderer::GetDevicecontext()->Unmap(mVertexBuffer->mBuffer, 0);
 	}
 
@@ -137,6 +149,20 @@ void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
 	{
 		SetTexture(mTextureHandle);
 	}
+	ImGui::Separator();
+
+	std::vector<const char*> ccharFuncs;
+	for (auto& func : particleFuncMap)
+	{
+		ccharFuncs.push_back(func.first.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mFuncIdx, ccharFuncs.data(), static_cast<int>(ccharFuncs.size())));
+	{
+		mNowFunc = particleFuncMap[ccharFuncs[mFuncIdx]];
+	}
+
+	ImGui::Separator();
 
 	ImGui::Text(u8"파티클 개수 : ");
 	ImGui::DragInt((uid + "Particle Count").c_str(), (int*)&mParticleCount, 100, 0, maxParticleCount);
@@ -258,16 +284,16 @@ void ParticleSystem::SetBuffers()
 {
 
 	PxVec4* bufferPos = mParticleBuffer->getPositionInvMasses();
-	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyHtoDAsync((CUdeviceptr)bufferPos, mPositionsHost, mParticleCount * sizeof(PxVec4), 0);
+	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyHtoDAsync((CUdeviceptr)bufferPos, &mPositionsHost, mParticleCount * sizeof(PxVec4), 0);
 	mParticleBuffer->raiseFlags(PxParticleBufferFlag::eUPDATE_POSITION);
 
 
 	PxVec4* bufferVel = mParticleBuffer->getVelocities();
-	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyHtoDAsync((CUdeviceptr)(bufferVel), mVelocitiesHost, mParticleCount * sizeof(PxVec4), 0);
+	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyHtoDAsync((CUdeviceptr)(bufferVel), &mVelocitiesHost, mParticleCount * sizeof(PxVec4), 0);
 	mParticleBuffer->raiseFlags(PxParticleBufferFlag::eUPDATE_VELOCITY);
 
 	PxU32* bufferPhases = mParticleBuffer->getPhases();
-	GameManager::GetPhysicsManager()->GetCudaContext()->memcpyHtoDAsync((CUdeviceptr)(bufferPhases), mPhasesHost, mParticleCount * sizeof(PxU32), 0);
+	GameManager::GetPhysicsManager()->GetCudaContext()->memcpyHtoDAsync((CUdeviceptr)(bufferPhases), &mPhasesHost, mParticleCount * sizeof(PxU32), 0);
 	mParticleBuffer->raiseFlags(PxParticleBufferFlag::eUPDATE_PHASE);
 
 	mParticleBuffer->setNbActiveParticles(mParticleCount);
@@ -285,7 +311,7 @@ void ParticleSystem::SetBuffers()
 
 	D3D11_SUBRESOURCE_DATA data;
 	ZeroMemory(&data, sizeof(data));
-	data.pSysMem = mPositionsHost; //첫번째 데이터의 주소
+	data.pSysMem = &mPositionsHost; //첫번째 데이터의 주소
 
 	mVertexBuffer = new D3DGraphicsVertexBuffer(&desc, &data);
 	mVertexBuffer->Create();
@@ -295,22 +321,26 @@ void ParticleSystem::SetBuffers()
 
 }
 
-void ParticleSystem::DefaultFogMove()
+void ParticleSystem::RegisterFunctions()
+{
+	particleFuncMap[u8"연기"] = DefaultFogMove;
+}
+
+void ParticleSystem::DefaultFogMove(funcArgs args)
 {
 	srand(static_cast<unsigned int>(time(0)));
-	int particleCount = mParticleCount; // 연기 입자 수
 	PxVec3 spawnCenter(0.0f, 10.0f, 0.0f); // 연기가 모이는 중심 위치
 	float spawnRadius = 5.0f; // 초기 위치에서의 반경
 	float riseSpeed = 7.0f; // 연기의 상승 속도
 	float horizontalSpread = 2.0f; // 연기의 확산 정도
 	float timeOffsetRange = 150.0f; // 시간 오프셋 범위
 
-	for (int i = 0; i < particleCount; ++i)
+	for (int i = 0; i < args.particleCount; ++i)
 	{
 		float timeOffset = (rand() % 100 / 100.0f) * timeOffsetRange;
 
 		// 초기 위치 설정 (spawnCenter 근처에 모임)
-		mPositionsHost[i] = PxVec4(
+		args.positions[i] = PxVec4(
 			spawnCenter.x + ((rand() % 100 / 100.0f - 0.5f) * spawnRadius), // X축 중심 근처
 			spawnCenter.y + ((rand() % 100 / 100.0f - 0.5f) * spawnRadius), // Y축 중심 근처
 			spawnCenter.z + ((rand() % 100 / 100.0f - 0.5f) * spawnRadius), // Z축 중심 근처
@@ -318,7 +348,7 @@ void ParticleSystem::DefaultFogMove()
 		);
 
 		// 초기 속도 설정 (Y축 상승, X/Z는 약간의 확산)
-		mVelocitiesHost[i] = PxVec4(
+		args.velocities[i] = PxVec4(
 			(rand() % 100 / 100.0f - 0.5f) * horizontalSpread, // X축 확산
 			riseSpeed + timeOffset * 0.1f,                    // Y축 상승 속도 (시간 오프셋 반영)
 			(rand() % 100 / 100.0f - 0.5f) * horizontalSpread, // Z축 확산
@@ -334,11 +364,11 @@ void ParticleSystem::DefaultFogMove()
 	const PxReal solidRestOffset = restOffset;
 	const PxReal fluidRestOffset = restOffset * 0.6f;
 
-	mParticleSystem->setRestOffset(restOffset);
-	mParticleSystem->setContactOffset(restOffset + 0.01f); // 입자 간 접촉 최소화
-	mParticleSystem->setParticleContactOffset(restOffset + 0.02f); // 부드러운 접촉
-	mParticleSystem->setSolidRestOffset(solidRestOffset);
-	mParticleSystem->setFluidRestOffset(fluidRestOffset);
+	args.ps->setRestOffset(restOffset);
+	args.ps->setContactOffset(restOffset + 0.01f); // 입자 간 접촉 최소화
+	args.ps->setParticleContactOffset(restOffset + 0.02f); // 부드러운 접촉
+	args.ps->setSolidRestOffset(solidRestOffset);
+	args.ps->setFluidRestOffset(fluidRestOffset);
 
 }
 
@@ -348,14 +378,14 @@ void ParticleSystem::FromGPUToHost()
 
 	PxVec4* bufferPos = mParticleBuffer->getPositionInvMasses();
 	GameManager::GetPhysicsManager()->GetCudaManager()->getCudaContext()->memcpyDtoHAsync(
-		mPositionsHost, (CUdeviceptr)bufferPos, sizeof(PxVec4) * mParticleCount, 0);
+		&mPositionsHost, (CUdeviceptr)bufferPos, sizeof(PxVec4) * mParticleCount, 0);
 
 	D3D11_MAPPED_SUBRESOURCE mappedResource;
 	HRESULT hr = D3DGraphicsRenderer::GetDevicecontext()->Map(
 		mVertexBuffer->mBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource
 	);
 	if (SUCCEEDED(hr)) {
-		memcpy(mappedResource.pData, mPositionsHost, sizeof(PxVec4) * mParticleCount);
+		memcpy(mappedResource.pData, &mPositionsHost, sizeof(PxVec4) * mParticleCount);
 		D3DGraphicsRenderer::GetDevicecontext()->Unmap(mVertexBuffer->mBuffer, 0);
 	}
 

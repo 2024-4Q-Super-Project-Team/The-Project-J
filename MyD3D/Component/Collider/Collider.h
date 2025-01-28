@@ -36,6 +36,8 @@ protected:
     virtual void SetPosition() = 0;
     virtual void SetRotation() = 0;
     void AddShapeToRigidbody();
+    void SetMaterial(std::string _name);
+
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;
@@ -43,6 +45,9 @@ protected:
     Vector3 mRotation;
     Quaternion mQuatRotation;
     Rigidbody* mRefRigidbody;
+
+    int mMaterialIdx = 0;
+    std::vector<std::string> mMaterials;
 protected:
     const Color mBaseColor = Color(0, 1, 0, 1);
     const Color mIntersectColor = Color(1, 0, 0, 1);

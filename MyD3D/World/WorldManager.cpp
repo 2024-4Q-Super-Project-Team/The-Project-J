@@ -264,9 +264,13 @@ BOOL WorldManager::DestroyWorld(const std::wstring& _name)
 	{
 		world->SetDestroy();
 		// 삭제하는 월드가 변경해야하는 월드면 nullptr로 바꿔준다.
-		if (world == mNextActiveWorld)
+		if (world == mNextActiveWorld )
 		{
 			mNextActiveWorld = nullptr;
+		}
+		if (world == mStartWorld)
+		{
+			mStartWorld = nullptr;
 		}
 		return TRUE;
 	}

@@ -17,11 +17,22 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	mOBB.Center = gameObject->transform->position;
 	mOBB.Orientation = Quaternion::Identity;
 	mOBB.Extents = mExtents;
+
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 void BoxCollider::Start()
 {
 	Collider::Start();
+
+	SetExtents();
+	SetRotation();
+	SetPosition();
 }
 
 void BoxCollider::Tick()
@@ -79,9 +90,6 @@ void BoxCollider::EditorUpdate()
 		EditorManager::mEditorCamera.PushWireList(this);
 	}
 
-	SetPosition();
-	SetRotation();
-	SetExtents();
 }
 
 void BoxCollider::EditorRender()
@@ -100,7 +108,7 @@ json BoxCollider::Serialize()
 	ret["position"] = { mPosition.x, mPosition.y, mPosition.z };
 	ret["rotation"] = { mRotation.x, mRotation.y, mRotation.z };
 	ret["extents"] = { mExtents.x, mExtents.y, mExtents.z };
-
+	ret["material"] = mMaterialIdx;
 	return ret;
 }
 
@@ -116,7 +124,6 @@ void BoxCollider::Deserialize(json& j)
 		mPosition.x = j["position"][0].get<float>();
 		mPosition.y = j["position"][1].get<float>();
 		mPosition.z = j["position"][2].get<float>();
-		SetPosition();
 		mOBB.Center = mPosition;
 	}
 	if (j.contains("rotation"))
@@ -124,7 +131,6 @@ void BoxCollider::Deserialize(json& j)
 		mRotation.x = j["rotation"][0].get<float>();
 		mRotation.y = j["rotation"][1].get<float>();
 		mRotation.z = j["rotation"][2].get<float>();
-		SetRotation();
 		mOBB.Orientation = mQuatRotation;
 	}
 	if (j.contains("extents"))
@@ -132,10 +138,15 @@ void BoxCollider::Deserialize(json& j)
 		mExtents.x = j["extents"][0].get<float>();
 		mExtents.y = j["extents"][1].get<float>();
 		mExtents.z = j["extents"][2].get<float>();
-		SetExtents();
 		mOBB.Extents.x = gameObject->transform->scale.x * mExtents.x;
 		mOBB.Extents.y = gameObject->transform->scale.y * mExtents.y;
 		mOBB.Extents.z = gameObject->transform->scale.z * mExtents.z;
+	}
+
+	if (j.contains("material"))
+	{
+		mMaterialIdx = j["material"];
+		SetMaterial(mMaterials[mMaterialIdx]);
 	}
 
 	SetExtents();
@@ -160,9 +171,11 @@ void BoxCollider::SetRotation()
 	PxTransform currentTransform = mShape->getLocalPose();
 	Vector3 rot = gameObject->transform->GetEulerAngles();
 	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
+	Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
 	PxQuat pxRot;
-	memcpy_s(&pxRot, sizeof(float) * 4, &mQuatRotation, sizeof(float) * 4);
+	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+
 	mOBB.Orientation = mQuatRotation;
 }
 
@@ -188,7 +201,7 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	ImGui::DragFloat3((uid + "Rotation").c_str(), &mRotation.x, 0.1f, -360.f, 360.f);
 
 	ImGui::Text("Extents : ");
-	ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.f, 100.f);
+	ImGui::DragFloat3((uid + "Extents").c_str(), &mExtents.x, 0.1f, 0.1f, 100.f);
 
 	ImGui::Separator();
 
@@ -197,4 +210,19 @@ void BoxCollider::EditorRendering(EditorViewerType _type)
 	{
 		SetIsTrigger();
 	}
+
+	std::vector<const char*> ccharMaterial;
+	for (auto& mat : mMaterials)
+	{
+		ccharMaterial.push_back(mat.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mMaterialIdx, ccharMaterial.data(), static_cast<int>(ccharMaterial.size())))
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+	}
+
+	SetExtents();
+	SetRotation();
+	SetPosition();
 }

@@ -15,6 +15,12 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 	mBS.Center = gameObject->transform->position;
 	mBS.Radius = mInitialRadius;
 	mRadius = mInitialRadius;
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 void SphereCollider::Start()
@@ -176,5 +182,16 @@ void SphereCollider::EditorRendering(EditorViewerType _type)
 	if (ImGui::Checkbox(("##isTrigger" + uid).c_str(), (bool*)&mIsTrigger))
 	{
 		SetIsTrigger();
+	}
+
+	std::vector<const char*> ccharMaterial;
+	for (auto& mat : mMaterials)
+	{
+		ccharMaterial.push_back(mat.c_str());
+	}
+
+	if (ImGui::Combo((uid + "Dynamic Items").c_str(), &mMaterialIdx, ccharMaterial.data(), static_cast<int>(ccharMaterial.size())))
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
 	}
 }

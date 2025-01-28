@@ -1,0 +1,57 @@
+{
+    "start": 360,
+    "worlds": [
+        {
+            "id": 360,
+            "is persistnace": false,
+            "name": "t",
+            "objects": [
+                {
+                    "id": 361,
+                    "name": "Main_Camera",
+                    "tag": "Main_Camera"
+                },
+                {
+                    "id": 362,
+                    "name": "Direction_Light",
+                    "tag": "Direction_Light"
+                },
+                {
+                    "id": 363,
+                    "name": "GameObject",
+                    "tag": "GameObject"
+                },
+                {
+                    "id": 364,
+                    "name": "candle.fbx_Prefab",
+                    "tag": "candle.fbx_Prefab"
+                },
+                {
+                    "id": 365,
+                    "name": "RootNode",
+                    "tag": "RootNode"
+                },
+                {
+                    "id": 366,
+                    "name": "body.001",
+                    "tag": "body.001"
+                },
+                {
+                    "id": 367,
+                    "name": "candle",
+                    "tag": "candle"
+                },
+                {
+                    "id": 368,
+                    "name": "rope.001",
+                    "tag": "rope.001"
+                },
+                {
+                    "id": 369,
+                    "name": "wax",
+                    "tag": "wax"
+                }
+            ]
+        }
+    ]
+}

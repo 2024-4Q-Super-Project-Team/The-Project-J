@@ -7,6 +7,7 @@ Mouse* Input::m_mouse = nullptr;
 void Input::Initialize()
 {
 	m_key = new Key();
+	m_key->Initialize();
 	m_mouse = new Mouse();
 	m_mouse->Initialize();
 }

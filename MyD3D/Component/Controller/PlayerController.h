@@ -17,9 +17,18 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+
+    virtual void _CALLBACK OnEnable();
     // Editor Only
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
+
+public:
+    void SetForwardKey(Key _key);
+    void SetBackwardKey(Key _key);
+    void SetLeftKey(Key _key);
+    void SetRightKey(Key _key);
+    void SetJumpKey(Key _key);
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -27,9 +36,17 @@ public:
 public:
     void SetMaterial(std::string _name);
 private:
-	static PxControllerManager* ControllerManager;
+	PxControllerManager* ControllerManager;
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
+    PxCapsuleControllerDesc mCapsuleDesc;
+    //Key
+    int mForwardKeyIdx = 0;
+    int mBackwardKeyIdx = 0;
+    int mLeftKeyIdx = 0;
+    int mRightKeyIdx = 0;
+    int mJumpKeyIdx = 0;
+    std::vector<std::string> mStrKeys;
 
     //Capsule Controller
     float mHeight = 4;
@@ -43,7 +60,6 @@ private:
 	float mJumpSpeed = 30.f;
 	float mGravity = 9.8f;
 	PxVec3 mMoveDirection = PxVec3(0.f, 0.f, 0.f);
-
 
     std::vector<std::string> mMaterials;
 

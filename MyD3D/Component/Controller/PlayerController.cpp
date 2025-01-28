@@ -5,15 +5,13 @@
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-PxControllerManager* PlayerController::ControllerManager = nullptr;
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
 
-	if (ControllerManager == nullptr)
-		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerWorld()->GetPxScene());
+	ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerWorld()->GetPxScene());
 
 	PxCapsuleControllerDesc capsuleDesc;
 	capsuleDesc.height = mHeight;
@@ -26,24 +24,30 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	capsuleDesc.stepOffset = mStepOffset;
 	mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(capsuleDesc));
 
-	Vector3 pos = gameObject->transform->position;
-	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
-
 	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
 	for (auto& material : materials)
 	{
 		mMaterials.push_back(material.first.c_str());
 	}
+
+	for (auto key : Key::keyMap)
+	{
+		mStrKeys.push_back(key.first);
+	}
 }
 
 PlayerController::~PlayerController()
 {
-	ControllerManager->release();
 	mCapsuleController->release();
+	ControllerManager->release();
 }
 
 void PlayerController::Start()
 {
+	Vector3 pos = gameObject->transform->position;
+	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
+
+	SetMaterial(mMaterials[mMaterialIdx]);
 }
 
 void PlayerController::Tick()
@@ -61,10 +65,32 @@ void PlayerController::PreUpdate()
 void PlayerController::Update()
 {
 	//입력에 따른 move 
+
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+	{
+		mMoveDirection += PxVec3(0, 0, 1);
+	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+	{
+		mMoveDirection += PxVec3(0, 0, -1);
+	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+	{
+		mMoveDirection += PxVec3(-1, 0, 0);
+	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+	{
+		mMoveDirection += PxVec3(1, 0, 0);
+	}
+
+	if (Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+	{
+		mMoveDirection.y = mJumpSpeed;
+	}
 	
-	//mMoveDirection *= mMoveSpeed;
-	//mMoveDirection.y -= mGravity * deltaTime;
-	//mCapsuleController->move(mMoveDirection, 0.001, deltaTime, mCharacterControllerFilters);
+	mMoveDirection *= mMoveSpeed;
+	mMoveDirection.y -= mGravity * Time::GetScaledDeltaTime();
+	mCapsuleController->move(mMoveDirection, 0.001, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 }
 
 void PlayerController::PostUpdate()
@@ -91,6 +117,20 @@ void PlayerController::PostRender()
 {
 }
 
+void _CALLBACK PlayerController::OnEnable()
+{
+	if (!ControllerManager)
+		ControllerManager = PxCreateControllerManager(*gameObject->GetOwnerWorld()->GetPxScene());
+
+	if (!mCapsuleController)
+	{
+		mCapsuleController = static_cast<PxCapsuleController*>(ControllerManager->createController(mCapsuleDesc));
+		Vector3 pos = gameObject->transform->position;
+		mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
+	}
+	return void _CALLBACK();
+}
+
 void PlayerController::EditorUpdate()
 {
 }
@@ -115,6 +155,15 @@ json PlayerController::Serialize()
 	ret["moveSpeed"] = mMoveSpeed;
 	ret["jumpSpeed"] = mJumpSpeed;
 	ret["gravity"] = mGravity;
+
+	ret["forward"] = mForwardKeyIdx;
+	ret["backward"] = mBackwardKeyIdx;
+	ret["left"] = mLeftKeyIdx;
+	ret["right"] = mRightKeyIdx;
+	ret["jump"] = mJumpKeyIdx;
+
+	ret["material"] = mMaterialIdx;
+
 	return ret;
 }
 
@@ -139,6 +188,20 @@ void PlayerController::Deserialize(json& j)
 		mJumpSpeed = j["jumpSpeed"].get<float>();
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
+
+	if (j.contains("forward"))
+		mForwardKeyIdx = j["forward"].get<int>();
+	if (j.contains("backward"))
+		mBackwardKeyIdx = j["backward"].get<int>();
+	if (j.contains("left"))
+		mLeftKeyIdx = j["left"].get<int>();
+	if (j.contains("right"))
+		mRightKeyIdx = j["right"].get<int>();
+	if (j.contains("jump"))
+		mJumpKeyIdx = j["jump"].get<int>();
+
+	if (j.contains("material"))
+		mMaterialIdx = j["material"].get<int>();
 }
 
 void PlayerController::SetMaterial(std::string _name)
@@ -157,6 +220,27 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 	ImGui::Separator();
+
+	//////////////////////////Key Setting//////////////////////
+
+	std::vector<const char*> ccharKeys;
+	for (auto& key : mStrKeys)
+	{
+		ccharKeys.push_back(key.c_str());
+	}
+	ImGui::Text("Forward : "); ImGui::SameLine;
+	ImGui::Combo((uid + "forwardkey").c_str(), &mForwardKeyIdx, ccharKeys.data(), static_cast<int>(ccharKeys.size()));
+	ImGui::Text("Backwrad : "); ImGui::SameLine; 
+	ImGui::Combo((uid + "backwardkey").c_str(), &mBackwardKeyIdx, ccharKeys.data(), static_cast<int>(ccharKeys.size()));
+	ImGui::Text("Left : "); ImGui::SameLine; 
+	ImGui::Combo((uid + "leftkey").c_str(), &mLeftKeyIdx, ccharKeys.data(), static_cast<int>(ccharKeys.size()));
+	ImGui::Text("Right : "); ImGui::SameLine; 
+	ImGui::Combo((uid + "rightkey").c_str(), &mRightKeyIdx, ccharKeys.data(), static_cast<int>(ccharKeys.size()));
+	ImGui::Text("Jump : "); ImGui::SameLine; 
+	ImGui::Combo((uid + "jumpkey").c_str(), &mJumpKeyIdx, ccharKeys.data(), static_cast<int>(ccharKeys.size()));
+	ImGui::Separator();
+	////////////////////////////////////////////////////////////
+
 	ImGui::Text("Capsule Controller"); ImGui::SameLine;
 	ImGui::Separator();
 	ImGui::Text("Height : "); ImGui::SameLine;

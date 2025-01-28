@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Collider.h"
 #include "Component/Collider/Rigidbody.h"
+#include "Physics/PhysicsManager.h"
 
 bool Collider::bDrawMode = false;
 
@@ -20,6 +21,7 @@ Collider::~Collider()
 
 void Collider::Start()
 {
+	SetMaterial(mMaterials[mMaterialIdx]);
 }
 
 void Collider::Tick()
@@ -91,4 +93,9 @@ void Collider::SetIsTrigger()
 }
 
 
+void Collider::SetMaterial(std::string _name)
+{
+	PxMaterial* material = GameManager::GetPhysicsManager()->GetMaterial(_name);
+	mShape->setMaterials(&material, 1);
+}
 

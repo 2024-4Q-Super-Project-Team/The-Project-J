@@ -32,5 +32,11 @@ public:
         LCONTROL = 17,
         TAB = 9,
         ENTER = 13,
+        W = 'W',
+        A = 'A',
+        S = 'S',
+        D = 'D'
     };
+
+    static std::unordered_map<std::string, Type> keyMap;
 };

@@ -39,6 +39,9 @@ public:
 	virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
 	virtual void DrawShadow(Light* _pLight) override;
 	virtual void DrawWire() override;
+public:
+	void SetTexture(ResourceHandle _handle);
+
 private:
 	//Init Or Renew
 	void SetMaterial();
@@ -48,7 +51,7 @@ private:
 	//Update
 	void FromGPUToHost();
 private:
-	unsigned int mParticleCount = 9000;
+	unsigned int mParticleCount = 300;
 
 	PxPBDParticleSystem* mParticleSystem;
 	PxParticleBuffer* mParticleBuffer;
@@ -70,6 +73,7 @@ private:
 	float mCflCoefficient = 1.0f;     // CFL 계수
 	float mGravity = 0.0f;            // 중력
 
+	ResourceHandle mTextureHandle;
 	Texture2DResource*  mTexture;
 	int mTextureSize = 5;
 

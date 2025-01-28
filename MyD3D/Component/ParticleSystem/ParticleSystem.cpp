@@ -116,11 +116,73 @@ void ParticleSystem::EditorRender()
 
 json ParticleSystem::Serialize()
 {
-    return json();
+	json ret;
+
+	ret["size"] = mTextureSize;
+	ret["func"] = mFuncIdx;
+	ret["count"] = mParticleCount;
+
+	ret["friction"] = mFriction;
+	ret["dampling"] = mDamping;
+	ret["adhesion"] = mAdhesion;
+	ret["visorticity"] = mViscosity;
+	ret["vorticity"] = mVorticity;
+	ret["surface tension"] = mSurfaceTension;
+	ret["cohesion"] = mCohesion;
+	ret["buoyancy"] = mBuoyancy;
+	ret["air resistance"] = mAirResistance;
+	ret["cfl"] = mCflCoefficient;
+	ret["gravity"] = mGravity;
+
+	return ret;
 }
 
 void ParticleSystem::Deserialize(json& j)
 {
+	if (j.contains("size"))
+		mTextureSize = j["size"].get<int>();
+
+	if (j.contains("func"))
+		mFuncIdx = j["func"].get<int>();
+
+	if (j.contains("count"))
+		mParticleCount = j["count"].get<unsigned int>();
+
+	if (j.contains("size"))
+		mTextureSize = j["size"].get<int>();
+
+	if (j.contains("friction"))
+		mFriction = j["friction"].get<float>();
+
+	if (j.contains("dampling"))
+		mDamping = j["dampling"].get<float>();
+
+	if (j.contains("adhesion"))
+		mAdhesion = j["adhesion"].get<float>();
+
+	if (j.contains("viscosity"))
+		mViscosity = j["viscosity"].get<float>();
+
+	if (j.contains("visorticity"))
+		mVorticity = j["visorticity"].get<float>();
+
+	if (j.contains("surface tension"))
+		mSurfaceTension = j["adhesion"].get<float>();
+
+	if (j.contains("cohesion"))
+		mCohesion = j["cohesion"].get<float>();
+
+	if (j.contains("buoyancy"))
+		mBuoyancy = j["buoyancy"].get<float>();
+
+	if (j.contains("air resistance"))
+		mAirResistance = j["air resistance"].get<float>();
+
+	if (j.contains("cfl"))
+		mCflCoefficient = j["cfl"].get<float>();
+
+	if (j.contains("gravity"))
+		mGravity = j["gravity"].get<float>();
 }
 
 void ParticleSystem::EditorRendering(EditorViewerType _viewerType)

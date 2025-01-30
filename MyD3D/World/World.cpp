@@ -39,6 +39,8 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
     mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+    mControllerManager = PxCreateControllerManager(*mPxScene);
+
 }
 
 World::~World()

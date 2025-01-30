@@ -36,7 +36,6 @@ public:
 public:
     void SetMaterial(std::string _name);
 private:
-	PxControllerManager* ControllerManager;
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
     PxCapsuleControllerDesc mCapsuleDesc;

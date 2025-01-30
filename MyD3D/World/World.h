@@ -76,9 +76,11 @@ public:
 	class PickingRay* mPickingRay;
 	PxScene* mPxScene;
 	class PhysicsEvent* mEventCallback;
+	PxControllerManager* mControllerManager;
 public:
 	PxScene* GetPxScene() { return mPxScene; }
 	class PickingRay* GetPickingRay() { return mPickingRay; }
+	PxControllerManager* GetControllerManager() { return mControllerManager; }
 //////////////////////////////////////////////////////////////////////////////
 // Editor
 //////////////////////////////////////////////////////////////////////////////

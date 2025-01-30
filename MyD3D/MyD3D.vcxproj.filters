@@ -345,19 +345,19 @@
     <ClInclude Include="Component\Collider\SphereCollider.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\UIManager.h">
+    <ClInclude Include="Manager\UIManager.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\Widget\Widget.h">
+    <ClInclude Include="Component\UI\UIWidget\UIWidget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\Widget\WidgetText.h">
+    <ClInclude Include="Component\UI\UIWidget\UIText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\Widget\WidgetImage.h">
+    <ClInclude Include="Component\UI\UIWidget\UISprite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
     <ClInclude Include="ThirdParty\imguizmo\GraphEditor.h">
@@ -399,7 +399,7 @@
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="UIManager\UICanvas.h">
+    <ClInclude Include="Component\UI\Canvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -722,19 +722,19 @@
     <ClCompile Include="Component\Collider\SphereCollider.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\UIManager.cpp">
+    <ClCompile Include="Manager\UIManager.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\Widget\Widget.cpp">
+    <ClCompile Include="Component\UI\UIWidget\UIWidget.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\Widget\WidgetText.cpp">
+    <ClCompile Include="Component\UI\UIWidget\UIText.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\Widget\WidgetImage.cpp">
+    <ClCompile Include="Component\UI\UIWidget\UISprite.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="ThirdParty\imguizmo\GraphEditor.cpp">
@@ -773,7 +773,7 @@
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="UIManager\UICanvas.cpp">
+    <ClCompile Include="Component\UI\Canvas.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,12 +1,17 @@
 #pragma once
-#include "Widget.h"
+#include "UIWidget.h"
 
-class WidgetText
-	: public Widget
+class UIText
+	: public UIWidget
 {
 public:
-	explicit WidgetText(Object* _owner);
-	virtual ~WidgetText();
+	explicit UIText(Object* _owner);
+	virtual ~UIText();
+public:
+	void PreUpdate() override;
+	void EditorUpdate() override;
+	void EditorGlobalUpdate() override;
+	void EditorRendering(EditorViewerType _viewerType) override;
 public:
 	virtual void DrawWidget(Vector2 _scale)	override;
 public:
@@ -18,6 +23,13 @@ public:
 	void SetTextOutlineColor(Color _color);
 public:
 	std::wstring GetTextFormat()	{ return mFormat; }
+public:
+	void _CALLBACK OnEnable()	override;
+	void _CALLBACK OnDisable()	override;
+	void _CALLBACK OnDestroy()	override;
+public:
+	virtual json Serialize() override;
+	virtual void Deserialize(json& j) override;
 private:
 	SpriteFont* m_pSpriteFont = nullptr;
 	wchar_t mFormat[1024];	// 텍스트 포맷

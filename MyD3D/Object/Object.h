@@ -15,6 +15,9 @@
 #include "Component/Collider/SphereCollider.h"
 #include "Component/Controller/PlayerController.h"
 #include "Component/ParticleSystem/ParticleSystem.h"
+#include "Component/UI/Canvas.h"
+#include "Component/UI/UIWidget/UISprite.h"
+#include "Component/UI/UIWidget/UIText.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"
@@ -27,7 +30,7 @@ class Object
     : public Engine::Entity
     , public Engine::ICycleHandler
     , public Engine::SaveBase
-	, public IEditorObject  
+	, public IEditorObject
 {
 public:
     explicit Object(std::wstring_view _name, std::wstring_view _tag);

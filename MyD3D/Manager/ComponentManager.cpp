@@ -15,7 +15,9 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(SphereCollider);
 	REGISTER_COMPONENT(PlayerController);
 	REGISTER_COMPONENT(ParticleSystem);
-
+	REGISTER_COMPONENT(Canvas);
+	REGISTER_COMPONENT(UISprite);
+	REGISTER_COMPONENT(UIText);
 
 	return true;
 }

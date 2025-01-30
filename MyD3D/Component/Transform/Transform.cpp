@@ -429,7 +429,7 @@ void Transform::Rotate180(float _duration, Dotween::EasingEffect _easingEffect)
 
 void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)
 {
-    if (isRotating) return; // 이미 회전 중이면 중복 실행 방지
+    if (isRotating) return;
 
     isRotating = true;
     rotationDuration = _duration;

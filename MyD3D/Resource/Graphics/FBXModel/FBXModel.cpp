@@ -26,11 +26,14 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
     mModelNodeTable  = std::move(pModel->ModelNodeTable);
     mRootNode       = pModel->RootNode;
    
-	for (auto& handle : pModel->TextureHandleTable)
-	{
-		ResourceManager::RegisterResourceHandle(handle);
-		ResourceManager::Alloc_Resource(handle);
-	}
+	//for (auto& handle : pModel->TextureHandleTable)
+	//{
+	//	ResourceManager::RegisterResourceHandle(handle);
+	//	ResourceManager::Alloc_Resource(handle);
+	//}
+
+	LoadJson();
+
 	for (auto& resource : mMaterialArray)
 	{
 		resource->Create();
@@ -57,6 +60,7 @@ FBXModelResource::FBXModelResource(ResourceHandle _handle)
 
 FBXModelResource::~FBXModelResource()
 {
+	// FBX가 쓰는 리소스는 전부 해제한다
 	for (auto& resource : mMaterialArray)
 	{
 		ResourceManager::Free_Resource(resource->GetHandle());
@@ -80,10 +84,11 @@ FBXModelResource::~FBXModelResource()
 json FBXModelResource::Serialize()
 {
 	json ret;
+	// Material
 	for (auto& mat : mMaterialTable)
 	{
 		json matJson;
-		matJson["name"] = Helper::ToString(mat.first);
+		matJson["name"]		= Helper::ToString(mat.first);
 		matJson["material"] = mat.second->Serialize();
 		ret += matJson;
 	}
@@ -92,46 +97,64 @@ json FBXModelResource::Serialize()
 
 void FBXModelResource::Deserialize(json& j)
 {
-	for (json& matJ : j)
+	for (json& jsonData : j)
 	{
-		if (matJ.contains("name"))
+		// Material Deserialize
+		if (jsonData.contains("material") && jsonData.contains("name"))
 		{
-			std::wstring name = Helper::ToWString(matJ["name"].get<std::string>());
-			auto mat = mMaterialTable[name];
-			if (mat && matJ.contains("material"))
-				mat->Deserialize(matJ["material"]);
+			std::wstring name = Helper::ToWString(jsonData["name"].get<std::string>());
+			auto matResorce = Helper::FindMap(name, mMaterialTable);
+			if (matResorce)
+			{
+				(*matResorce)->Deserialize(jsonData["material"]);
+			}
 		}
 	}
 }
 
 void FBXModelResource::SaveJson()
 {
-	json fbxJson = Serialize();
+	std::filesystem::path JsonPath =
+		std::filesystem::path(Helper::ToString(GetPath())).replace_extension(".json");
 
-	std::string filePath = Helper::ToString(GetPath());
-	std::filesystem::path path(filePath);
-
-	std::string jsonFilePath = path.replace_extension("").string() + ".json";
-	std::ofstream fbxJsonFile(jsonFilePath);
-	fbxJsonFile << fbxJson.dump(4);
-	fbxJsonFile.close();
+	if (!std::filesystem::exists(JsonPath) || !std::filesystem::is_regular_file(JsonPath)) {
+		// JSON 파일이 없거나, 일반 파일이 아니면 새로운 JSON 파일을 생성
+		std::ofstream createFile(JsonPath);
+		//if (createFile.is_open()) {
+		//	createFile << "{}"; // 기본 빈 JSON 데이터로 초기화
+		//	createFile.close();
+		//}
+	}
+	std::ofstream JsonStream(JsonPath);
+	if (JsonStream.is_open())
+	{
+		json FBXJson = Serialize();
+		JsonStream << FBXJson.dump(4);
+		JsonStream.close();
+	}
 }
 
 void FBXModelResource::LoadJson()
 {
-	std::string filePath = Helper::ToString(GetPath());
-	std::filesystem::path path(filePath);
+	std::filesystem::path JsonPath = 
+		std::filesystem::path(Helper::ToString(GetPath())).replace_extension(".json");
 
-	std::string jsonFilePath = path.replace_extension("").string() + ".json";
-	std::ifstream loadFile(jsonFilePath);
-
-	json fbxJson;
+	//if (!std::filesystem::exists(JsonPath) || !std::filesystem::is_regular_file(JsonPath)) {
+		// JSON 파일이 없거나, 일반 파일이 아니면 새로운 JSON 파일을 생성
+		//std::ofstream createFile(JsonPath);
+		//if (createFile.is_open()) {
+		//	createFile << "{}"; // 기본 빈 JSON 데이터로 초기화
+		//	createFile.close();
+		//}
+	//}
+	std::ifstream loadFile(JsonPath);
 	if (loadFile.is_open())
 	{
-		loadFile >> fbxJson;
+		json FBXJson;
+		loadFile >> FBXJson;
 		loadFile.close();
+		Deserialize(FBXJson);
 	}
-	Deserialize(fbxJson);
 }
 
 void FBXModelResource::EditorRendering(EditorViewerType _viewerType)

@@ -181,6 +181,7 @@ void MeshRenderer::SetMaterial(ResourceHandle _handle)
         }
     }
 }
+
 void MeshRenderer::SetMaterial(MaterialResource* _pResource)
 {
     if (_pResource)

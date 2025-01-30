@@ -25,6 +25,8 @@ void MaterialResource::Create()
     {
         if (mMaterialMapTextureHandle[i].GetPath() != L"")
         {
+            ResourceManager::RegisterResourceHandle(mMaterialMapTextureHandle[i]);
+            ResourceManager::Alloc_Resource(mMaterialMapTextureHandle[i]);
             mMaterialMapTexture[i] = ResourceManager::GetResource<Texture2DResource>(mMaterialMapTextureHandle[i]);
             if (mMaterialMapTexture[i])
             {
@@ -91,8 +93,6 @@ void MaterialResource::FreeDefaultMaterial()
 
 json MaterialResource::Serialize()
 {
-    
-
     ColorF diffuse = mMaterialProperty.DiffuseRGB;
     ColorF ambient = mMaterialProperty.AmbientRGB;
     ColorF specular = mMaterialProperty.SpecularRGB;
@@ -118,7 +118,7 @@ json MaterialResource::Serialize()
 
     ret["property"] = mprop;
     ret["blend type"] = mBlendMode;
-    ret["rs type"] = mRasterMode;
+    ret["raster type"] = mRasterMode;
 
     return ret;
 }
@@ -168,8 +168,8 @@ void MaterialResource::Deserialize(json& j)
     
     if (j.contains("blend type"))
         mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
-    if (j.contains("rs type"))
-        mRasterMode = static_cast<eRasterizerStateType>(j["rs type"].get<int>());
+    if (j.contains("raster type"))
+        mRasterMode = static_cast<eRasterizerStateType>(j["raster type"].get<int>());
 }
 
 #define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \

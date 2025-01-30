@@ -62,7 +62,7 @@ void FBXImporter::ProcessMaterial(const aiScene* _pAiScene)
         std::wstring Name = AIToWString(pAiMaterial->GetName());
         std::filesystem::path FBXPath = mFBXResource->Handle.GetPath();
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
-        std::filesystem::path ResultPath = (FBXPath.parent_path() / MainKey).wstring() + L".json";
+        std::filesystem::path ResultPath = FBXPath.replace_extension(".json");
         FBXPath = FBXPath.parent_path();
 
         ResourceHandle handle =
@@ -207,7 +207,7 @@ void FBXImporter::ProcessMesh(const aiScene* _pAiScene)
 
         std::filesystem::path FBXPath = mFBXResource->Handle.GetPath();
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
-        std::filesystem::path ResultPath = (FBXPath.parent_path() / MainKey).wstring() + L".json";
+        std::filesystem::path ResultPath = FBXPath.replace_extension(".json");
 
         vertexs.reserve(pAiMesh->mNumVertices);
         // Create Vertex
@@ -306,7 +306,7 @@ void FBXImporter::ProcessAnimation(const aiScene* _pAiScene)
 
         std::filesystem::path FBXPath = mFBXResource->Handle.GetPath();
         std::wstring MainKey = FBXPath.filename().wstring() + L"_" + Name;
-        std::filesystem::path ResultPath = (FBXPath.parent_path() / MainKey).wstring() + L".json";
+        std::filesystem::path ResultPath = FBXPath.replace_extension(".json");
 
         ResourceHandle handle = 
         {

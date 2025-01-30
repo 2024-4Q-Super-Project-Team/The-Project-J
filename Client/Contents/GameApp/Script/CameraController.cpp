@@ -137,10 +137,8 @@ void CameraController::Update()
 
 json CameraController::Serialize()
 {
-	json ret;
+	json ret = MonoBehaviour::Serialize();
 
-	ret["id"] = GiveId();
-	ret["name"] = "CameraController";
 	ret["speed"] = mMoveSpeed.val;
 	ret["sensitivity"] = sensitivity.val;
 	ret["max angle"] = maxYAngle.val;
@@ -153,7 +151,7 @@ json CameraController::Serialize()
 
 void CameraController::Deserialize(json& j)
 {
-	SetId(j["id"].get<unsigned int>());
+	MonoBehaviour::Deserialize(j);
 
 	mMoveSpeed.val = j["speed"].get<float>();
 	sensitivity.val = j["sensitivity"].get<float>();

@@ -134,12 +134,16 @@ void MonoBehaviour::Destroy(Object* _object)
 json MonoBehaviour::Serialize()
 {
 	json ret;
+	ret["id"] = GiveId();
+	ret["name"] = GetEID();
 	ret["initial active"] = isActive;
 	return ret;
 }
 
-void MonoBehaviour::Deserialize( json& j)
+void MonoBehaviour::Deserialize(json& j)
 {
+	SetId(j["id"].get<unsigned int>());
+	isActive = j["initial active"].get<bool>();
 }
 
 void MonoBehaviour::EditorRendering(EditorViewerType _viewerType)

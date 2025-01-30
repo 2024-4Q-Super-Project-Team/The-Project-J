@@ -56,10 +56,13 @@ void SkinnedMeshRenderer::PreRender()
 
 void SkinnedMeshRenderer::Render()
 {
-    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    if (mMaterial)
     {
-        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
-        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
     }
 }
 
@@ -83,10 +86,13 @@ void SkinnedMeshRenderer::EditorGlobalUpdate()
 
 void SkinnedMeshRenderer::EditorRender()
 {
-    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    if (mMaterial)
     {
-        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
-        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
     }
     if (mMesh && mRootBone)
     {

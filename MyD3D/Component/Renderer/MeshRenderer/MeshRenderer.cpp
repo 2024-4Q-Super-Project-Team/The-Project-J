@@ -53,10 +53,13 @@ void MeshRenderer::PreRender()
 
 void MeshRenderer::Render()
 {
-    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    if (mMaterial)
     {
-        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
-        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
     }
 }
 
@@ -80,10 +83,13 @@ void MeshRenderer::EditorGlobalUpdate()
 
 void MeshRenderer::EditorRender()
 {
-    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    if (mMaterial)
     {
-        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
-        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
     }
     if (mMesh)
     {

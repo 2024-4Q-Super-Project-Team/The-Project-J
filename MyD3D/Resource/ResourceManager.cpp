@@ -304,8 +304,8 @@ BOOL ResourceManager::LoadFileFromPath(const std::wstring& _path)
     Helper::GetExtFromFilePath(_path, fileExt);
     Helper::GetFileNameFromFilePath(_path, fileName);
 
-    ResourceHandle handle = { eResourceType::SIZE , fileName, L"", _path };
-    if (fileExt == L".fbx" || fileExt == L".FBX")
+    ResourceHandle handle   = { eResourceType::SIZE , fileName, L"", _path };
+    if (fileExt == L".fbx" || fileExt == L".FBX" || fileExt == L".obj")
         handle.mResourceType = eResourceType::FBXModelResource;
     if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
         handle.mResourceType = eResourceType::Texture2DResource;

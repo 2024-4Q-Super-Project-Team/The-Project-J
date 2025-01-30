@@ -12,6 +12,26 @@ namespace Editor
 	GuizmoManipulater::GuizmoManipulater()
 	{
 	}
+
+    void GuizmoManipulater::SetLocalMatrixFromWorldMatrix(const Matrix& _worldMatrix)
+    {
+        if (mFocusObject == nullptr)
+            return;
+
+        // 부모 객체가 있는 경우 부모 객체의 월드 행렬을 가져옴
+        Matrix parentWorldMatrix = Matrix::Identity;
+        if (mFocusObject->transform->GetParent() != nullptr)
+        {
+            parentWorldMatrix = mFocusObject->transform->GetParent()->GetWorldMatrix();
+        }
+
+        // 부모의 월드 행렬의 역행렬 구해서 로컬 구하기
+        Matrix parentWorldMatrixInverse = parentWorldMatrix.Invert();
+        Matrix localMatrix = _worldMatrix * parentWorldMatrixInverse;
+
+        mFocusObject->transform->SetLocalMatrix(localMatrix);
+    }
+
     void GuizmoManipulater::Render()
     {
         if (mFocusObject == nullptr)
@@ -22,7 +42,7 @@ namespace Editor
         ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, size.x, size.y);
         ImGuizmo::SetOrthographic(false);
 
-        Matrix Matrix = mFocusObject->transform->GetLocalMatrix();
+        Matrix worldMatrix = mFocusObject->transform->GetWorldMatrix();
 
         if (CanUseManipulate)
         {
@@ -31,9 +51,9 @@ namespace Editor
                 *EditorManager::mEditorCamera.mProjectionMatrix.m,
                 mCurrentGizmoOperation,
                 ImGuizmo::MODE::LOCAL,
-                *Matrix.m))
+                *worldMatrix.m))
             {
-                mFocusObject->transform->SetLocalMatrix(Matrix);
+				SetLocalMatrixFromWorldMatrix(worldMatrix); // 부모 월드 역행렬 사용해서 로컬 좌표로 변환
             }
         }
         if (ImGuizmo::IsUsing() == true)
@@ -90,7 +110,7 @@ namespace Editor
 	{
 		if (mFocusObject)
 		{
-            Vector3 targetPosition(10.0f, 0.0f, 10.0f); // 임의로  
+            Vector3 targetPosition(10.0f, 0.0f, 10.0f); // 임의로 일단 정해놓음. 바라볼 포지션
 			mFocusObject->transform->LookAt(targetPosition, 2.0f, Dotween::EasingEffect::InOutQuad);
 		}
 	}

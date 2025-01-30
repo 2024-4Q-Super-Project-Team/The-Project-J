@@ -14,6 +14,7 @@ namespace Editor
 		virtual void Render() override;
 	public:
 		void ProcessUndo();
+		void SetLocalMatrixFromWorldMatrix(const Matrix& _worldMatrix);
 	public:
 		static inline void SetFocusObjedct(Object* _pObject) { mFocusObject = _pObject; }
 		static inline Object* GetFocusObject() { return mFocusObject; }

@@ -25,6 +25,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\PlayerScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -34,6 +35,7 @@
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ScriptRegister.h" />
+    <ClInclude Include="Contents\GameApp\Script\PlayerScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

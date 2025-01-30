@@ -24,12 +24,12 @@ public:
     virtual void Update() override {}
     virtual void PostUpdate() override {}
     virtual void PreRender() override {}
-    virtual void Render() override {}
-    virtual void Draw(Camera* _camera) override {}
+    virtual void Render() override final {}
+    virtual void Draw(Camera* _camera) override final {}
     virtual void PostRender() override {}
 	// Editor Only
-	virtual void EditorUpdate() override {}
-	virtual void EditorRender() override {}
+	virtual void EditorUpdate() override final {};
+	virtual void EditorRender() override final {}
 
 protected: // MonoBehaviour¸Þ¼Òµå==================
 	// ===========================================

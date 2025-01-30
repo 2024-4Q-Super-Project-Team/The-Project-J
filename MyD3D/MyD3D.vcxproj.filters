@@ -402,6 +402,12 @@
     <ClInclude Include="UIManager\UICanvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Component\FSM\FiniteStateMachine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\FSM\FSMState\FSMState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -774,6 +780,12 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="UIManager\UICanvas.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\FSM\FiniteStateMachine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\FSM\FSMState\FSMState.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

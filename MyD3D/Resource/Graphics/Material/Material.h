@@ -43,6 +43,7 @@ public:
     virtual void Deserialize(json& j);
 public: 
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
+    void ShowMaerialMap(eMaterialMapType _matType, const char* mapLabel);
 };
 
 //// MaterialData를 참조하며, 독립적인 머티리얼 상수버퍼 값을 가지는 머티리얼 

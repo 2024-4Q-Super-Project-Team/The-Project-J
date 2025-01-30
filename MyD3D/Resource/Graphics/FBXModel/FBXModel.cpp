@@ -147,13 +147,14 @@ void FBXModelResource::LoadJson()
 		//	createFile.close();
 		//}
 	//}
+
 	std::ifstream loadFile(JsonPath);
+	json FBXJson;
 	if (loadFile.is_open())
 	{
-		json FBXJson;
 		loadFile >> FBXJson;
-		loadFile.close();
 		Deserialize(FBXJson);
+		loadFile.close();
 	}
 }
 

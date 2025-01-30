@@ -75,5 +75,4 @@ public:
 		return isOk;
 	}
 	static BOOL ReceiveDragAndDropObjectData(const char* _uid, Object** _pObject);
-	
 };

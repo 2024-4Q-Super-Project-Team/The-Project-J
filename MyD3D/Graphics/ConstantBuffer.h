@@ -46,11 +46,13 @@ class MaterialResource;
 struct MaterialCBuffer
 {
     MaterialProperty MatProp;
-    UINT	         UseMapFlag = 0; // 0xFFFFFFFF = 초기 상태 모두 TRUE 
-    Vector3          Padding;
+    UINT             HasMapFlag = 0;
+    UINT	         UseMapFlag = 0xFFFFFFFF; // 0xFFFFFFFF = 초기 상태 모두 TRUE , 0 = 초기 상태 모두 FALSE 
+    Vector2          Padding;
     void SetMaterial(MaterialResource* _pMaterial);
     BOOL GetUsingMap(eMaterialMapType _type);
     void SetUsingMap(eMaterialMapType _type, BOOL _bValue);
+    void SetHasingMap(eMaterialMapType _type, BOOL _bValue);
     void ToggleUsingMap(eMaterialMapType _type);
 };
 

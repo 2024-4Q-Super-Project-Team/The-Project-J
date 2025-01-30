@@ -129,28 +129,9 @@ void MaterialResource::Deserialize(json& j)
     {
         json propJson = j["property"];
 
-        if(propJson.contains("diffuse map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
-        if (propJson.contains("specular map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
-        if (propJson.contains("ambient map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
-        if(propJson.contains("emissive map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
-        if(propJson.contains("normal map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
-        if(propJson.contains("roughness map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
-        if(propJson.contains("opacity map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
-        if(propJson.contains("metalness map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
-        if(propJson.contains("ambientocclusion map handle"))
-            mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
-
         for (int i = 0; i < 4; i++)
         {
-            if(propJson.contains("diffuse"))
+            if (propJson.contains("diffuse"))
                 mMaterialProperty.DiffuseRGB[i] = propJson["diffuse"][i].get<float>();
             if (propJson.contains("ambient"))
                 mMaterialProperty.AmbientRGB[i] = propJson["ambient"][i].get<float>();
@@ -158,27 +139,38 @@ void MaterialResource::Deserialize(json& j)
                 mMaterialProperty.SpecularRGB[i] = propJson["specular"][i].get<float>();
         }
 
-        if(propJson.contains("roughness"))
+        if (propJson.contains("roughness"))
             mMaterialProperty.RoughnessScale = propJson["roughness"].get<float>();
         if (propJson.contains("metallic"))
             mMaterialProperty.MetallicScale = propJson["metallic"].get<float>();
         if (propJson.contains("ao"))
             mMaterialProperty.AmbienOcclusionScale = propJson["ao"].get<float>();
     }
-    
+    if (j.contains("diffuse map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Deserialize(j["diffuse map handle"]);
+    if (j.contains("specular map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Deserialize(j["specular map handle"]);
+    if (j.contains("ambient map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Deserialize(j["ambient map handle"]);
+    if (j.contains("emissive map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::EMISSIVE].Deserialize(j["emissive map handle"]);
+    if (j.contains("normal map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::NORMAL].Deserialize(j["normal map handle"]);
+    if (j.contains("roughness map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::ROUGHNESS].Deserialize(j["roughness map handle"]);
+    if (j.contains("opacity map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::OPACITY].Deserialize(j["opacity map handle"]);
+    if (j.contains("metalness map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::METALNESS].Deserialize(j["metalness map handle"]);
+    if (j.contains("ambientocclusion map handle"))
+        mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT_OCCLUSION].Deserialize(j["ambientocclusion map handle"]);
+
     if (j.contains("blend type"))
         mBlendMode = static_cast<eBlendModeType>(j["blend type"].get<int>());
     if (j.contains("raster type"))
         mRasterMode = static_cast<eRasterizerStateType>(j["raster type"].get<int>());
 }
 
-#define SHOW_MATERIAL_MAP_RESUORCE(typeEnum, label) \
-if (mMaterialMapTexture[(UINT)typeEnum]) \
-{ \
-    ImGui::Separator();\
-    ImGui::Text(label);\
-    mMaterialMapTexture[(UINT)typeEnum]->EditorRendering(EditorViewerType::INSPECTOR); \
-}\
 
 void MaterialResource::EditorRendering(EditorViewerType _viewerType)
 {
@@ -259,31 +251,31 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
             switch (mapType)
             {
             case eMaterialMapType::DIFFUSE:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::DIFFUSE, "Diffuse Map");
+                ShowMaerialMap(eMaterialMapType::DIFFUSE, "Diffuse Map");
                 break;
             case eMaterialMapType::SPECULAR:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::SPECULAR, "Specular Map");
+                ShowMaerialMap(eMaterialMapType::SPECULAR, "Specular Map");
                 break;
             case eMaterialMapType::AMBIENT:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::AMBIENT, "Ambient Map");
+                ShowMaerialMap(eMaterialMapType::AMBIENT, "Ambient Map");
                 break;
             case eMaterialMapType::EMISSIVE:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::EMISSIVE, "Emissive Map");
+                ShowMaerialMap(eMaterialMapType::EMISSIVE, "Emissive Map");
                 break;
             case eMaterialMapType::NORMAL:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::NORMAL, "Normal Map");
+                ShowMaerialMap(eMaterialMapType::NORMAL, "Normal Map");
                 break;
             case eMaterialMapType::ROUGHNESS:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::ROUGHNESS, "Roughness Map");
+                ShowMaerialMap(eMaterialMapType::ROUGHNESS, "Roughness Map");
                 break;
             case eMaterialMapType::OPACITY:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::OPACITY, "Opacity Map");
+                ShowMaerialMap(eMaterialMapType::OPACITY, "Opacity Map");
                 break;
             case eMaterialMapType::METALNESS:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::METALNESS, "Metalness Map");
+                ShowMaerialMap(eMaterialMapType::METALNESS, "Metalness Map");
                 break;
             case eMaterialMapType::AMBIENT_OCCLUSION:
-                SHOW_MATERIAL_MAP_RESUORCE(eMaterialMapType::AMBIENT_OCCLUSION, "AmbientOcclusion Map");
+                ShowMaerialMap(eMaterialMapType::AMBIENT_OCCLUSION, "AmbientOcclusion Map");
                 break;
             case eMaterialMapType::SIZE:
                 break;
@@ -295,6 +287,42 @@ void MaterialResource::EditorRendering(EditorViewerType _viewerType)
     }
     default:
         break;
+    }
+}
+
+void MaterialResource::ShowMaerialMap(eMaterialMapType _matType, const char* mapLabel)
+{
+    ImGui::Separator();
+    ImGui::Text(mapLabel);
+    std::string widgetID = "NULL " + std::string(mapLabel);
+    if (mMaterialMapTexture[(UINT)_matType])
+    {
+        widgetID = mMaterialMapTexture[(UINT)_matType]->GetEID();
+        mMaterialMapTexture[(UINT)_matType]->EditorRendering(EditorViewerType::DEFAULT);
+        ImGui::PushID(widgetID.c_str());
+        if (ImGui::IsItemHovered() && Input::IsMouseUp(Mouse::RIGHT)) {
+
+            mMaterialMapTextureHandle[(UINT)_matType] = ResourceHandle();
+            mMaterialMapTexture[(UINT)_matType] = nullptr;
+        }
+        else
+        {
+            mMaterialMapTexture[(UINT)_matType]->EditorRendering(EditorViewerType::INSPECTOR);
+        }
+        ImGui::PopID();
+    }
+    else
+    {
+        ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+        ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+        EDITOR_COLOR_POP(1);
+    }
+    if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(widgetID.c_str(), &mMaterialMapTextureHandle[(UINT)_matType]))
+    {
+        if (mMaterialMapTextureHandle[(UINT)_matType].GetResourceType() == eResourceType::Texture2DResource) {
+
+            mMaterialMapTexture[(UINT)_matType] = ResourceManager::GetResource<Texture2DResource>(mMaterialMapTextureHandle[(UINT)_matType]);
+        }
     }
 }
 

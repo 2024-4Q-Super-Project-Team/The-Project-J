@@ -56,6 +56,11 @@ void SkinnedMeshRenderer::PreRender()
 
 void SkinnedMeshRenderer::Render()
 {
+    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    {
+        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+    }
 }
 
 void SkinnedMeshRenderer::PostRender()
@@ -78,6 +83,11 @@ void SkinnedMeshRenderer::EditorGlobalUpdate()
 
 void SkinnedMeshRenderer::EditorRender()
 {
+    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    {
+        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+    }
     if (mMesh && mRootBone)
     {
         // 메쉬나 루트 본이 바뀐부분이 있으면 갱신
@@ -394,20 +404,6 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     }
 }
 
-#define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
-if (mMaterial->mMaterialMapTexture[typeIndex]) \
-{ \
-    bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
-    ImGui::Separator();\
-    if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
-        mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
-    } \
-    if (ImGui::TreeNodeEx((std::string(label) + mMaterial->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
-        mMaterial->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
-        ImGui::TreePop();\
-    }\
-}\
-
 void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
@@ -457,36 +453,36 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
-                {
+               {
                     eMaterialMapType mapType = (eMaterialMapType)type;
-
                     switch (mapType)
                     {
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                    case eMaterialMapType::DIFFUSE:
+                        ShowMaerialProperties(mapType, "Diffuse Map");
                         break;
                     case eMaterialMapType::SPECULAR:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        ShowMaerialProperties(mapType, "Specular Map");
                         break;
                     case eMaterialMapType::AMBIENT:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        ShowMaerialProperties(mapType, "Ambient Map");
                         break;
                     case eMaterialMapType::EMISSIVE:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        ShowMaerialProperties(mapType, "Emissive Map");
                         break;
                     case eMaterialMapType::NORMAL:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        ShowMaerialProperties(mapType, "Normal Map");
                         break;
                     case eMaterialMapType::ROUGHNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        ShowMaerialProperties(mapType, "Roughness Map");
                         break;
                     case eMaterialMapType::OPACITY:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        ShowMaerialProperties(mapType, "Opacity Map");
                         break;
                     case eMaterialMapType::METALNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        ShowMaerialProperties(mapType, "Metalness Map");
                         break;
                     case eMaterialMapType::AMBIENT_OCCLUSION:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        ShowMaerialProperties(mapType, "AmbientOcclusion Map");
                         break;
                     case eMaterialMapType::SIZE:
                         break;
@@ -519,4 +515,23 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
         ImGui::TreePop();
     }
     EDITOR_COLOR_POP(1);
+}
+
+void SkinnedMeshRenderer::ShowMaerialProperties(eMaterialMapType _type, const char* _label)
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    if (mMaterial->mMaterialMapTexture[(UINT)_type])
+    { 
+        bool UseMap = (bool)mMatCBuffer.GetUsingMap(_type);
+        ImGui::Separator();
+        if (ImGui::Checkbox(("Using " + std::string(_label) + uid + std::to_string((UINT)_type)).c_str(), &UseMap)) {
+            
+                mMatCBuffer.SetUsingMap(_type, UseMap);
+        } 
+        if (ImGui::TreeNodeEx((std::string(_label) + mMaterial->mMaterialMapTexture[(UINT)_type]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) 
+        {
+                mMaterial->mMaterialMapTexture[(UINT)_type]->EditorRendering(EditorViewerType::INSPECTOR);
+                ImGui::TreePop();
+        }
+    }
 }

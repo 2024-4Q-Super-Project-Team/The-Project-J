@@ -53,6 +53,11 @@ void MeshRenderer::PreRender()
 
 void MeshRenderer::Render()
 {
+    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    {
+        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+    }
 }
 
 void MeshRenderer::PostRender()
@@ -75,6 +80,11 @@ void MeshRenderer::EditorGlobalUpdate()
 
 void MeshRenderer::EditorRender()
 {
+    for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+    {
+        BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+        mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+    }
     if (mMesh)
     {
         EditorManager::mEditorCamera.PushDrawList(this);
@@ -332,11 +342,9 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Mesh";
-        std::string name = "NULL Mesh";
         if (mMesh)
         {
             mMesh->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMesh->GetKey());
             widgetID = mMesh->GetEID();
         }
         else
@@ -356,46 +364,43 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Material";
-        std::string name = "NULL Material";
         if (mMaterial)
         {
             mMaterial->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMaterial->GetKey());
             widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                 for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
                 {
                     eMaterialMapType mapType = (eMaterialMapType)type;
-
                     switch (mapType)
                     {
                     case eMaterialMapType::DIFFUSE:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                        ShowMaerialProperties(mapType, "Diffuse Map");
                         break;
                     case eMaterialMapType::SPECULAR:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        ShowMaerialProperties(mapType, "Specular Map");
                         break;
                     case eMaterialMapType::AMBIENT:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        ShowMaerialProperties(mapType, "Ambient Map");
                         break;
                     case eMaterialMapType::EMISSIVE:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        ShowMaerialProperties(mapType, "Emissive Map");
                         break;
                     case eMaterialMapType::NORMAL:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        ShowMaerialProperties(mapType, "Normal Map");
                         break;
                     case eMaterialMapType::ROUGHNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        ShowMaerialProperties(mapType, "Roughness Map");
                         break;
                     case eMaterialMapType::OPACITY:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        ShowMaerialProperties(mapType, "Opacity Map");
                         break;
                     case eMaterialMapType::METALNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        ShowMaerialProperties(mapType, "Metalness Map");
                         break;
                     case eMaterialMapType::AMBIENT_OCCLUSION:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        ShowMaerialProperties(mapType, "AmbientOcclusion Map");
                         break;
                     case eMaterialMapType::SIZE:
                         break;
@@ -430,4 +435,23 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
         }
     }
     EDITOR_COLOR_POP(1);
+}
+
+void MeshRenderer::ShowMaerialProperties(eMaterialMapType _type, const char* _label)
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    if (mMaterial->mMaterialMapTexture[(UINT)_type])
+    {
+        bool UseMap = (bool)mMatCBuffer.GetUsingMap(_type);
+        ImGui::Separator();
+        if (ImGui::Checkbox(("Using " + std::string(_label) + uid + std::to_string((UINT)_type)).c_str(), &UseMap)) {
+
+            mMatCBuffer.SetUsingMap(_type, UseMap);
+        }
+        if (ImGui::TreeNodeEx((std::string(_label) + mMaterial->mMaterialMapTexture[(UINT)_type]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE))
+        {
+            mMaterial->mMaterialMapTexture[(UINT)_type]->EditorRendering(EditorViewerType::INSPECTOR);
+            ImGui::TreePop();
+        }
+    }
 }

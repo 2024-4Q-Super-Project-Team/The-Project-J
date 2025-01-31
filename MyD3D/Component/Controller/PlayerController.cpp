@@ -4,6 +4,7 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Component/Controller/PlayerBehaviorCallback.h"
 
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
@@ -326,7 +327,8 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 	ImGui::Separator();
 }
 
-void PlayerController::Jump(float _jumpForce)
+void PlayerController::StartJump()
 {
-	mMoveDirection.y = _jumpForce;
+	mIsJumping = true;
+	mJumpElapsedTime = 0.f;
 }

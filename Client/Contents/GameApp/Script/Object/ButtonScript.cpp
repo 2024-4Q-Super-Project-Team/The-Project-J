@@ -5,6 +5,6 @@ void ButtonScript::Start()
 {
 }
 
-void _CALLBACK ButtonScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
+void ButtonScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
 {
 }

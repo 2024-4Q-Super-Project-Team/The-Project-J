@@ -31,7 +31,8 @@ public:
     void SetLeftKey(Key _key);
     void SetRightKey(Key _key);
     void SetJumpKey(Key _key);
-	void Jump(float _jumpForce);
+    void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
+    void StartJump();
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);

@@ -12,7 +12,8 @@ void JumpPadScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
     if (_destination->GetOwner()->GetComponent<PlayerController>())
     {
         auto* playerController = _destination->GetOwner()->GetComponent<PlayerController>();
-		playerController->Jump(mJumpForce);
+        playerController->SetJumpSpeed(mJumpForce);
+        playerController->StartJump();
 		Display::Console::Log("Jump!");
     }
 }

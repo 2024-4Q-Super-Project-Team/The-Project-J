@@ -15,6 +15,7 @@ PxFilterFlags CustomFilterShader(
 {
     pairFlags = PxPairFlag::eCONTACT_DEFAULT;
     pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;
+    pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND; //collision start/exit 판별위해.
 
     return PxFilterFlag::eDEFAULT;
 }

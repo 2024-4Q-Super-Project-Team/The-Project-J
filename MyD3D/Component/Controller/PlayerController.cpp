@@ -23,7 +23,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
 	mCapsuleDesc.behaviorCallback = mIceBehavior;
-	mCapsuleDesc.maxJumpHeight = 100.f;
+	mCapsuleDesc.maxJumpHeight = 20.f;
 	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
@@ -71,46 +71,62 @@ void PlayerController::Update()
 	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
 	//입력에 따른 move 
 
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+	if (mJumpState == eJumpState::None || (mJumpInputElapsedTime >= mJumpInputDuration))
 	{
-		moveDirection += PxVec3(0, 0, 1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
-	{
-		moveDirection += PxVec3(0, 0, -1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
-	{
-		moveDirection += PxVec3(-1, 0, 0);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
-	{
-		moveDirection += PxVec3(1, 0, 0);
-	}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, 1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, -1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+		{
+			moveDirection += PxVec3(-1, 0, 0);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+		{
+			moveDirection += PxVec3(1, 0, 0);
+		}
 
-	if (!moveDirection.isZero())
-		moveDirection.normalize();
+		if (!moveDirection.isZero())
+			moveDirection.normalize();
 
-	//이동
-	mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
+		//이동
+		mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
 
+		mJumpInputElapsedTime = 0.f;
+
+	}
 
 	//점프
-	if (!mIsJumping && Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+	if (mJumpState == eJumpState::None && Input::IsKeyHold(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
 	{
-		mIsJumping = true;
+		mJumpState = eJumpState::InitJump;
+		mJumpInitElapsedTime += Time::GetScaledDeltaTime();
+	}
+	if (mJumpState == eJumpState::InitJump && Input::IsKeyUp(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+	{
+		//mJumpInitElapsedTime에 따라 mJumpSpeed를 조절. 
+		//TODO 
+
+		mJumpInitElapsedTime = 0.f;
+		mJumpState = eJumpState::Jumping;
 	}
 
-	if (mIsJumping)
+	if (mJumpState == eJumpState::Jumping)
 	{
 		mJumpElapsedTime += Time::GetScaledDeltaTime();
+		mJumpInputElapsedTime += Time::GetScaledDeltaTime();
 		float t = mJumpElapsedTime / mJumpDuration;
 		mMoveVelocity.y = mJumpSpeed * (1-t) ;
 
 		if (t >= 1.0f) {
-			mIsJumping = false;
+			mJumpState = eJumpState::None;
 			mMoveVelocity.y = 0.f;
 			mJumpElapsedTime = 0.f;
+			mJumpInputElapsedTime = 0.f;
 		}
 	}
 
@@ -191,6 +207,8 @@ json PlayerController::Serialize()
 
 	ret["material"] = mMaterialIdx;
 
+	ret["jump duration"] = mJumpDuration;
+
 	return ret;
 }
 
@@ -229,6 +247,9 @@ void PlayerController::Deserialize(json& j)
 
 	if (j.contains("material"))
 		mMaterialIdx = j["material"].get<int>();
+
+	if (j.contains("jump duration"))
+		mJumpDuration = j["jump duration"].get<float>();
 }
 
 void PlayerController::SetMaterial(std::string _name)

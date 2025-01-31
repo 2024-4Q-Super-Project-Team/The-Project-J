@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PhysicsManager.h"
+#include "Physics/PhysicsEventCallback.h"
 
 PhysicsManager::~PhysicsManager()
 {
@@ -21,7 +22,9 @@ void PhysicsManager::Initialize()
     if (!mPhysics)
         assert(mFoundation, "PxCreatePhysics failed");
 
-    mMaterials["Default"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
+    mEventCallback = new PhysicsEventCallback;
+
+    mMaterials["Default"] = mPhysics->createMaterial(0.5f, 0.5f, 0.1f);
     mMaterials[u8"얼음"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
     //mMaterials[u8"얼음"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
 
@@ -38,7 +41,7 @@ void PhysicsManager::Finalization()
     mPvd->release();
     mFoundation->release();
     mCudaContextManager->releaseContext();
-    //mCudaContextManager->release();
+    SAFE_DELETE(mEventCallback);
 }
 
 PxMaterial* PhysicsManager::CreateMaterial(std::string name, float staticFriction, float dynamicFriction, float restituion)

@@ -1,13 +1,13 @@
 #include "pch.h"
 #include "UIManager.h"
 
-#include "Widget/Widget.h"
+#include "Component/UI/UIWidget/UIWidget.h"
 
 #include "Graphics/GraphicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 #include "ViewportScene/ViewportManager.h"
 
-std::vector<Widget*>	UIManager::mDrawWidgetList{};
+std::vector<UIWidget*>	UIManager::mDrawWidgetList{};
 SpriteBatch*			UIManager::m_pSpriteBatch = nullptr;
 ViewportScene*			UIManager::m_pFocusViewport = nullptr;
 Vector2					UIManager::mFocusScreen{};
@@ -50,7 +50,7 @@ void UIManager::Render()
 	if (mDrawWidgetList.empty())
 		return;
 
-	m_pSpriteBatch->SetViewport(EditorManager::GetFocusViewport()->GetMainViewport()->mViewport);
+	//m_pSpriteBatch->SetViewport(EditorManager::GetFocusViewport()->GetMainViewport()->mViewport);
 	m_pSpriteBatch->Begin();
 
 	for (auto& widget : mDrawWidgetList)
@@ -62,6 +62,9 @@ void UIManager::Render()
 
 	m_pSpriteBatch->End();
 
+	GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+	GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+	GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
 	GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
 	GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->Bind();
 }

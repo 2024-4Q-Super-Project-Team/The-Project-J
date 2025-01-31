@@ -6,6 +6,7 @@
 #include "Resource/Graphics/Animation/Animation.h"
 #include "Resource/Prefab/Prefab.h"
 #include "Resource/AudioResource/AudioResource.h"
+#include "Resource/FontResource/FontResource.h"
 
 class ResourceManager
 {

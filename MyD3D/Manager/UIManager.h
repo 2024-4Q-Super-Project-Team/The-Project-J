@@ -1,6 +1,6 @@
 #pragma once
 
-class Widget;
+class UIWidget;
 
 class UIManager
 {
@@ -12,7 +12,7 @@ public:
     static void Render();
 public:
     // 드로우할 위젯 모음
-    static std::vector <Widget*> mDrawWidgetList;
+    static std::vector <UIWidget*> mDrawWidgetList;
     // 뷰포트 얻는 함수
     static void SetFocusViewport(ViewportScene* _pViewport);
     // Get 함수

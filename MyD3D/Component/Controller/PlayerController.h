@@ -60,17 +60,23 @@ private:
     float mStepOffset = 0.5f;
     int mMaterialIdx = 0;
     //Movement
-	float mMoveSpeed = 0.5f;
-	float mJumpSpeed = 30.f;
-	float mGravity = 9.8f;
+	float mMoveSpeed = 10.f;
+	float mJumpSpeed = 0.13f;
+	float mGravity = 80.f;
     std::vector<std::string> mMaterials;
 
     PxVec3 mMoveVelocity = PxVec3(0.f, 0.f, 0.f);
 
-    float mJumpDuration = 0.5f;
+    //Jump
+    float mJumpInitElapsedTime = 0.f;
+
+    float mJumpDuration = 0.9f; //editable
+    float mJumpInputDuration = 0.1f;
     float mJumpElapsedTime = 0.f;
-    bool mIsGrounded = false;
-    bool mIsJumping = false;
+    float mJumpInputElapsedTime = 0.f;
+
+    enum eJumpState {None, InitJump, Jumping};
+    eJumpState mJumpState = None;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

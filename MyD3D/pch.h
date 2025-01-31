@@ -100,7 +100,7 @@ using json = nlohmann::json;
 #include "Component/ComponentFactory/ComponentFactory.h"
 #include "Manager/GameManager.h"
 #include "Editor/EditorManager.h"
-#include "UIManager/UIManager.h"
+#include "Manager/UIManager.h"
 #include "Save/SaveManager.h"
 
 //Debug Draw

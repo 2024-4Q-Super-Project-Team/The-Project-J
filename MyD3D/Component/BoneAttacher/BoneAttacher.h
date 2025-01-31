@@ -29,6 +29,8 @@ private:
     // Owner본이 DestBone에 붙는다.
     Transform* mDestBone;
 public:
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 };

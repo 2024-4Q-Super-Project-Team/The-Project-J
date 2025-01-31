@@ -342,6 +342,7 @@ json SkinnedMeshRenderer::Serialize()
 
     ret["mesh handle"] = mMeshHandle.Serialize();
     ret["material handle"] = mMaterialHandle.Serialize();
+    ret["cast shadow"] = isCastShadow;
 
     json mprop;
     ColorF diffuse = mMatCBuffer.MatProp.DiffuseRGB;
@@ -377,6 +378,9 @@ void SkinnedMeshRenderer::Deserialize(json& j)
         mMaterialHandle.Deserialize(j["material handle"]);
         SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
     }
+
+    if (j.contains("cast shadow"))
+        isCastShadow = j["cast shadow"].get<bool>();
 
     if (j.contains("Property"))
     {

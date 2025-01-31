@@ -365,6 +365,8 @@ FodyWeavers.xsd
 # shader files
 *.cso
 *.json
+*.fbx
+*.png
 Client/fmod.dll
 Client/fmodstudio.dll
 Client/fmodstudioL.dll

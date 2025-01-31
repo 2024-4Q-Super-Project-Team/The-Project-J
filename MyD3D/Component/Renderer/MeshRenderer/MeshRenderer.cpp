@@ -263,8 +263,10 @@ json MeshRenderer::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = "MeshRenderer";
+
     ret["mesh handle"] = mMeshHandle.Serialize();
     ret["material handle"] = mMaterialHandle.Serialize();
+    ret["cast shadow"] = isCastShadow;
 
     json mprop;
     ColorF diffuse = mMatCBuffer.MatProp.DiffuseRGB;
@@ -293,12 +295,13 @@ void MeshRenderer::Deserialize(json& j)
         mMeshHandle.Deserialize(j["mesh handle"]);
         SetMesh(ResourceManager::GetResource<MeshResource>(mMeshHandle));
     }
-        
     if (j.contains("material handle"))
     {
         mMaterialHandle.Deserialize(j["material handle"]);
         SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
     }
+    if (j.contains("cast shadow"))
+        isCastShadow = j["cast shadow"].get<bool>();
 
     if (j.contains("Property"))
     {

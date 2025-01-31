@@ -79,7 +79,6 @@ void PlayerController::Update()
 	{
 		mMoveDirection += PxVec3(1, 0, 0);
 	}
-
 	if (Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
 	{
 		mMoveDirection.y = mJumpSpeed;

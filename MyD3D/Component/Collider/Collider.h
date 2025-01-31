@@ -30,6 +30,8 @@ public:
     virtual void Deserialize(json& j)  = 0;
 
     static bool bDrawMode;
+public:
+    Object* GetOwner() { return gameObject; }
 
 protected:
     void SetIsTrigger();

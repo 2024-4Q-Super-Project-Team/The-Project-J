@@ -25,7 +25,9 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\PlayerScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\JumpPadScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\ButtonScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -35,7 +37,10 @@
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ScriptRegister.h" />
-    <ClInclude Include="Contents\GameApp\Script\PlayerScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\JumpPadScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\ButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

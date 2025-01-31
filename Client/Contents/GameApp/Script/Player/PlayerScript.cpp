@@ -1,14 +1,19 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "PlayerState.h"
 
 void PlayerScript::Start()
 {
     // 초기화 코드
+	// 게임오브젝트에 FSM을 추가하고, FSM에 상태를 추가합니다.
+	//auto fsm = gameObject->AddComponent<FiniteStateMachine>();
+	//fsm->AddState<State::Player_Run>(L"Player_Run");
+	//// 초기 상태를 설정합니다.
+	//fsm->ChangeState(L"Player_Run");
 }
 
 void PlayerScript::Update()
 {
-    // 업데이트 코드
 }
 
 void PlayerScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
@@ -23,7 +28,6 @@ void PlayerScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
     //}
     //else if (auto* button = _destination->GetOwner()->GetComponent<Button>())
     //{
-    //    // 버튼이 눌렸을 때의 동작을 추가합니다.
     //    button->Press();
     //}
 }
@@ -32,7 +36,6 @@ void PlayerScript::OnCollisionExit(Collider* _origin, Collider* _destination)
 {
     //if (auto* button = _destination->GetOwner()->GetComponent<Button>())
     //{
-    //    // 버튼이 떼어졌을 때의 동작을 추가합니다.
     //    button->Release();
     //}
 }

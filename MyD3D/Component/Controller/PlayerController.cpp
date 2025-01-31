@@ -293,3 +293,8 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 
 	ImGui::Separator();
 }
+
+void PlayerController::Jump(float _jumpForce)
+{
+	mMoveDirection.y = _jumpForce;
+}

@@ -172,25 +172,30 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
     <ClCompile Include="Contents\GameApp\Script\ModelSpawner.cpp" />
     <ClCompile Include="Contents\GameApp\World\TestWorld.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\JumpPadScript.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Contents\GameApp\Script\PlayerScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\ButtonScript.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
     <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\JumpPadScript.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Contents\GameApp\Script\PlayerScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
     <ClInclude Include="ScriptRegister.h" />
   </ItemGroup>
   <ItemGroup>

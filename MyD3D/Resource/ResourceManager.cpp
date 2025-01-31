@@ -32,14 +32,12 @@ void ResourceManager::Finalization()
 
 void ResourceManager::Reset()
 {
+    Free_All_Resource();
     for (auto& table : mHandleFromResourceMappingTable)
     {
-        for (auto& [handle, resource] : table)
-        {
-            SAFE_DELETE(resource);
-        }
         table.clear();
     }
+    // 테이블에 delete하면서 이미 지웠으므로 nullptr만 해준다
     MeshResource::SkyCubeMesh = nullptr;
     MeshResource::CubeMesh = nullptr;
     MeshResource::PlainMesh = nullptr;
@@ -139,6 +137,7 @@ void ResourceManager::Alloc_Resource(ResourceHandle _handle)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(AudioResource)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(FontResource)
         Display::Console::Log("Alloc_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+        Display::Console::Log("Alloc_Resource - ID : ", _handle.GetId(), " , MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
     }
 }
 
@@ -163,9 +162,8 @@ BOOL ResourceManager::Free_Resource(ResourceHandle _handle)
         {
             return FALSE;
         }
-        delete table[_handle];
-        table[_handle] = nullptr;
-        Display::Console::Log("Free_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
+        SAFE_DELETE(table[_handle]);
+        Display::Console::Log("Free_Resource - ID : ", _handle.GetId(), " , MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
         return TRUE;
     }
     return FALSE;
@@ -177,7 +175,7 @@ void ResourceManager::Free_All_Resource()
     {
         for (auto& [handle, resource] : table)
         {
-            SAFE_DELETE(resource);
+            Free_Resource(handle);
         }
     }
     MeshResource::SkyCubeMesh = nullptr;
@@ -306,8 +304,8 @@ BOOL ResourceManager::LoadFileFromPath(const std::wstring& _path)
     Helper::GetExtFromFilePath(_path, fileExt);
     Helper::GetFileNameFromFilePath(_path, fileName);
 
-    ResourceHandle handle = { eResourceType::SIZE , fileName, L"", _path };
-    if (fileExt == L".fbx" || fileExt == L".FBX")
+    ResourceHandle handle   = { eResourceType::SIZE , fileName, L"", _path };
+    if (fileExt == L".fbx" || fileExt == L".FBX" || fileExt == L".obj")
         handle.mResourceType = eResourceType::FBXModelResource;
     if (fileExt == L".png" || fileExt == L".jpg" || fileExt == L".dds" || fileExt == L".tga")
         handle.mResourceType = eResourceType::Texture2DResource;

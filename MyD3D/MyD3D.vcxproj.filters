@@ -405,6 +405,15 @@
     <ClInclude Include="Resource\FontResource\FontResource.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Component\FSM\FiniteStateMachine.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\FSM\FSMState\FSMState.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\BoneAttacher\BoneAttacher.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -780,6 +789,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Resource\FontResource\FontResource.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\FSM\FiniteStateMachine.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\FSM\FSMState\FSMState.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\BoneAttacher\BoneAttacher.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

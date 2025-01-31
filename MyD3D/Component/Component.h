@@ -26,6 +26,7 @@ enum class eComponentType
 	CAMERA,
 	LIGHT,
 	ANIMAITOR,
+	BONE_ATTACHER,
 	SKINNED_MESH_RENDERER,
 	MESH_RENDERER,
 	EDITOR_UI,
@@ -38,7 +39,8 @@ enum class eComponentType
 	UI_SPRITE,
 	UI_TEXT,
 	UPDATE_END,  // 업데이트 루프를 도는 컴포넌트의 끝. 빈 배열 하나를 차지하더라도 있는게 나은듯
-	MESH_FILTER,
+    MESH_FILTER,
+	FSM_STATE,
     SIZE,
 };
 

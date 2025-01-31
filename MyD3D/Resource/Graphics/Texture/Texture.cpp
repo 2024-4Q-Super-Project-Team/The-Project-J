@@ -8,6 +8,7 @@ Texture2DResource::Texture2DResource(ResourceHandle _handle)
 	, Texture(new D3DGraphicsImg(_handle.GetPath()))
 {
 	SetEID("Texture : " + Helper::ToString(_handle.GetKey()));
+	Display::Console::Log("create\n");
 }
 
 Texture2DResource::~Texture2DResource()

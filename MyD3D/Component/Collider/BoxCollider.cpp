@@ -8,7 +8,7 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	SetEID("BoxCollider");
 
 	mExtents = mInitialSize;
-	mGeometry = PxBoxGeometry(PxVec3(mExtents.x / 2, mExtents.y / 2, mExtents.z / 2));
+	mGeometry = PxBoxGeometry(PxVec3(mExtents.x, mExtents.y, mExtents.z));
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
 	mShape->userData = this;
@@ -182,7 +182,7 @@ void BoxCollider::SetRotation()
 void BoxCollider::SetExtents()
 {
 	Vector3 size = gameObject->transform->scale;
-	mGeometry = (PxVec3(size.x * mExtents.x / 2.f, size.y * mExtents.y / 2.f, size.z * mExtents.z / 2.f));
+	mGeometry = (PxVec3(size.x * mExtents.x, size.y * mExtents.y, size.z * mExtents.z));
 	mShape->setGeometry(mGeometry);
 
 	mOBB.Extents.x = size.x * mExtents.x;

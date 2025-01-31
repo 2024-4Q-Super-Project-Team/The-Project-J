@@ -34,11 +34,13 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     sceneDesc.filterShader = CustomFilterShader;
     //sceneDesc.simulationEventCallback = mEventCallback;
         // GPU 가속 설정
-    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS | PxSceneFlag::eENABLE_PCM;
     sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+    
     sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
     mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+
     mControllerManager = PxCreateControllerManager(*mPxScene);
 
 }
@@ -47,6 +49,13 @@ World::~World()
 {
     SAFE_DELETE_VECTOR(mObjectArray);
     SAFE_DELETE(mPickingRay);
+
+    if (mControllerManager)
+    {
+        mControllerManager->release();
+        mControllerManager = nullptr;
+    }
+
     if (mPxScene)
     {
         mPxScene->release();
@@ -54,6 +63,8 @@ World::~World()
     }
     if (Editor::InspectorViewer::IsFocusObject(this))
         Editor::InspectorViewer::SetFocusObject(nullptr);
+
+
 }
 
 void World::Start()

@@ -156,12 +156,14 @@
     <ClInclude Include="AudioSystem\AudioObject\AudioGroup.h" />
     <ClInclude Include="AudioSystem\Core\AudioController.h" />
     <ClInclude Include="AudioSystem\Core\AudioHub.h" />
+    <ClInclude Include="Component\BoneAttacher\BoneAttacher.h" />
     <ClInclude Include="Component\Collider\BoxCollider.h" />
     <ClInclude Include="Component\Collider\Collider.h" />
     <ClInclude Include="Component\Audio\AudioListener.h" />
     <ClInclude Include="Component\Audio\AudioSource.h" />
     <ClInclude Include="AudioSystem\Interface\IAudio.h" />
     <ClInclude Include="AudioSystem\eAudio.h" />
+    <ClInclude Include="Component\FSM\FSMState\FSMState.h" />
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.h" />
     <ClInclude Include="Editor\EditorCamera\EditorGridDrawer.h" />
     <ClInclude Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="Editor\Handler\EditorCustumWidget.h" />
     <ClInclude Include="Editor\Handler\EditorDragNDrop.h" />
     <ClInclude Include="Resource\FontResource\FontResource.h" />
+    <ClInclude Include="Component\FSM\FiniteStateMachine.h" />
     <ClInclude Include="Graphics\Extra\DebugDraw.h" />
     <ClInclude Include="Editor\EditorManager.h" />
     <ClInclude Include="Editor\Interface\IEditorObject.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="Helper\Dotween\DotTween.h" />
     <ClInclude Include="Helper\Dotween\EasingFunction.h" />
     <ClInclude Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.h" />
+    <ClInclude Include="Component\Controller\PlayerBehaviorCallback.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Component\Controller\PlayerController.h" />
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h" />
@@ -288,12 +292,14 @@
     <ClCompile Include="AudioSystem\AudioObject\AudioGroup.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioController.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioHub.cpp" />
+    <ClCompile Include="Component\BoneAttacher\BoneAttacher.cpp" />
     <ClCompile Include="Component\Collider\BoxCollider.cpp" />
     <ClCompile Include="Component\Collider\Collider.cpp" />
     <ClCompile Include="Component\Audio\AudioListener.cpp" />
     <ClCompile Include="Component\Audio\AudioSource.cpp" />
     <ClCompile Include="AudioSystem\Interface\IAudio.cpp" />
     <ClCompile Include="AudioSystem\eAudio.cpp" />
+    <ClCompile Include="Component\FSM\FSMState\FSMState.cpp" />
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorStartWorldSetter.cpp" />
     <ClCompile Include="Editor\EditorCamera\EditorGridDrawer.cpp" />
     <ClCompile Include="Editor\CumstomWidget\GuizmoItem\Manipulate\GuizmoManipulater.cpp" />
@@ -307,6 +313,7 @@
     <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp" />
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp" />
     <ClCompile Include="Resource\FontResource\FontResource.cpp" />
+    <ClCompile Include="Component\FSM\FiniteStateMachine.cpp" />
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp" />
     <ClCompile Include="Editor\EditorManager.cpp" />
     <ClCompile Include="Editor\Interface\IEditorObject.cpp" />
@@ -322,6 +329,7 @@
     <ClCompile Include="Helper\Dotween\DotTween.cpp" />
     <ClCompile Include="Helper\Dotween\EasingFunction.cpp" />
     <ClCompile Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.cpp" />
+    <ClCompile Include="Component\Controller\PlayerBehaviorCallback.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Component\Controller\PlayerController.cpp" />
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp" />

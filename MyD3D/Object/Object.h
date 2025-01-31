@@ -18,6 +18,8 @@
 #include "Component/UI/Canvas.h"
 #include "Component/UI/UIWidget/UISprite.h"
 #include "Component/UI/UIWidget/UIText.h"
+#include "Component/BoneAttacher/BoneAttacher.h"
+#include "Component/FSM/FiniteStateMachine.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"

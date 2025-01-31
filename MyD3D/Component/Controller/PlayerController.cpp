@@ -4,12 +4,15 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Component/Controller/PlayerBehaviorCallback.h"
 
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
+
+	mIceBehavior = new PlayerBehaviorCallback;
 
 	mCapsuleDesc.height = mHeight;
 	mCapsuleDesc.radius = mRadius;
@@ -19,6 +22,9 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
+	mCapsuleDesc.behaviorCallback = mIceBehavior;
+	mCapsuleDesc.maxJumpHeight = 100.f;
+	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
 
@@ -37,6 +43,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 PlayerController::~PlayerController()
 {
 	mCapsuleController->release();
+	SAFE_DELETE(mIceBehavior);
 }
 
 void PlayerController::Start()
@@ -61,33 +68,62 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
+	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
 	//입력에 따른 move 
 
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+	if (!mIsJumping)
 	{
-		mMoveDirection += PxVec3(0, 0, 1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(0, 0, -1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(-1, 0, 0);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(1, 0, 0);
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, 1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, -1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+		{
+			moveDirection += PxVec3(-1, 0, 0);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+		{
+			moveDirection += PxVec3(1, 0, 0);
+		}
+
+		if (!moveDirection.isZero())
+			moveDirection.normalize();
+		//이동
+		mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
+
 	}
 
-	if (Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+
+
+	//점프
+	if (!mIsJumping && Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
 	{
-		mMoveDirection.y = mJumpSpeed;
+		mIsJumping = true;
 	}
-	
-	mMoveDirection *= mMoveSpeed;
-	mMoveDirection.y -= mGravity * Time::GetScaledDeltaTime();
-	mCapsuleController->move(mMoveDirection, 0.001, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
+
+	if (mIsJumping)
+	{
+		mJumpElapsedTime += Time::GetScaledDeltaTime();
+		float t = mJumpElapsedTime / mJumpDuration;
+		mMoveVelocity.y = mJumpSpeed * (1-t) ;
+
+		if (t >= 1.0f) {
+			mIsJumping = false;
+			mMoveVelocity.y = 0.f;
+			mJumpElapsedTime = 0.f;
+		}
+	}
+
+	//중력 
+	mMoveVelocity.y -= mGravity * Time::GetScaledDeltaTime();
+
+	mCapsuleController->move(mMoveVelocity, 0.01f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
+
+
 }
 
 void PlayerController::PostUpdate()
@@ -249,7 +285,7 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 		mCapsuleController->setRadius(mRadius);
 	}
 	ImGui::Text("ContactOffset : "); ImGui::SameLine;
-	if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 1.0f))
+	if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 100.0f))
 	{
 		mCapsuleController->setContactOffset(mContactOffset);
 	}

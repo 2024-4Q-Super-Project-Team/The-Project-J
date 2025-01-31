@@ -1,8 +1,8 @@
 #pragma once
 #include "Component/Component.h"
-#include "Resource/Resource.h"
 
 class Transform;
+class Texture2DResource;
 
 // 위젯 타입
 enum class eUIType
@@ -47,6 +47,9 @@ public:
 	// 그래픽 정보 설정
 	void SetAlpha(FLOAT _alpha) { mAlpha = Clamp(_alpha, 0.0f, 1.0f); }
 	void SetColor(Color _color) { mColor = _color; }
+
+	float	GetAlpha() { return mAlpha; }
+	Color	GetColor() { return mColor; }
 protected:
 	std::wstring mID = L"";
 	Texture2DResource* m_pTexture = nullptr;

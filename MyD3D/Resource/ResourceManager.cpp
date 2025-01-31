@@ -137,6 +137,7 @@ void ResourceManager::Alloc_Resource(ResourceHandle _handle)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(FBXModelResource)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(Texture2DResource)
         ALLOC_RESOURCE_FROM_ENUM_TYPE(AudioResource)
+        ALLOC_RESOURCE_FROM_ENUM_TYPE(FontResource)
         Display::Console::Log("Alloc_Resource - MainKey : ", _handle.GetKey(), ", Path : ", _handle.GetPath(), '\n');
     }
 }
@@ -294,6 +295,7 @@ BOOL ResourceManager::LoadFileFromHandle(const ResourceHandle& _handle)
     REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(FBXModelResource);
     REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(Texture2DResource);
     REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(AudioResource);
+    REGISTER_AND_ALLOC_RESOUCE_FROM_HANDLE(FontResource);
     return FALSE;
 }
 
@@ -311,6 +313,8 @@ BOOL ResourceManager::LoadFileFromPath(const std::wstring& _path)
         handle.mResourceType = eResourceType::Texture2DResource;
     if (fileExt == L".ogg" || fileExt == L".mp3" || fileExt == L".wav")
         handle.mResourceType = eResourceType::AudioResource;
+    if (fileExt == L".sfont" || fileExt == L".soritefont")
+        handle.mResourceType = eResourceType::FontResource;
 
     if (handle.GetResourceType() == eResourceType::SIZE)
     {

@@ -402,6 +402,9 @@
     <ClInclude Include="Component\UI\Canvas.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Resource\FontResource\FontResource.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\Application.cpp">
@@ -774,6 +777,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\UI\Canvas.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Resource\FontResource\FontResource.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

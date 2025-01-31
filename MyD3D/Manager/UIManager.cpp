@@ -62,6 +62,9 @@ void UIManager::Render()
 
 	m_pSpriteBatch->End();
 
+	GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+	GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+	GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
 	GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
 	GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->Bind();
 }

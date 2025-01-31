@@ -4,6 +4,7 @@
 #include "Component/Camera/Camera.h"
 #include "Component/UI/Canvas.h"
 #include "Manager/UIManager.h"
+#include "Resource/Resource.h"
 
 /*
 	DXGI_MODE_ROTATION
@@ -23,11 +24,7 @@ UIWidget::UIWidget(Object* _owner)
 
 UIWidget::~UIWidget()
 {
-	//if (m_pTexture != nullptr)
-	//{
-	//	delete m_pTexture;
-	//	m_pTexture = nullptr;
-	//}
+
 }
 
 void UIWidget::Tick()

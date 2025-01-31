@@ -300,13 +300,13 @@ void Light::EditorRendering(EditorViewerType _viewerType)
         ImGui::Text("Light Range : ");
         ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRadius, 0.05f, 1.0f, 500.0f);
         ImGui::Text("Light CutOff : ");
-        ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
+        ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.0000001f, 1.0f);
     }
 
     ImGui::Text("Light Strengh : ");
     ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
     ImGui::Text("Light Radiance : ");
-    ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
+    ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f,  0.0f, 1.0f);
 
     ImGui::Separator();
 

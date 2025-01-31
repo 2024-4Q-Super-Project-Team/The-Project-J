@@ -11,11 +11,7 @@ UISprite::UISprite(Object* _owner)
 
 UISprite::~UISprite()
 {
-	//if (m_pTexture != nullptr)
-	//{
-	//	delete m_pTexture;
-	//	m_pTexture = nullptr;
-	//}
+
 }
 
 void UISprite::DrawWidget(Vector2 _scale)
@@ -96,6 +92,7 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 		   name = Helper::ToString(m_pTexture->GetKey());
 		   widgetID = m_pTexture->GetEID();
 
+		   ImGui::DragFloat3("color", &mColor.x, 1.0f, 0.0f, 1.f);
 		   ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
        }
        else
@@ -125,7 +122,7 @@ json UISprite::Serialize()
 	ret["name"] = "UISprite";
 	ret["texture handle"] = mTextureHandle.Serialize();
 
-	ret["texture type"] = mUIType;
+	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z };
 	ret["alpha"] = mAlpha;
 
@@ -142,9 +139,9 @@ void UISprite::Deserialize(json& j)
 		SetTexture(mTextureHandle);
 	}
 
-	if (j.contains("texture type"))
+	if (j.contains("ui type"))
 	{
-		mUIType = (eUIType)j["texture type"].get<int>();
+		mUIType = (eUIType)j["ui type"].get<int>();
 	}
 
 	if (j.contains("color")) {

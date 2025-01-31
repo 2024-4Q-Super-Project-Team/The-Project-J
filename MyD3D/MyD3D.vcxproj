@@ -174,6 +174,7 @@
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h" />
     <ClInclude Include="Editor\Handler\EditorCustumWidget.h" />
     <ClInclude Include="Editor\Handler\EditorDragNDrop.h" />
+    <ClInclude Include="Resource\FontResource\FontResource.h" />
     <ClInclude Include="Graphics\Extra\DebugDraw.h" />
     <ClInclude Include="Editor\EditorManager.h" />
     <ClInclude Include="Editor\Interface\IEditorObject.h" />
@@ -305,6 +306,7 @@
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp" />
     <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp" />
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp" />
+    <ClCompile Include="Resource\FontResource\FontResource.cpp" />
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp" />
     <ClCompile Include="Editor\EditorManager.cpp" />
     <ClCompile Include="Editor\Interface\IEditorObject.cpp" />

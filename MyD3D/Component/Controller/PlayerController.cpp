@@ -350,6 +350,6 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 
 void PlayerController::StartJump()
 {
-	mIsJumping = true;
-	mJumpElapsedTime = 0.f;
+	mJumpInitElapsedTime = 0.f;
+	mJumpState = eJumpState::Jumping;
 }

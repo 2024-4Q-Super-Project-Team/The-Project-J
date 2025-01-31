@@ -13,7 +13,7 @@ MonoBehaviour::MonoBehaviour(Object* _owner, const std::string& _eid)
     : Component(_owner)
 {
     mType = eComponentType::SCRIPT;
-	SetEID("Script : " +_eid);
+	SetEID(_eid);
 }
 
 Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _tag)

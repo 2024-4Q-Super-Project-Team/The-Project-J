@@ -16,7 +16,7 @@ void PlayerScript::Update()
 {
 }
 
-void PlayerScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
+void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
     //if (auto* jumpPad = _destination->GetOwner()->GetComponent<JumpPad>())
     //{
@@ -32,7 +32,7 @@ void PlayerScript::OnCollisionEnter(Collider* _origin, Collider* _destination)
     //}
 }
 
-void PlayerScript::OnCollisionExit(Collider* _origin, Collider* _destination)
+void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
     //if (auto* button = _destination->GetOwner()->GetComponent<Button>())
     //{

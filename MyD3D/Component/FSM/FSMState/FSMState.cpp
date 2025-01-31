@@ -6,7 +6,7 @@ FSMState::FSMState(FiniteStateMachine* _fsm, Object* _owner, const std::string& 
 	, FSM(_fsm)
 {
 	mType = eComponentType::FSM_STATE;
-	SetEID("FSMState : " + _eid);
+	SetEID(_eid);
 }
 
 FSMState::~FSMState()

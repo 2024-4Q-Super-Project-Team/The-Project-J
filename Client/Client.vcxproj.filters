@@ -26,8 +26,8 @@
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\JumpPadScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\ButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -38,8 +38,8 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\JumpPadScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\ButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
   </ItemGroup>
   <ItemGroup>

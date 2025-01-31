@@ -33,6 +33,8 @@ public:
     void SetDisableGravity(bool b);
     void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
 public:
+    Object* GetOwner() { return gameObject; }
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 private:

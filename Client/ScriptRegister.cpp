@@ -5,8 +5,8 @@
 #include "Contents/GameApp/Script/CameraController.h"
 #include "Contents/GameApp/Script/ModelSpawner.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
-#include "Contents/GameApp/Script/Object/JumpPadScript.h"
-#include "Contents/GameApp/Script/Object/ButtonScript.h"
+#include "Contents/GameApp/Script/Object/JumpPad/JumpPadScript.h"
+#include "Contents/GameApp/Script/Object/Button/ButtonScript.h"
 
 void ScriptRegister::Register()
 {

@@ -23,21 +23,49 @@ public:
     // Editor Only
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
+public:
+    virtual void _CALLBACK OnEnable() {};
+    virtual void _CALLBACK OnDisable() {};
+    virtual void _CALLBACK OnDestroy() {};
 private:
     void UpdateState();
 public:
+    void ChangeState(const std::wstring& _key);
     template<typename T>
-    void AddState(const std::string& _key)
+    T* AddState(const std::wstring& _key)
     {
+        T* instance;
+        auto itr = mStateTable.find(_key);
+        if (FIND_FAILED(itr, mStateTable))
+        {
+            instance = new T(this, gameObject);
+            mStateTable[_key] = instance;
+            instance->Start();
+        }
+        else
+        {
+            instance = dynamic_cast<T*>(itr->second);
+        }
+        return instance;
     }
     template<typename T>
-    T* GetState(const std::string& _key)
+    T* GetState(const std::wstring& _key)
     {
+        auto itr = mStateTable.find(_key);
+        if (FIND_FAILED(itr, mStateTable))
+        {
+            return nullptr;
+        }
+        return dynamic_cast<T*>(itr->second);
     }
-    void ChangeState(const std::string& _key);
 private:
     std::unordered_map<std::wstring, FSMState*> mStateTable;
-    FSMState* mCurState = nullptr;
-    FSMState* mPreState = nullptr;
+    FSMState* mCurrState = nullptr;
+    FSMState* mNextState = nullptr;
+public:
+    virtual void EditorRendering(EditorViewerType _viewerType) override;
+public:
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
 };
 

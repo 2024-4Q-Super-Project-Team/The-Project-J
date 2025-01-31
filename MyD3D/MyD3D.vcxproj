@@ -156,6 +156,7 @@
     <ClInclude Include="AudioSystem\AudioObject\AudioGroup.h" />
     <ClInclude Include="AudioSystem\Core\AudioController.h" />
     <ClInclude Include="AudioSystem\Core\AudioHub.h" />
+    <ClInclude Include="Component\BoneAttacher\BoneAttacher.h" />
     <ClInclude Include="Component\Collider\BoxCollider.h" />
     <ClInclude Include="Component\Collider\Collider.h" />
     <ClInclude Include="Component\Audio\AudioListener.h" />
@@ -289,6 +290,7 @@
     <ClCompile Include="AudioSystem\AudioObject\AudioGroup.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioController.cpp" />
     <ClCompile Include="AudioSystem\Core\AudioHub.cpp" />
+    <ClCompile Include="Component\BoneAttacher\BoneAttacher.cpp" />
     <ClCompile Include="Component\Collider\BoxCollider.cpp" />
     <ClCompile Include="Component\Collider\Collider.cpp" />
     <ClCompile Include="Component\Audio\AudioListener.cpp" />

@@ -106,10 +106,6 @@ void ModelSpawner::PreRender()
 {
 }
 
-void ModelSpawner::Render()
-{
-}
-
 void ModelSpawner::PostRender()
 {
 }

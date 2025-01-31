@@ -155,11 +155,13 @@ cbuffer TransformBuffer : register(b0)
 }
 
 // 매크로: 특정 플래그 확인
+#define HAS_MAP(x) ((HasMapFlags & (1 << x)) != 0)
 #define USE_MAP(x) ((UseMapFlags & (1 << x)) != 0)
 cbuffer MaterialBuffer : register(b1)
 {
     MaterialProperty MaterialProp;
-    uint UseMapFlags; // 비트 플래그
+    uint HasMapFlags;
+    uint UseMapFlags;
 }
 
 cbuffer CameraBuffer : register(b2)

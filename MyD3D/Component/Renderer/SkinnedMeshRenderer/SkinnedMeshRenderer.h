@@ -73,4 +73,5 @@ private:
 	bool isCastShadow = true;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
+    void ShowMaerialProperties(eMaterialMapType _type, const char* _label);
 };

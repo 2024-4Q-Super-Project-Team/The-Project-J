@@ -5,6 +5,8 @@ namespace Engine
 	class SaveBase
 	{
 	public:
+		static inline void Reset() { mIdCount = 0; }
+	public:
 		unsigned int GetId() { return mId;  }
 		unsigned int GiveId() { mId = mIdCount++; return mId;  }
 		void SetId(unsigned int id) { mId = id; mMap[id] = this; }

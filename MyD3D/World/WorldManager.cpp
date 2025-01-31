@@ -250,7 +250,6 @@ World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _t
 	{
 		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
 		mWorldArray.push_back(instance);
-		instance->OnCreate();
 		if (isEmpty == false)
 		{
 			instance->InitWorldObject();

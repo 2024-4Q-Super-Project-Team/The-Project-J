@@ -192,6 +192,7 @@
     <ClInclude Include="Helper\Dotween\DotTween.h" />
     <ClInclude Include="Helper\Dotween\EasingFunction.h" />
     <ClInclude Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.h" />
+    <ClInclude Include="Component\Controller\PlayerBehaviorCallback.h" />
     <ClInclude Include="Interface\IWindowMessageHandler.h" />
     <ClInclude Include="Component\Controller\PlayerController.h" />
     <ClInclude Include="Component\ParticleSystem\ParticleSystem.h" />
@@ -326,6 +327,7 @@
     <ClCompile Include="Helper\Dotween\DotTween.cpp" />
     <ClCompile Include="Helper\Dotween\EasingFunction.cpp" />
     <ClCompile Include="Editor\CumstomWidget\GuizmoItem\GuizmoHandler.cpp" />
+    <ClCompile Include="Component\Controller\PlayerBehaviorCallback.cpp" />
     <ClCompile Include="Interface\IWindowMessageHandler.cpp" />
     <ClCompile Include="Component\Controller\PlayerController.cpp" />
     <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp" />

@@ -14,6 +14,7 @@ WorldManager::~WorldManager()
     SAFE_DELETE_VECTOR(mWorldArray);
 	mCurrActiveWorld = nullptr;
 	mNextActiveWorld = nullptr;
+	mStartWorld = nullptr;
 }
 
 void WorldManager::Start()
@@ -31,6 +32,7 @@ void WorldManager::Reset()
 	SAFE_DELETE_VECTOR(mWorldArray);
 	mCurrActiveWorld = nullptr;
 	mNextActiveWorld = nullptr;
+	mStartWorld = nullptr;
 }
 
 void WorldManager::Tick()

@@ -1,6 +1,8 @@
 #pragma once
 #include "Component/Component.h"
 
+class PlayerBehaviorCallback;
+
 class PlayerController : public Component
 {
 public:
@@ -40,6 +42,7 @@ private:
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
     PxCapsuleControllerDesc mCapsuleDesc;
+    PlayerBehaviorCallback* mIceBehavior;
     //Key
     int mForwardKeyIdx = 0;
     int mBackwardKeyIdx = 0;
@@ -59,10 +62,14 @@ private:
 	float mMoveSpeed = 0.5f;
 	float mJumpSpeed = 30.f;
 	float mGravity = 9.8f;
-	PxVec3 mMoveDirection = PxVec3(0.f, 0.f, 0.f);
-
     std::vector<std::string> mMaterials;
 
+    PxVec3 mMoveVelocity = PxVec3(0.f, 0.f, 0.f);
+
+    float mJumpDuration = 0.5f;
+    float mJumpElapsedTime = 0.f;
+    bool mIsGrounded = false;
+    bool mIsJumping = false;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

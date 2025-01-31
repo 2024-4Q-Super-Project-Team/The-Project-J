@@ -109,10 +109,13 @@ void FiniteStateMachine::EditorRendering(EditorViewerType _viewerType)
 
 json FiniteStateMachine::Serialize()
 {
-	return json();
+	json ret;
+	ret["id"] = GetId();
+	ret["name"] = "MeshRenderer";
+	return ret;
 }
 
 void FiniteStateMachine::Deserialize(json& j)
 {
-
+	SetId(j["id"].get<unsigned int>());
 }

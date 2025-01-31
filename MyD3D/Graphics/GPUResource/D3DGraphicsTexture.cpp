@@ -332,33 +332,40 @@ HRESULT D3DGraphicsImg::Create()
     if (ext == L"dds")
     {
         if (S_OK != LoadFromDDSFile(mName.c_str(), DDS_FLAGS::DDS_FLAGS_NONE, nullptr, Image)) {
-            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromDDSFile.");
+            Display::Console::Log("Hresult Failed to D3DGraphicsImg::LoadFromDDSFile.");
         }
     }
     else if (ext == L"tga")
     {
         TexMetadata metadata;
         if (S_OK != LoadFromTGAFile(mName.c_str(), &metadata, Image)) {
-            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromTGAFile.");
+            Display::Console::Log("Hresult Failed to D3DGraphicsImg::LoadFromTGAFile.");
         }
     }
     else
     {
         if (S_OK != LoadFromWICFile(mName.c_str(), WIC_FLAGS::WIC_FLAGS_NONE, nullptr, Image)) {
-            Display::Console::Log("Hresult Failed to GraphicsTexture2D::LoadFromWICFile.");
+            Display::Console::Log("Hresult Failed to D3DGraphicsImg::LoadFromWICFile.");
         }
     }
     ID3D11Device* pDevice = D3DGraphicsDevice::GetDevice();
     if (pDevice)
     {
-        CreateShaderResourceView(
+        if (S_OK == CreateShaderResourceView(
             pDevice
             , Image.GetImages()
             , Image.GetImageCount()
             , Image.GetMetadata()
-            , &mSRV);
-        mWidth = Image.GetImages()->width;
-        mHeight = Image.GetImages()->height;
+            , &mSRV))
+        {
+            mWidth = Image.GetImages()->width;
+            mHeight = Image.GetImages()->height;
+        }
+        else
+        {
+            Display::Console::Log("Hresult Failed to D3DGraphicsImg::CreateShaderResourceView.");
+        }
+        
         Image.Release();
         return S_OK;
     }
@@ -367,43 +374,46 @@ HRESULT D3DGraphicsImg::Create()
 
 HRESULT D3DGraphicsImg::Bind()
 {
-    auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
-    if (pDeviceContext)
+    if (mSRV)
     {
-        switch (mStage)
+        auto pDeviceContext = D3DGraphicsRenderer::mDeviceContext;
+        if (pDeviceContext)
         {
-        case eShaderStage::PASS:
-            break;
-        case eShaderStage::VS:
-            pDeviceContext->VSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::PS:
-            pDeviceContext->PSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::GS:
-            pDeviceContext->GSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::HS:
-            pDeviceContext->HSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::DS:
-            pDeviceContext->DSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::CS:
-            pDeviceContext->CSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        case eShaderStage::ALL:
-            pDeviceContext->VSSetShaderResources(mSlot, 1, &mSRV);
-            pDeviceContext->PSSetShaderResources(mSlot, 1, &mSRV);
-            pDeviceContext->GSSetShaderResources(mSlot, 1, &mSRV);
-            pDeviceContext->HSSetShaderResources(mSlot, 1, &mSRV);
-            pDeviceContext->DSSetShaderResources(mSlot, 1, &mSRV);
-            pDeviceContext->CSSetShaderResources(mSlot, 1, &mSRV);
-            break;
-        default:
-            return E_INVALIDARG;
+            switch (mStage)
+            {
+            case eShaderStage::PASS:
+                break;
+            case eShaderStage::VS:
+                pDeviceContext->VSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::PS:
+                pDeviceContext->PSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::GS:
+                pDeviceContext->GSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::HS:
+                pDeviceContext->HSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::DS:
+                pDeviceContext->DSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::CS:
+                pDeviceContext->CSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            case eShaderStage::ALL:
+                pDeviceContext->VSSetShaderResources(mSlot, 1, &mSRV);
+                pDeviceContext->PSSetShaderResources(mSlot, 1, &mSRV);
+                pDeviceContext->GSSetShaderResources(mSlot, 1, &mSRV);
+                pDeviceContext->HSSetShaderResources(mSlot, 1, &mSRV);
+                pDeviceContext->DSSetShaderResources(mSlot, 1, &mSRV);
+                pDeviceContext->CSSetShaderResources(mSlot, 1, &mSRV);
+                break;
+            default:
+                return E_INVALIDARG;
+            }
+            return S_OK;
         }
-        return S_OK;
     }
     return E_FAIL;
 }

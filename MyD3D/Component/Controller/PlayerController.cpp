@@ -4,12 +4,15 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Component/Controller/PlayerBehaviorCallback.h"
 
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
+
+	mIceBehavior = new PlayerBehaviorCallback;
 
 	mCapsuleDesc.height = mHeight;
 	mCapsuleDesc.radius = mRadius;
@@ -19,6 +22,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
+	mCapsuleDesc.behaviorCallback = mIceBehavior;
+	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
 
@@ -37,6 +42,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 PlayerController::~PlayerController()
 {
 	mCapsuleController->release();
+	SAFE_DELETE(mIceBehavior);
 }
 
 void PlayerController::Start()

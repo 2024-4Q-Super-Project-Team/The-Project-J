@@ -1,6 +1,8 @@
 #pragma once
 #include "Component/Component.h"
 
+class PlayerBehaviorCallback;
+
 class PlayerController : public Component
 {
 public:
@@ -39,6 +41,7 @@ private:
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
     PxCapsuleControllerDesc mCapsuleDesc;
+    PlayerBehaviorCallback* mIceBehavior;
     //Key
     int mForwardKeyIdx = 0;
     int mBackwardKeyIdx = 0;

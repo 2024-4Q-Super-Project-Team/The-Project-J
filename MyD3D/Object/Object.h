@@ -15,6 +15,8 @@
 #include "Component/Collider/SphereCollider.h"
 #include "Component/Controller/PlayerController.h"
 #include "Component/ParticleSystem/ParticleSystem.h"
+#include "Component/BoneAttacher/BoneAttacher.h"
+#include "Component/FSM/FiniteStateMachine.h"
 
 #include "Interface/SaveBase.h"
 #include "Editor/Interface/IEditorObject.h"

@@ -18,26 +18,39 @@ void FiniteStateMachine::Start()
 
 void FiniteStateMachine::Tick()
 {
+	UpdateState();
+	if (mCurrState)
+		mCurrState->Tick();
 }
 
 void FiniteStateMachine::FixedUpdate()
 {
+	if (mCurrState)
+		mCurrState->FixedUpdate();
 }
 
 void FiniteStateMachine::PreUpdate()
 {
+	if (mCurrState)
+		mCurrState->PreUpdate();
 }
 
 void FiniteStateMachine::Update()
 {
+	if (mCurrState)
+		mCurrState->Update();
 }
 
 void FiniteStateMachine::PostUpdate()
 {
+	if (mCurrState)
+		mCurrState->PostUpdate();
 }
 
 void FiniteStateMachine::PreRender()
 {
+	if (mCurrState)
+		mCurrState->PreRender();
 }
 
 void FiniteStateMachine::Render()
@@ -50,16 +63,55 @@ void FiniteStateMachine::Draw(Camera* _camera)
 
 void FiniteStateMachine::PostRender()
 {
+	if (mCurrState)
+		mCurrState->PostRender();
 }
 
 void FiniteStateMachine::EditorUpdate()
 {
+	UpdateState();
+	if (mCurrState)
+		mCurrState->EditorUpdate();
 }
 
 void FiniteStateMachine::EditorRender()
 {
+	if (mCurrState)
+		mCurrState->EditorRender();
 }
 
 void FiniteStateMachine::UpdateState()
 {
+	if (mCurrState != mNextState)
+	{
+		// 다르면 현재상태의 Exit, 다음 상태의 Enter를 호출
+		mCurrState->OnStateExit();
+		mNextState->OnStateEnter();
+		mCurrState = mNextState;
+	}
+}
+
+void FiniteStateMachine::ChangeState(const std::wstring& _key)
+{
+	FSMState* state = GetState<FSMState>(_key);
+	if (state && state != mNextState)
+	{
+		mNextState = state;
+	}
+}
+
+void FiniteStateMachine::EditorRendering(EditorViewerType _viewerType)
+{
+	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+
+}
+
+json FiniteStateMachine::Serialize()
+{
+	return json();
+}
+
+void FiniteStateMachine::Deserialize(json& j)
+{
+
 }

@@ -14,3 +14,12 @@ private:
 	SerializeField(FLOAT, mJumpPower, 0.0f);
 };
 
+namespace State
+{
+	class Player_Run : public FSMState
+	{
+	public:
+		_FSM_STATE_INIT(Player_Run);
+	public:
+	};
+}

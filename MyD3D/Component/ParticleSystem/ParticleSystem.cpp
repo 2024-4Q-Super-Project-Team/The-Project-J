@@ -279,6 +279,7 @@ Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)
 
 void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
+	if (!mTexture) return;
 	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//// 리소스 바인딩

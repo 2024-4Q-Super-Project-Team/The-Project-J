@@ -21,7 +21,7 @@ void PhysicsManager::Initialize()
     if (!mPhysics)
         assert(mFoundation, "PxCreatePhysics failed");
 
-    mMaterials["Default"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
+    mMaterials["Default"] = mPhysics->createMaterial(0.5f, 0.5f, 0.1f);
     mMaterials[u8"얼음"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
     //mMaterials[u8"얼음"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
 

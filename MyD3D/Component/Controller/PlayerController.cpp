@@ -71,28 +71,32 @@ void PlayerController::Update()
 	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
 	//입력에 따른 move 
 
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+	if (!mIsJumping)
 	{
-		moveDirection += PxVec3(0, 0, 1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
-	{
-		moveDirection += PxVec3(0, 0, -1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
-	{
-		moveDirection += PxVec3(-1, 0, 0);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
-	{
-		moveDirection += PxVec3(1, 0, 0);
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, 1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, -1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+		{
+			moveDirection += PxVec3(-1, 0, 0);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+		{
+			moveDirection += PxVec3(1, 0, 0);
+		}
+
+		if (!moveDirection.isZero())
+			moveDirection.normalize();
+		//이동
+		mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
+
 	}
 
-	if (!moveDirection.isZero())
-		moveDirection.normalize();
-
-	//이동
-	mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
 
 
 	//점프

@@ -65,7 +65,7 @@ private:
 
     PxVec3 mMoveVelocity = PxVec3(0.f, 0.f, 0.f);
 
-    float mJumpDuration = 0.5f;
+    float mJumpDuration = 0.8f;
     float mJumpElapsedTime = 0.f;
     bool mIsGrounded = false;
     bool mIsJumping = false;

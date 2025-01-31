@@ -41,12 +41,9 @@ private:
     bool mIsKinematic = false;
     bool mDisableGravity = false;
     float mMass = 1.f;
-    
 
     bool mFreezePosition[3];
     bool mFreezeRotation[3];
-    
-
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

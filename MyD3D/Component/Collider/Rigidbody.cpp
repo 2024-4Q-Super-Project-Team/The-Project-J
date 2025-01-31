@@ -40,6 +40,7 @@ void Rigidbody::Start()
 	}
 	mRigidActor->userData = this;
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
 	SetMass(mMass);

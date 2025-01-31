@@ -40,9 +40,34 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 		Object* triggerObject = static_cast<Object*>(triggerRigidbody->gameObject);
 		Object* otherObject = static_cast<Object*>(otherRigidbody->gameObject);
 
-		//OnCollisionEnter
-		//OnColliisonStay
-		//OnCollisionExit
+		auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
+		auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
+
+		const PxContactPairFlags& cp = pairs[0].flags;
+
+		// 처음으로 충돌했을 때 
+		if (cp & PxContactPairFlag::eACTOR_PAIR_HAS_FIRST_TOUCH)
+		{
+			for (auto script : triggerScripts)
+				script->OnCollisionEnter(triggerRigidbody, otherRigidbody);
+			for (auto script : otherScripts)
+				script->OnCollisionEnter(otherRigidbody, triggerRigidbody);
+		}
+		// 충돌이 끝나는 때
+		else if (cp & PxContactPairFlag::eACTOR_PAIR_LOST_TOUCH)
+		{
+			for (auto script : triggerScripts)
+				script->OnCollisionExit(triggerRigidbody, otherRigidbody);
+			for (auto script : otherScripts)
+				script->OnCollisionExit(otherRigidbody, triggerRigidbody);
+		} //충돌중~
+		else
+		{
+			for (auto script : triggerScripts)
+				script->OnCollisionStay(triggerRigidbody, otherRigidbody);
+			for (auto script : otherScripts)
+				script->OnCollisionStay(otherRigidbody, triggerRigidbody);
+		}
 	}
 
 	virtual void onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count)

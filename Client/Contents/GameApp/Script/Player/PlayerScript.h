@@ -7,17 +7,9 @@ public:
 public:
 	void Start();
 	void Update();
+	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
 private:
 	SerializeField(FLOAT, mMoveSpeed, 0.0f);
 	SerializeField(FLOAT, mJumpPower, 0.0f);
 };
-
-namespace State
-{
-	class Player_Run : public FSMState
-	{
-	public:
-		_FSM_STATE_INIT(Player_Run);
-	public:
-	};
-}

@@ -7,9 +7,10 @@ class Input
 {
 public:
 	static void Initialize();
+	static void Finalization();
 	static void Update();
-	static void Reset();
 
+	//===================Keyboard===================
 	template<typename T> 
 	static bool IsKeyDown(T _keyCode);
 	template<typename T> 
@@ -17,6 +18,7 @@ public:
 	template<typename T> 
 	static bool IsKeyUp(T _keyCode);
 
+	//===================Mouse===================
 	static bool IsMouseDown(int _mouseType);
 	static bool IsMouseHold(int _mouseType);
 	static bool IsMouseUp(int _mouseType);
@@ -27,24 +29,37 @@ public:
 	static void SetMousePosition(Vector2 _position);
 	static void ShowMouseCursor(bool _isShow);
 
+	//===================GamePad===================
+	static bool PadIsDown(int button, int _handle = 0);
+	static bool PadIsHold(int button, int _handle = 0);
+	static bool PadIsUp(int button, int _handle = 0);
+	static Vector2 GetPadStickForce(int _type, int _handle = 0);
+	static float GetPadTriggerForce(int _type, int _handle = 0);
+	// 패드 진동
+	static void SetPadVibration(float _leftMotor, float _rightMotor, int _handle = 0);
+	static void SetPadVibration(float _leftMotor, float _rightMotor, float _time, bool _isFade, int _handle = 0);
+	static float GetPadVibration(int _dir, int _handle = 0);
+	static int  ConnectedPadCount() { return (int)mPads.size(); }
+
 	static void InputMessegeProcess(MSG _msg);
 private:
-	static Key* m_key;
-	static Mouse* m_mouse;
+	static Key* mKey;
+	static Mouse* mMouse;
+	static std::vector<GamePad*> mPads;
 };
 
 template<typename T>
 static bool Input::IsKeyDown(T _keyCode)
 {
-	return m_key->IsKeyDown(static_cast<int>(_keyCode));
+	return mKey->IsKeyDown(static_cast<int>(_keyCode));
 }
 template<typename T>
 static bool Input::IsKeyHold(T _keyCode)
 {
-	return m_key->IsKeyHold(static_cast<int>(_keyCode));
+	return mKey->IsKeyHold(static_cast<int>(_keyCode));
 }
 template<typename T>
 static bool Input::IsKeyUp(T _keyCode)
 {
-	return m_key->IsKeyUp(static_cast<int>(_keyCode));
+	return mKey->IsKeyUp(static_cast<int>(_keyCode));
 }

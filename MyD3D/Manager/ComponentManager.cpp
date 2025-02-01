@@ -14,6 +14,7 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(Rigidbody);
 	REGISTER_COMPONENT(BoxCollider);
 	REGISTER_COMPONENT(SphereCollider);
+	REGISTER_COMPONENT(ConvexCollider);
 	REGISTER_COMPONENT(PlayerController);
 	REGISTER_COMPONENT(ParticleSystem);
 	REGISTER_COMPONENT(Canvas);

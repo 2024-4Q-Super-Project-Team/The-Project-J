@@ -82,6 +82,7 @@ void FiniteStateMachine::EditorRender()
 
 void FiniteStateMachine::UpdateState()
 {
+	// 다음 상태가 현재 상태와 다르다면
 	if (mCurrState != mNextState)
 	{
 		// 다르면 현재상태의 Exit, 다음 상태의 Enter를 호출

@@ -8,6 +8,7 @@
 Animator::Animator(Object* _owner)
     : Component(_owner)
     , isPlaying(true)
+    , isLoop(true)
     , mDuration(0.0f)
     , mFrameRateScale(1.0f)
 {
@@ -52,11 +53,21 @@ void Animator::Render()
 {
     if (isPlaying && mActiveAnimation)
     {
-        mDuration += Time::GetScaledDeltaTime() * mActiveAnimation->GetFramePerSecond();
+        mDuration += Time::GetScaledDeltaTime() *
+            mActiveAnimation->GetFramePerSecond() *
+            mFrameRateScale;
+        // 총 프레임을 넘으면 빼준다.
         float TotalFrame = mActiveAnimation->GetTotalFrame();
-        while (mDuration >= TotalFrame)
+        while (mDuration > TotalFrame)
         {
-            mDuration -= TotalFrame;
+            if (isLoop == TRUE)
+            {
+                mDuration -= TotalFrame;
+            }
+            else
+            {
+                mDuration = TotalFrame;
+            }
         }
         CalculateAnimationTramsform(gameObject->transform);
     }
@@ -85,7 +96,7 @@ void Animator::EditorRender()
 {
 }
 
-void Animator::SetAnimation(ResourceHandle _handle)
+void Animator::SetCurrentAnimation(ResourceHandle _handle)
 {
     if (_handle.GetResourceType() == eResourceType::AnimationResource)
     {
@@ -95,14 +106,6 @@ void Animator::SetAnimation(ResourceHandle _handle)
         {
             mActiveAnimation = pResource;
         }
-    }
-}
-
-void Animator::SetAnimation(AnimationResource* _pAnim)
-{
-    if (_pAnim)
-    {
-        mActiveAnimation = _pAnim;
     }
 }
 
@@ -123,6 +126,24 @@ void _CALLBACK Animator::OnDestroy()
     return void _CALLBACK();
 }
 
+void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
+{
+    auto itr = mAnimationTable.find(_key);
+    if (FIND_FAILED(itr, mAnimationTable))
+    {
+        mAnimationTable[_key] = _handle;
+    }
+}
+
+void Animator::SetCurrentAnimation(std::wstring _key)
+{
+    auto itr = mAnimationTable.find(_key);
+    if (FIND_SUCCESS(itr, mAnimationTable))
+    {
+        SetCurrentAnimation(itr->second);
+    }
+}
+
 json Animator::Serialize()
 { 
     json ret;
@@ -130,6 +151,18 @@ json Animator::Serialize()
     ret["name"] = "Animator";
     ret["active animation handle"] = mAnimationHandle.Serialize();
     ret["frame rate scale"] = mFrameRateScale;
+    ret["is playing"] = isPlaying;
+    ret["is loop"] = isLoop;
+
+    json tableJson;
+    for (auto& anim : mAnimationTable)
+    {
+        tableJson["key"] = anim.first;
+        tableJson["handle"] = anim.second.Serialize();
+    }
+
+    ret["table"] += tableJson;
+
     return ret;
 }
 
@@ -140,6 +173,28 @@ void Animator::Deserialize(json& j)
         mAnimationHandle.Deserialize(j["active animation handle"]);
     if (j.contains("frame rate scale"))
         mFrameRateScale = j["frame rate scale"].get<FLOAT>();
+    if (j.contains("is playing"))
+        mFrameRateScale = j["is playing"].get<BOOL>();
+    if (j.contains("is loop"))
+        mFrameRateScale = j["is loop"].get<BOOL>();
+
+    if (j.contains("table"))
+    {
+        json tableJson = j["table"];
+        for (json& animJson : tableJson)
+        {
+            if (animJson.contains("key"))
+            {
+                std::wstring key = Helper::ToWString(animJson["key"].get<std::string>());
+                if (animJson.contains("handle"))
+                {
+                    ResourceHandle handle;
+                    handle.Deserialize(animJson["handle"]);
+                    mAnimationTable[key] = handle;
+                }
+            }
+        }
+    }
 }
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)
@@ -197,7 +252,6 @@ Quaternion Animator::CalculateAnimationRotation(AnimationNode* _pChannel)
         FrameRatio);
 
     return Rotation;
-
 }
 
 Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
@@ -224,30 +278,53 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
 void Animator::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-    //////////////////////////////////////////////////////////////////////
-    // Mesh
-    //////////////////////////////////////////////////////////////////////
     {
-        std::string widgetID = "NULL Animation";
-        std::string name = "NULL Animation";
-        if (mActiveAnimation)
         {
-            mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mActiveAnimation->GetKey());
-            widgetID = mActiveAnimation->GetEID();
+            ImGui::Text("Current Animation");
+            std::string widgetID = "NULL Animation";
+            if (mActiveAnimation)
+            {
+                mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
+                widgetID = mActiveAnimation->GetEID();
+            }
+            else
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
+            {
+                SetCurrentAnimation(mAnimationHandle);
+            }
         }
-        else
+        ImGui::Separator();
         {
-            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
-            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
-            EDITOR_COLOR_POP(1);
+            ImGui::Text("Animation List");
+            for (auto handle : mAnimationTable)
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
+                ImGui::Selectable(Helper::ToString(handle.second.GetKey()).c_str(), false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
         }
-        if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
+        ImGui::Separator();
         {
-            SetAnimation(mAnimationHandle);
+            if (ImGui::Checkbox(("IsPlaying" + uid).c_str(), (bool*)&isPlaying))
+            {
+            }
+        }
+        ImGui::Separator();
+        {
+            if (ImGui::Checkbox(("isLoop" + uid).c_str(), (bool*)&isLoop))
+            {
+            }
+        }
+        ImGui::Separator();
+        {
+            ImGui::Separator();
+            ImGui::Text("Duration : %f", mDuration);
         }
     }
-    ImGui::Separator();
-    ImGui::Text("Duration : %f", mDuration);
 }
 

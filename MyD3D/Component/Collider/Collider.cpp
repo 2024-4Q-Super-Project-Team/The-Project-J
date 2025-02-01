@@ -9,6 +9,12 @@ Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;
 	mIsTrigger = false;
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 Collider::~Collider()
@@ -21,7 +27,11 @@ Collider::~Collider()
 
 void Collider::Start()
 {
-	SetMaterial(mMaterials[mMaterialIdx]);
+	if (mShape)
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+		mShape->userData = this;
+	}
 }
 
 void Collider::Tick()
@@ -60,6 +70,14 @@ void Collider::PostRender()
 {
 }
 
+void Collider::EditorUpdate()
+{
+}
+
+void Collider::EditorRender()
+{
+}
+
 Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
 {
 	return _camera->GetDistance(gameObject->transform);
@@ -68,6 +86,9 @@ Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
 
 void Collider::AddShapeToRigidbody()
 {
+	if (addedToRigid) return; 
+	if (mShape == nullptr) return;
+
 	mRefRigidbody = gameObject->GetComponent<Rigidbody>();
 	if (mRefRigidbody)
 		mRefRigidbody->AddShape(mShape);
@@ -75,8 +96,15 @@ void Collider::AddShapeToRigidbody()
 	SetIsTrigger();
 	SetPosition();
 	SetRotation();
+
+	mShape->userData = this;
+	addedToRigid = true;
 }
 
+
+void Collider::DrawWire()
+{
+}
 
 void Collider::SetIsTrigger()
 {

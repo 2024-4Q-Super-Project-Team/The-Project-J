@@ -15,7 +15,7 @@ public:
 	void Finalization();
 
 	PxPhysics* GetPhysics() const { return mPhysics; }
-	PxMaterial* GetDefaultMaterial() { return mMaterials["Default"]; }
+	PxSimulationEventCallback* GetCallback() { return mEventCallback; }
 	static PickingRay GetPickingRay() { return ray; }
 	PxCudaContextManager* GetCudaManager() { return mCudaContextManager; }
 	PxCudaContext* GetCudaContext() { return mCudaContext; }
@@ -25,13 +25,17 @@ public:
 	dynamicFriction(동적마찰계수) : 값이 더 클수록 움직이는 상태에서 더 많은 저항을 받음. 0~1
 	restituion(반발계수) : 충돌시 물체의 반발 정도. 클수록 탄성 충돌. 0~1*/
 	PxMaterial* CreateMaterial(std::string name, float staticFriction, float dynamicFriction, float restituion);
-	PxMaterial* GetMaterial(std::string name) { return mMaterials[name]; }
+	PxMaterial* GetMaterial(std::string name) { return mMaterials[name]; }	
+	PxMaterial* GetDefaultMaterial() { return mMaterials["Default"]; }
 	std::unordered_map<std::string, PxMaterial*> GetMaterials() { return mMaterials; }
+
+	PxConvexMesh* CreateConvexMesh(PxU32 numVerts, const PxVec3* verts);
 private:
 	PxFoundation* mFoundation;
 	bool  recordMemoryAllocations = true;
 	PxPvd* mPvd;
 	PxPhysics* mPhysics;
+	PxSimulationEventCallback* mEventCallback;
 
 	static PickingRay ray;
 	PxCudaContextManager* mCudaContextManager;

@@ -38,8 +38,10 @@ void Rigidbody::Start()
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
 			->createRigidDynamic(gameObject->transform->GetPxTransform());
 	}
-	mRigidActor->userData = gameObject;
+
+	
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
 	SetMass(mMass);
@@ -50,6 +52,8 @@ void Rigidbody::Start()
 	{
 		collider->AddShapeToRigidbody();
 	}
+	mRigidActor->userData = this;
+
 }
 
 void Rigidbody::Tick()

@@ -2,6 +2,7 @@
 #include "Component/Component.h"
 
 class PrefabResource;
+class Rigidbody;
 class Collider;
 class Object;
 class MonoBehaviour;
@@ -64,9 +65,13 @@ public:
 	// 
 	// CallBackÇÔ¼ö===============================
 
-	virtual void _CALLBACK OnCollisionEnter(Collider* _origin, Collider* _destination) {};
-	virtual void _CALLBACK OnCollisionStay(Collider* _origin, Collider* _destination) {};
-	virtual void _CALLBACK OnCollisionExit(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) {};
+	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) {};
+	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) {};
+
+	virtual void _CALLBACK OnTriggerEnter(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerStay(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerExit(Collider* _origin, Collider* _destination) {};
 
 	virtual void _CALLBACK OnMouseEnter() {};
 	virtual void _CALLBACK OnMouseStay() {};

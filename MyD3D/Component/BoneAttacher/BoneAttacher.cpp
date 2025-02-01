@@ -61,6 +61,10 @@ void BoneAttacher::EditorRender()
 {
 }
 
+void BoneAttacher::EditorRendering(EditorViewerType _viewerType)
+{
+}
+
 json BoneAttacher::Serialize()
 {
     json ret;

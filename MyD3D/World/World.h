@@ -8,6 +8,7 @@ class ViewportScene;
 class Object;
 class SkyBox;
 class Camera;
+class PhysicsEventCallback;
 
 class World
 	: public Engine::ICycleHandler

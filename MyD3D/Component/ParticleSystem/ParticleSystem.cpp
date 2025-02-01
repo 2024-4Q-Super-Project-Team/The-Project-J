@@ -135,6 +135,8 @@ json ParticleSystem::Serialize()
 	ret["cfl"] = mCflCoefficient;
 	ret["gravity"] = mGravity;
 
+	ret["texture handle"] = mTextureHandle.Serialize();
+
 	return ret;
 }
 
@@ -188,6 +190,16 @@ void ParticleSystem::Deserialize(json& j)
 
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
+
+	if (j.contains("texture handle"))
+	{
+		mTextureHandle.Deserialize(j["texture handle"]);
+
+		if (mTextureHandle.GetResourceType() == eResourceType::Texture2DResource)
+		{
+			mTexture = ResourceManager::GetResource<Texture2DResource>(mTextureHandle);
+		}
+	}
 }
 
 void ParticleSystem::EditorRendering(EditorViewerType _viewerType)
@@ -279,6 +291,7 @@ Vector3 ParticleSystem::GetDistanceFromCamera(Camera* _camera)
 
 void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 {
+	if (!mTexture) return;
 	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
 	//// 리소스 바인딩

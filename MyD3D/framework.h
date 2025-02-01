@@ -61,10 +61,12 @@ using namespace DirectX::SimpleMath;
 #include "physx/cudamanager\PxCudaContextManager.h"
 #include "physx/cudamanager/PxCudaContext.h"
 using namespace physx;
-
 //json
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+// Xinput
+#include <Xinput.h>
+#pragma comment(lib, "xinput.lib")
 
 // UI Text
 #include <tchar.h>

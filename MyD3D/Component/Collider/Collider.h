@@ -19,25 +19,31 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+    virtual void EditorUpdate() override;
+    virtual void EditorRender() override;
 public:
-    virtual void DrawObject(Matrix& _view, Matrix& _projection) = 0;
-    virtual void DrawShadow(Light* _pLight)  = 0;
+    virtual void DrawObject(Matrix& _view, Matrix& _projection) {}
+    virtual void DrawShadow(Light* _pLight) {}
+    virtual void DrawWire() override;
     virtual eBlendModeType GetBlendMode() override { return eBlendModeType::OPAQUE_BLEND; }
     virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::BACKFACE_CULLING; }
     virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
+    void SetPxShape(PxShape* _shape) { mShape = _shape; AddShapeToRigidbody(); }
 public:
-    virtual json Serialize()  = 0;
-    virtual void Deserialize(json& j)  = 0;
+    virtual json Serialize() { return json(); }
+    virtual void Deserialize(json& j) {}
+
+    virtual MeshResource* GetMesh() { return nullptr; }
+    virtual MaterialResource* GetMaterial() { return nullptr; }
 
     static bool bDrawMode;
 
 protected:
     void SetIsTrigger();
-    virtual void SetPosition() = 0;
-    virtual void SetRotation() = 0;
+    virtual void SetPosition() {}
+    virtual void SetRotation() {}
     void AddShapeToRigidbody();
     void SetMaterial(std::string _name);
-
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;
@@ -53,5 +59,6 @@ protected:
     const Color mIntersectColor = Color(1, 0, 0, 1);
 
 	friend class Rigidbody;
+	friend class PlayerController;
 };
 

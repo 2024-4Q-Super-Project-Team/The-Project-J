@@ -77,6 +77,10 @@ private:
 
     enum eJumpState {None, InitJump, Jumping};
     eJumpState mJumpState = None;
+
+    //Actor and Shapes
+    Rigidbody* mRigid = nullptr;
+    std::vector<Collider*> mColliders;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

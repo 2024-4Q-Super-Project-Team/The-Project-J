@@ -22,18 +22,18 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 		//loop through all trigger-pairs of PhysX simulation
 		for (PxU32 i = 0; i < nbPairs; i++)
 		{
-			//get current trigger actor & other actor info 
-			//from current trigger-pair 
 			const PxTriggerPair& curTriggerPair = pairs[i];
 
-			PxActor* triggerActor = curTriggerPair.triggerActor;
-			PxActor* otherActor = curTriggerPair.otherActor;
+			PxShape* triggerShape = curTriggerPair.triggerShape;
+			PxShape* otherShape = curTriggerPair.otherShape;
 
-			Rigidbody* triggerRigidbody = static_cast<Rigidbody*>(triggerActor->userData);
-			Rigidbody* otherRigidbody = static_cast<Rigidbody*>(otherActor->userData);
+			Collider* triggerCollider = static_cast<Collider*>(triggerShape->userData);
+			Collider* otherCollider = static_cast<Collider*>(otherShape->userData);
 
-			Object* triggerObject = static_cast<Object*>(triggerRigidbody->gameObject);
-			Object* otherObject = static_cast<Object*>(otherRigidbody->gameObject);
+			if (!triggerCollider || !otherCollider) return;
+
+			Object* triggerObject = static_cast<Object*>(triggerCollider->gameObject);
+			Object* otherObject = static_cast<Object*>(otherCollider->gameObject);
 
 			auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
 			auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
@@ -44,24 +44,24 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 			if (cp & PxPairFlag::eNOTIFY_TOUCH_FOUND)
 			{
 				for (auto script : triggerScripts)
-					script->OnCollisionEnter(triggerRigidbody, otherRigidbody);
+					script->OnTriggerEnter(triggerCollider, otherCollider);
 				for (auto script : otherScripts)
-					script->OnCollisionEnter(otherRigidbody, triggerRigidbody);
+					script->OnTriggerEnter(otherCollider, triggerCollider);
 			}
 			// 충돌이 끝나는 때
 			else if (cp & PxPairFlag::eNOTIFY_TOUCH_LOST)
 			{
 				for (auto script : triggerScripts)
-					script->OnCollisionExit(triggerRigidbody, otherRigidbody);
+					script->OnTriggerExit(triggerCollider, otherCollider);
 				for (auto script : otherScripts)
-					script->OnCollisionExit(otherRigidbody, triggerRigidbody);
+					script->OnTriggerExit(otherCollider, triggerCollider);
 			} //충돌중~
 			else
 			{
 				for (auto script : triggerScripts)
-					script->OnCollisionStay(triggerRigidbody, otherRigidbody);
+					script->OnTriggerStay(triggerCollider, otherCollider);
 				for (auto script : otherScripts)
-					script->OnCollisionStay(otherRigidbody, triggerRigidbody);
+					script->OnTriggerStay(otherCollider, triggerCollider);
 			}
 		}
 	}

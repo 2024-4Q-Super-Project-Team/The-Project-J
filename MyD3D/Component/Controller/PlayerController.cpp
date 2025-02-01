@@ -38,11 +38,34 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	{
 		mStrKeys.push_back(key.first);
 	}
+
+	//for Trigger/Contact Event
+	//Inner Rigidbody
+	mRigid = new Rigidbody(gameObject);
+	mCapsuleController->getActor()->userData = mRigid;
+	mRigid->SetPxActor(mCapsuleController->getActor());
+
+	//Inner Shapes
+	PxShape* shapes[10];
+	PxU32 shapeSize = mCapsuleController->getActor()->getShapes(shapes, 10);
+	for (int i = 0; i < shapeSize; i++) {
+		Collider* col = new Collider(gameObject);
+		shapes[i]->userData = col;
+		mColliders.push_back(col);
+	}
 }
 
 PlayerController::~PlayerController()
 {
 	mCapsuleController->release();
+
+	mRigid->mRigidActor = nullptr;
+	SAFE_DELETE(mRigid);
+	for (Collider* col : mColliders)
+	{
+		col->mShape = nullptr;
+		SAFE_DELETE(col);
+	}
 	SAFE_DELETE(mIceBehavior);
 }
 
@@ -52,6 +75,8 @@ void PlayerController::Start()
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 
 	SetMaterial(mMaterials[mMaterialIdx]);
+
+	mCapsuleController->setUserData(this);
 }
 
 void PlayerController::Tick()

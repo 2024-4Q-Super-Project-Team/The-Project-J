@@ -24,7 +24,7 @@ public:
 public:
     //PxRigidActor 설정하는 함수들
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
-
+    void SetPxActor(PxRigidActor* _actor) { mRigidActor = _actor; }
 public:
     void SetMaterial(std::string _name); 
 
@@ -50,5 +50,6 @@ public:
     virtual void EditorRendering(EditorViewerType _type) override;
 
     friend class Collider;
+    friend class PlayerController;
 };
 

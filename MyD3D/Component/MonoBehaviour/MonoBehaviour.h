@@ -3,6 +3,7 @@
 
 class PrefabResource;
 class Rigidbody;
+class Collider;
 class Object;
 class MonoBehaviour;
 
@@ -68,9 +69,9 @@ public:
 	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) {};
 	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) {};
 
-	virtual void _CALLBACK OnTriggerEnter(Rigidbody* _origin, Rigidbody* _destination) {};
-	virtual void _CALLBACK OnTriggerStay(Rigidbody* _origin, Rigidbody* _destination) {};
-	virtual void _CALLBACK OnTriggerExit(Rigidbody* _origin, Rigidbody* _destination) {};
+	virtual void _CALLBACK OnTriggerEnter(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerStay(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerExit(Collider* _origin, Collider* _destination) {};
 
 	virtual void _CALLBACK OnMouseEnter() {};
 	virtual void _CALLBACK OnMouseStay() {};

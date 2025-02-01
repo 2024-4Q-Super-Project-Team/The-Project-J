@@ -21,7 +21,11 @@ Collider::~Collider()
 
 void Collider::Start()
 {
-	SetMaterial(mMaterials[mMaterialIdx]);
+	if (mShape)
+	{
+		SetMaterial(mMaterials[mMaterialIdx]);
+		mShape->userData = this;
+	}
 }
 
 void Collider::Tick()
@@ -60,6 +64,14 @@ void Collider::PostRender()
 {
 }
 
+void Collider::EditorUpdate()
+{
+}
+
+void Collider::EditorRender()
+{
+}
+
 Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
 {
 	return _camera->GetDistance(gameObject->transform);
@@ -75,8 +87,14 @@ void Collider::AddShapeToRigidbody()
 	SetIsTrigger();
 	SetPosition();
 	SetRotation();
+
+	mShape->userData = this;
 }
 
+
+void Collider::DrawWire()
+{
+}
 
 void Collider::SetIsTrigger()
 {

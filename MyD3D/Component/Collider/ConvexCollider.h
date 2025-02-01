@@ -20,6 +20,10 @@ public:
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
 public:
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 public:

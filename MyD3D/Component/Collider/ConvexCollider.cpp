@@ -32,16 +32,11 @@ void ConvexCollider::Start()
 
 		Vector3 meshSize = gameObject->transform->scale;
 		PxVec3 scale = PxVec3(meshSize.x, meshSize.y, meshSize.y);
-		
-		Quaternion quatRot = gameObject->transform->rotation;
-		PxQuat rotation = PxQuat(quatRot.x, quatRot.y, quatRot.z, quatRot.w);
-		
-		PxMeshScale meshScale(scale, rotation);
-		mConvexGeom.scale = meshScale;
+		mConvexGeom.scale.scale = scale;
 
 		mShape = GameManager::GetPhysicsManager()->GetPhysics()
 			->createShape(mConvexGeom, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
-		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, true);
+		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
 
 		AddShapeToRigidbody();
 	}
@@ -100,6 +95,23 @@ void ConvexCollider::EditorUpdate()
 void ConvexCollider::EditorRender()
 {
 	Collider::EditorRender();
+}
+
+void _CALLBACK ConvexCollider::OnEnable()
+{
+	mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+	return void _CALLBACK();
+}
+
+void _CALLBACK ConvexCollider::OnDisable()
+{
+	mMesh = nullptr;
+	return void _CALLBACK();
+}
+
+void _CALLBACK ConvexCollider::OnDestroy()
+{
+	return void _CALLBACK();
 }
 
 json ConvexCollider::Serialize()

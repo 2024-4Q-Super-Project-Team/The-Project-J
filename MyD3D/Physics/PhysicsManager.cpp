@@ -71,6 +71,7 @@ PxConvexMesh* PhysicsManager::CreateConvexMesh(PxU32 numVerts, const PxVec3* ver
 	desc.points.count = numVerts;
 	desc.points.stride = sizeof(PxVec3);
 	desc.flags = PxConvexFlag::eCOMPUTE_CONVEX;
+	desc.vertexLimit = 255;
 
 	PxU32 meshSize = 0;
 	PxConvexMesh* convex = NULL;

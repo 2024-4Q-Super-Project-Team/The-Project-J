@@ -33,8 +33,9 @@ public:
     virtual void _CALLBACK OnDisable() override;
     virtual void _CALLBACK OnDestroy() override;
 public:
-    void SetAnimation(ResourceHandle _handle);
-    void SetAnimation(AnimationResource* _pAnim);
+    void AddAnimation(std::wstring _key, ResourceHandle _handle);
+    void SetCurrentAnimation(std::wstring _key);
+    void SetCurrentAnimation(ResourceHandle _handle);
 public:
     inline void Play() {    // 처음으로 돌아가서 재생
         isPlaying = TRUE;
@@ -60,7 +61,6 @@ private:
     Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
-    // TODO : AudioSource처럼 테이블로 두고 관리하는게 낫지 않을까? 라는 생각
 private:
     ResourceHandle      mAnimationHandle;
     AnimationResource*  mActiveAnimation;
@@ -68,6 +68,7 @@ private:
     BOOL  isLoop;
     FLOAT mDuration;
     FLOAT mFrameRateScale;
+    std::unordered_map<std::wstring, ResourceHandle> mAnimationTable;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

@@ -107,6 +107,12 @@ void MeshRenderer::Draw(Camera* _camera)
 
         _camera->PushDrawList(this);
         //_camera->PushWireList(this);
+
+        if (isCastOutline)
+        {
+            GraphicsManager::GetConstantBuffer(eCBufferType::Outline)->UpdateGPUResoure(&mOutlineCBuffer);
+            _camera->PushOutlineDrawList(this);
+        }
     }
 }
 
@@ -428,6 +434,15 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
             SetMaterial(mMaterialHandle);
         }
         ImGui::Separator();
+
+        ImGui::Checkbox(("Rendering Outline" + uid).c_str(), &isCastOutline);
+       
+        if (isCastOutline)
+        {
+            ImGui::ColorEdit3("outline color", &mOutlineCBuffer.outlineColor.x);
+            ImGui::DragFloat("outline scale", &mOutlineCBuffer.outlineOffset, 0.5f, 0.01f, 10.f);
+        }
+        ImGui::NewLine();
     }
     //////////////////////////////////////////////////////////////////////
     // Lighting Properties

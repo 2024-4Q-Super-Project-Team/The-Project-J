@@ -50,6 +50,8 @@ public:
     void SetCameraOffset(Vector2 _offsetScale);
     // 카메라에 Draw할 컴포넌트를 Push합니다.
     void PushDrawList(IRenderContext* _renderContext);
+    // 카메라에 Outline을 Draw할 컴포넌트를 Push 합니다.
+    void PushOutlineDrawList(IRenderContext* _renderContext);
     // 카메라에 Light정보를 Push합니다. 매 업데이트마다 Push해줘야 함.
     void PushLightList(Light* _pLight);
     // 카메라에 그릴 와이어프레임 정보를 Push합니다.
@@ -64,6 +66,7 @@ private:
     void DrawForwardList();
     void DrawDeferredList();
     void DrawWireList();
+    void DrawOutlineList();
     void DrawSwapChain();
     // 렌더 큐의 Draw 작업 수행
     void ExcuteDrawList();

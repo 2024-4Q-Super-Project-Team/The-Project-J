@@ -9,6 +9,7 @@ enum class eCBufferType
     BoneMatrix,
     Light,
     ParticleSize,
+    Outline,
     SIZE
 };
 #define CBUFFER_TYPE_COUNT static_cast<UINT>(eCBufferType::SIZE)
@@ -45,6 +46,7 @@ enum class eVertexShaderType
     SHADOW,
     PARTICLE,
     GRID,
+    OUTLINE,
     SIZE,
 };
 #define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
@@ -66,6 +68,7 @@ enum class ePixelShaderType
     G_BUFFER,
     PARTICLE,
     GRID,
+    OUTLINE,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)
@@ -93,6 +96,8 @@ enum class eRasterizerStateType
 enum class eDepthStencilStateType
 {
     DEFAULT,       
+    STENCIL_WRITE,
+    STENCIL_READ,
     SIZE,
 };
 #define DEPTHSTENCIL_STATE_TYPE_COUNT static_cast<UINT>(eDepthStencilStateType::SIZE)
@@ -102,6 +107,7 @@ enum class eBlendModeType
     OPAQUE_BLEND,           // Opaqueºí·»µå
     TRANSPARENT_BLEND,      // Transparentºí·»µå
     WIREFRAME_BELND,        // WireFrameºí·»µå
+    OUTLINE_BLEND,          // Outlineºí·»µå
     SIZE,
 };
 #define BLEND_MODE_TYPE_COUNT static_cast<UINT>(eBlendModeType::SIZE)

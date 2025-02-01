@@ -64,6 +64,11 @@ struct DEFERRED_PS_OUT
     float4 worldpos : SV_Target4;
 };
 
+struct OUTLINE_VS_OUTPUT
+{
+    float4 pos : SV_POSITION;
+};
+
 
 #define PI 3.141592
 #define GAMMA 2.2
@@ -191,4 +196,11 @@ cbuffer ParticleSizeBuffer : register(b5)
 {
     float particleSize;
     float padding[3];
+};
+
+cbuffer OutlineBuffer : register(b6)
+{
+    float4 outlineColor;
+    float outlineOffset;
+    float paddingg[3];
 };

@@ -51,7 +51,9 @@ void UIManager::Render()
 		return;
 
 	//m_pSpriteBatch->SetViewport(EditorManager::GetFocusViewport()->GetMainViewport()->mViewport);
-	m_pSpriteBatch->Begin();
+	
+	ID3D11BlendState* pBlendState = GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->GetBlendState();
+	m_pSpriteBatch->Begin(SpriteSortMode_Deferred, pBlendState);
 
 	for (auto& widget : mDrawWidgetList)
 	{

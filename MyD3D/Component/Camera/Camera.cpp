@@ -316,6 +316,30 @@ void Camera::DrawWireList()
     DebugRenderer::EndDraw();
 }
 
+void Camera::DrawOutlineList()
+{
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    // ÀÌ°Å ºí·»µå ½ºÅ×ÀÌÆ® ¹Ù²ã¾ßµÇ³ª? ±»ÀÌ? ÀÏ´Ü ÇØº¾¼¼
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::STENCIL_WRITE)->Bind();
+    GetCurrentRenderTarget()->Clear();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::STENCIL_READ)->Bind();
+
+    GraphicsManager::GetVertexShader(eVertexShaderType::OUTLINE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::OUTLINE)->Bind();
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND].clear();
+
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
+}
+
 void Camera::DrawSwapChain()
 {
     // QuadFrame Pass
@@ -369,6 +393,8 @@ void Camera::ExcuteDrawList()
                 {
                     mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
                 }
+
+                DrawOutlineList();
 
                 mMainRenderTarget->EndDraw();
             }
@@ -456,6 +482,13 @@ void Camera::PushDrawList(IRenderContext* _renderContext)
 {
     if (_renderContext == nullptr) return;
     eBlendModeType blendMode = _renderContext->GetBlendMode();
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
+}
+
+void Camera::PushOutlineDrawList(IRenderContext* _renderContext)
+{
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = eBlendModeType::OUTLINE_BLEND;
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 

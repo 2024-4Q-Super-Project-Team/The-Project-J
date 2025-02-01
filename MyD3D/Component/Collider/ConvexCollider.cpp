@@ -164,11 +164,9 @@ void ConvexCollider::EditorRendering(EditorViewerType _type)
 	ImGui::Text("Mesh : ");
 
 	std::string widgetID = "NULL Mesh";
-	std::string name = "NULL Mesh";
 	if (mMesh)
 	{
 		mMesh->EditorRendering(EditorViewerType::DEFAULT);
-		name = Helper::ToString(mMesh->GetKey());
 		widgetID = mMesh->GetEID();
 		mMesh->EditorRendering(EditorViewerType::INSPECTOR);
 	}

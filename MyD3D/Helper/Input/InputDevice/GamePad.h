@@ -33,11 +33,11 @@ private:
     bool isConnected;
     static float mDeadZone;
 
-    float m_leftVibration = 0.0f;
-    float m_rightVibration = 0.0f;
+    float mLeftVibration = 0.0f;
+    float mRightVibration = 0.0f;
     bool  isVibrationTimeLimit = false;
     bool  isVibrationFade = false;
-    float m_vibrationTime = 0.0f;
+    float mVibrationTime = 0.0f;
 
 public:
 

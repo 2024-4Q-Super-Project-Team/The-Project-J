@@ -29,18 +29,18 @@ void GamePad::Update()
 
     if (isVibrationTimeLimit)
     {
-        m_vibrationTime -= Time::GetUnScaledDeltaTime();
+        mVibrationTime -= Time::GetUnScaledDeltaTime();
         if (isVibrationFade)
         {
-            if (m_vibrationTime <= 1.0f)
+            if (mVibrationTime <= 1.0f)
             {
-                SetVibration(m_leftVibration * m_vibrationTime, m_rightVibration * m_vibrationTime, m_vibrationTime, true);
+                SetVibration(mLeftVibration * mVibrationTime, mRightVibration * mVibrationTime, mVibrationTime, true);
             }
         }
-        if (m_vibrationTime <= 0.0f)
+        if (mVibrationTime <= 0.0f)
         {
             SetVibration(0, 0);
-            m_vibrationTime = 0.0f;
+            mVibrationTime = 0.0f;
             isVibrationTimeLimit = false;
         }
     }
@@ -76,8 +76,8 @@ void GamePad::SetVibration(float _leftMotor, float _rightMotor)
     ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
     vibration.wLeftMotorSpeed = _leftMotor * 65530;
     vibration.wRightMotorSpeed = _rightMotor * 65530;
-    m_leftVibration = _leftMotor;
-    m_rightVibration = _rightMotor;
+    mLeftVibration = _leftMotor;
+    mRightVibration = _rightMotor;
     isVibrationTimeLimit = false;
     XInputSetState(mHandle, &vibration);
 }
@@ -88,19 +88,19 @@ void GamePad::SetVibration(float _leftMotor, float _rightMotor, float _time, boo
     ZeroMemory(&vibration, sizeof(XINPUT_VIBRATION));
     vibration.wLeftMotorSpeed = _leftMotor * 65530;
     vibration.wRightMotorSpeed = _rightMotor * 65530;
-    m_leftVibration = _leftMotor;
-    m_rightVibration = _rightMotor;
+    mLeftVibration = _leftMotor;
+    mRightVibration = _rightMotor;
     isVibrationTimeLimit = true;
     isVibrationFade = _isFade;
-    m_vibrationTime = _time;
+    mVibrationTime = _time;
 
     XInputSetState(mHandle, &vibration);
 }
 
 float GamePad::GetVibration(int _dir)
 {
-    if (_dir == LEFT) return m_leftVibration;
-    if (_dir == RIGHT) return m_rightVibration;
+    if (_dir == LEFT) return mLeftVibration;
+    if (_dir == RIGHT) return mRightVibration;
 }
 
 Vector2 GamePad::GetStickForce(int _type) const

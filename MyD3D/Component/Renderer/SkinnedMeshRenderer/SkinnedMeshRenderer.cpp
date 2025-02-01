@@ -418,22 +418,49 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-    if (mRootBone)
-        ImGui::Text(Helper::ToString(mRootBone->gameObject->GetName()).c_str());
-    else
-        ImGui::Text("NULL RootBone");
-
+    //////////////////////////////////////////////////////////////////////
+    // RootBone
+    //////////////////////////////////////////////////////////////////////
+    {
+        std::string widgetID = "NULL RootBone";
+        if (mRootBone)
+        {
+            widgetID = Helper::ToString(mRootBone->gameObject->GetName());
+            auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+            ImGui::Selectable((widgetID).c_str(), false, flags);
+            EDITOR_COLOR_POP(1);
+            if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+            {
+                Editor::InspectorViewer::SetFocusObject(mRootBone->gameObject);
+                Editor::GuizmoManipulater::SetFocusObjedct(mRootBone->gameObject);
+            }
+            if (ImGui::IsItemHovered() && Input::IsMouseUp(Mouse::RIGHT)) 
+            {
+                SetRootBone(nullptr);
+            }
+        }
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
+        }
+        Object* receiveObject = nullptr;
+        if (EditorDragNDrop::ReceiveDragAndDropObjectData(widgetID.c_str(), &receiveObject))
+        {
+            SetRootBone(receiveObject->transform);
+        }
+    }
     ImGui::Separator();
     //////////////////////////////////////////////////////////////////////
     // Mesh
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Mesh";
-        std::string name = "NULL Mesh";
         if (mMesh)
         {
             mMesh->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMesh->GetKey());
             widgetID = mMesh->GetEID();
         }
         else
@@ -453,12 +480,10 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Material";
-        std::string name = "NULL Material";
 
         if (mMaterial)
         {
             mMaterial->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMaterial->GetKey());
             widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {

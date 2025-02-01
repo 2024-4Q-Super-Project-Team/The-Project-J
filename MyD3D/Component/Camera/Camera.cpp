@@ -318,10 +318,14 @@ void Camera::DrawWireList()
 
 void Camera::DrawOutlineList()
 {
-    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+    GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
     // ÀÌ°Å ºí·»µå ½ºÅ×ÀÌÆ® ¹Ù²ã¾ßµÇ³ª? ±»ÀÌ? ÀÏ´Ü ÇØº¾¼¼
     GraphicsManager::GetDepthStencilState(eDepthStencilStateType::STENCIL_WRITE)->Bind();
-    GetCurrentRenderTarget()->Clear();
+    GetCurrentRenderTarget()->ClearStencil();
     for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND])
     {
         drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
@@ -394,6 +398,9 @@ void Camera::ExcuteDrawList()
                     mSkyBox->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
                 }
 
+                ////////////////////////////////////////////////////
+                // Outline Draw
+                ////////////////////////////////////////////////////
                 DrawOutlineList();
 
                 mMainRenderTarget->EndDraw();

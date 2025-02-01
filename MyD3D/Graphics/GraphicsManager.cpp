@@ -341,20 +341,20 @@ void GraphicsManager::InitDepthStencilState()
         D3D11_DEPTH_STENCIL_DESC swDssDesc;
         ZeroMemory(&swDssDesc, sizeof(swDssDesc));
 
-        swDssDesc.DepthEnable = false;
+        swDssDesc.DepthEnable = true;
         swDssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-        swDssDesc.DepthFunc = D3D11_COMPARISON_LESS;
+        swDssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
         swDssDesc.StencilEnable = true;
         swDssDesc.StencilReadMask = 0x00;
         swDssDesc.StencilWriteMask = 0xFF;
         swDssDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-        swDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-        swDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
         swDssDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
         swDssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-        swDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+        swDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
         swDssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-        swDssDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+        swDssDesc.BackFace.StencilFunc = swDssDesc.FrontFace.StencilFunc;
 
         mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&swDssDesc);
     }
@@ -365,20 +365,20 @@ void GraphicsManager::InitDepthStencilState()
         D3D11_DEPTH_STENCIL_DESC srDssDesc;
         ZeroMemory(&srDssDesc, sizeof(srDssDesc));
 
-        srDssDesc.DepthEnable = false;
+        srDssDesc.DepthEnable = true;
         srDssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-        srDssDesc.DepthFunc = D3D11_COMPARISON_LESS;
+        srDssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
         srDssDesc.StencilEnable = true;
         srDssDesc.StencilReadMask = 0xFF;
         srDssDesc.StencilWriteMask = 0x00;
         srDssDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-        srDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-        srDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
         srDssDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
         srDssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-        srDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+        srDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
         srDssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-        srDssDesc.BackFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+        srDssDesc.BackFace.StencilFunc = srDssDesc.FrontFace.StencilFunc;
 
         mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&srDssDesc);
     }
@@ -436,7 +436,7 @@ std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultDepthS
     TexDesc.Height = _height;
     TexDesc.MipLevels = 1;
     TexDesc.ArraySize = 1;
-    TexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+    TexDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
     TexDesc.SampleDesc.Count = 1;
     TexDesc.SampleDesc.Quality = 0;
     TexDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -444,12 +444,12 @@ std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultDepthS
     TexDesc.CPUAccessFlags = 0;
     TexDesc.MiscFlags = 0;
 
-    DSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    DSVDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     DSVDesc.Texture2D.MipSlice = 0;
     DSVDesc.Flags = 0;
 
-    SRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    SRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
     SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     SRVDesc.Texture2D.MostDetailedMip = 0;
     SRVDesc.Texture2D.MipLevels = 1;

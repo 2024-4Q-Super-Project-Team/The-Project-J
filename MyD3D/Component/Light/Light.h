@@ -29,7 +29,12 @@ public:
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
 public:
-    void UpdateLightProperty();
+    virtual void _CALLBACK OnEnable() override;
+    virtual void _CALLBACK OnDisable() override;
+    virtual void _CALLBACK OnDestroy() override;
+private:
+    void AllocShadowMap();
+    void FreeShadowMap();
 public:
     virtual void Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable) override;
 public:
@@ -49,7 +54,6 @@ private:
     LightProperty           mLightProp;
     D3DBitmapRenderTarget*  mShadowRenderTarget;
     D3DGraphicsViewport*    mShadowViewport;
-
     // Light의 Near, Far
     float mLightNear = 50.0f;
     float mLightFar = 15000.0f;
@@ -61,8 +65,6 @@ private:
 	float mShadowResolution;
     // 그림자 렌더 범위
     float mShadowDistance;
-
-	static std::queue<D3DBitmapRenderTarget*> mShadowRenderTargetPool;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

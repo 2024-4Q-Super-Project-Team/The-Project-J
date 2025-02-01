@@ -221,7 +221,6 @@ D3DBitmapRenderTarget::~D3DBitmapRenderTarget()
 void D3DBitmapRenderTarget::Release()
 {
     ResetAllSRV();
-    mDepthStencilView->Reset();
     SAFE_RELEASE_MAP(mShaderResourceViewTable);
     SAFE_RELEASE_ARRAY(mRenderTargetViews);
     SAFE_RELEASE(mDepthStencilView);

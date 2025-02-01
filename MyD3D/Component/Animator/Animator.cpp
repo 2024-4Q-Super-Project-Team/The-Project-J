@@ -8,6 +8,7 @@
 Animator::Animator(Object* _owner)
     : Component(_owner)
     , isPlaying(true)
+    , isLoop(true)
     , mDuration(0.0f)
     , mFrameRateScale(1.0f)
 {
@@ -52,11 +53,21 @@ void Animator::Render()
 {
     if (isPlaying && mActiveAnimation)
     {
-        mDuration += Time::GetScaledDeltaTime() * mActiveAnimation->GetFramePerSecond();
+        mDuration += Time::GetScaledDeltaTime() *
+            mActiveAnimation->GetFramePerSecond() *
+            mFrameRateScale;
+        // 총 프레임을 넘으면 빼준다.
         float TotalFrame = mActiveAnimation->GetTotalFrame();
-        while (mDuration >= TotalFrame)
+        while (mDuration > TotalFrame)
         {
-            mDuration -= TotalFrame;
+            if (isLoop == TRUE)
+            {
+                mDuration -= TotalFrame;
+            }
+            else
+            {
+                mDuration = TotalFrame;
+            }
         }
         CalculateAnimationTramsform(gameObject->transform);
     }
@@ -130,6 +141,8 @@ json Animator::Serialize()
     ret["name"] = "Animator";
     ret["active animation handle"] = mAnimationHandle.Serialize();
     ret["frame rate scale"] = mFrameRateScale;
+    ret["is playing"] = isPlaying;
+    ret["is loop"] = isLoop;
     return ret;
 }
 
@@ -140,6 +153,10 @@ void Animator::Deserialize(json& j)
         mAnimationHandle.Deserialize(j["active animation handle"]);
     if (j.contains("frame rate scale"))
         mFrameRateScale = j["frame rate scale"].get<FLOAT>();
+    if (j.contains("is playing"))
+        mFrameRateScale = j["is playing"].get<BOOL>();
+    if (j.contains("is loop"))
+        mFrameRateScale = j["is loop"].get<BOOL>();
 }
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)
@@ -245,6 +262,14 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
         if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
         {
             SetAnimation(mAnimationHandle);
+        }
+        if (ImGui::Checkbox(("IsPlaying" + uid).c_str(), (bool*)&isPlaying))
+        {
+
+        }
+        if (ImGui::Checkbox(("isLoop" + uid).c_str(), (bool*)&isLoop))
+        {
+
         }
     }
     ImGui::Separator();

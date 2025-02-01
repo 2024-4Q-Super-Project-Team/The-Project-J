@@ -29,12 +29,29 @@ public:
     virtual void EditorGlobalUpdate() override;
     virtual void EditorRender() override;
 public:
-    void SetAnimation(ResourceHandle _handle);
-    void SetAnimation(AnimationResource* _pAnim);
-public:
     virtual void _CALLBACK OnEnable() override;
     virtual void _CALLBACK OnDisable() override;
     virtual void _CALLBACK OnDestroy() override;
+public:
+    void SetAnimation(ResourceHandle _handle);
+    void SetAnimation(AnimationResource* _pAnim);
+public:
+    inline void Play() {    // 처음으로 돌아가서 재생
+        isPlaying = TRUE;
+        mDuration = 0.0f;
+    }
+    inline void Stop() {    // 처음으로 돌아가서 정지
+        isPlaying = FALSE;
+        mDuration = 0.0f;
+    }
+    inline void Pause() {   // 중지
+        isPlaying = FALSE;
+    }
+    inline void Resume() {  // 이어서재생
+        isPlaying = TRUE;
+    }
+    inline void SetFrame(FLOAT _val) { mDuration = _val; }
+    inline void SetFremeRateScale(FLOAT _val) { mFrameRateScale = _val; }
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
@@ -48,6 +65,7 @@ private:
     ResourceHandle      mAnimationHandle;
     AnimationResource*  mActiveAnimation;
     BOOL  isPlaying;
+    BOOL  isLoop;
     FLOAT mDuration;
     FLOAT mFrameRateScale;
 public:

@@ -240,17 +240,26 @@ void Transform::Deserialize(json& j)
         scale.z = j["scale"][2].get<float>();
     }
 
-    unsigned int rootId = j["root parent"].get<unsigned int>();
-    if (rootId == NULLID)
-        mRootParent = nullptr;
-    else
-        mRootParent = static_cast<Object*>(Engine::SaveBase::mMap[rootId])->GetComponent<Transform>();
+    if (j.contains("root parent"))
+    {
+        unsigned int rootId = j["root parent"].get<unsigned int>();
+        if (rootId == NULLID)
+            mRootParent = nullptr;
+        else
+            mRootParent = static_cast<Object*>(Engine::SaveBase::mMap[rootId])->GetComponent<Transform>();
+    }
+    else mRootParent = nullptr;
 
-    unsigned int parentId = j["parent"].get<unsigned int>();
-    if (parentId == NULLID)
-        mParent = nullptr;
-    else
-        SetParent(static_cast<Object*>(Engine::SaveBase::mMap[parentId])->GetComponent<Transform>());
+    if (j.contains("parent"))
+    {
+        unsigned int parentId = j["parent"].get<unsigned int>();
+        if (parentId == NULLID)
+            mParent = nullptr;
+        else
+            SetParent(static_cast<Object*>(Engine::SaveBase::mMap[parentId])->GetComponent<Transform>());
+    }
+    else mParent = nullptr;
+   
 }
 
 void Transform::EditorRendering(EditorViewerType _viewerType)

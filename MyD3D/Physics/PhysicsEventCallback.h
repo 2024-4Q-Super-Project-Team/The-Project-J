@@ -25,6 +25,44 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 			//get current trigger actor & other actor info 
 			//from current trigger-pair 
 			const PxTriggerPair& curTriggerPair = pairs[i];
+
+			PxActor* triggerActor = curTriggerPair.triggerActor;
+			PxActor* otherActor = curTriggerPair.otherActor;
+
+			Rigidbody* triggerRigidbody = static_cast<Rigidbody*>(triggerActor->userData);
+			Rigidbody* otherRigidbody = static_cast<Rigidbody*>(otherActor->userData);
+
+			Object* triggerObject = static_cast<Object*>(triggerRigidbody->gameObject);
+			Object* otherObject = static_cast<Object*>(otherRigidbody->gameObject);
+
+			auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
+			auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
+
+			const PxPairFlags& cp = pairs[0].status;
+				
+			// 처음으로 충돌했을 때 
+			if (cp & PxPairFlag::eNOTIFY_TOUCH_FOUND)
+			{
+				for (auto script : triggerScripts)
+					script->OnCollisionEnter(triggerRigidbody, otherRigidbody);
+				for (auto script : otherScripts)
+					script->OnCollisionEnter(otherRigidbody, triggerRigidbody);
+			}
+			// 충돌이 끝나는 때
+			else if (cp & PxPairFlag::eNOTIFY_TOUCH_LOST)
+			{
+				for (auto script : triggerScripts)
+					script->OnCollisionExit(triggerRigidbody, otherRigidbody);
+				for (auto script : otherScripts)
+					script->OnCollisionExit(otherRigidbody, triggerRigidbody);
+			} //충돌중~
+			else
+			{
+				for (auto script : triggerScripts)
+					script->OnCollisionStay(triggerRigidbody, otherRigidbody);
+				for (auto script : otherScripts)
+					script->OnCollisionStay(otherRigidbody, triggerRigidbody);
+			}
 		}
 	}
 

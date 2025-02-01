@@ -347,7 +347,6 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 
 	ImGui::Separator();
 }
-
 void PlayerController::StartJump()
 {
 	mJumpInitElapsedTime = 0.f;

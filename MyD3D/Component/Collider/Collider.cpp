@@ -9,6 +9,12 @@ Collider::Collider(Object* _owner) : Component(_owner)
 {
 	mType = eComponentType::COLLDIER;
 	mIsTrigger = false;
+
+	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
+	for (auto& material : materials)
+	{
+		mMaterials.push_back(material.first.c_str());
+	}
 }
 
 Collider::~Collider()
@@ -80,6 +86,9 @@ Vector3 Collider::GetDistanceFromCamera(Camera* _camera)
 
 void Collider::AddShapeToRigidbody()
 {
+	if (addedToRigid) return; 
+	if (mShape == nullptr) return;
+
 	mRefRigidbody = gameObject->GetComponent<Rigidbody>();
 	if (mRefRigidbody)
 		mRefRigidbody->AddShape(mShape);
@@ -89,6 +98,7 @@ void Collider::AddShapeToRigidbody()
 	SetRotation();
 
 	mShape->userData = this;
+	addedToRigid = true;
 }
 
 

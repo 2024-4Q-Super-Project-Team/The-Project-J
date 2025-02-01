@@ -60,5 +60,7 @@ protected:
 
 	friend class Rigidbody;
 	friend class PlayerController;
+
+    bool addedToRigid = false;
 };
 

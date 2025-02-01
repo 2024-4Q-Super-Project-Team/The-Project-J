@@ -135,6 +135,8 @@ json ParticleSystem::Serialize()
 	ret["cfl"] = mCflCoefficient;
 	ret["gravity"] = mGravity;
 
+	ret["texture handle"] = mTextureHandle.Serialize();
+
 	return ret;
 }
 
@@ -188,6 +190,16 @@ void ParticleSystem::Deserialize(json& j)
 
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
+
+	if (j.contains("mesh handle"))
+	{
+		mTextureHandle.Deserialize(j["texture handle"]);
+
+		if (mTextureHandle.GetResourceType() == eResourceType::Texture2DResource)
+		{
+			mTexture = ResourceManager::GetResource<Texture2DResource>(mTextureHandle);
+		}
+	}
 }
 
 void ParticleSystem::EditorRendering(EditorViewerType _viewerType)

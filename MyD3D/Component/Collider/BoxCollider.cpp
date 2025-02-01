@@ -18,12 +18,6 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	mOBB.Orientation = Quaternion::Identity;
 	mOBB.Extents = mExtents;
 
-
-	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
-	for (auto& material : materials)
-	{
-		mMaterials.push_back(material.first.c_str());
-	}
 }
 
 void BoxCollider::Start()

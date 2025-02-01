@@ -131,11 +131,7 @@ void Transform::UpdateFromPxTransform(PxTransform pxTransform)
 {
     mPxTransform = pxTransform;
     PxTransform localTransform = mPxTransform;
-    if (mParent)
-    {
-        PxTransform parentInverse = mParent->mPxTransform.getInverse();
-        localTransform = parentInverse.transform(mPxTransform);
-    }
+
 
     memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
     memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);

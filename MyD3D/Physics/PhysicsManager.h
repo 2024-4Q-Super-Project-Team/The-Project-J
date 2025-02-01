@@ -28,6 +28,8 @@ public:
 	PxMaterial* GetMaterial(std::string name) { return mMaterials[name]; }	
 	PxMaterial* GetDefaultMaterial() { return mMaterials["Default"]; }
 	std::unordered_map<std::string, PxMaterial*> GetMaterials() { return mMaterials; }
+
+	PxConvexMesh* CreateConvexMesh(PxU32 numVerts, const PxVec3* verts);
 private:
 	PxFoundation* mFoundation;
 	bool  recordMemoryAllocations = true;

@@ -11,18 +11,14 @@ void ConvexCollider::Start()
 {
 	Collider::Start();
 
-	MeshRenderer* mr = gameObject->GetComponent<MeshRenderer>();
-	if (mr == nullptr) return;
-
-	MeshResource* mesh = mr->GetMesh();
-	if (mesh == nullptr) return;
+	if (mMesh == nullptr) return;
 
 	std::vector<PxVec3> pxVertices;
-	int count = mesh->mVertices.size();
+	int count = mMesh->mVertices.size();
 
 	for (int i = 0; i < count; i++)
 	{
-		Vertex vertex = mesh->mVertices[i];
+		Vertex vertex = mMesh->mVertices[i];
 		pxVertices.push_back(PxVec3(
 			vertex.Position.x,
 			vertex.Position.y,
@@ -40,7 +36,7 @@ void ConvexCollider::Start()
 		Quaternion quatRot = gameObject->transform->rotation;
 		PxQuat rotation = PxQuat(quatRot.x, quatRot.y, quatRot.z, quatRot.w);
 		
-		PxMeshScale meshScale(PxVec3(1,1,1), rotation);
+		PxMeshScale meshScale(scale, rotation);
 		mConvexGeom.scale = meshScale;
 
 		mShape = GameManager::GetPhysicsManager()->GetPhysics()
@@ -112,6 +108,7 @@ json ConvexCollider::Serialize()
 
 	ret["id"] = GetId();
 	ret["name"] = "ConvexCollider";
+	ret["mesh handle"] = mMeshHandle.Serialize();
 
 	return ret;
 }
@@ -120,6 +117,11 @@ void ConvexCollider::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
+	if (j.contains("mesh handle"))
+	{
+		mMeshHandle.Deserialize(j["mesh handle"]);
+		mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+	}
 }
 
 void ConvexCollider::DrawWire()
@@ -128,23 +130,48 @@ void ConvexCollider::DrawWire()
 
 void ConvexCollider::SetPosition()
 {
-	PxTransform currentTransform = mShape->getLocalPose();
-	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
+	//PxTransform currentTransform = mShape->getLocalPose();
+	//mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
 }
 
 void ConvexCollider::SetRotation()
 {
-	PxTransform currentTransform = mShape->getLocalPose();
-	Vector3 rot = gameObject->transform->GetEulerAngles();
-	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
-	Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
-	PxQuat pxRot;
-	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
-	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+	//PxTransform currentTransform = mShape->getLocalPose();
+	//Vector3 rot = gameObject->transform->GetEulerAngles();
+	//mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
+	//Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
+	//PxQuat pxRot;
+	//memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
+	//mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
 
 void ConvexCollider::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
+	ImGui::Text("Mesh : ");
+
+	std::string widgetID = "NULL Mesh";
+	std::string name = "NULL Mesh";
+	if (mMesh)
+	{
+		mMesh->EditorRendering(EditorViewerType::DEFAULT);
+		name = Helper::ToString(mMesh->GetKey());
+		widgetID = mMesh->GetEID();
+		mMesh->EditorRendering(EditorViewerType::INSPECTOR);
+	}
+	else
+	{
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+		ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+		EDITOR_COLOR_POP(1);
+	}
+
+	if (EditorDragNDrop::ReceiveDragAndDropResourceData<MeshResource>(widgetID.c_str(), &mMeshHandle))
+	{
+		if (mMeshHandle.GetResourceType() == eResourceType::MeshResource)
+		{
+			mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+		}
+	}
 }

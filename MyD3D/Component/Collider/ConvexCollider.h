@@ -34,6 +34,8 @@ public:
     virtual void SetRotation();
 private:
     PxConvexMeshGeometry mConvexGeom;
+    MeshResource* mMesh;
+    ResourceHandle mMeshHandle;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 };

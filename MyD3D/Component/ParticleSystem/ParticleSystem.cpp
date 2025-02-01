@@ -191,7 +191,7 @@ void ParticleSystem::Deserialize(json& j)
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
 
-	if (j.contains("mesh handle"))
+	if (j.contains("texture handle"))
 	{
 		mTextureHandle.Deserialize(j["texture handle"]);
 

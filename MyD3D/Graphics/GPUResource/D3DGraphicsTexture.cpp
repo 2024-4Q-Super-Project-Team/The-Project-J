@@ -32,27 +32,26 @@ D3DGraphicsTexture2D::D3DGraphicsTexture2D(ID3D11Texture2D* _pTex)
 
 D3DGraphicsTexture2D::~D3DGraphicsTexture2D()
 {
-    //if (mTex)
-    //{
-    //    ULONG refCount = 0;
-    //    do {
-    //        refCount = mTex->Release();
-    //    } while (refCount > 0);
-    //    mTex = nullptr;
-    //}
+    if (mTex)
+    {
+        ULONG refCount = 0;
+        do {
+            refCount = mTex->Release();
+        } while (refCount > 0);
+        mTex = nullptr;
+    }
 }
 
 void D3DGraphicsTexture2D::Release()
 {
-    //if (mTex)
-    //{
-    //    ULONG refCount = 0;
-    //    do {
-    //        refCount = mTex->Release();
-    //    } while (refCount > 0);
-    //    mTex = nullptr;
-    //}
-    delete this;
+    if (mTex)
+    {
+        ULONG refCount = 0;
+        do {
+            refCount = mTex->Release();
+        } while (refCount > 0);
+        mTex = nullptr;
+    }
 }
 
 HRESULT D3DGraphicsTexture2D::Create()
@@ -109,6 +108,7 @@ D3DGraphicsRTV::D3DGraphicsRTV(D3DGraphicsTexture2D* _pTex2D, D3D11_RENDER_TARGE
 D3DGraphicsRTV::~D3DGraphicsRTV()
 {
     SAFE_RELEASE(mRTV);
+    SAFE_RELEASE(mRefTex);
 }
 
 void D3DGraphicsRTV::Release()
@@ -161,6 +161,7 @@ D3DGraphicsDSV::~D3DGraphicsDSV()
 void D3DGraphicsDSV::Release()
 {
     SAFE_RELEASE(mDSV);
+    SAFE_RELEASE(mRefTex);
     delete this;
 }
 
@@ -316,11 +317,11 @@ D3DGraphicsImg::~D3DGraphicsImg()
 void D3DGraphicsImg::Release()
 {
     SAFE_RELEASE(mSRV);
-    IDXGIDebug* debug;
-    if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
-        debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
-        debug->Release();
-    }
+    //IDXGIDebug* debug;
+    //if (SUCCEEDED(DXGIGetDebugInterface1(0, IID_PPV_ARGS(&debug)))) {
+    //    debug->ReportLiveObjects(DXGI_DEBUG_ALL, DXGI_DEBUG_RLO_DETAIL);
+    //    debug->Release();
+    //}
     delete this;
 }
 

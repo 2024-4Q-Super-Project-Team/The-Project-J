@@ -47,7 +47,7 @@ Light::Light(Object* _owner)
 
     mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
 
-    pTexture->mTex->Release();
+    pTexture->Release();
 }
 
 Light::~Light()

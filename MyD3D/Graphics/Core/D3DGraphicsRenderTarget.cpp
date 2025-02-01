@@ -112,6 +112,7 @@ D3DHwndRenderTarget::D3DHwndRenderTarget(HWND _hWnd)
             Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
             D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
             mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
+            pTexture->Release();
         }
     }
     {
@@ -179,33 +180,28 @@ void D3DHwndRenderTarget::EndDraw()
 
 void D3DHwndRenderTarget::Resize(UINT _width, UINT _height)
 {
-    //모든 참조 객체를 Release해야 ResizeBuffers가 에러를 안낸다.
+    mRenderTargetViews.front()->Reset();
+    // 모든 참조 객체를 Release해야 ResizeBuffers가 에러를 안낸다.
     SAFE_RELEASE_VECTOR(mRenderTargetViews);
-    
+    SAFE_RELEASE(mDepthStencilView);
     RECT sizeRect = {};
     if (GetClientRect(mHwnd, &sizeRect)) {
         mWidth = (UINT)(sizeRect.right - sizeRect.left);
         mHeight = (UINT)(sizeRect.bottom - sizeRect.top);
     }
 
-    mSwapChain->ResizeBuffers(
-        0,              // 버퍼 수 (0은 기존 값을 유지)
-        mWidth,       // 새 가로 크기
-        mHeight,      // 새 세로 크기
-        DXGI_FORMAT_UNKNOWN, // 기존 포맷 유지
-        0               // 플래그
-    );
+    Helper::HRT(mSwapChain->ResizeBuffers(
+        0,                      // 버퍼 수 (0은 기존 값을 유지)
+        mWidth,                 // 새 가로 크기
+        mHeight,                // 새 세로 크기
+        DXGI_FORMAT_UNKNOWN,    // 기존 포맷 유지
+        0                       // 플래그
+    ));
     { // 백버퍼 RTV 생성
         ID3D11Texture2D* pD3DTex2D = nullptr;
         Helper::HRT(mSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)&pD3DTex2D));
         D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(pD3DTex2D);
         mRenderTargetViews.push_back(new D3DGraphicsRTV(pTexture, nullptr));
-    }
-
-    // 뎁스뷰가 있으면 재생성
-    if (mDepthStencilView)
-    {
-        Helper::HRT(mDepthStencilView->Resize(_width, _height));
     }
 }
 

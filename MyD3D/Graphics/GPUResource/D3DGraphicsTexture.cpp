@@ -83,7 +83,7 @@ HRESULT D3DGraphicsTexture2D::Resize(UINT _width, UINT _height)
 }
 
 D3DResourceView::D3DResourceView(D3DGraphicsTexture2D* _pRefTex)
-    : mRefTex(_pRefTex)
+    : mRefTex(_pRefTex), mWidth(0), mHeight(0)
 {
 }
 

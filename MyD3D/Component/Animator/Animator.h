@@ -54,6 +54,13 @@ public:
     inline void SetFrame(FLOAT _val) { mDuration = _val; }
     inline void SetFremeRateScale(FLOAT _val) { mFrameRateScale = _val; }
 public:
+    bool IsPlaying();
+    bool IsLoop();
+    bool IsEnd();
+    inline const auto& GetActiveAnimationKey()      { return mActiveAnimationKey; }
+    inline const auto& GetActiveAnimationHandle()   { return mActiveAnimationHandle; }
+    inline const auto  GetActiveAnimationResource() { return mActiveAnimation; }
+public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
@@ -62,7 +69,8 @@ private:
     Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
     Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
 private:
-    ResourceHandle      mAnimationHandle;
+    std::wstring        mActiveAnimationKey;
+    ResourceHandle      mActiveAnimationHandle;
     AnimationResource*  mActiveAnimation;
     BOOL  isPlaying;
     BOOL  isLoop;

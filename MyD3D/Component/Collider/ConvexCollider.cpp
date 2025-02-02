@@ -7,6 +7,12 @@ ConvexCollider::ConvexCollider(Object* _owner) : Collider(_owner)
 	SetEID("ConvexCollider");
 }
 
+ConvexCollider::~ConvexCollider()
+{
+	if(mCmesh)
+		mCmesh->release();
+}
+
 void ConvexCollider::Start()
 {
 	Collider::Start();
@@ -27,8 +33,8 @@ void ConvexCollider::Start()
 
 	if (count > 0)
 	{
-		PxConvexMesh* cmesh = GameManager::GetPhysicsManager()->CreateConvexMesh(count, &pxVertices[0]);
-		mConvexGeom = PxConvexMeshGeometry(cmesh);
+		mCmesh = GameManager::GetPhysicsManager()->CreateConvexMesh(count, &pxVertices[0]);
+		mConvexGeom = PxConvexMeshGeometry(mCmesh);
 
 		Vector3 meshSize = gameObject->transform->scale;
 		PxVec3 scale = PxVec3(meshSize.x, meshSize.y, meshSize.y);

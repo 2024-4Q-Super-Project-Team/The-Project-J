@@ -4,7 +4,7 @@ class ConvexCollider : public Collider
 {
 public:
     explicit ConvexCollider(Object* _owner);
-    virtual ~ConvexCollider() {}
+    virtual ~ConvexCollider();
 public:
     virtual void Start() override;
     virtual void Tick() override;
@@ -40,6 +40,7 @@ private:
     PxConvexMeshGeometry mConvexGeom;
     MeshResource* mMesh;
     ResourceHandle mMeshHandle;
+    PxConvexMesh* mCmesh;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 };

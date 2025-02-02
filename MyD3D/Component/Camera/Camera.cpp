@@ -390,7 +390,7 @@ json Camera::Serialize()
 {
     json ret;
 
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["name"] = "Camera";
     ret["fov angle"] = mFovAngle;
     ret["near"] = mProjectionNear;

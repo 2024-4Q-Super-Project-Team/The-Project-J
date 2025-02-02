@@ -22,7 +22,7 @@ Animator::~Animator()
 
 void Animator::Start()
 {
-    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
+    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mActiveAnimationHandle);
 }
 
 void Animator::Tick()
@@ -83,13 +83,13 @@ void Animator::PostRender()
 
 void Animator::EditorUpdate()
 {
-    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mAnimationHandle);
+    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mActiveAnimationHandle);
 }
 
 void Animator::EditorGlobalUpdate()
 {
     gameObject->GetOwnerWorld()->
-        mNeedResourceHandleTable.insert(mAnimationHandle.GetParentkey());
+        mNeedResourceHandleTable.insert(mActiveAnimationHandle.GetParentkey());
 }
 
 void Animator::EditorRender()
@@ -100,12 +100,9 @@ void Animator::SetCurrentAnimation(ResourceHandle _handle)
 {
     if (_handle.GetResourceType() == eResourceType::AnimationResource)
     {
-        mAnimationHandle = _handle;
         auto pResource = ResourceManager::GetResource<AnimationResource>(_handle);
-        if (pResource)
-        {
-            mActiveAnimation = pResource;
-        }
+        mActiveAnimation = pResource;
+        mActiveAnimationHandle = _handle;
     }
 }
 
@@ -141,7 +138,27 @@ void Animator::SetCurrentAnimation(std::wstring _key)
     if (FIND_SUCCESS(itr, mAnimationTable))
     {
         SetCurrentAnimation(itr->second);
+        mActiveAnimationKey = _key;
     }
+}
+
+bool Animator::IsPlaying()
+{
+    return isPlaying == TRUE;
+}
+
+bool Animator::IsLoop()
+{
+    return isLoop == TRUE;
+}
+
+bool Animator::IsEnd()
+{
+    if (mActiveAnimation)
+    {
+        return mDuration == mActiveAnimation->GetTotalFrame();
+    }
+    return false;
 }
 
 json Animator::Serialize()
@@ -149,7 +166,8 @@ json Animator::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = "Animator";
-    ret["active animation handle"] = mAnimationHandle.Serialize();
+    ret["active animation key"] = Helper::ToString(mActiveAnimationKey);;
+    ret["active animation handle"] = mActiveAnimationHandle.Serialize();
     ret["frame rate scale"] = mFrameRateScale;
     ret["is playing"] = isPlaying;
     ret["is loop"] = isLoop;
@@ -169,8 +187,10 @@ json Animator::Serialize()
 void Animator::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
+    if (j.contains("active animation key"))
+        mActiveAnimationKey = Helper::ToWString(j["active animation key"].get<std::string>());
     if(j.contains("active animation handle"))
-        mAnimationHandle.Deserialize(j["active animation handle"]);
+        mActiveAnimationHandle.Deserialize(j["active animation handle"]);
     if (j.contains("frame rate scale"))
         mFrameRateScale = j["frame rate scale"].get<FLOAT>();
     if (j.contains("is playing"))
@@ -293,9 +313,9 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
             }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mAnimationHandle))
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mActiveAnimationHandle))
             {
-                SetCurrentAnimation(mAnimationHandle);
+                SetCurrentAnimation(mActiveAnimationHandle);
             }
         }
         ImGui::Separator();

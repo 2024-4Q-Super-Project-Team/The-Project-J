@@ -3,6 +3,14 @@
 
 class PlayerBehaviorCallback;
 
+enum class MovementFlag : uint8_t
+{
+    SlideOnPlane = 1 << 0,   // 평면에서 슬라이드
+    SlideOnSlope = 1 << 1    // 경사면에서 슬라이드
+};
+
+using MovementFlags  = uint8_t;
+
 class PlayerController : public Component
 {
 public:
@@ -62,10 +70,16 @@ private:
     //Movement
 	float mMoveSpeed = 10.f;
 	float mJumpSpeed = 0.13f;
-	float mGravity = 80.f;
+	float mGravity = 98.f;
     std::vector<std::string> mMaterials;
 
-    PxVec3 mMoveVelocity = PxVec3(0.f, 0.f, 0.f);
+
+    PxVec3 mPrevPosition;
+    PxVec3 mDisplacement = PxVec3(0.f, 0.f, 0.f);
+    PxVec3 mVelocity = PxVec3(0.f, 0.f, 0.f);
+    float mAcceleration = 20.f;
+
+    MovementFlags mMovementFlags;
 
     //Jump
     float mJumpInitElapsedTime = 0.f;
@@ -81,6 +95,7 @@ private:
     //Actor and Shapes
     Rigidbody* mRigid = nullptr;
     std::vector<Collider*> mColliders;
+
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

@@ -22,9 +22,9 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
-	//mCapsuleDesc.behaviorCallback = mIceBehavior;
+	mCapsuleDesc.behaviorCallback = mIceBehavior;
 	mCapsuleDesc.maxJumpHeight = 20.f;
-	//mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
 
@@ -77,6 +77,8 @@ void PlayerController::Start()
 	SetMaterial(mMaterials[mMaterialIdx]);
 
 	mCapsuleController->setUserData(this);
+
+	mPrevPosition = PxVec3(pos.x, pos.y, pos.z);
 }
 
 void PlayerController::Tick()
@@ -85,16 +87,16 @@ void PlayerController::Tick()
 
 void PlayerController::FixedUpdate()
 {
-}
+	//시간
+	float t = GameManager::GetFixedUpdateTick();
 
-void PlayerController::PreUpdate()
-{
-}
+	//현재 속도 계산 
+	Vector3 pos = gameObject->transform->position;
+	PxVec3 nowPosition = PxVec3(pos.x, pos.y, pos.z);
+	mVelocity = nowPosition - mPrevPosition;
 
-void PlayerController::Update()
-{
+	//방향 계산(입력)
 	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
-	//입력에 따른 move 
 
 	if (mJumpState == eJumpState::None || (mJumpInputElapsedTime >= mJumpInputDuration))
 	{
@@ -118,10 +120,38 @@ void PlayerController::Update()
 		if (!moveDirection.isZero())
 			moveDirection.normalize();
 
-		//이동
-		mMoveVelocity = moveDirection * mMoveSpeed * Time::GetScaledDeltaTime();
+		if(!(mMovementFlags & static_cast<uint8_t>(MovementFlag::SlideOnPlane)))
+		{
+			mDisplacement = moveDirection * mMoveSpeed * t;
+		}
 
+		//if (mMovementFlags & static_cast<uint8_t>(MovementFlag::SlideOnPlane))
+		{
+			mDisplacement.x = mVelocity.x * t + (1.f / 2.f) * mAcceleration * moveDirection.x * t * t;
+			mDisplacement.z = mVelocity.z * t + (1.f / 2.f) * mAcceleration * moveDirection.z * t * t;
+			
+			mVelocity.x *= 0.9f;
+			mVelocity.z *= 0.9f;
+		}
+
+		//중력
+		mDisplacement.y = mVelocity.y * t - (1.f / 2.f) * mGravity * t * t;
+		
 		mJumpInputElapsedTime = 0.f;
+
+
+		//바닥 감지 
+		Vector3 objPos = gameObject->transform->position;
+		PxVec3 pxRayOrigin(objPos.x, objPos.y, objPos.z);
+		PxVec3 pxRayDirection(0, -1, 0);
+		float distance = 0.1f;
+
+		PxRaycastBuffer hitBuffer;
+		if (GameManager::GetCurrentWorld()->GetPxScene()
+			->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer));
+
+		if (hitBuffer.hasAnyHits())
+			mDisplacement.y = 0;
 
 	}
 
@@ -129,7 +159,7 @@ void PlayerController::Update()
 	if (mJumpState == eJumpState::None && Input::IsKeyHold(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
 	{
 		mJumpState = eJumpState::InitJump;
-		mJumpInitElapsedTime += Time::GetScaledDeltaTime();
+		mJumpInitElapsedTime += t;
 	}
 	if (mJumpState == eJumpState::InitJump && Input::IsKeyUp(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
 	{
@@ -142,24 +172,28 @@ void PlayerController::Update()
 
 	if (mJumpState == eJumpState::Jumping)
 	{
-		mJumpElapsedTime += Time::GetScaledDeltaTime();
-		mJumpInputElapsedTime += Time::GetScaledDeltaTime();
+		mJumpElapsedTime += t;
+		mJumpInputElapsedTime += t;
 		float t = mJumpElapsedTime / mJumpDuration;
-		mMoveVelocity.y = mJumpSpeed * (1-t) ;
+		mDisplacement.y = mJumpSpeed * (1 - t);
 
 		if (t >= 1.0f) {
 			mJumpState = eJumpState::None;
-			mMoveVelocity.y = 0.f;
+			mDisplacement.y = 0.f;
 			mJumpElapsedTime = 0.f;
 			mJumpInputElapsedTime = 0.f;
 		}
 	}
+	mCapsuleController->move(mDisplacement, 0.01f, t, mCharacterControllerFilters);
 
-	//중력 
-	mMoveVelocity.y -= mGravity * Time::GetScaledDeltaTime();
+}
 
-	mCapsuleController->move(mMoveVelocity, 0.01f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
+void PlayerController::PreUpdate()
+{
+}
 
+void PlayerController::Update()
+{
 
 }
 
@@ -364,15 +398,14 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 	ImGui::Text("JumpSpeed : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "JumpSpeed").c_str(), &mJumpSpeed, 0.1f, 0.f, 10.f);
 
-	ImGui::Text("Jump Duration : "); ImGui::SameLine;
-	ImGui::DragFloat((uid + "Jump Duration").c_str(), &mJumpDuration, 0.01f, 0.01f, 20.f);
-
-
 	ImGui::Text("Gravity : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
 
-
+	ImGui::Text("Mateiral : "); ImGui::SameLine;
 	
+	ImGui::Text(u8"Displacement(디버깅용) : "); ImGui::SameLine;
+	ImGui::Text("%.4f,  %.4f,  %.4f ", mDisplacement.x, mDisplacement.y, mDisplacement.z); ImGui::SameLine;
+
 
 	ImGui::Separator();
 }

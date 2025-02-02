@@ -22,9 +22,9 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
-	mCapsuleDesc.behaviorCallback = mIceBehavior;
+	//mCapsuleDesc.behaviorCallback = mIceBehavior;
 	mCapsuleDesc.maxJumpHeight = 20.f;
-	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
+	//mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
 
@@ -364,10 +364,14 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 	ImGui::Text("JumpSpeed : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "JumpSpeed").c_str(), &mJumpSpeed, 0.1f, 0.f, 10.f);
 
+	ImGui::Text("Jump Duration : "); ImGui::SameLine;
+	ImGui::DragFloat((uid + "Jump Duration").c_str(), &mJumpDuration, 0.01f, 0.01f, 20.f);
+
+
 	ImGui::Text("Gravity : "); ImGui::SameLine;
 	ImGui::DragFloat((uid + "Gravity").c_str(), &mGravity, 0.1f, 0.f, 20.f);
 
-	ImGui::Text("Mateiral : "); ImGui::SameLine;
+
 	
 
 	ImGui::Separator();

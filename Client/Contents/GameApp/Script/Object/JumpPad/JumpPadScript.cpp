@@ -24,6 +24,8 @@ json JumpPadScript::Serialize()
 {
 	json ret = MonoBehaviour::Serialize();
 
+	ret["id"] = GetId();
+	ret["name"] = "JumpPadScript";
 	ret["jump force"] = mJumpForce.val;
 	
 	return ret;
@@ -33,5 +35,8 @@ void JumpPadScript::Deserialize(json& j)
 {
 	MonoBehaviour::Deserialize(j);
 
-	mJumpForce.val = j["jump force"].get<float>();
+	if (j.contains("jump force"))
+	{
+		mJumpForce.val = j["jump force"].get<float>();
+	}
 }

@@ -57,6 +57,9 @@ public:
     bool IsPlaying();
     bool IsLoop();
     bool IsEnd();
+    inline const auto& GetActiveAnimationKey()      { return mActiveAnimationKey; }
+    inline const auto& GetActiveAnimationHandle()   { return mActiveAnimationHandle; }
+    inline const auto  GetActiveAnimationResource() { return mActiveAnimation; }
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);

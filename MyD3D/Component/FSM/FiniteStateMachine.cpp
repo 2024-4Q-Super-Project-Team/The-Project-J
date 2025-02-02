@@ -111,7 +111,7 @@ json FiniteStateMachine::Serialize()
 {
 	json ret;
 	ret["id"] = GetId();
-	ret["name"] = "MeshRenderer";
+	ret["name"] = "FiniteStateMachine";
 	return ret;
 }
 

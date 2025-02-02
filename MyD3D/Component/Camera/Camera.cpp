@@ -92,7 +92,8 @@ void Camera::Render()
 
 void Camera::Draw(Camera* _camera)
 {
-    _camera->PushWireList(this);
+    if(GameManager::GetRunType() == eEngineRunType::EDITOR_MODE)
+        _camera->PushWireList(this);
 }
 
 void Camera::PostRender()

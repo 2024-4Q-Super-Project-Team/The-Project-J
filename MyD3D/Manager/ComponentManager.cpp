@@ -3,9 +3,10 @@
 
 bool ComponentManager::Initialize()
 {
-	REGISTER_COMPONENT(Animator);
 	REGISTER_COMPONENT(Camera);
 	REGISTER_COMPONENT(Light);
+	REGISTER_COMPONENT(Animator);
+	REGISTER_COMPONENT(FiniteStateMachine);
 	REGISTER_COMPONENT(MeshRenderer);
 	REGISTER_COMPONENT(SkinnedMeshRenderer);
 	REGISTER_COMPONENT(AudioSource);
@@ -13,9 +14,12 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(Rigidbody);
 	REGISTER_COMPONENT(BoxCollider);
 	REGISTER_COMPONENT(SphereCollider);
+	REGISTER_COMPONENT(ConvexCollider);
 	REGISTER_COMPONENT(PlayerController);
 	REGISTER_COMPONENT(ParticleSystem);
-
+	REGISTER_COMPONENT(Canvas);
+	REGISTER_COMPONENT(UISprite);
+	REGISTER_COMPONENT(UIText);
 
 	return true;
 }

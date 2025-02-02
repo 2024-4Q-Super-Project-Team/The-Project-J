@@ -129,8 +129,6 @@ void MonoBehaviour::Destroy(Object* _object)
 	_object->SetDestroy();
 }
 
-// JSON_TODO :
-// 모노비헤이어 시리얼라이즈 이거 맞나요? 진짜 몰라서 물어봄. 확인점
 json MonoBehaviour::Serialize()
 {
 	json ret;

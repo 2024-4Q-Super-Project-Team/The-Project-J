@@ -16,11 +16,6 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 	mBS.Radius = mInitialRadius;
 	mRadius = mInitialRadius;
 
-	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
-	for (auto& material : materials)
-	{
-		mMaterials.push_back(material.first.c_str());
-	}
 }
 
 void SphereCollider::Start()

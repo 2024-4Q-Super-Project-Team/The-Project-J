@@ -30,8 +30,7 @@ void Engine::Entity::SetDestroy()
 	if (mState != EntityState::Destroy)
 	{
 		mState = EntityState::Destroy;
-		if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
-			OnDestroy();
+		OnDestroy();
 	}
 }
 
@@ -44,7 +43,7 @@ void Engine::Entity::SetCreate()
 		mState = EntityState::Create;
 	}
 	// 근데 처음 만들어진거면 어차피 Create상태이다. 따라서 콜백을 호출해준다.
-	else if(GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+	else 
 	{
 		OnCreate();
 	}

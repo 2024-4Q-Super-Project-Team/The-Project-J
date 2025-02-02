@@ -45,7 +45,13 @@ BOOL EditorDragNDrop::ReceiveDragAndDropObjectData(const char* _uid, Object** _p
     {
         if (ImGui::IsMouseReleased(ImGuiMouseButton_Left))
         {
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenBlockedByActiveItem))
+            if (ImGui::IsItemHovered(
+                ImGuiHoveredFlags_AllowWhenBlockedByActiveItem 
+                //ImGuiHoveredFlags_AllowWhenOverlapped  |
+                //ImGuiHoveredFlags_AllowWhenDisabled |//비활성화된 요소(버튼 등) 위에서도 감지.
+                //ImGuiHoveredFlags_AllowWhenOverlappedByItem | //다른 아이템이 겹쳐져 있어도 감지.
+                //ImGuiHoveredFlags_AllowWhenOverlappedByWindow | //다른 윈도우가 위에 덮여 있어도 감지.
+            ))
             {
                 *_pObject = EditorDragNDrop::mItemState.mObjectPtr;
                 EditorDragNDrop::mItemState.Clear();
@@ -54,14 +60,6 @@ BOOL EditorDragNDrop::ReceiveDragAndDropObjectData(const char* _uid, Object** _p
             }
         }
     }
-    if (isDragging == TRUE && ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
-    {
-        if (_pObject)
-        {
-            
-        }
-    }
     ImGui::PopID();
-
     return isOk;
 }

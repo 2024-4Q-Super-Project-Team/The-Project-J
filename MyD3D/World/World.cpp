@@ -15,6 +15,7 @@ PxFilterFlags CustomFilterShader(
 {
     pairFlags = PxPairFlag::eCONTACT_DEFAULT;
     pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;
+    pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND; //collision start/exit 판별위해.
 
     return PxFilterFlag::eDEFAULT;
 }
@@ -32,13 +33,15 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = CustomFilterShader;
-    //sceneDesc.simulationEventCallback = mEventCallback;
+    sceneDesc.simulationEventCallback = GameManager::GetPhysicsManager()->GetCallback();
         // GPU 가속 설정
-    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS;
+    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS | PxSceneFlag::eENABLE_PCM;
     sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
+    
     sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
 
     mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
+
     mControllerManager = PxCreateControllerManager(*mPxScene);
 
 }
@@ -47,6 +50,13 @@ World::~World()
 {
     SAFE_DELETE_VECTOR(mObjectArray);
     SAFE_DELETE(mPickingRay);
+
+    if (mControllerManager)
+    {
+        mControllerManager->release();
+        mControllerManager = nullptr;
+    }
+
     if (mPxScene)
     {
         mPxScene->release();
@@ -54,6 +64,8 @@ World::~World()
     }
     if (Editor::InspectorViewer::IsFocusObject(this))
         Editor::InspectorViewer::SetFocusObject(nullptr);
+
+
 }
 
 void World::Start()

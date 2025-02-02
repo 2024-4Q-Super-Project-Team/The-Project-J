@@ -56,6 +56,14 @@ void SkinnedMeshRenderer::PreRender()
 
 void SkinnedMeshRenderer::Render()
 {
+    if (mMaterial)
+    {
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
+    }
 }
 
 void SkinnedMeshRenderer::PostRender()
@@ -78,6 +86,14 @@ void SkinnedMeshRenderer::EditorGlobalUpdate()
 
 void SkinnedMeshRenderer::EditorRender()
 {
+    if (mMaterial)
+    {
+        for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
+        {
+            BOOL hasMap = mMaterial->mMaterialMapTexture[type] ? TRUE : FALSE;
+            mMatCBuffer.SetHasingMap((eMaterialMapType)type, hasMap);
+        }
+    }
     if (mMesh && mRootBone)
     {
         // 메쉬나 루트 본이 바뀐부분이 있으면 갱신
@@ -326,6 +342,7 @@ json SkinnedMeshRenderer::Serialize()
 
     ret["mesh handle"] = mMeshHandle.Serialize();
     ret["material handle"] = mMaterialHandle.Serialize();
+    ret["cast shadow"] = isCastShadow;
 
     json mprop;
     ColorF diffuse = mMatCBuffer.MatProp.DiffuseRGB;
@@ -362,6 +379,9 @@ void SkinnedMeshRenderer::Deserialize(json& j)
         SetMaterial(mMaterial = ResourceManager::GetResource<MaterialResource>(mMaterialHandle));
     }
 
+    if (j.contains("cast shadow"))
+        isCastShadow = j["cast shadow"].get<bool>();
+
     if (j.contains("Property"))
     {
         json propJson = j["property"];
@@ -394,40 +414,53 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     }
 }
 
-#define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \
-if (mMaterial->mMaterialMapTexture[typeIndex]) \
-{ \
-    bool UseMap = (bool)mMatCBuffer.GetUsingMap(typeEnum);\
-    ImGui::Separator();\
-    if (ImGui::Checkbox(("Using " + std::string(label) + uid + std::to_string(typeIndex)).c_str(), &UseMap)) {\
-        mMatCBuffer.SetUsingMap(typeEnum, UseMap);\
-    } \
-    if (ImGui::TreeNodeEx((std::string(label) + mMaterial->mMaterialMapTexture[typeIndex]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) { \
-        mMaterial->mMaterialMapTexture[typeIndex]->EditorRendering(EditorViewerType::INSPECTOR); \
-        ImGui::TreePop();\
-    }\
-}\
-
 void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
 {
     std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
 
-    if (mRootBone)
-        ImGui::Text(Helper::ToString(mRootBone->gameObject->GetName()).c_str());
-    else
-        ImGui::Text("NULL RootBone");
-
+    //////////////////////////////////////////////////////////////////////
+    // RootBone
+    //////////////////////////////////////////////////////////////////////
+    {
+        std::string widgetID = "NULL RootBone";
+        if (mRootBone)
+        {
+            widgetID = Helper::ToString(mRootBone->gameObject->GetName());
+            auto flags = ImGuiSelectableFlags_AllowDoubleClick;
+            ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_RESOURCE);
+            ImGui::Selectable((widgetID).c_str(), false, flags);
+            EDITOR_COLOR_POP(1);
+            if (ImGui::IsItemHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Left))
+            {
+                Editor::InspectorViewer::SetFocusObject(mRootBone->gameObject);
+                Editor::GuizmoManipulater::SetFocusObjedct(mRootBone->gameObject);
+            }
+            if (ImGui::IsItemHovered() && Input::IsMouseUp(Mouse::RIGHT)) 
+            {
+                SetRootBone(nullptr);
+            }
+        }
+        else
+        {
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+            ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
+        }
+        Object* receiveObject = nullptr;
+        if (EditorDragNDrop::ReceiveDragAndDropObjectData(widgetID.c_str(), &receiveObject))
+        {
+            SetRootBone(receiveObject->transform);
+        }
+    }
     ImGui::Separator();
     //////////////////////////////////////////////////////////////////////
     // Mesh
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Mesh";
-        std::string name = "NULL Mesh";
         if (mMesh)
         {
             mMesh->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMesh->GetKey());
             widgetID = mMesh->GetEID();
         }
         else
@@ -447,46 +480,44 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
     //////////////////////////////////////////////////////////////////////
     {
         std::string widgetID = "NULL Material";
-        std::string name = "NULL Material";
 
         if (mMaterial)
         {
             mMaterial->EditorRendering(EditorViewerType::DEFAULT);
-            name = Helper::ToString(mMaterial->GetKey());
             widgetID = mMaterial->GetEID();
             if (ImGui::TreeNodeEx(("Material Porperties" + uid).c_str(), EDITOR_FLAG_RESOURCE))
             {
                for (int type = 0; type < MATERIAL_MAP_SIZE; ++type)
-                {
+               {
                     eMaterialMapType mapType = (eMaterialMapType)type;
-
                     switch (mapType)
                     {
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Diffuse Map");
+                    case eMaterialMapType::DIFFUSE:
+                        ShowMaerialProperties(mapType, "Diffuse Map");
                         break;
                     case eMaterialMapType::SPECULAR:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Specular Map");
+                        ShowMaerialProperties(mapType, "Specular Map");
                         break;
                     case eMaterialMapType::AMBIENT:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Ambient Map");
+                        ShowMaerialProperties(mapType, "Ambient Map");
                         break;
                     case eMaterialMapType::EMISSIVE:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Emissive Map");
+                        ShowMaerialProperties(mapType, "Emissive Map");
                         break;
                     case eMaterialMapType::NORMAL:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Normal Map");
+                        ShowMaerialProperties(mapType, "Normal Map");
                         break;
                     case eMaterialMapType::ROUGHNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Roughness Map");
+                        ShowMaerialProperties(mapType, "Roughness Map");
                         break;
                     case eMaterialMapType::OPACITY:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Opacity Map");
+                        ShowMaerialProperties(mapType, "Opacity Map");
                         break;
                     case eMaterialMapType::METALNESS:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "Metalness Map");
+                        ShowMaerialProperties(mapType, "Metalness Map");
                         break;
                     case eMaterialMapType::AMBIENT_OCCLUSION:
-                        USEMAP_MATERIAL_MAP_RESUORCE(type, mapType, "AmbientOcclusion Map");
+                        ShowMaerialProperties(mapType, "AmbientOcclusion Map");
                         break;
                     case eMaterialMapType::SIZE:
                         break;
@@ -519,4 +550,23 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
         ImGui::TreePop();
     }
     EDITOR_COLOR_POP(1);
+}
+
+void SkinnedMeshRenderer::ShowMaerialProperties(eMaterialMapType _type, const char* _label)
+{
+    std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
+    if (mMaterial->mMaterialMapTexture[(UINT)_type])
+    { 
+        bool UseMap = (bool)mMatCBuffer.GetUsingMap(_type);
+        ImGui::Separator();
+        if (ImGui::Checkbox(("Using " + std::string(_label) + uid + std::to_string((UINT)_type)).c_str(), &UseMap)) {
+            
+                mMatCBuffer.SetUsingMap(_type, UseMap);
+        } 
+        if (ImGui::TreeNodeEx((std::string(_label) + mMaterial->mMaterialMapTexture[(UINT)_type]->GetEID() + uid).c_str(), EDITOR_FLAG_RESOURCE)) 
+        {
+                mMaterial->mMaterialMapTexture[(UINT)_type]->EditorRendering(EditorViewerType::INSPECTOR);
+                ImGui::TreePop();
+        }
+    }
 }

@@ -43,12 +43,12 @@ using namespace DirectX;
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 //Imguizmo
-#include "imguizmo\ImGuizmo.h"
-#include "imguizmo\ImSequencer.h"
-#include "imguizmo\ImZoomSlider.h"
-#include "imguizmo\ImCurveEdit.h"
-#include "imguizmo\GraphEditor.h"
-#include "imguizmo\ImGradient.h"
+#include "ThirdParty/imguizmo\ImGuizmo.h"
+#include "ThirdParty/imguizmo\ImSequencer.h"
+#include "ThirdParty/imguizmo\ImZoomSlider.h"
+#include "ThirdParty/imguizmo\ImCurveEdit.h"
+#include "ThirdParty/imguizmo\GraphEditor.h"
+#include "ThirdParty/imguizmo\ImGradient.h"
 // SimpleMath
 #include <directxtk/SimpleMath.h>
 using namespace DirectX::SimpleMath;
@@ -61,10 +61,12 @@ using namespace DirectX::SimpleMath;
 #include "physx/cudamanager\PxCudaContextManager.h"
 #include "physx/cudamanager/PxCudaContext.h"
 using namespace physx;
-
 //json
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
+// Xinput
+#include <Xinput.h>
+#pragma comment(lib, "xinput.lib")
 
 // UI Text
 #include <tchar.h>
@@ -107,4 +109,4 @@ using json = nlohmann::json;
 #include "Manager/GameManager.h"
 #include "Application/Application.h"
 #include "Save/SaveManager.h"
-#include "UIManager/UIManager.h"
+#include "Manager/UIManager.h"

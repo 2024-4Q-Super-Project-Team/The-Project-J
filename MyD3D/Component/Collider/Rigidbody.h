@@ -24,7 +24,7 @@ public:
 public:
     //PxRigidActor 설정하는 함수들
     void AddShape(PxShape* _shape) { mRigidActor->attachShape(*_shape); }
-
+    void SetPxActor(PxRigidActor* _actor) { mRigidActor = _actor; }
 public:
     void SetMaterial(std::string _name); 
 
@@ -32,6 +32,8 @@ public:
     void SetIsKinematic(bool b);
     void SetDisableGravity(bool b);
     void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
+public:
+    Object* GetOwner() { return gameObject; }
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
@@ -41,15 +43,13 @@ private:
     bool mIsKinematic = false;
     bool mDisableGravity = false;
     float mMass = 1.f;
-    
 
     bool mFreezePosition[3];
     bool mFreezeRotation[3];
-    
-
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 
     friend class Collider;
+    friend class PlayerController;
 };
 

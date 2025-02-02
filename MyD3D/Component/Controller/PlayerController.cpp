@@ -4,12 +4,15 @@
 #include "World/World.h"
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
+#include "Component/Controller/PlayerBehaviorCallback.h"
 
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
 {
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
+
+	mIceBehavior = new PlayerBehaviorCallback;
 
 	mCapsuleDesc.height = mHeight;
 	mCapsuleDesc.radius = mRadius;
@@ -19,6 +22,9 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = mStepOffset;
+	mCapsuleDesc.behaviorCallback = mIceBehavior;
+	mCapsuleDesc.maxJumpHeight = 20.f;
+	mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
 
@@ -32,11 +38,35 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	{
 		mStrKeys.push_back(key.first);
 	}
+
+	//for Trigger/Contact Event
+	//Inner Rigidbody
+	mRigid = new Rigidbody(gameObject);
+	mCapsuleController->getActor()->userData = mRigid;
+	mRigid->SetPxActor(mCapsuleController->getActor());
+
+	//Inner Shapes
+	PxShape* shapes[10];
+	PxU32 shapeSize = mCapsuleController->getActor()->getShapes(shapes, 10);
+	for (int i = 0; i < shapeSize; i++) {
+		Collider* col = new Collider(gameObject);
+		shapes[i]->userData = col;
+		mColliders.push_back(col);
+	}
 }
 
 PlayerController::~PlayerController()
 {
 	mCapsuleController->release();
+
+	mRigid->mRigidActor = nullptr;
+	SAFE_DELETE(mRigid);
+	for (Collider* col : mColliders)
+	{
+		col->mShape = nullptr;
+		SAFE_DELETE(col);
+	}
+	SAFE_DELETE(mIceBehavior);
 }
 
 void PlayerController::Start()
@@ -45,6 +75,10 @@ void PlayerController::Start()
 	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 
 	SetMaterial(mMaterials[mMaterialIdx]);
+
+	mCapsuleController->setUserData(this);
+
+	mPrevPosition = PxVec3(pos.x, pos.y, pos.z);
 }
 
 void PlayerController::Tick()
@@ -53,6 +87,105 @@ void PlayerController::Tick()
 
 void PlayerController::FixedUpdate()
 {
+	//시간
+	float t = GameManager::GetFixedUpdateTick();
+
+	//현재 속도 계산 
+	Vector3 pos = gameObject->transform->position;
+	PxVec3 nowPosition = PxVec3(pos.x, pos.y, pos.z);
+	mVelocity = nowPosition - mPrevPosition;
+
+	//방향 계산(입력)
+	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
+
+	if (mJumpState == eJumpState::None || (mJumpInputElapsedTime >= mJumpInputDuration))
+	{
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, 1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+		{
+			moveDirection += PxVec3(0, 0, -1);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+		{
+			moveDirection += PxVec3(-1, 0, 0);
+		}
+		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+		{
+			moveDirection += PxVec3(1, 0, 0);
+		}
+
+		if (!moveDirection.isZero())
+			moveDirection.normalize();
+
+		if(!(mMovementFlags & static_cast<uint8_t>(MovementFlag::SlideOnPlane)))
+		{
+			mDisplacement = moveDirection * mMoveSpeed * t;
+		}
+
+		//if (mMovementFlags & static_cast<uint8_t>(MovementFlag::SlideOnPlane))
+		{
+			mDisplacement.x = mVelocity.x * t + (1.f / 2.f) * mAcceleration * moveDirection.x * t * t;
+			mDisplacement.z = mVelocity.z * t + (1.f / 2.f) * mAcceleration * moveDirection.z * t * t;
+			
+			mVelocity.x *= 0.9f;
+			mVelocity.z *= 0.9f;
+		}
+
+		//중력
+		mDisplacement.y = mVelocity.y * t - (1.f / 2.f) * mGravity * t * t;
+		
+		mJumpInputElapsedTime = 0.f;
+
+
+		//바닥 감지 
+		Vector3 objPos = gameObject->transform->position;
+		PxVec3 pxRayOrigin(objPos.x, objPos.y, objPos.z);
+		PxVec3 pxRayDirection(0, -1, 0);
+		float distance = 0.1f;
+
+		PxRaycastBuffer hitBuffer;
+		if (GameManager::GetCurrentWorld()->GetPxScene()
+			->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer));
+
+		if (hitBuffer.hasAnyHits())
+			mDisplacement.y = 0;
+
+	}
+
+	//점프
+	if (mJumpState == eJumpState::None && Input::IsKeyHold(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+	{
+		mJumpState = eJumpState::InitJump;
+		mJumpInitElapsedTime += t;
+	}
+	if (mJumpState == eJumpState::InitJump && Input::IsKeyUp(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
+	{
+		//mJumpInitElapsedTime에 따라 mJumpSpeed를 조절. 
+		//TODO 
+
+		mJumpInitElapsedTime = 0.f;
+		mJumpState = eJumpState::Jumping;
+	}
+
+	if (mJumpState == eJumpState::Jumping)
+	{
+		mJumpElapsedTime += t;
+		mJumpInputElapsedTime += t;
+		float t = mJumpElapsedTime / mJumpDuration;
+		mDisplacement.y = mJumpSpeed * (1 - t);
+
+		if (t >= 1.0f) {
+			mJumpState = eJumpState::None;
+			mDisplacement.y = 0.f;
+			mJumpElapsedTime = 0.f;
+			mJumpInputElapsedTime = 0.f;
+		}
+	}
+	mCapsuleController->move(mDisplacement, 0.01f, t, mCharacterControllerFilters);
+
 }
 
 void PlayerController::PreUpdate()
@@ -61,33 +194,7 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
-	//입력에 따른 move 
 
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(0, 0, 1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(0, 0, -1);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(-1, 0, 0);
-	}
-	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
-	{
-		mMoveDirection += PxVec3(1, 0, 0);
-	}
-
-	if (Input::IsKeyDown(Key::keyMap[mStrKeys[mJumpKeyIdx]]))
-	{
-		mMoveDirection.y = mJumpSpeed;
-	}
-	
-	mMoveDirection *= mMoveSpeed;
-	mMoveDirection.y -= mGravity * Time::GetScaledDeltaTime();
-	mCapsuleController->move(mMoveDirection, 0.001, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 }
 
 void PlayerController::PostUpdate()
@@ -159,6 +266,8 @@ json PlayerController::Serialize()
 
 	ret["material"] = mMaterialIdx;
 
+	ret["jump duration"] = mJumpDuration;
+
 	return ret;
 }
 
@@ -197,6 +306,9 @@ void PlayerController::Deserialize(json& j)
 
 	if (j.contains("material"))
 		mMaterialIdx = j["material"].get<int>();
+
+	if (j.contains("jump duration"))
+		mJumpDuration = j["jump duration"].get<float>();
 }
 
 void PlayerController::SetMaterial(std::string _name)
@@ -249,7 +361,7 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 		mCapsuleController->setRadius(mRadius);
 	}
 	ImGui::Text("ContactOffset : "); ImGui::SameLine;
-	if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 1.0f))
+	if (ImGui::DragFloat((uid + "ContactOffset").c_str(), &mContactOffset, 0.01f, 0.1f, 100.0f))
 	{
 		mCapsuleController->setContactOffset(mContactOffset);
 	}
@@ -291,6 +403,14 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 
 	ImGui::Text("Mateiral : "); ImGui::SameLine;
 	
+	ImGui::Text(u8"Displacement(디버깅용) : "); ImGui::SameLine;
+	ImGui::Text("%.4f,  %.4f,  %.4f ", mDisplacement.x, mDisplacement.y, mDisplacement.z); ImGui::SameLine;
+
 
 	ImGui::Separator();
+}
+void PlayerController::StartJump()
+{
+	mJumpInitElapsedTime = 0.f;
+	mJumpState = eJumpState::Jumping;
 }

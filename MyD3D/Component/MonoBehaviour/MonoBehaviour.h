@@ -2,6 +2,7 @@
 #include "Component/Component.h"
 
 class PrefabResource;
+class Rigidbody;
 class Collider;
 class Object;
 class MonoBehaviour;
@@ -24,12 +25,12 @@ public:
     virtual void Update() override {}
     virtual void PostUpdate() override {}
     virtual void PreRender() override {}
-    virtual void Render() override {}
-    virtual void Draw(Camera* _camera) override {}
+    virtual void Render() override final {}
+    virtual void Draw(Camera* _camera) override final {}
     virtual void PostRender() override {}
 	// Editor Only
-	virtual void EditorUpdate() override {}
-	virtual void EditorRender() override {}
+	virtual void EditorUpdate() override final {};
+	virtual void EditorRender() override final {}
 
 protected: // MonoBehaviour메소드==================
 	// ===========================================
@@ -64,9 +65,13 @@ public:
 	// 
 	// CallBack함수===============================
 
-	virtual void _CALLBACK OnCollisionEnter(Collider* _origin, Collider* _destination) {};
-	virtual void _CALLBACK OnCollisionStay(Collider* _origin, Collider* _destination) {};
-	virtual void _CALLBACK OnCollisionExit(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) {};
+	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) {};
+	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) {};
+
+	virtual void _CALLBACK OnTriggerEnter(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerStay(Collider* _origin, Collider* _destination) {};
+	virtual void _CALLBACK OnTriggerExit(Collider* _origin, Collider* _destination) {};
 
 	virtual void _CALLBACK OnMouseEnter() {};
 	virtual void _CALLBACK OnMouseStay() {};

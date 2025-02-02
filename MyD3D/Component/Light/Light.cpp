@@ -7,11 +7,9 @@
 
 #include "World/World.h"
 
-std::queue<D3DBitmapRenderTarget*>  Light::mShadowRenderTargetPool;
-
 Light::Light(Object* _owner)
     : Component(_owner)
-	, mShadowResolution(4096.0f)
+    , mShadowResolution(4096.0f)
     , mShadowDistance(4096.0f)
     , mShadowViewport(nullptr)
     , mShadowRenderTarget(nullptr)
@@ -20,40 +18,12 @@ Light::Light(Object* _owner)
     mType = eComponentType::LIGHT;
     SetLightType(eLightType::Direction);
     mLightProp.Direction = Vector4(0, 0, 1, 0);
-    // Viewport 생성
-    mShadowViewport = new D3DGraphicsViewport(0.0f, 0.0f, mShadowResolution, mShadowResolution);
-    // 렌더타겟 생성
-    mShadowRenderTarget = new D3DBitmapRenderTarget(mShadowResolution, mShadowResolution);
-
-    // Depth Stencil Texture 생성
-    D3D11_TEXTURE2D_DESC TexDesc = D3DGraphicsDefault::DefaultTextureDesc;
-    TexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
-    TexDesc.Width = mShadowResolution;
-    TexDesc.Height = mShadowResolution;
-    TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-    D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC DSVDesc = {};
-    DSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    D3DGraphicsDSV* ShadowDSV = new D3DGraphicsDSV(pTexture, &DSVDesc);
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
-    SRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
-    SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    SRVDesc.Texture2D.MipLevels = 1;
-    D3DGraphicsSRV* ShadowSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
-    ShadowSRV->SetBindStage(eShaderStage::PS);
-
-    mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
-
-    pTexture->mTex->Release();
+    AllocShadowMap();
 }
 
 Light::~Light()
 {
-    SAFE_DELETE(mShadowRenderTarget);
-    SAFE_DELETE(mShadowViewport);
+    FreeShadowMap();
 }
 
 void Light::Start()
@@ -90,6 +60,10 @@ void Light::Render()
 
 void Light::Draw(Camera* _camera)
 {
+    if (!mShadowRenderTarget && !mShadowViewport)
+    {
+        AllocShadowMap();
+    }
     // 그림자 계산 수행
 	// 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
     if (mLightProp.UseShadow == TRUE && mShadowViewport && mShadowRenderTarget)
@@ -160,8 +134,65 @@ void Light::EditorRender()
 {
 }
 
-void Light::UpdateLightProperty()
+void _CALLBACK Light::OnEnable()
 {
+    AllocShadowMap();
+    return void _CALLBACK();
+}
+
+void _CALLBACK Light::OnDisable()
+{
+    FreeShadowMap();
+    return void _CALLBACK();
+}
+
+void _CALLBACK Light::OnDestroy()
+{
+
+    return void _CALLBACK();
+}
+
+void Light::AllocShadowMap()
+{
+    if (!mShadowViewport)
+    {
+        // Viewport 생성
+        mShadowViewport = new D3DGraphicsViewport(0.0f, 0.0f, mShadowResolution, mShadowResolution);
+    }
+    if (!mShadowRenderTarget)
+    {
+        // 렌더타겟 생성
+        mShadowRenderTarget = new D3DBitmapRenderTarget(mShadowResolution, mShadowResolution);
+        // Depth Stencil Texture 생성
+        D3D11_TEXTURE2D_DESC TexDesc = D3DGraphicsDefault::DefaultTextureDesc;
+        TexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+        TexDesc.Width = mShadowResolution;
+        TexDesc.Height = mShadowResolution;
+        TexDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+        D3DGraphicsTexture2D* pTexture = new D3DGraphicsTexture2D(&TexDesc);
+
+        D3D11_DEPTH_STENCIL_VIEW_DESC DSVDesc = {};
+        DSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+        DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+        D3DGraphicsDSV* ShadowDSV = new D3DGraphicsDSV(pTexture, &DSVDesc);
+
+        D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc = {};
+        SRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+        SRVDesc.Texture2D.MipLevels = 1;
+        D3DGraphicsSRV* ShadowSRV = new D3DGraphicsSRV(pTexture, &SRVDesc);
+        ShadowSRV->SetBindStage(eShaderStage::PS);
+
+        mShadowRenderTarget->PushResourceView(ShadowDSV, ShadowSRV);
+
+        pTexture->Release();
+    }
+}
+
+void Light::FreeShadowMap()
+{
+    SAFE_RELEASE(mShadowViewport);
+    SAFE_RELEASE(mShadowRenderTarget);
 }
 
 void Light::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
@@ -300,13 +331,13 @@ void Light::EditorRendering(EditorViewerType _viewerType)
         ImGui::Text("Light Range : ");
         ImGui::DragFloat((uid + "Range").c_str(), &mLightProp.LightRadius, 0.05f, 1.0f, 500.0f);
         ImGui::Text("Light CutOff : ");
-        ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.001f, 10.0f);
+        ImGui::DragFloat((uid + "CutOff").c_str(), &mLightProp.LightCutOff, 0.05f, 0.0000001f, 1.0f);
     }
 
     ImGui::Text("Light Strengh : ");
     ImGui::DragFloat((uid + "LStrengh").c_str(), &mLightProp.LightStrengh, 0.05f, 0.0f, 1.0f);
     ImGui::Text("Light Radiance : ");
-    ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f, -1.0f, 1.0f);
+    ImGui::DragFloat3((uid + "Radiance").c_str(), &mLightProp.Radiance.r, 0.05f,  0.0f, 1.0f);
 
     ImGui::Separator();
 
@@ -322,11 +353,14 @@ void Light::EditorRendering(EditorViewerType _viewerType)
     ImGui::DragFloat((uid + "LightFar").c_str(), &mLightFar, 1.0f, 1.0f, 100000.0f);
 
     ImGui::Separator();
-    ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
-    if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+    if (mShadowRenderTarget)
     {
-        ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
-        ImGui::TreePop();
+        ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
+        if (ImGui::TreeNodeEx(("Shadow View" + uid).c_str(), ImGuiTreeNodeFlags_Selected))
+        {
+            ImGui::Image((ImTextureID)mShadowRenderTarget->GetSRV(mShadowRenderTarget->GetDSV())->mSRV, ImVec2(200, 200));
+            ImGui::TreePop();
+        }
+        EDITOR_COLOR_POP(1);
     }
-    EDITOR_COLOR_POP(1);
 }

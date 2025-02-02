@@ -124,6 +124,7 @@ public:                                          \
     }                                            \
 };
 
+SERIALDATA_TEMPLATE(bool, Editor::CheckBox);
 SERIALDATA_TEMPLATE(INT, Editor::DragInt);
 SERIALDATA_TEMPLATE(FLOAT, Editor::DragFloat);
 SERIALDATA_TEMPLATE(Vector2, Editor::DragVector2);

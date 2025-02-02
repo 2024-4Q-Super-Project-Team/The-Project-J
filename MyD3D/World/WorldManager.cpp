@@ -14,6 +14,7 @@ WorldManager::~WorldManager()
     SAFE_DELETE_VECTOR(mWorldArray);
 	mCurrActiveWorld = nullptr;
 	mNextActiveWorld = nullptr;
+	mStartWorld = nullptr;
 }
 
 void WorldManager::Start()
@@ -31,6 +32,7 @@ void WorldManager::Reset()
 	SAFE_DELETE_VECTOR(mWorldArray);
 	mCurrActiveWorld = nullptr;
 	mNextActiveWorld = nullptr;
+	mStartWorld = nullptr;
 }
 
 void WorldManager::Tick()
@@ -248,7 +250,6 @@ World* WorldManager::CreateWorld(const std::wstring& _name, std::wstring_view _t
 	{
 		World* instance = new World(mOwnerScene, _name, _tag, isEmpty);
 		mWorldArray.push_back(instance);
-		instance->OnCreate();
 		if (isEmpty == false)
 		{
 			instance->InitWorldObject();

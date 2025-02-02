@@ -34,20 +34,22 @@ public:
 	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
 public:
+	void SetPlayerHandle(UINT _Index);
+	void SetPlayerAnimation();
+public:
 	float GetKeyForce(ePlayerInputType _inputType);
 private:
 	// 1p, 2p 플레이어 구분용도
 	UINT mPlayerHandle;
 	// Player의 상태
-	ePlayerStateType mPlayerState = ePlayerStateType::IDLE;
+	ePlayerStateType	mPlayerState = ePlayerStateType::IDLE;
 	// 내부에서 사용할 Player가 가진 컴포넌트 포인터
-	FiniteStateMachine* mFSM = nullptr;
 	Animator*			mAnimator = nullptr;
 	PlayerController*	mPlayerController = nullptr;
 	BurnObjectScript*	mBurnObjectScript;
 
-	SerializeField(FLOAT, mMoveSpeed, 0.0f);
-	SerializeField(FLOAT, mJumpPower, 0.0f);
+	SerializeField(	FLOAT, mMoveSpeed, 0.0f	);
+	SerializeField(	FLOAT, mJumpPower, 0.0f	);
 
 	////////////////////////////////////////////////
 	// [02/02 ~] 주형 작업 - 플레이어 체력 관련

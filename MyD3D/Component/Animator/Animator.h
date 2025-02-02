@@ -74,9 +74,16 @@ private:
     AnimationResource*  mActiveAnimation;
     BOOL  isPlaying;
     BOOL  isLoop;
+    BOOL  isReverse;
     FLOAT mDuration;
     FLOAT mFrameRateScale;
     std::unordered_map<std::wstring, ResourceHandle> mAnimationTable;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
+    /////////////////////////////////////////////
+    // Animator Popup
+    /////////////////////////////////////////////
+    ResourceHandle receiveHandle;
+    bool isAddAnimatorPopup = false;
+    void ShowAddAnimationPopup();
 };

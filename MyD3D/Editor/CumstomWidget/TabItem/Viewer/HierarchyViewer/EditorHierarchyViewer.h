@@ -3,6 +3,7 @@
 
 class WorldManager;
 class Object;
+class Animator;
 
 namespace Editor
 {
@@ -43,5 +44,6 @@ namespace Editor
         Object* mPopupObject = nullptr;
         bool isDeleteObjectPopupOpen = false;
         void ShowDeleteObjectPopup();
+
     };
 }

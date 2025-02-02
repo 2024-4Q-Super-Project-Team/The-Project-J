@@ -53,20 +53,38 @@ void Animator::Render()
 {
     if (isPlaying && mActiveAnimation)
     {
-        mDuration += Time::GetScaledDeltaTime() *
+        float AnimCount = Time::GetScaledDeltaTime() *
             mActiveAnimation->GetFramePerSecond() *
             mFrameRateScale;
-        // 총 프레임을 넘으면 빼준다.
         float TotalFrame = mActiveAnimation->GetTotalFrame();
-        while (mDuration > TotalFrame)
+        if (isReverse == FALSE)
         {
-            if (isLoop == TRUE)
+            mDuration += AnimCount;
+            while (mDuration > TotalFrame)
             {
-                mDuration -= TotalFrame;
+                if (isLoop == TRUE)
+                {
+                    mDuration -= TotalFrame;
+                }
+                else
+                {
+                    mDuration = TotalFrame;
+                }
             }
-            else
+        }
+        else if (isReverse == TRUE)
+        {
+            mDuration -= AnimCount;
+            while (mDuration < 0)
             {
-                mDuration = TotalFrame;
+                if (isLoop == TRUE)
+                {
+                    mDuration += TotalFrame;
+                }
+                else
+                {
+                    mDuration = 0.0f;
+                }
             }
         }
         CalculateAnimationTramsform(gameObject->transform);
@@ -171,6 +189,7 @@ json Animator::Serialize()
     ret["frame rate scale"] = mFrameRateScale;
     ret["is playing"] = isPlaying;
     ret["is loop"] = isLoop;
+    ret["is reverse"] = isReverse;
 
     json tableJson;
     for (auto& anim : mAnimationTable)
@@ -187,6 +206,7 @@ json Animator::Serialize()
 void Animator::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
+
     if (j.contains("active animation key"))
         mActiveAnimationKey = Helper::ToWString(j["active animation key"].get<std::string>());
     if(j.contains("active animation handle"))
@@ -197,6 +217,8 @@ void Animator::Deserialize(json& j)
         mFrameRateScale = j["is playing"].get<BOOL>();
     if (j.contains("is loop"))
         mFrameRateScale = j["is loop"].get<BOOL>();
+    if (j.contains("is reverse"))
+        mFrameRateScale = j["is reverse"].get<BOOL>();
 
     if (j.contains("table"))
     {
@@ -313,19 +335,43 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
             }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mActiveAnimationHandle))
-            {
-                SetCurrentAnimation(mActiveAnimationHandle);
-            }
         }
         ImGui::Separator();
         {
             ImGui::Text("Animation List");
-            for (auto handle : mAnimationTable)
+            for (auto itr = mAnimationTable.begin(); itr != mAnimationTable.end();)
             {
-                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
-                ImGui::Selectable(Helper::ToString(handle.second.GetKey()).c_str(), false, ImGuiSelectableFlags_Highlight);
+                bool isDelete = false;
+                const std::wstring& key = itr->first;
+                const ResourceHandle& handle = itr->second;
+                std::string str = Helper::ToString(key) + " : " + Helper::ToString(handle.GetKey());
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE);
+                ImGui::Selectable((str).c_str(), false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
+                if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                {
+                    ImGui::OpenPopup(("AnimatorPopup" + Helper::ToString(key)).c_str());
+                }
+                if (ImGui::BeginPopup(("AnimatorPopup" + Helper::ToString(key)).c_str()))
+                {
+                    if (ImGui::MenuItem("Set Active Animation")) {
+                        SetCurrentAnimation(key);
+                    }
+                    if (ImGui::MenuItem("Delete Animation")) {
+                        isDelete = true;
+                        itr = mAnimationTable.erase(itr);
+                    }
+                    ImGui::EndPopup();
+                }
+                if(!isDelete)
+                    ++itr;
+            }
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
+            ImGui::Selectable("Add Animation", false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>("Add Animation", &receiveHandle))
+            {
+                isAddAnimatorPopup = true;
             }
         }
         ImGui::Separator();
@@ -345,6 +391,43 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
             ImGui::Separator();
             ImGui::Text("Duration : %f", mDuration);
         }
+    }
+    ShowAddAnimationPopup();
+}
+
+void Animator::ShowAddAnimationPopup()
+{
+    std::string id = "Add Animation";
+    if (isAddAnimatorPopup)
+    {
+        ImGui::OpenPopup(id.c_str());
+        isAddAnimatorPopup = false;
+    }
+    if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Key : ");
+        static char Name[128] = "";
+        ImGui::InputText("##AddAnimationKey", Name, IM_ARRAYSIZE(Name));
+        ImGui::Separator();
+
+        ImGui::Text(std::string("Animation : " + Helper::ToString(receiveHandle.GetKey())).c_str());
+        ImGui::Separator();
+
+        const char* defaultName = "";
+        if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+        {
+            std::wstring newName = Helper::ToWString(std::string(Name));
+            AddAnimation(newName, receiveHandle);
+            ImGui::CloseCurrentPopup();
+            strcpy_s(Name, defaultName);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+        {
+            ImGui::CloseCurrentPopup();
+            strcpy_s(Name, defaultName);
+        }
+        ImGui::EndPopup();
     }
 }
 

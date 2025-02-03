@@ -199,7 +199,7 @@ json Animator::Serialize()
     json tableJson;
     for (auto& anim : mAnimationTable)
     {
-        tableJson["key"] = anim.first;
+        tableJson["key"] = Helper::ToString(anim.first);
         tableJson["handle"] = anim.second.Serialize();
     }
 

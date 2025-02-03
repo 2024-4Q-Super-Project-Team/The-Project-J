@@ -31,7 +31,7 @@ private:
 
     Vector3     mOffsetPosition = Vector3::Zero;
     Quaternion  mOffsetRotation = Quaternion::Identity;
-    Vector3     mOffsetScale = Vector3::Zero;
+    Vector3     mOffsetScale = Vector3::One;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 public:

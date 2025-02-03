@@ -193,7 +193,6 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
     <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
-    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="pch.h" />

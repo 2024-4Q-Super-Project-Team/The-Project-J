@@ -1,10 +1,14 @@
 #pragma once
 #include "Component/Component.h"
 
-class PlayerBehaviorCallback;
+class DynamicBehaviorCallback;
 
 class PlayerController : public Component
 {
+    enum SlopeMode
+    {
+        Ride, Slide
+    };
 public:
     explicit PlayerController(Object* _owner);
     virtual ~PlayerController();
@@ -34,6 +38,7 @@ public:
     void CheckOnGround();
 
     bool GetIsOnGround();
+    void SetSlopeMode(SlopeMode _mode);
 
 public:
     ///Jump///
@@ -53,7 +58,7 @@ private:
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;
     PxCapsuleControllerDesc mCapsuleDesc;
-    PlayerBehaviorCallback* mIceBehavior;
+    DynamicBehaviorCallback* mBehaviorCallback;
     //Key
     int mForwardKeyIdx = 0;
     int mBackwardKeyIdx = 0;
@@ -73,6 +78,8 @@ private:
 	float mMoveSpeed = 10.f;
     PxVec3 mDisplacement = PxVec3(0.f, 0.f, 0.f);
     bool mIsOnGround = false;
+    SlopeMode mSlopeMode = SlopeMode::Ride;
+    int mSlopeModeIdx = 0;
 
     //Jump
     float mJumpInitElapsedTime = 0.f;

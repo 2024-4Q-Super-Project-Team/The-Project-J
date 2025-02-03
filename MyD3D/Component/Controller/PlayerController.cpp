@@ -12,7 +12,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	SetEID("PlayerController");
 	mType = eComponentType::CONTROLLER;
 
-	mIceBehavior = new PlayerBehaviorCallback;
+	mBehaviorCallback = new DynamicBehaviorCallback;
+	SetSlopeMode(mSlopeMode);
 
 	mCapsuleDesc.height = mHeight;
 	mCapsuleDesc.radius = mRadius;
@@ -23,7 +24,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = 0.f;
 	mCapsuleDesc.scaleCoeff = 1.0f;
-	//mCapsuleDesc.behaviorCallback = mIceBehavior;
+	mCapsuleDesc.density = 10.f;
+	mCapsuleDesc.behaviorCallback = mBehaviorCallback;
 	mCapsuleDesc.maxJumpHeight = 20.f;
 	//mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
@@ -67,7 +69,8 @@ PlayerController::~PlayerController()
 		col->mShape = nullptr;
 		SAFE_DELETE(col);
 	}
-	SAFE_DELETE(mIceBehavior);
+	SAFE_DELETE(mBehaviorCallback);
+
 }
 
 void PlayerController::Start()
@@ -223,6 +226,15 @@ void PlayerController::CheckOnGround()
 	}
 }
 
+void PlayerController::SetSlopeMode(SlopeMode _mode)
+{
+	mSlopeMode = _mode; 
+	if(_mode == SlopeMode::Ride)
+		mBehaviorCallback->SetFlags(PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT);
+	else if (_mode == SlopeMode::Slide)
+		mBehaviorCallback->SetFlags(PxControllerBehaviorFlag::eCCT_SLIDE);
+}
+
 void PlayerController::GravityUpdate()
 {
 	//중력 
@@ -246,6 +258,7 @@ json PlayerController::Serialize()
 	ret["moveSpeed"] = mMoveSpeed;
 	ret["jumpSpeed"] = mJumpSpeed;
 	ret["gravity"] = mGravity;
+	ret["slope mode"] = mSlopeMode;
 
 	ret["forward"] = mForwardKeyIdx;
 	ret["backward"] = mBackwardKeyIdx;
@@ -281,6 +294,13 @@ void PlayerController::Deserialize(json& j)
 		mJumpSpeed = j["jumpSpeed"].get<float>();
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
+
+	if (j.contains("slope mode"))
+	{
+		mSlopeMode = (SlopeMode)j["slope mode"].get<int>();
+		mSlopeModeIdx = (int)mSlopeMode;
+	}
+		
 
 	if (j.contains("forward"))
 		mForwardKeyIdx = j["forward"].get<int>();
@@ -396,6 +416,13 @@ void PlayerController::EditorRendering(EditorViewerType _type)
 
 	ImGui::Text("Displacement : %.3f, %.3f, %.3f", mDisplacement.x, mDisplacement.y, mDisplacement.z); ImGui::SameLine;
 	
+	ImGui::Separator();
+	std::vector<const char*> ccharSlopeMode = {"Ride", "Slide"};
+	ImGui::Text(u8"경사면 모드"); ImGui::SameLine;
+	if (ImGui::Combo((uid + "SlopeMode").c_str(), &mSlopeModeIdx, ccharSlopeMode.data(), static_cast<int>(ccharSlopeMode.size())))
+	{
+		SetSlopeMode((SlopeMode)mSlopeModeIdx);
+	}
 
 	ImGui::Separator();
 }

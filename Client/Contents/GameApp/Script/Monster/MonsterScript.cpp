@@ -5,6 +5,8 @@
 
 void MonsterScript::Start()
 {
+	gameObject->SetTag(L"Monster");
+
 	// Init Setting
 	mFSM = eMonsterStateType::IDLE;
 	bIsTarget = false;

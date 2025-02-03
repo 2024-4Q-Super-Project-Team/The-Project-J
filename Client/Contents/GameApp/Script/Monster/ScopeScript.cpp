@@ -6,6 +6,11 @@
 
 void ScopeScript::Start()
 {
+	gameObject->SetTag(L"Scope");
+
+	// Init Setting
+	bIsPlayer = false;
+
 	// Add componenet
 	
 	{	// Collider Component

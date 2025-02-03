@@ -289,6 +289,15 @@ json MeshRenderer::Serialize()
 
     ret["use map"] = mMatCBuffer.UseMapFlag;
 
+    ret["cast outline"] = isCastOutline;
+
+    json outline;
+    Color outlineColor = mOutlineCBuffer.outlineColor;
+    outline["outline color"] = { outlineColor.x, outlineColor.y, outlineColor.z, outlineColor.w };
+    outline["outline offset"] = mOutlineCBuffer.outlineOffset;
+
+    ret["outline property"] = outline;
+
     return ret;
 }
 
@@ -333,6 +342,27 @@ void MeshRenderer::Deserialize(json& j)
 
     if (j.contains("use map"))
         mMatCBuffer.UseMapFlag = j["use map"].get<unsigned int>();
+
+    if (j.contains("cast outline"))
+        isCastOutline = j["cast outline"].get<bool>();
+
+    if (j.contains("outline property"))
+    {
+        json propOutline = j["outline property"];
+        
+        if (propOutline.contains("outline color") && propOutline["outline color"].size() == 4)
+        {
+            Color col = { propOutline["outline color"][0].get<float>(),
+                            propOutline["outline color"][1].get<float>(),
+                            propOutline["outline color"][2].get<float>(),
+                            propOutline["outline color"][3].get<float>()};
+            
+            SetOutlineColor(col);
+        }
+
+        if (propOutline.contains("outline offset"))
+            SetOutlineScale(propOutline["outline offset"].get<float>());
+    }
 }
 
 #define USEMAP_MATERIAL_MAP_RESUORCE(typeIndex, typeEnum, label) \

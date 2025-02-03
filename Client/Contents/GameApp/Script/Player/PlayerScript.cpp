@@ -1,38 +1,21 @@
 #include "pch.h"
 #include "PlayerScript.h"
-#include "PlayerState.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 void PlayerScript::Start()
 {
     // 초기화 코드
-   
-    {   // FSM컴포넌트 저장, 없으면 추가
-        mFSM = gameObject->GetComponent<FiniteStateMachine>();
-        if (mFSM == nullptr)
-            mFSM = gameObject->AddComponent<FiniteStateMachine>();
-    }
-    
-    {   // Animator컴포넌트 저장, 없으면 추가
-        mAnimator = gameObject->GetComponent<Animator>();
-        if (mAnimator == nullptr)
-            mAnimator = gameObject->AddComponent<Animator>();
-    }
-   
+    gameObject->SetTag(L"Player");
+    SetPlayerAnimation();
+
+
     {   // PlayerController컴포넌트 저장, 없으면 추가
         mPlayerController = gameObject->GetComponent<PlayerController>();
         if (mPlayerController == nullptr)
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
-
     {   // BurnObject추가
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
     }
-
-    gameObject->SetTag(L"Player");
-
-	//fsm->AddState<State::Player_Run>(L"Player_Run");
-	//// 초기 상태를 설정합니다.
-	//fsm->ChangeState(L"Player_Run");
 }
 
 void PlayerScript::Update()
@@ -104,6 +87,21 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
     //{
     //    button->Release();
     //}
+}
+
+void PlayerScript::SetPlayerHandle(UINT _Index)
+{
+    mPlayerHandle = _Index;
+}
+
+void PlayerScript::SetPlayerAnimation()
+{
+    {   // Animator컴포넌트 저장, 없으면 추가
+        mAnimator = gameObject->GetComponent<Animator>();
+        if (mAnimator == nullptr)
+            mAnimator = gameObject->AddComponent<Animator>();
+    }
+    //mAnimator->AddAnimation();
 }
 
 // 반환 값이 float인 이유는, pad의 조이스틱은 0~1의 값을 반환하기 때문

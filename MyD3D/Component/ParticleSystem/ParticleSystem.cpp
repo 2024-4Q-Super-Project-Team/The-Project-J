@@ -118,7 +118,7 @@ json ParticleSystem::Serialize()
 {
 	json ret;
 
-	ret["id"] = GiveId();
+	ret["id"] = GetId();
 	ret["size"] = mTextureSize;
 	ret["func"] = mFuncIdx;
 	ret["count"] = mParticleCount;

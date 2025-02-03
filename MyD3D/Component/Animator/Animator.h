@@ -34,7 +34,7 @@ public:
     virtual void _CALLBACK OnDestroy() override;
 public:
     void AddAnimation(std::wstring _key, ResourceHandle _handle);
-    void SetCurrentAnimation(std::wstring _key);
+    void SetCurrentAnimation(std::wstring _key, float _blendScale = 0.0f);
     void SetCurrentAnimation(ResourceHandle _handle);
 public:
     inline void Play() {    // 처음으로 돌아가서 재생
@@ -74,9 +74,20 @@ private:
     AnimationResource*  mActiveAnimation;
     BOOL  isPlaying;
     BOOL  isLoop;
+    BOOL  isReverse;
     FLOAT mDuration;
     FLOAT mFrameRateScale;
     std::unordered_map<std::wstring, ResourceHandle> mAnimationTable;
+
+    Vector3     mOffsetPosition = Vector3::Zero;
+    Quaternion  mOffsetRotation = Quaternion::Identity;
+    Vector3     mOffsetScale = Vector3::One;
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
+    /////////////////////////////////////////////
+    // Animator Popup
+    /////////////////////////////////////////////
+    ResourceHandle receiveHandle;
+    bool isAddAnimatorPopup = false;
+    void ShowAddAnimationPopup();
 };

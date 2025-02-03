@@ -91,13 +91,15 @@ void AudioListener::EditorRender()
 
 json AudioListener::Serialize()
 {
-	//TODO
+	json ret;
+	ret["id"] = GetId();
+	ret["name"] = "AudioListener";
 	return json();
 }
 
 void AudioListener::Deserialize(json& j)
 {
-	//TODO
+	SetId(j["id"].get<unsigned int>());
 }
 
 void AudioListener::EditorRendering(EditorViewerType _viewerType)

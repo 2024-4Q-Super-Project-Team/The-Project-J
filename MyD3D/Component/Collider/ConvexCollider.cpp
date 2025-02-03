@@ -17,6 +17,10 @@ void ConvexCollider::Start()
 {
 	Collider::Start();
 
+
+	mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+
+
 	if (mMesh == nullptr) return;
 
 	std::vector<PxVec3> pxVertices;
@@ -96,6 +100,12 @@ void ConvexCollider::PostRender()
 void ConvexCollider::EditorUpdate()
 {
 	Collider::EditorUpdate();
+}
+
+void ConvexCollider::EditorGlobalUpdate()
+{
+	gameObject->GetOwnerWorld()->
+		mNeedResourceHandleTable.insert(mMeshHandle.GetParentkey());
 }
 
 void ConvexCollider::EditorRender()

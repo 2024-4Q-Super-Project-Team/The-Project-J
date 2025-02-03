@@ -53,20 +53,40 @@ void Animator::Render()
 {
     if (isPlaying && mActiveAnimation)
     {
-        mDuration += Time::GetScaledDeltaTime() *
+        float AnimCount = Time::GetScaledDeltaTime() *
             mActiveAnimation->GetFramePerSecond() *
             mFrameRateScale;
-        // 총 프레임을 넘으면 빼준다.
         float TotalFrame = mActiveAnimation->GetTotalFrame();
-        while (mDuration > TotalFrame)
+        // TotalFrame이 0이면 무한루프를 돌아버리므로 예외처리
+        if (TotalFrame <= 0.0f) return;
+        if (isReverse == FALSE)
         {
-            if (isLoop == TRUE)
+            mDuration += AnimCount;
+            while (mDuration > TotalFrame)
             {
-                mDuration -= TotalFrame;
+                if (isLoop == TRUE)
+                {
+                    mDuration -= TotalFrame;
+                }
+                else
+                {
+                    mDuration = TotalFrame;
+                }
             }
-            else
+        }
+        else if (isReverse == TRUE)
+        {
+            mDuration -= AnimCount;
+            while (mDuration < 0)
             {
-                mDuration = TotalFrame;
+                if (isLoop == TRUE)
+                {
+                    mDuration += TotalFrame;
+                }
+                else
+                {
+                    mDuration = 0.0f;
+                }
             }
         }
         CalculateAnimationTramsform(gameObject->transform);
@@ -132,7 +152,7 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
     }
 }
 
-void Animator::SetCurrentAnimation(std::wstring _key)
+void Animator::SetCurrentAnimation(std::wstring _key, float _blendScale)
 {
     auto itr = mAnimationTable.find(_key);
     if (FIND_SUCCESS(itr, mAnimationTable))
@@ -171,11 +191,15 @@ json Animator::Serialize()
     ret["frame rate scale"] = mFrameRateScale;
     ret["is playing"] = isPlaying;
     ret["is loop"] = isLoop;
+    ret["is reverse"] = isReverse;
+    ret["position"] = { mOffsetPosition.x, mOffsetPosition.y, mOffsetPosition.z };
+    ret["rotation"] = { mOffsetRotation.x, mOffsetRotation.y, mOffsetRotation.z, mOffsetRotation.w };
+    ret["scale"] = { mOffsetScale.x, mOffsetScale.y, mOffsetScale.z };
 
     json tableJson;
     for (auto& anim : mAnimationTable)
     {
-        tableJson["key"] = anim.first;
+        tableJson["key"] = Helper::ToString(anim.first);
         tableJson["handle"] = anim.second.Serialize();
     }
 
@@ -187,6 +211,7 @@ json Animator::Serialize()
 void Animator::Deserialize(json& j)
 {
     SetId(j["id"].get<unsigned int>());
+
     if (j.contains("active animation key"))
         mActiveAnimationKey = Helper::ToWString(j["active animation key"].get<std::string>());
     if(j.contains("active animation handle"))
@@ -197,7 +222,28 @@ void Animator::Deserialize(json& j)
         mFrameRateScale = j["is playing"].get<BOOL>();
     if (j.contains("is loop"))
         mFrameRateScale = j["is loop"].get<BOOL>();
+    if (j.contains("is reverse"))
+        mFrameRateScale = j["is reverse"].get<BOOL>();
 
+    if (j.contains("position") && j["position"].size() == 3)
+    {
+        mOffsetPosition.x = j["position"][0].get<float>();
+        mOffsetPosition.y = j["position"][1].get<float>();
+        mOffsetPosition.z = j["position"][2].get<float>();
+    }
+    if (j.contains("rotation") && j["rotation"].size() == 4)
+    {
+        mOffsetRotation.x = j["rotation"][0].get<float>();
+        mOffsetRotation.y = j["rotation"][1].get<float>();
+        mOffsetRotation.z = j["rotation"][2].get<float>();
+        mOffsetRotation.w = j["rotation"][3].get<float>();
+    }
+    if (j.contains("scale") && j["scale"].size() == 3)
+    {
+        mOffsetScale.x = j["scale"][0].get<float>();
+        mOffsetScale.y = j["scale"][1].get<float>();
+        mOffsetScale.z = j["scale"][2].get<float>();
+    }
     if (j.contains("table"))
     {
         json tableJson = j["table"];
@@ -222,9 +268,9 @@ void Animator::CalculateAnimationTramsform(Transform* _pBone)
     auto pChannel = mActiveAnimation->GetChannel(_pBone->gameObject->GetName());
     if (pChannel)
     {
-        _pBone->position = CalculateAnimationPosition(pChannel);
-        _pBone->rotation = CalculateAnimationRotation(pChannel);
-        _pBone->scale    = CalculateAnimationScaling(pChannel);
+        _pBone->position = CalculateAnimationPosition(pChannel) + mOffsetPosition;
+        _pBone->rotation = CalculateAnimationRotation(pChannel) * mOffsetRotation;
+        _pBone->scale    = CalculateAnimationScaling(pChannel) * mOffsetScale;
     }
     for (auto child : _pBone->GetChildren())
     {
@@ -313,19 +359,43 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
                 ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
             }
-            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>(widgetID.c_str(), &mActiveAnimationHandle))
-            {
-                SetCurrentAnimation(mActiveAnimationHandle);
-            }
         }
         ImGui::Separator();
         {
             ImGui::Text("Animation List");
-            for (auto handle : mAnimationTable)
+            for (auto itr = mAnimationTable.begin(); itr != mAnimationTable.end();)
             {
-                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
-                ImGui::Selectable(Helper::ToString(handle.second.GetKey()).c_str(), false, ImGuiSelectableFlags_Highlight);
+                bool isDelete = false;
+                const std::wstring& key = itr->first;
+                const ResourceHandle& handle = itr->second;
+                std::string str = Helper::ToString(key) + " : " + Helper::ToString(handle.GetKey());
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE);
+                ImGui::Selectable((str).c_str(), false, ImGuiSelectableFlags_Highlight);
                 EDITOR_COLOR_POP(1);
+                if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+                {
+                    ImGui::OpenPopup(("AnimatorPopup" + Helper::ToString(key)).c_str());
+                }
+                if (ImGui::BeginPopup(("AnimatorPopup" + Helper::ToString(key)).c_str()))
+                {
+                    if (ImGui::MenuItem("Set Active Animation")) {
+                        SetCurrentAnimation(key);
+                    }
+                    if (ImGui::MenuItem("Delete Animation")) {
+                        isDelete = true;
+                        itr = mAnimationTable.erase(itr);
+                    }
+                    ImGui::EndPopup();
+                }
+                if(!isDelete)
+                    ++itr;
+            }
+            ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
+            ImGui::Selectable("Add Animation", false, ImGuiSelectableFlags_Highlight);
+            EDITOR_COLOR_POP(1);
+            if (EditorDragNDrop::ReceiveDragAndDropResourceData<AnimationResource>("Add Animation", &receiveHandle))
+            {
+                isAddAnimatorPopup = true;
             }
         }
         ImGui::Separator();
@@ -345,6 +415,69 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
             ImGui::Separator();
             ImGui::Text("Duration : %f", mDuration);
         }
+        ImGui::Separator();
+        {
+            ImGui::Text("Offset Position : ");
+            ImGui::DragFloat3((uid + "Position").c_str(), &mOffsetPosition.x, 0.1f);
+        }
+        {
+            // 쿼터니언에서 오일러로
+            Vector3 Euler = mOffsetRotation.ToEuler();
+            Vector3 EulerDegrees;
+            EulerDegrees.x = DirectX::XMConvertToDegrees(Euler.x);
+            EulerDegrees.y = DirectX::XMConvertToDegrees(Euler.y);
+            EulerDegrees.z = DirectX::XMConvertToDegrees(Euler.z);
+            ImGui::Text("Offset Rotation : ");
+            if (ImGui::DragFloat3((uid + "Rotation").c_str(), &EulerDegrees.x, 0.1f))
+            {
+                Euler.x = DirectX::XMConvertToRadians(EulerDegrees.x);
+                Euler.y = DirectX::XMConvertToRadians(EulerDegrees.y);
+                Euler.z = DirectX::XMConvertToRadians(EulerDegrees.z);
+                // 라디안에서 쿼터니언으로
+                mOffsetRotation = Quaternion::CreateFromYawPitchRoll(Euler.y, Euler.x, Euler.z);
+            }
+        }
+        {
+            ImGui::Text("Offset Scale : ");
+            ImGui::DragFloat3((uid + "Scale").c_str(), &mOffsetScale.x, 0.1f);
+        }
+    }
+    ShowAddAnimationPopup();
+}
+
+void Animator::ShowAddAnimationPopup()
+{
+    std::string id = "Add Animation";
+    if (isAddAnimatorPopup)
+    {
+        ImGui::OpenPopup(id.c_str());
+        isAddAnimatorPopup = false;
+    }
+    if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+    {
+        ImGui::Text("Key : ");
+        static char Name[128] = "";
+        ImGui::InputText("##AddAnimationKey", Name, IM_ARRAYSIZE(Name));
+        ImGui::Separator();
+
+        ImGui::Text(std::string("Animation : " + Helper::ToString(receiveHandle.GetKey())).c_str());
+        ImGui::Separator();
+
+        const char* defaultName = "";
+        if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+        {
+            std::wstring newName = Helper::ToWString(std::string(Name));
+            AddAnimation(newName, receiveHandle);
+            ImGui::CloseCurrentPopup();
+            strcpy_s(Name, defaultName);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+        {
+            ImGui::CloseCurrentPopup();
+            strcpy_s(Name, defaultName);
+        }
+        ImGui::EndPopup();
     }
 }
 

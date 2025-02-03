@@ -38,7 +38,7 @@ void AudioResource::SetSoundMode(eAudioListenMode _soundMode)
 json AudioResource::Serialize()
 {
     json ret;
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["loop"] = mUseLoop;
     ret["mode"] = mListenMode;
 

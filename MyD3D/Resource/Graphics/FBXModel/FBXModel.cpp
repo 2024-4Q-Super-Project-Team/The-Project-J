@@ -85,31 +85,39 @@ json FBXModelResource::Serialize()
 {
 	json ret;
 	// Material
+	ret["id"] = GiveId();
 	for (auto& mat : mMaterialTable)
 	{
 		json matJson;
 		matJson["name"]		= Helper::ToString(mat.first);
 		matJson["material"] = mat.second->Serialize();
-		ret += matJson;
+		ret["materials"] += matJson;
 	}
 	return ret;
 }
 
 void FBXModelResource::Deserialize(json& j)
 {
-	for (json& jsonData : j)
+	if(j.contains("id"))
+		SetId(j["id"].get<unsigned int>());
+
+	if (j.contains("materials"))
 	{
-		// Material Deserialize
-		if (jsonData.contains("material") && jsonData.contains("name"))
+		for (json& jsonData : j["materials"])
 		{
-			std::wstring name = Helper::ToWString(jsonData["name"].get<std::string>());
-			auto matResorce = Helper::FindMap(name, mMaterialTable);
-			if (matResorce)
+			// Material Deserialize
+			if (jsonData.contains("material") && jsonData.contains("name"))
 			{
-				(*matResorce)->Deserialize(jsonData["material"]);
+				std::wstring name = Helper::ToWString(jsonData["name"].get<std::string>());
+				auto matResorce = Helper::FindMap(name, mMaterialTable);
+				if (matResorce)
+				{
+					(*matResorce)->Deserialize(jsonData["material"]);
+				}
 			}
 		}
 	}
+
 }
 
 void FBXModelResource::SaveJson()

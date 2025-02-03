@@ -3,14 +3,6 @@
 
 class PlayerBehaviorCallback;
 
-enum class MovementFlag : uint8_t
-{
-    SlideOnPlane = 1 << 0,   // 평면에서 슬라이드
-    SlideOnSlope = 1 << 1    // 경사면에서 슬라이드
-};
-
-using MovementFlags  = uint8_t;
-
 class PlayerController : public Component
 {
 public:
@@ -34,13 +26,23 @@ public:
     virtual void EditorRender() override;
 
 public:
-    void SetForwardKey(Key _key);
-    void SetBackwardKey(Key _key);
-    void SetLeftKey(Key _key);
-    void SetRightKey(Key _key);
-    void SetJumpKey(Key _key);
-    void SetJumpSpeed(float speed) { mJumpSpeed = speed; }
+    float t;
+    ///move///
+    void KeyboardMove();
+    void PadMove();
+    void SetMoveSpeed(float _speed) { mMoveSpeed = _speed; }
+    void CheckOnGround();
+
+    bool GetIsOnGround();
+
+public:
+    ///Jump///
+    void SetJumpSpeed(float _speed) { mJumpSpeed = _speed; }
+    void JumpUpdate();
     void StartJump();
+
+    //Force
+    void GravityUpdate();
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -66,24 +68,15 @@ private:
     float mContactOffset = 0.1f;
     float mSlopeLimit = 0.707f;
     float mStepOffset = 0.5f;
-    int mMaterialIdx = 0;
+   
     //Movement
 	float mMoveSpeed = 10.f;
-	float mJumpSpeed = 0.13f;
-	float mGravity = 98.f;
-    std::vector<std::string> mMaterials;
-
-
-    PxVec3 mPrevPosition;
     PxVec3 mDisplacement = PxVec3(0.f, 0.f, 0.f);
-    PxVec3 mVelocity = PxVec3(0.f, 0.f, 0.f);
-    float mAcceleration = 20.f;
-
-    MovementFlags mMovementFlags;
+    bool mIsOnGround = false;
 
     //Jump
     float mJumpInitElapsedTime = 0.f;
-
+    float mJumpSpeed = 0.13f;
     float mJumpDuration = 0.9f; //editable
     float mJumpInputDuration = 0.1f;
     float mJumpElapsedTime = 0.f;
@@ -91,11 +84,17 @@ private:
 
     enum eJumpState {None, InitJump, Jumping};
     eJumpState mJumpState = None;
+    
+    //Force
+    float mGravity = 80.f;
 
     //Actor and Shapes
     Rigidbody* mRigid = nullptr;
     std::vector<Collider*> mColliders;
 
+    //Material
+    std::vector<std::string> mMaterials;
+    int mMaterialIdx = 0;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

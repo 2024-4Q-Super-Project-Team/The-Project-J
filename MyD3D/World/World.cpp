@@ -261,7 +261,7 @@ void World::ShiftObject(Object* _dstObject)
 json World::Serialize()
 {
     json ret;
-    ret["id"] = GiveId();
+    ret["id"] = GetId();
     ret["name"] = Helper::ToString(mName);
     ret["is persistnace"] = isPersistance;
     json objs = json::array();

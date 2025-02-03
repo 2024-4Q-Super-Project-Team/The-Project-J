@@ -132,7 +132,7 @@ void MonoBehaviour::Destroy(Object* _object)
 json MonoBehaviour::Serialize()
 {
 	json ret;
-	ret["id"] = GiveId();
+	ret["id"] = GetId();
 	ret["name"] = GetEID();
 	ret["initial active"] = isActive;
 	return ret;

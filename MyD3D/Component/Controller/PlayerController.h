@@ -2,6 +2,7 @@
 #include "Component/Component.h"
 
 class DynamicBehaviorCallback;
+class ControllerEventCallback;
 
 class PlayerController : public Component
 {
@@ -48,6 +49,9 @@ public:
 
     //Force
     void GravityUpdate();
+
+    //Collision
+    void CheckNowColliding();
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -59,6 +63,8 @@ private:
 	PxControllerFilters mCharacterControllerFilters;
     PxCapsuleControllerDesc mCapsuleDesc;
     DynamicBehaviorCallback* mBehaviorCallback;
+    ControllerEventCallback* mEventCallback;
+
     //Key
     int mForwardKeyIdx = 0;
     int mBackwardKeyIdx = 0;
@@ -99,11 +105,16 @@ private:
     Rigidbody* mRigid = nullptr;
     std::vector<Collider*> mColliders;
 
+    //Colliding
+    std::unordered_map<PxActor*, bool> mActorsColliding;
+
     //Material
     std::vector<std::string> mMaterials;
     int mMaterialIdx = 0;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
+
+    friend class ControllerEventCallback;
 
 };
 

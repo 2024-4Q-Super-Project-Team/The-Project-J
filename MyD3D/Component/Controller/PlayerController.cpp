@@ -5,6 +5,7 @@
 #include "World/WorldManager.h"
 #include "ViewportScene/ViewportScene.h"
 #include "Component/Controller/PlayerBehaviorCallback.h"
+#include "Component/Controller/ControllerEventCallback.h"
 
 
 PlayerController::PlayerController(Object* _owner) :Component(_owner)
@@ -14,6 +15,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 
 	mBehaviorCallback = new DynamicBehaviorCallback;
 	SetSlopeMode(mSlopeMode);
+
+	mEventCallback = new ControllerEventCallback;
 
 	mCapsuleDesc.height = mHeight;
 	mCapsuleDesc.radius = mRadius;
@@ -26,10 +29,14 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.scaleCoeff = 1.0f;
 	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.behaviorCallback = mBehaviorCallback;
+	mCapsuleDesc.reportCallback = mEventCallback;
 	mCapsuleDesc.maxJumpHeight = 20.f;
 	//mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
 	PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 	mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
+
+	mCapsuleController->setUserData(this);
+
 
 	const auto& materials = GameManager::GetPhysicsManager()->GetMaterials();
 	for (auto& material : materials)
@@ -70,6 +77,7 @@ PlayerController::~PlayerController()
 		SAFE_DELETE(col);
 	}
 	SAFE_DELETE(mBehaviorCallback);
+	SAFE_DELETE(mEventCallback);
 
 }
 
@@ -134,6 +142,8 @@ void PlayerController::PreRender()
 {
 	PxExtendedVec3 pos = mCapsuleController->getPosition();
 	gameObject->transform->position = Vector3(pos.x, pos.y, pos.z);
+
+	CheckNowColliding();
 }
 
 void PlayerController::Render()
@@ -240,6 +250,37 @@ void PlayerController::GravityUpdate()
 	//중력 
 	//if (mIsOnGround == false)
 	mDisplacement.y -= mGravity * t;
+}
+
+void PlayerController::CheckNowColliding()
+{
+	for (auto it = mActorsColliding.begin(); it != mActorsColliding.end();)
+	{
+		if ((*it).second == false) //이번에 충돌하지 않았음 
+		{
+
+			Rigidbody* collidingRigidbody = static_cast<Rigidbody*>((*it).first->userData);
+
+			Object* triggerObject = static_cast<Object*>(mRigid->gameObject);
+			Object* otherObject = static_cast<Object*>(collidingRigidbody->gameObject);
+
+			auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
+			auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
+
+			for (auto script : triggerScripts)
+				script->OnCollisionExit(mRigid, collidingRigidbody);
+			for (auto script : otherScripts)
+				script->OnCollisionExit(collidingRigidbody, mRigid);
+
+			mActorsColliding.erase(it);
+		}
+		else
+		{
+			(*it).second = false;
+			++it;
+		}
+			
+	}
 }
 
 json PlayerController::Serialize()

@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "PlayerScript.h"
-#include "PlayerState.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 void PlayerScript::Start()
 {

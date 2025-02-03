@@ -98,11 +98,12 @@ void PlayerController::Update()
 
 	mDisplacement = PxVec3(0, 0, 0);
 
+	CheckOnGround();
 	KeyboardMove();
 	PadMove();
-	GravityUpate();
+	GravityUpdate();
 	JumpUpdate();
-
+	
 
 	mCapsuleController->move(mDisplacement, 0.01f, t, mCharacterControllerFilters);
 }
@@ -188,27 +189,33 @@ void PlayerController::PadMove()
 	
 }
 
-void PlayerController::GravityUpate()
+void PlayerController::CheckOnGround()
 {
-	//중력 
-	mDisplacement.y -= mGravity * t;
+	mIsOnGround = false;
 
 	//바닥 감지 
-	//Vector3 objPos = gameObject->transform->position;
-	//PxVec3 pxRayOrigin(objPos.x, objPos.y, objPos.z);
-	//PxVec3 pxRayDirection(0, -1, 0);
-	//float distance = 0.5;
-	//
-	//PxRaycastBuffer hitBuffer;
-	//if (GameManager::GetCurrentWorld()->GetPxScene()
-	//	->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer));
-	//
-	//const PxRaycastHit& hit = hitBuffer.block;
-	//if (hit.distance < distance)
-	//{
-	//	mDisplacement.y = 0;
-	//}
-		
+	Vector3 objPos = gameObject->transform->position;
+	PxVec3 pxRayOrigin(objPos.x, objPos.y - mCapsuleController->getHeight() / 2.f - mCapsuleController->getRadius(), objPos.z);
+	PxVec3 pxRayDirection(0, -1, 0);
+	float distance = 0.5;
+
+	PxRaycastBuffer hitBuffer;
+	if (GameManager::GetCurrentWorld()->GetPxScene()
+		->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer))
+	{
+		const PxRaycastHit& hit = hitBuffer.block;
+		if (hit.distance < distance)
+		{
+			mIsOnGround = true;
+		}
+	}
+}
+
+void PlayerController::GravityUpdate()
+{
+	//중력 
+	//if (mIsOnGround == false)
+	mDisplacement.y -= mGravity * t;
 }
 
 json PlayerController::Serialize()

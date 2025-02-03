@@ -31,7 +31,9 @@ public:
     void KeyboardMove();
     void PadMove();
     void SetMoveSpeed(float _speed) { mMoveSpeed = _speed; }
+    void CheckOnGround();
 
+    bool GetIsOnGround();
 
 public:
     ///Jump///
@@ -40,7 +42,7 @@ public:
     void StartJump();
 
     //Force
-    void GravityUpate();
+    void GravityUpdate();
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -70,6 +72,7 @@ private:
     //Movement
 	float mMoveSpeed = 10.f;
     PxVec3 mDisplacement = PxVec3(0.f, 0.f, 0.f);
+    bool mIsOnGround = false;
 
     //Jump
     float mJumpInitElapsedTime = 0.f;

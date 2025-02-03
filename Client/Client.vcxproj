@@ -173,9 +173,11 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
     <ClCompile Include="Contents\GameApp\Script\ModelSpawner.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\World\TestWorld.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="main.cpp" />
@@ -191,10 +193,13 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
     <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />

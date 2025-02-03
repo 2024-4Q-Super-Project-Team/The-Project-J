@@ -48,6 +48,11 @@ std::vector<Object*> MonoBehaviour::FindObjectsWithTag(std::wstring_view _tag)
 {
 	std::vector<Object*> tempArr;
     World* curWorld = GameManager::GetCurrentWorld();
+	if (curWorld == nullptr)
+	{
+		return tempArr; // curWorld가 nullptr인 경우
+	}
+
 	auto& objects = curWorld->GetObjectArray();
 	for (auto& object : objects)
 	{

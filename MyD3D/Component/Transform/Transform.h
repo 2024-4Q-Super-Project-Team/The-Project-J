@@ -43,6 +43,7 @@ public:
     Vector3 GetEulerAngles() const { return rotation.ToEuler(); }
 
 // Dotween 관련
+// 회전
 private:
     bool isRotating = false;
 	bool isLookingAt = false;
@@ -51,6 +52,13 @@ private:
     Dotween::EasingEffect easingEffect;
     Quaternion startRotation;
     Quaternion endRotation;
+// 움직임
+private:
+	bool isMoving = false;
+	float moveDuration = 2.0f;
+	float moveElapsedTime = 0.0f;
+	Vector3 startPosition;
+	Vector3 endPosition;
 
 public:
     inline Transform* GetParent() const { return mParent; }
@@ -112,11 +120,13 @@ public:
 public:
     // dotween 함수
     void Rotate180(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
-	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 
 private:
     void UpdateLookAt(float t, Dotween::EasingEffect easingEffect);
     void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
+	void UpdateMove(float t, Dotween::EasingEffect easingEffect);
     
 
 

@@ -70,6 +70,7 @@ namespace Editor
 				{
 					mManipulater->LookAtTargetObject();
 				}
+
                 ImGui::End();
             }
         }

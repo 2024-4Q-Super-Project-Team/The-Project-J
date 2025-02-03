@@ -25,18 +25,7 @@ void PlayerScript::Update()
 
 void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-    //if (auto* jumpPad = _destination->GetOwner()->GetComponent<JumpPad>())
-    //{
-    //    auto* playerController = GetOwner()->GetComponent<PlayerController>();
-    //    if (playerController)
-    //    {
-    //        playerController->Jump(jumpPad->GetJumpForce());
-    //    }
-    //}
-    //else if (auto* button = _destination->GetOwner()->GetComponent<Button>())
-    //{
-    //    button->Press();
-    //}
+
 }
 
 void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
@@ -84,10 +73,7 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 
 void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-    //if (auto* button = _destination->GetOwner()->GetComponent<Button>())
-    //{
-    //    button->Release();
-    //}
+ 
 }
 
 void PlayerScript::SetPlayerHandle(UINT _Index)

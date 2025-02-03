@@ -8,6 +8,8 @@
 #include "Contents/GameApp/Script/Object/JumpPad/JumpPadScript.h"
 #include "Contents/GameApp/Script/Object/Button/ButtonScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Contents/GameApp/Script/Monster/MonsterScript.h"
+#include "Contents/GameApp/Script/Monster/ScopeScript.h"
 
 void ScriptRegister::Register()
 {
@@ -17,4 +19,6 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(JumpPadScript);
 	REGISTER_COMPONENT(ButtonScript);
 	REGISTER_COMPONENT(BurnObjectScript);
+	REGISTER_COMPONENT(MonsterScript);
+	REGISTER_COMPONENT(ScopeScript);
 }

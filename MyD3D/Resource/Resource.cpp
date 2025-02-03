@@ -54,7 +54,10 @@ json ResourceHandle::Serialize()
 {
 	json ret;
 
-	ret["id"] = GetId();
+	if (GetId() == 0)
+		ret["id"] = GiveId();
+	else
+		ret["id"] = GetId();
 	ret["type"] = mResourceType;
 	ret["main key"] = Helper::ToString(mMainKey);
 	ret["sub key"] = Helper::ToString(mSubKey);

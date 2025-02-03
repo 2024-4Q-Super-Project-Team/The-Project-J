@@ -21,7 +21,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
-	mCapsuleDesc.stepOffset = mStepOffset;
+	mCapsuleDesc.stepOffset = 0.f;
+	mCapsuleDesc.scaleCoeff = 1.0f;
 	//mCapsuleDesc.behaviorCallback = mIceBehavior;
 	mCapsuleDesc.maxJumpHeight = 20.f;
 	//mCapsuleDesc.nonWalkableMode = PxControllerNonWalkableMode::ePREVENT_CLIMBING_AND_FORCE_SLIDING;
@@ -77,6 +78,12 @@ void PlayerController::Start()
 	SetMaterial(mMaterials[mMaterialIdx]);
 
 	mCapsuleController->setUserData(this);
+
+	mCapsuleController->setHeight(mHeight);
+	mCapsuleController->setRadius(mRadius);
+	mCapsuleController->setContactOffset(0.f);
+	mCapsuleController->setSlopeLimit(mSlopeLimit);
+	mCapsuleController->setStepOffset(0.f);
 }
 
 void PlayerController::Tick()
@@ -105,7 +112,13 @@ void PlayerController::Update()
 	JumpUpdate();
 	
 
-	mCapsuleController->move(mDisplacement, 0.01f, t, mCharacterControllerFilters);
+	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, t, mCharacterControllerFilters);
+
+
+	if (flags & PxControllerCollisionFlag::eCOLLISION_DOWN)
+	{
+		int a = 0;
+	}
 }
 
 void PlayerController::PostUpdate()
@@ -157,31 +170,30 @@ void PlayerController::KeyboardMove()
 	PxVec3 moveDirection = PxVec3(0.f, 0.f, 0.f);
 	//입력에 따른 move 
 
-	if (mJumpState == eJumpState::None || (mJumpInputElapsedTime >= mJumpInputDuration))
+
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
 	{
-		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mForwardKeyIdx]]))
-		{
-			moveDirection += PxVec3(0, 0, 1);
-		}
-		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
-		{
-			moveDirection += PxVec3(0, 0, -1);
-		}
-		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
-		{
-			moveDirection += PxVec3(-1, 0, 0);
-		}
-		if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
-		{
-			moveDirection += PxVec3(1, 0, 0);
-		}
-
-		if (!moveDirection.isZero())
-			moveDirection.normalize();
-
-		//이동
-		mDisplacement += moveDirection * mMoveSpeed * t;
+		moveDirection += PxVec3(0, 0, 1);
 	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mBackwardKeyIdx]]))
+	{
+		moveDirection += PxVec3(0, 0, -1);
+	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mLeftKeyIdx]]))
+	{
+		moveDirection += PxVec3(-1, 0, 0);
+	}
+	if (Input::IsKeyHold(Key::keyMap[mStrKeys[mRightKeyIdx]]))
+	{
+		moveDirection += PxVec3(1, 0, 0);
+	}
+
+	if (!moveDirection.isZero())
+		moveDirection.normalize();
+
+	//이동
+	mDisplacement += moveDirection * mMoveSpeed * t;
+
 }
 
 void PlayerController::PadMove()

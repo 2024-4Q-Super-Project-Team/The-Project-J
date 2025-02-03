@@ -22,6 +22,7 @@ namespace Editor
 		inline void SetGizmoOperation(ImGuizmo::OPERATION operation) { mCurrentGizmoOperation = operation; }
 		void RotateFocusObject();
 		void LookAtTargetObject();
+		void GoToTarget();
 		
 
 	private:

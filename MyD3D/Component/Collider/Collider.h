@@ -37,6 +37,8 @@ public:
     virtual MaterialResource* GetMaterial() { return nullptr; }
 
     static bool bDrawMode;
+public:
+    Object* GetOwner() { return gameObject; }
 
 protected:
     void SetIsTrigger();

@@ -56,6 +56,18 @@ void Transform::PreUpdate()
 
 void Transform::Update()
 {
+    if (isMoving)
+    {
+        moveElapsedTime += Time::GetScaledDeltaTime();
+        float t = moveElapsedTime / moveDuration;
+        UpdateMove(t, easingEffect);
+        if (moveElapsedTime >= moveDuration)
+        {
+            isMoving = false;
+            moveElapsedTime = 0.0f;
+            UpdateMove(1.0f, easingEffect);
+        }
+    }
 }
 
 void Transform::PostUpdate()
@@ -440,12 +452,22 @@ void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::
     rotationDuration = _duration;
     rotationElapsedTime = 0.0f;
     easingEffect = _easingEffect;
-
     startRotation = rotation;
 
     Vector3 direction = targetPosition - position;
     direction.Normalize();
     endRotation = Quaternion::LookRotation(direction, Vector3::Up);
+}
+
+void Transform::MoveTo(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)
+{
+	if (isMoving) return;
+	isMoving = true;
+	moveDuration = _duration;
+	moveElapsedTime = 0.0f;
+	easingEffect = _easingEffect;
+	startPosition = position;
+	endPosition = targetPosition;
 }
 
 void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
@@ -462,4 +484,10 @@ void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 
     UpdateMatrix();
+}
+
+void Transform::UpdateMove(float t, Dotween::EasingEffect easingEffect)
+{
+	position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+	UpdateMatrix();
 }

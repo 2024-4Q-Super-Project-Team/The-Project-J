@@ -194,17 +194,21 @@ void PlayerController::GravityUpate()
 	mDisplacement.y -= mGravity * t;
 
 	//¹Ù´Ú °¨Áö 
-	Vector3 objPos = gameObject->transform->position;
-	PxVec3 pxRayOrigin(objPos.x, objPos.y - mCapsuleController->getHeight()/2.f + mCapsuleController->getRadius(), objPos.z);
-	PxVec3 pxRayDirection(objPos.x, objPos.y - mCapsuleController->getHeight() / 2.f + mCapsuleController->getRadius() - 1, objPos.z);
-	float distance = 0.5;
-
-	PxRaycastBuffer hitBuffer;
-	if (GameManager::GetCurrentWorld()->GetPxScene()
-		->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer));
-
-	if (hitBuffer.hasAnyHits())
-		mDisplacement.y = 0;
+	//Vector3 objPos = gameObject->transform->position;
+	//PxVec3 pxRayOrigin(objPos.x, objPos.y, objPos.z);
+	//PxVec3 pxRayDirection(0, -1, 0);
+	//float distance = 0.5;
+	//
+	//PxRaycastBuffer hitBuffer;
+	//if (GameManager::GetCurrentWorld()->GetPxScene()
+	//	->raycast(pxRayOrigin, pxRayDirection, distance, hitBuffer));
+	//
+	//const PxRaycastHit& hit = hitBuffer.block;
+	//if (hit.distance < distance)
+	//{
+	//	mDisplacement.y = 0;
+	//}
+		
 }
 
 json PlayerController::Serialize()

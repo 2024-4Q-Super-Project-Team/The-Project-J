@@ -93,6 +93,9 @@ void MaterialResource::FreeDefaultMaterial()
 
 json MaterialResource::Serialize()
 {
+    json ret;
+
+    ret["id"] = GiveId();
     ColorF diffuse = mMaterialProperty.DiffuseRGB;
     ColorF ambient = mMaterialProperty.AmbientRGB;
     ColorF specular = mMaterialProperty.SpecularRGB;
@@ -105,7 +108,6 @@ json MaterialResource::Serialize()
     mprop["metallic"] = mMaterialProperty.MetallicScale;
     mprop["ao"] = mMaterialProperty.AmbienOcclusionScale;
 
-    json ret;
     ret["diffuse map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::DIFFUSE].Serialize();
     ret["specular map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::SPECULAR].Serialize();
     ret["ambient map handle"] = mMaterialMapTextureHandle[(UINT)eMaterialMapType::AMBIENT].Serialize();

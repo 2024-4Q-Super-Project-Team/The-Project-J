@@ -19,11 +19,16 @@ Texture2DResource::~Texture2DResource()
 
 json Texture2DResource::Serialize()
 {
+	json ret;
+	ret["id"] = GiveId();
+
 	return json();
 }
 
 void Texture2DResource::Deserialize(json& j)
 {
+	if (j.contains("id"))
+		SetId(j["id"].get<unsigned int>());
 }
 
 void Texture2DResource::EditorRendering(EditorViewerType _viewerType)

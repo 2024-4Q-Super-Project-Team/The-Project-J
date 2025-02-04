@@ -29,6 +29,7 @@ public:
     virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::BACKFACE_CULLING; }
     virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
     void SetPxShape(PxShape* _shape) { mShape = _shape; AddShapeToRigidbody(); }
+    virtual Vector3 GetSize() { return Vector3(1.0f, 1.0f, 1.0f); }
 public:
     virtual json Serialize() { return json(); }
     virtual void Deserialize(json& j) {}

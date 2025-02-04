@@ -34,6 +34,11 @@ public:
     virtual void SetPosition();
     virtual void SetRotation();
     void SetExtents();
+    virtual Vector3 GetSize() override;
+
+    void SetPosition(const Vector3& position) { mPosition = position; }
+    void SetRotation(const Vector3& rotation) { mRotation = rotation; }
+    void SetExtents(const Vector3& extents) { mExtents = extents; }
 private:
     const Vector3 mInitialSize = { 1, 1, 1 };
 

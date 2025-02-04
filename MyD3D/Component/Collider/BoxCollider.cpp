@@ -184,6 +184,11 @@ void BoxCollider::SetExtents()
 	mOBB.Extents.z = size.z * mExtents.z;
 }
 
+Vector3 BoxCollider::GetSize()
+{
+	return mExtents * gameObject->transform->scale;
+}
+
 void BoxCollider::EditorRendering(EditorViewerType _type)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));

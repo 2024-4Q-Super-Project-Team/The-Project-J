@@ -4,6 +4,8 @@
 class LowerPlatformButtonScript : public ButtonScript
 {
 public:
+	void Start() override;
+public:
     explicit LowerPlatformButtonScript(Object* _owner);
     virtual ~LowerPlatformButtonScript() = default;
 public:
@@ -18,4 +20,6 @@ protected:
     virtual bool CanInteract(Object* _object) override; // 상호작용 할 수 있는지 판단 (1P, 2P, 물체 등)
 private:
     Object* platform;
+    std::wstring GetPlatformTag();
+
 };

@@ -98,3 +98,24 @@ bool InputSyncer::IsKeyUp(UINT _handle, eInputType _type)
 		}
 	}
 }
+
+Vector2 InputSyncer::GetInputDirection(UINT _handle)
+{
+	Vector2 force = Vector2::Zero;
+
+	// Pad의 왼쪽 조이스틱 우선 확인
+	if (Input::GetPadStickForce(GamePad::LEFT).x != 0 ||
+		Input::GetPadStickForce(GamePad::LEFT).y != 0)
+	{
+		force = Input::GetPadStickForce(GamePad::LEFT, _handle);
+	}
+	// PadInput이 없다면 KeyInput확인
+	else
+	{
+		if (IsKeyHold(_handle, LEFT)) force.x -= 1;
+		if (IsKeyHold(_handle, RIGHT)) force.x += 1;
+		if (IsKeyHold(_handle, UP)) force.y += 1;
+		if (IsKeyHold(_handle, DOWN)) force.y -= 1;
+	}
+	return force;
+}

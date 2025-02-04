@@ -146,6 +146,16 @@ void PlayerScript::UpdatePlayerHP()
     }
 }
 
+void PlayerScript::UpdateInput()
+{
+    Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
+    // 인풋을 통해 Direction값이 있다고 판정되면
+    if (moveDirection != Vector2::Zero)
+    {
+
+    }
+}
+
 json PlayerScript::Serialize()
 {
     json ret = MonoBehaviour::Serialize();

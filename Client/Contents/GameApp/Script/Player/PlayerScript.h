@@ -32,10 +32,12 @@ public:
 	void SetHP(INT _val);	// 플레이어의 HP를 변경
 	void Hit(INT _damage);	// 플레이어에게 피격을 시키는 함수
 
+	INT GetMaxHpValue() { return mPlayerMaxHP.val; }
 	//////////////////////////////////////////////////////////////////////
 
 private:
-	void UpdatePlayerHP(); // 플레이어의 체력에 대한 업데이트
+	void UpdatePlayerHP();	// 플레이어의 체력에 대한 업데이트
+	void UpdateInput();		// 입력에 따른 플레이어의 업데이트
 private:
 	// 1p, 2p 플레이어 구분용도
 	SerializeField(INT,		mPlayerHandle, 0);

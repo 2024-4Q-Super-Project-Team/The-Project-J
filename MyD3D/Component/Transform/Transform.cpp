@@ -427,7 +427,7 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
-void Transform::Rotate180(float _duration, Dotween::EasingEffect _easingEffect)
+void Transform::Rotate90(float _duration, Dotween::EasingEffect _easingEffect)
 {
     if (isRotating) return; // 이미 회전 중이면 중복 실행 X
 
@@ -437,7 +437,7 @@ void Transform::Rotate180(float _duration, Dotween::EasingEffect _easingEffect)
     easingEffect = _easingEffect;
 
     startRotation = rotation;
-    endRotation = startRotation * Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_PI); // 180도 회전
+    endRotation = startRotation * Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_PIDIV2); // 90도 회전
 }
 
 void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)

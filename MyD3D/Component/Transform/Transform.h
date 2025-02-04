@@ -86,6 +86,7 @@ public:
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
     inline const PxTransform  GetPxTransform() { return mPxTransform; }
+	inline const float GetHeight() { return scale.y; }
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();
@@ -119,7 +120,8 @@ public:
 // dotween 함수
 public:
     // dotween 함수
-    void Rotate180(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
+    void Rotate90(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
+    void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
 	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 

@@ -102,7 +102,7 @@ namespace Editor
     {
         if (mFocusObject)
         {
-            mFocusObject->transform->Rotate180(2.0f, Dotween::EasingEffect::InOutQuad);
+            mFocusObject->transform->Rotate90(2.0f, Dotween::EasingEffect::InOutQuad);
         }
     }
 

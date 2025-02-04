@@ -36,6 +36,7 @@ void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destina
         }
     }
 }
+
 void OnOffButtonScript::OnButtonPressed()
 {
     if (isProcessing) return; // 이미 처리 중이면 반환
@@ -93,7 +94,7 @@ bool OnOffButtonScript::CanInteract(Object* _object)
 std::wstring OnOffButtonScript::GetOtherButtonTag()
 {
 	// 현재 버튼의 태그를 기반으로 상대 버튼의 태그 반환 (1_1밟으면 1_2반환, 2_2밟으면 2_1반환...)
-    // 1_1은 1_2와 짝이고, 2_1은 2_2와 짝이고 ...
+    // ex) OnOff1_1은 OnOff1_2와 짝이고, OnOff2_1은 OnOff2_2와 짝이고 ... _1 과 _2로 짝지어지게 태그를 지어주면 됨미다
     std::wstring currentTag = gameObject->GetTag();
     if (currentTag.find(L"_1") != std::wstring::npos)
     {

@@ -53,6 +53,7 @@ public:
     }
     inline void SetFrame(FLOAT _val) { mDuration = _val; }
     inline void SetFremeRateScale(FLOAT _val) { mFrameRateScale = _val; }
+    inline void SetLoop(bool _isLoop) { isLoop = _isLoop; }
 public:
     bool IsPlaying();
     bool IsLoop();

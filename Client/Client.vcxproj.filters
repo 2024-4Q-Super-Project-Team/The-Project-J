@@ -20,8 +20,6 @@
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\ModelSpawner.cpp" />
-    <ClCompile Include="Contents\GameApp\World\TestWorld.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
@@ -37,17 +35,16 @@
     <ClInclude Include="Application\GameApp.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
-    <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
-    <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
-     <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

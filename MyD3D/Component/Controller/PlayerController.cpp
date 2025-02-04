@@ -25,9 +25,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
-	mCapsuleDesc.stepOffset = 0.f;
+	mCapsuleDesc.stepOffset = mStepOffset;
 	mCapsuleDesc.scaleCoeff = 1.0f;
-	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.behaviorCallback = mBehaviorCallback;
 	mCapsuleDesc.reportCallback = mEventCallback;
 	mCapsuleDesc.maxJumpHeight = 20.f;
@@ -86,9 +85,9 @@ void PlayerController::Start()
 
 	mCapsuleController->setHeight(mHeight);
 	mCapsuleController->setRadius(mRadius);
-	mCapsuleController->setContactOffset(0.f);
+	mCapsuleController->setContactOffset(mContactOffset);
 	mCapsuleController->setSlopeLimit(mSlopeLimit);
-	mCapsuleController->setStepOffset(0.f);
+	mCapsuleController->setStepOffset(mStepOffset);
 }
 
 void PlayerController::Tick()
@@ -106,15 +105,16 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
-	t = Time::GetScaledDeltaTime();
 	GravityUpdate();
-	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, t, mCharacterControllerFilters);
+	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 	mIsOnGround = flags & PxControllerCollisionFlag::eCOLLISION_DOWN;
+
 }
 
 void PlayerController::PostUpdate()
 {
 	gameObject->transform->UpdatePxTransform();
+
 }
 
 void PlayerController::PreRender()
@@ -197,13 +197,8 @@ void PlayerController::GravityUpdate()
 	//ม฿ทย 
 	if (mIsOnGround == false)
 	{
-		mGravityElapsedTime += t;
-		float gt = mGravityElapsedTime;
-		float s = 0.5f * mGravity * gt * gt;
-		mDisplacement.y -= s;
+		mDisplacement.y -= mGravity * Time::GetScaledDeltaTime();
 	}
-	else
-		mGravityElapsedTime = 0.f;
 }
 
 void PlayerController::CheckNowColliding()

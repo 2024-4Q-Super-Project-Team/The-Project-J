@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+
 void PlayerScript::Start()
 {
     // 초기화 코드
@@ -25,7 +26,7 @@ void PlayerScript::Update()
 {
     // HP 갱신
     UpdatePlayerHP();
-    UpdateInput();
+
     if (isAction)
     {
         // 컨트롤러 움직이지 못하게
@@ -93,15 +94,15 @@ void PlayerScript::Reset()
 {
     isAction = false;
     mBurnObjectScript->SetBurn(true);
-    mPlayerCurHP = mPlayerMaxHP.val;
-    mHpReduceCount = 0.0f;
+    mPlayerHP.val = mPlayerMaxHP.val;
+    mHpReduceCount.val = 0.0f;
 }
 
 void PlayerScript::SetHP(INT _val)
 {
     if (mPlayerState != ePlayerStateType::DEAD)
     {
-        mPlayerCurHP = _val;
+        mPlayerHP.val = _val;
     }
 }
 
@@ -113,7 +114,7 @@ void PlayerScript::Hit(INT _damage)
         if (mAnimator->GetActiveAnimationKey() != L"Hit")
         {
             mAnimator->SetCurrentAnimation(L"Hit");
-            mPlayerCurHP -= _damage;
+            mPlayerHP.val -= _damage;
         }
     }
 }
@@ -127,16 +128,16 @@ void PlayerScript::UpdatePlayerHP()
         if (mBurnObjectScript->IsBurning())
         {
             // 체력 감소 카운트 틱 계산
-            mHpReduceCount += Time::GetUnScaledDeltaTime();
+            mHpReduceCount.val += Time::GetUnScaledDeltaTime();
             // 체력 감소 카운트가 틱보다 높은 경우 HP감소
-            while (mHpReduceCount >= mHpReduceTick.val)
+            while (mHpReduceCount.val >= mHpReduceTick.val)
             {
-                --mPlayerCurHP;
-                mHpReduceCount -= mHpReduceTick.val;
+                --mPlayerHP.val;
+                mHpReduceCount.val -= mHpReduceTick.val;
             }
         }
         // 플레이어의 체력이 0 이하일 경우
-        if (mPlayerCurHP <= 0)
+        if (mPlayerHP.val <= 0)
         {
             mPlayerState = ePlayerStateType::DEAD;
             // 애니메이션 Dead재생
@@ -155,6 +156,9 @@ void PlayerScript::UpdateInput()
     {
         moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
         moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+        // 이동 방향에 따른 회전 각도 계산
+        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
+        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY, 0.0f));
     }
     mPlayerController->SetMoveForceX(moveForce.x);
     mPlayerController->SetMoveForceZ(moveForce.y);
@@ -176,7 +180,7 @@ json PlayerScript::Serialize()
     ret["player handle"] = mPlayerHandle.val;
     ret["player max hp"] = mPlayerMaxHP.val;
     ret["player hp reduce tick"] = mHpReduceTick.val;
-    ret["player move speed"] = mJumpPower.val;
+    ret["player move speed"] = mMoveSpeed.val;
     ret["player jump power"] = mJumpPower.val;
 
     return ret;
@@ -196,13 +200,5 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player hp reduce tick"))
     {
         mHpReduceTick.val = j["player hp reduce tick"].get<FLOAT>();
-    }
-    if (j.contains("player move speed"))
-    {
-        mMoveSpeed.val = j["player move speed"].get<FLOAT>();
-    }
-    if (j.contains("player jump power"))
-    {
-        mJumpPower.val = j["player jump power"].get<FLOAT>();
     }
 }

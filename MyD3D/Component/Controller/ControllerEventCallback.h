@@ -15,16 +15,16 @@ private:
 
 	virtual void onShapeHit(const PxControllerShapeHit& hit)
 	{
-		PxActor* triggerActor = hit.controller->getActor();
+		PxActor* hitActor = hit.controller->getActor();
 		PxActor* otherActor = hit.actor;
 
-		Rigidbody* triggerRigidbody = static_cast<Rigidbody*>(triggerActor->userData);
+		Rigidbody* hitRigidbody = static_cast<Rigidbody*>(hitActor->userData);
 		Rigidbody* otherRigidbody = static_cast<Rigidbody*>(otherActor->userData);
 
-		Object* triggerObject = static_cast<Object*>(triggerRigidbody->gameObject);
+		Object* hitObject = static_cast<Object*>(hitRigidbody->gameObject);
 		Object* otherObject = static_cast<Object*>(otherRigidbody->gameObject);
 
-		auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
+		auto hitScripts = hitObject->GetComponents<MonoBehaviour>();
 		auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
 
 
@@ -39,17 +39,17 @@ private:
 		{
 			mCollisions[hit.controller].insert(hit.actor);
 
-			for (auto script : triggerScripts)
-				script->OnCollisionEnter(triggerRigidbody, otherRigidbody);
+			for (auto script : hitScripts)
+				script->OnCollisionEnter(hitRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
-				script->OnCollisionEnter(otherRigidbody, triggerRigidbody);
+				script->OnCollisionEnter(otherRigidbody, hitRigidbody);
 		}
 		else //충돌중 
 		{
-			for (auto script : triggerScripts)
-				script->OnCollisionStay(triggerRigidbody, otherRigidbody);
+			for (auto script : hitScripts)
+				script->OnCollisionStay(hitRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
-				script->OnCollisionStay(otherRigidbody, triggerRigidbody);
+				script->OnCollisionStay(otherRigidbody, hitRigidbody);
 		}
 	}
 	virtual void onControllerHit(const PxControllersHit& hit) 
@@ -62,5 +62,3 @@ private:
 	}
 
 };
-
-//collider controller에서 erase 할 떄 callback의 map에서도 erase 해줘야 함. 

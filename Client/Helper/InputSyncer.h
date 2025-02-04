@@ -26,7 +26,6 @@ public:
 	static bool IsKeyDown(UINT _handle, eInputType _type);
 	static bool IsKeyHold(UINT _handle, eInputType _type);
 	static bool IsKeyUp(UINT _handle, eInputType _type);
-	static Vector2 GetInputDirection(UINT _handle);
 private:
 	
 	static std::unordered_map<eInputType, std::vector<UINT>> mKeySet[2];

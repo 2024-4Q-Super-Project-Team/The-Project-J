@@ -37,6 +37,10 @@ PrefabResource::PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel
 
 PrefabResource::~PrefabResource()
 {
+    for (auto& obj : mObjectList)
+    {
+        obj->transform->SetParent(nullptr);
+    }
     SAFE_DELETE_ARRAY(mObjectList);
 }
 
@@ -81,7 +85,7 @@ Object* PrefabResource::GetObjectFromName(const std::wstring& _name)
 Object* PrefabResource::Instantiate(World* _dstWorld)
 {
     World* dstWorld = _dstWorld == nullptr ? GameManager::GetCurrentWorld() : _dstWorld;
-   
+
     if (dstWorld)
     {
         std::list<Object*>                          cloneArray;

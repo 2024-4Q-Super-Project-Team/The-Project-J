@@ -9,7 +9,7 @@ ConvexCollider::ConvexCollider(Object* _owner) : Collider(_owner)
 
 ConvexCollider::~ConvexCollider()
 {
-	if(mCmesh)
+	if (mCmesh)
 		mCmesh->release();
 }
 
@@ -19,7 +19,6 @@ void ConvexCollider::Start()
 
 
 	mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-
 
 	if (mMesh == nullptr) return;
 

@@ -42,27 +42,27 @@ public:
     void SetEulerAngles(const Vector3& euler) { rotation = Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z); }
     Vector3 GetEulerAngles() const { return rotation.ToEuler(); }
 
-// Dotween 관련
-// 회전
+    // Dotween 관련
+    // 회전
 private:
     bool isRotating = false;
-	bool isLookingAt = false;
+    bool isLookingAt = false;
     float rotationDuration = 2.0f;
     float rotationElapsedTime = 0.0f;
     Dotween::EasingEffect easingEffect;
     Quaternion startRotation;
     Quaternion endRotation;
-// 움직임
+    // 움직임
 private:
-	bool isMoving = false;
-	float moveDuration = 2.0f;
-	float moveElapsedTime = 0.0f;
-	Vector3 startPosition;
-	Vector3 endPosition;
+    bool isMoving = false;
+    float moveDuration = 2.0f;
+    float moveElapsedTime = 0.0f;
+    Vector3 startPosition;
+    Vector3 endPosition;
 
 public:
     inline Transform* GetParent() const { return mParent; }
-    inline Transform* GetRootParent() { return mParent != nullptr? GetRootParent() : this; }
+    inline Transform* GetRootParent() { return mParent != nullptr ? GetRootParent() : this; }
     inline bool       IsBelong(Transform* _dest)
     {
         if (this == nullptr || mParent == nullptr)
@@ -79,19 +79,20 @@ public:
     }
     inline const std::vector<Transform*>& GetChildren() { return mChildren; }
     inline const Vector3& GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
-    inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
-    inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
+    inline const Matrix& GetLocalMatrix() { return mLocalMatrix; }
+    inline const Matrix& GetWorldMatrix() { return mWorldMatrix; }
     inline const Vector3  Forward() { return GetWorldMatrix().Forward(); }
-    inline const Vector3  Up() { return GetWorldMatrix().Up(); }     
+    inline const Vector3  Up() { return GetWorldMatrix().Up(); }
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
-    inline const PxTransform  GetPxTransform() { return mPxTransform; }
+    inline const PxTransform  GetPxWorldTransform() { return mPxWorldTransform; }
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();
     // 부모를 변경한다.
     void SetParent(Transform* _parent);
     void SetLocalMatrix(Matrix& _matrix);
+    void  SetPxWorldTransform(PxTransform _transform) { mPxWorldTransform = _transform; }
 
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -112,22 +113,23 @@ private:
     std::vector<Transform*> mChildren;
     // ====================================
     PxTransform mPxTransform{};
+    PxTransform mPxWorldTransform{};
 
 public:
     void EditorRendering(EditorViewerType _viewerType);
 
-// dotween 함수
+    // dotween 함수
 public:
     // dotween 함수
     void Rotate180(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::Linear);
-	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
-	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 
 private:
     void UpdateLookAt(float t, Dotween::EasingEffect easingEffect);
     void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
-	void UpdateMove(float t, Dotween::EasingEffect easingEffect);
-    
+    void UpdateMove(float t, Dotween::EasingEffect easingEffect);
+
 
 
 };

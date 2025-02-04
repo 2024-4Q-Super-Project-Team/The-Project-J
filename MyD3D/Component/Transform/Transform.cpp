@@ -35,11 +35,16 @@ Transform::~Transform()
             }
         }
     }
+    for (auto& child : mChildren)
+    {
+        child->SetParent(nullptr);
+    }
+
+    UpdatePxTransform();
 }
 
 void Transform::Start()
 {
-
 }
 
 void Transform::Tick()
@@ -68,6 +73,8 @@ void Transform::Update()
             UpdateMove(1.0f, easingEffect);
         }
     }
+
+    UpdatePxTransform();
 }
 
 void Transform::PostUpdate()
@@ -92,25 +99,25 @@ void Transform::PostRender()
 
 void Transform::EditorUpdate()
 {
-	// Dotween 테스트용으로 일단 여기에 돌림. 회전
+    // Dotween 테스트용으로 일단 여기에 돌림. 회전
     if (isRotating)
     {
         rotationElapsedTime += Time::GetScaledDeltaTime();
         float t = rotationElapsedTime / rotationDuration;           // 버튼 누르고 지난 시간 / duration
-		UpdateRotation(t, easingEffect);							// t가 1이 될 때까지 회전
-        Display::Console::Log("Transform Updating... : " , rotationElapsedTime);
+        UpdateRotation(t, easingEffect);							// t가 1이 될 때까지 회전
+        Display::Console::Log("Transform Updating... : ", rotationElapsedTime);
         Display::Console::Log(rotationElapsedTime, "\n");
 
         if (rotationElapsedTime >= rotationDuration)
         {
             isRotating = false;                 // 회전 완료
-			rotationElapsedTime = 0.0f;         // 초기화
-            Display::Console::Log("Rotate Finished, flag :  " ,isRotating,  "\n");
+            rotationElapsedTime = 0.0f;         // 초기화
+            Display::Console::Log("Rotate Finished, flag :  ", isRotating, "\n");
             UpdateRotation(1.0f, easingEffect); // 최종 위치로 설정
         }
     }
 
-	// 바라보기
+    // 바라보기
     if (isLookingAt)
     {
         rotationElapsedTime += Time::GetScaledDeltaTime();
@@ -121,10 +128,10 @@ void Transform::EditorUpdate()
 
         if (rotationElapsedTime >= rotationDuration)
         {
-            isLookingAt = false;               
-            rotationElapsedTime = 0.0f;         
+            isLookingAt = false;
+            rotationElapsedTime = 0.0f;
             Display::Console::Log("Rotate Finished, flag : ", isRotating, "\n");
-            UpdateLookAt(1.0f, easingEffect);  
+            UpdateLookAt(1.0f, easingEffect);
         }
     }
 }
@@ -135,26 +142,43 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
-    memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);
-    memcpy_s(&mPxTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+
+    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+
 }
 
-void Transform::UpdateFromPxTransform(PxTransform pxTransform)
+void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
 {
-    mPxTransform = pxTransform;
-    PxTransform localTransform = mPxTransform;
 
+    mPxWorldTransform = _pxWorldTransform;
 
-    memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
-    memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
+    if (mParent) // 부모가 있는 경우
+    {
+
+        PxMat44 parentWorldMatrix = PxMat44(mParent->mPxWorldTransform);
+        PxMat44 parentWorldInverse = parentWorldMatrix.inverseRT();
+        PxMat44 pxWorldMatrix = PxMat44(mPxWorldTransform);
+        PxMat44 pxLocalMatrix = parentWorldInverse * pxWorldMatrix;
+        PxTransform localTransform = PxTransform(pxLocalMatrix);
+
+        memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
+        memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
+    }
+    else
+    {
+        memcpy_s(&position, sizeof(float) * 3, &mPxWorldTransform.p, sizeof(float) * 3);
+        memcpy_s(&rotation, sizeof(float) * 4, &mPxWorldTransform.q, sizeof(float) * 4);
+    }
+
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)
 {
     Transform* clone = _owner->transform;
-    clone->position  = this->position;
-    clone->rotation  = this->rotation;
-    clone->scale     = this->scale;
+    clone->position = this->position;
+    clone->rotation = this->rotation;
+    clone->scale = this->scale;
 
     if (this->GetParent())
     {
@@ -213,7 +237,7 @@ json Transform::Serialize()
     json ret;
     ret["id"] = GetId();
     ret["name"] = "Transform";
- 
+
     ret["position"] = { position.x, position.y, position.z };
     ret["rotation"] = { rotation.x, rotation.y, rotation.z, rotation.w };
     ret["scale"] = { scale.x, scale.y, scale.z };
@@ -267,7 +291,7 @@ void Transform::Deserialize(json& j)
             SetParent(static_cast<Object*>(Engine::SaveBase::mMap[parentId])->GetComponent<Transform>());
     }
     else mParent = nullptr;
-   
+
 }
 
 void Transform::EditorRendering(EditorViewerType _viewerType)
@@ -292,7 +316,7 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
     }
     case EditorViewerType::HIERARCHY:
         break;
-    case EditorViewerType::INSPECTOR: 
+    case EditorViewerType::INSPECTOR:
     {
         //////////////////////////////////////////////////
         // Position, Rotation, Scale
@@ -368,7 +392,7 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
                     ImGui::Text("NULL Children");
                 }
             }
-            
+
         }
         ImGui::Separator();
         //////////////////////////////////////////////////
@@ -461,13 +485,13 @@ void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::
 
 void Transform::MoveTo(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)
 {
-	if (isMoving) return;
-	isMoving = true;
-	moveDuration = _duration;
-	moveElapsedTime = 0.0f;
-	easingEffect = _easingEffect;
-	startPosition = position;
-	endPosition = targetPosition;
+    if (isMoving) return;
+    isMoving = true;
+    moveDuration = _duration;
+    moveElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
+    startPosition = position;
+    endPosition = targetPosition;
 }
 
 void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
@@ -488,6 +512,6 @@ void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
 
 void Transform::UpdateMove(float t, Dotween::EasingEffect easingEffect)
 {
-	position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-	UpdateMatrix();
+    position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+    UpdateMatrix();
 }

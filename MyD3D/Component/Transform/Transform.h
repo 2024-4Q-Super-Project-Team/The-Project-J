@@ -87,6 +87,7 @@ public:
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
     inline const PxTransform  GetPxTransform() { return mPxTransform; }
 	inline const float GetHeight() { return scale.y; }
+    Vector3 LocalToWorld(const Vector3& localPosition) const;
 public:
     // 더티플래그가 True면 업데이트를 한다.
     void UpdateMatrix();

@@ -59,13 +59,27 @@ void Transform::Update()
     if (isMoving)
     {
         moveElapsedTime += Time::GetScaledDeltaTime();
-        float t = moveElapsedTime / moveDuration;
-        UpdateMove(t, easingEffect);
+        float t = moveElapsedTime / moveDuration;               // 버튼 누르고 지난 시간 / duration
+        UpdateMove(t, easingEffect);                            // t가 1이 될 때까지 회전
         if (moveElapsedTime >= moveDuration)
         {
             isMoving = false;
             moveElapsedTime = 0.0f;
             UpdateMove(1.0f, easingEffect);
+        }
+    }
+
+    if (isRotating)
+    {
+        rotationElapsedTime += Time::GetScaledDeltaTime();
+        float t = rotationElapsedTime / rotationDuration;           
+        UpdateRotation(t, easingEffect);							
+
+        if (rotationElapsedTime >= rotationDuration)
+        {
+            isRotating = false;                 
+            rotationElapsedTime = 0.0f;         
+            UpdateRotation(1.0f, easingEffect); 
         }
     }
 }
@@ -182,6 +196,11 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
+}
+
+Vector3 Transform::LocalToWorld(const Vector3& localPosition) const
+{
+    return Vector3::Transform(localPosition, mWorldMatrix);
 }
 
 void Transform::SetParent(Transform* _parent)
@@ -440,6 +459,27 @@ void Transform::Rotate90(float _duration, Dotween::EasingEffect _easingEffect)
     endRotation = startRotation * Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_PIDIV2); // 90도 회전
 }
 
+void Transform::RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isRotating) return;
+
+    isRotating = true;
+    rotationDuration = duration;
+    rotationElapsedTime = 0.0f;
+    this->easingEffect = easingEffect;
+
+    startRotation = rotation;
+    startPosition = position;
+
+    // 피벗 기준으로 회전
+    Vector3 direction = position - pivot;
+    Quaternion rotationQuat = Quaternion::CreateFromAxisAngle(axis, angle);
+    Vector3 rotatedDirection = Vector3::Transform(direction, rotationQuat);
+    endPosition = pivot + rotatedDirection;
+
+    endRotation = startRotation * rotationQuat;
+}
+
 void Transform::LookAt(const Vector3& targetPosition, float _duration, Dotween::EasingEffect _easingEffect)
 {
     if (isRotating) return;
@@ -470,6 +510,7 @@ void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+    position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 
     UpdateMatrix();
 }
@@ -487,3 +528,4 @@ void Transform::UpdateMove(float t, Dotween::EasingEffect easingEffect)
 	position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 	UpdateMatrix();
 }
+

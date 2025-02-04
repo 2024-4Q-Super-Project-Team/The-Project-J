@@ -9,6 +9,12 @@ OnOffButtonScript::OnOffButtonScript(Object* _owner)
 
 void OnOffButtonScript::Start()
 {
+    gameObject->AddComponent<Rigidbody>();
+
+    BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
+    boxCol->SetPosition(Vector3(0, 163, 0));
+    boxCol->SetExtents(Vector3(30, 8, 30));
+
     // 상대 버튼 찾기
     std::wstring otherButtonTag = GetOtherButtonTag();
     auto objects = FindObjectsWithTag(otherButtonTag);
@@ -35,6 +41,10 @@ void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destina
             isUp.val = false;
         }
     }
+}
+
+void OnOffButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
+{
 }
 
 void OnOffButtonScript::OnButtonPressed()
@@ -71,19 +81,6 @@ void OnOffButtonScript::OnButtonReleased()
     // 현재 버튼 올리기
     MoveButton(150.0f, 1.0f);
     isProcessing = false; // 처리 완료
-}
-
-void OnOffButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
-{
-    //Object* interactingObject = _destination->GetOwner();
-    //if (CanInteract(interactingObject))
-    //{
-    //    if (isUp.val)
-    //    {
-    //        OnButtonPressed(); // 상대 버튼 올리고, 내 버튼 내리기
-    //        isUp.val = false;
-    //    }
-    //}
 }
 
 bool OnOffButtonScript::CanInteract(Object* _object)

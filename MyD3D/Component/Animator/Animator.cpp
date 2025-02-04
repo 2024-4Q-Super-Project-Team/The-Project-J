@@ -125,6 +125,7 @@ void Animator::SetCurrentAnimation(ResourceHandle _handle)
         auto pResource = ResourceManager::GetResource<AnimationResource>(_handle);
         mActiveAnimation = pResource;
         mActiveAnimationHandle = _handle;
+        mDuration = 0.0f;
     }
 }
 

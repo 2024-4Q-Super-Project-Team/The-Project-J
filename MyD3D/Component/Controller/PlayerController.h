@@ -4,6 +4,7 @@
 class DynamicBehaviorCallback;
 class ControllerEventCallback;
 
+
 class PlayerController : public Component
 {
     enum SlopeMode
@@ -33,9 +34,7 @@ public:
 public:
     float t;
     ///move///
-    void KeyboardMove();
-    void PadMove();
-    void SetMoveSpeed(float _speed) { mMoveSpeed = _speed; }
+    void Move(Vector3 _displacement);
     void CheckOnGround();
 
     bool GetIsOnGround();
@@ -43,15 +42,13 @@ public:
 
 public:
     ///Jump///
-    void SetJumpSpeed(float _speed) { mJumpSpeed = _speed; }
-    void JumpUpdate();
-    void StartJump();
 
     //Force
     void GravityUpdate();
 
     //Collision
     void CheckNowColliding();
+
 public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -65,14 +62,6 @@ private:
     DynamicBehaviorCallback* mBehaviorCallback;
     ControllerEventCallback* mEventCallback;
 
-    //Key
-    int mForwardKeyIdx = 0;
-    int mBackwardKeyIdx = 0;
-    int mLeftKeyIdx = 0;
-    int mRightKeyIdx = 0;
-    int mJumpKeyIdx = 0;
-    std::vector<std::string> mStrKeys;
-
     //Capsule Controller
     float mHeight = 4;
     float mRadius = 2;
@@ -81,25 +70,16 @@ private:
     float mStepOffset = 0.5f;
    
     //Movement
-	float mMoveSpeed = 10.f;
     PxVec3 mDisplacement = PxVec3(0.f, 0.f, 0.f);
     bool mIsOnGround = false;
+
+    //SlopeMode
     SlopeMode mSlopeMode = SlopeMode::Ride;
     int mSlopeModeIdx = 0;
 
-    //Jump
-    float mJumpInitElapsedTime = 0.f;
-    float mJumpSpeed = 0.13f;
-    float mJumpDuration = 0.9f; //editable
-    float mJumpInputDuration = 0.1f;
-    float mJumpElapsedTime = 0.f;
-    float mJumpInputElapsedTime = 0.f;
-
-    enum eJumpState {None, InitJump, Jumping};
-    eJumpState mJumpState = None;
-    
     //Force
     float mGravity = 80.f;
+    float mGravityElapsedTime = 0.f;
 
     //Actor and Shapes
     Rigidbody* mRigid = nullptr;

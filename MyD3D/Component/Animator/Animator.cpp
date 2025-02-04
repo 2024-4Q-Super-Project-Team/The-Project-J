@@ -22,7 +22,7 @@ Animator::~Animator()
 
 void Animator::Start()
 {
-    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mActiveAnimationHandle);
+    SetCurrentAnimation(mActiveAnimationHandle);
 }
 
 void Animator::Tick()
@@ -103,13 +103,15 @@ void Animator::PostRender()
 
 void Animator::EditorUpdate()
 {
-    mActiveAnimation = ResourceManager::GetResource<AnimationResource>(mActiveAnimationHandle);
 }
 
 void Animator::EditorGlobalUpdate()
 {
-    gameObject->GetOwnerWorld()->
-        mNeedResourceHandleTable.insert(mActiveAnimationHandle.GetParentkey());
+    for (auto& [key, handle] : mAnimationTable)
+    {
+        gameObject->GetOwnerWorld()->
+            mNeedResourceHandleTable.insert(handle.GetParentkey());
+    }
 }
 
 void Animator::EditorRender()
@@ -196,14 +198,18 @@ json Animator::Serialize()
     ret["rotation"] = { mOffsetRotation.x, mOffsetRotation.y, mOffsetRotation.z, mOffsetRotation.w };
     ret["scale"] = { mOffsetScale.x, mOffsetScale.y, mOffsetScale.z };
 
-    json tableJson;
+    json tableJson = json::array(); // JSON 배열로 초기화
+
     for (auto& anim : mAnimationTable)
     {
-        tableJson["key"] = Helper::ToString(anim.first);
-        tableJson["handle"] = anim.second.Serialize();
+        json entry;
+        entry["key"] = Helper::ToString(anim.first);
+        entry["handle"] = anim.second.Serialize();
+
+        tableJson.push_back(entry); // 배열에 추가
     }
 
-    ret["table"] += tableJson;
+    ret["table"] = tableJson; // 배열을 최종 JSON 객체에 추가
 
     return ret;
 }
@@ -219,11 +225,11 @@ void Animator::Deserialize(json& j)
     if (j.contains("frame rate scale"))
         mFrameRateScale = j["frame rate scale"].get<FLOAT>();
     if (j.contains("is playing"))
-        mFrameRateScale = j["is playing"].get<BOOL>();
+        isPlaying = j["is playing"].get<BOOL>();
     if (j.contains("is loop"))
-        mFrameRateScale = j["is loop"].get<BOOL>();
+        isLoop = j["is loop"].get<BOOL>();
     if (j.contains("is reverse"))
-        mFrameRateScale = j["is reverse"].get<BOOL>();
+        isReverse = j["is reverse"].get<BOOL>();
 
     if (j.contains("position") && j["position"].size() == 3)
     {
@@ -409,6 +415,11 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
             if (ImGui::Checkbox(("isLoop" + uid).c_str(), (bool*)&isLoop))
             {
             }
+        }
+        ImGui::Separator();
+        {
+            ImGui::Text("FrameRateScale : ");
+            ImGui::DragFloat((uid + "FrameRateScale").c_str(), &mFrameRateScale, 0.01f, 0.0f, 1.0f);
         }
         ImGui::Separator();
         {

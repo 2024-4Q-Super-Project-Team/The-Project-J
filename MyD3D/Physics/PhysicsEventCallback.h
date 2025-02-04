@@ -69,16 +69,16 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 	//The method will be called for a pair of actors if one of the colliding shape pairs requested contact notification.
 	void onContact(const PxContactPairHeader& pairHeader, const PxContactPair* pairs, PxU32 nbPairs)
 	{
-		PxActor* triggerActor = pairHeader.actors[0];
+		PxActor* contactActor = pairHeader.actors[0];
 		PxActor* otherActor = pairHeader.actors[1];
 
-		Rigidbody* triggerRigidbody= static_cast<Rigidbody*>(triggerActor->userData);
+		Rigidbody* contactRigidbody= static_cast<Rigidbody*>(contactActor->userData);
 		Rigidbody* otherRigidbody = static_cast<Rigidbody*>(otherActor->userData);
 
-		Object* triggerObject = static_cast<Object*>(triggerRigidbody->gameObject);
+		Object* contactObject = static_cast<Object*>(contactRigidbody->gameObject);
 		Object* otherObject = static_cast<Object*>(otherRigidbody->gameObject);
 
-		auto triggerScripts = triggerObject->GetComponents<MonoBehaviour>();
+		auto contactScripts = contactObject->GetComponents<MonoBehaviour>();
 		auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
 
 		const PxContactPairFlags& cp = pairs[0].flags;
@@ -86,25 +86,25 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 		// 처음으로 충돌했을 때 
 		if (cp & PxContactPairFlag::eACTOR_PAIR_HAS_FIRST_TOUCH)
 		{
-			for (auto script : triggerScripts)
-				script->OnCollisionEnter(triggerRigidbody, otherRigidbody);
+			for (auto script : contactScripts)
+				script->OnCollisionEnter(contactRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
-				script->OnCollisionEnter(otherRigidbody, triggerRigidbody);
+				script->OnCollisionEnter(otherRigidbody, contactRigidbody);
 		}
 		// 충돌이 끝나는 때
 		else if (cp & PxContactPairFlag::eACTOR_PAIR_LOST_TOUCH)
 		{
-			for (auto script : triggerScripts)
-				script->OnCollisionExit(triggerRigidbody, otherRigidbody);
+			for (auto script : contactScripts)
+				script->OnCollisionExit(contactRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
-				script->OnCollisionExit(otherRigidbody, triggerRigidbody);
+				script->OnCollisionExit(otherRigidbody, contactRigidbody);
 		} //충돌중~
 		else
 		{
-			for (auto script : triggerScripts)
-				script->OnCollisionStay(triggerRigidbody, otherRigidbody);
+			for (auto script : contactScripts)
+				script->OnCollisionStay(contactRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
-				script->OnCollisionStay(otherRigidbody, triggerRigidbody);
+				script->OnCollisionStay(otherRigidbody, contactRigidbody);
 		}
 	}
 

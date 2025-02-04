@@ -178,6 +178,7 @@
     <ClInclude Include="Editor\Handler\EditorCustumWidget.h" />
     <ClInclude Include="Editor\Handler\EditorDragNDrop.h" />
     <ClInclude Include="Physics\PhysicsEventCallback.h" />
+    <ClInclude Include="Component\Controller\ControllerEventCallback.h" />
     <ClInclude Include="Resource\FontResource\FontResource.h" />
     <ClInclude Include="Component\FSM\FiniteStateMachine.h" />
     <ClInclude Include="Graphics\Extra\DebugDraw.h" />
@@ -316,6 +317,7 @@
     <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp" />
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp" />
     <ClCompile Include="Physics\PhysicsEventCallback.cpp" />
+    <ClCompile Include="Component\Controller\ControllerEventCallback.cpp" />
     <ClCompile Include="Resource\FontResource\FontResource.cpp" />
     <ClCompile Include="Component\FSM\FiniteStateMachine.cpp" />
     <ClCompile Include="Graphics\Extra\DebugDraw.cpp" />

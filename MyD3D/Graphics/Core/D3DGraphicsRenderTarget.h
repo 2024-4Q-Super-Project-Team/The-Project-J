@@ -20,6 +20,8 @@ public:
     virtual void Clear(FLOAT* _color);
     virtual void EndDraw() = 0;
 public:
+    void ClearStencil();
+    void ClearDepth();
     BOOL SetTarget();
     void Reset();
     virtual void Resize(UINT _width, UINT _height) = 0;

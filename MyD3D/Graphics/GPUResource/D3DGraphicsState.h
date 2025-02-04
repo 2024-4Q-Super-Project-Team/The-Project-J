@@ -26,6 +26,7 @@ public:
     explicit D3DGraphicsBlendState(IN D3D11_BLEND_DESC* _pBlendDesc);
     virtual ~D3DGraphicsBlendState() = default;
 public:
+    ID3D11BlendState* GetBlendState() { return mBlendState; }
     virtual void    Release() override;
     virtual HRESULT Create() override;
     virtual HRESULT Bind() override;

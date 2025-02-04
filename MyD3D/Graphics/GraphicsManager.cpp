@@ -125,12 +125,22 @@ void GraphicsManager::InitConstantBuffer()
         mCBufferArray[slot]->SetBindStage(eShaderStage::PS);
         mCBufferArray[slot]->Bind();
     }
+    // Particle
     {
         UINT slot = static_cast<UINT>(eCBufferType::ParticleSize);
         bufDesc.ByteWidth = sizeof(ParticleSizeCBuffer);
         mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
         mCBufferArray[slot]->SetBindSlot(slot);
         mCBufferArray[slot]->SetBindStage(eShaderStage::GS);
+        mCBufferArray[slot]->Bind();
+    }
+    // Outline
+    {
+        UINT slot = static_cast<UINT>(eCBufferType::Outline);
+        bufDesc.ByteWidth = sizeof(OutlineCBuffer);
+        mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
+        mCBufferArray[slot]->SetBindSlot(slot);
+        mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);
         mCBufferArray[slot]->Bind();
     }
 }
@@ -144,7 +154,8 @@ void GraphicsManager::InitShader()
         mVertexShaderArray[(UINT)eVertexShaderType::SHADOW] = new D3DGraphicsVertexShader(L"resource/shader/Shadow_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::PARTICLE] = new D3DGraphicsVertexShader(L"resource/shader/Particle_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::GRID] = new D3DGraphicsVertexShader(L"resource/shader/Grid_VS.cso");
-
+        mVertexShaderArray[(UINT)eVertexShaderType::OUTLINE] = new D3DGraphicsVertexShader(L"resource/shader/Outline_VS.cso");
+    
     }
     {
         mGeometryShaderArray[(UINT)eGeometryShaderType::PARTICLE] = new D3DGraphicsGeometryShader(L"resource/shader/Particle_GS.cso");
@@ -158,6 +169,7 @@ void GraphicsManager::InitShader()
         mPixelShaderArray[(UINT)ePixelShaderType::G_BUFFER] = new D3DGraphicsPixelShader(L"resource/shader/GBuffer_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::PARTICLE] = new D3DGraphicsPixelShader(L"resource/shader/Particle_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::GRID] = new D3DGraphicsPixelShader(L"resource/shader/Grid_PS.cso");
+        mPixelShaderArray[(UINT)ePixelShaderType::OUTLINE] = new D3DGraphicsPixelShader(L"resource/shader/Outline_PS.cso");
 
     }
 }
@@ -322,6 +334,54 @@ void GraphicsManager::InitDepthStencilState()
 
         mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&DssDesc);
     }
+
+    // Only write Stencil State
+    {
+        UINT slot = static_cast<UINT>(eDepthStencilStateType::STENCIL_WRITE);
+        D3D11_DEPTH_STENCIL_DESC swDssDesc;
+        ZeroMemory(&swDssDesc, sizeof(swDssDesc));
+
+        swDssDesc.DepthEnable = true;
+        swDssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        swDssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+        swDssDesc.StencilEnable = true;
+        swDssDesc.StencilReadMask = 0x00;
+        swDssDesc.StencilWriteMask = 0xFF;
+        swDssDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+        swDssDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+        swDssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        swDssDesc.BackFace.StencilFunc = swDssDesc.FrontFace.StencilFunc;
+
+        mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&swDssDesc);
+    }
+
+    // Only Read Stencil State
+    {
+        UINT slot = static_cast<UINT>(eDepthStencilStateType::STENCIL_READ);
+        D3D11_DEPTH_STENCIL_DESC srDssDesc;
+        ZeroMemory(&srDssDesc, sizeof(srDssDesc));
+
+        srDssDesc.DepthEnable = true;
+        srDssDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+        srDssDesc.DepthFunc = D3D11_COMPARISON_LESS_EQUAL;
+        srDssDesc.StencilEnable = true;
+        srDssDesc.StencilReadMask = 0xFF;
+        srDssDesc.StencilWriteMask = 0x00;
+        srDssDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
+        srDssDesc.FrontFace.StencilFunc = D3D11_COMPARISON_NOT_EQUAL;
+        srDssDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+        srDssDesc.BackFace.StencilFunc = srDssDesc.FrontFace.StencilFunc;
+
+        mDepthStecilStateArray[slot] = new D3DGraphicsDepthStencilState(&srDssDesc);
+    }
 }
 
 std::pair<D3DGraphicsRTV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultRenderTargetView(UINT _width, UINT _height)
@@ -376,7 +436,7 @@ std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultDepthS
     TexDesc.Height = _height;
     TexDesc.MipLevels = 1;
     TexDesc.ArraySize = 1;
-    TexDesc.Format = DXGI_FORMAT_R32_TYPELESS;
+    TexDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
     TexDesc.SampleDesc.Count = 1;
     TexDesc.SampleDesc.Quality = 0;
     TexDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -384,11 +444,12 @@ std::pair<D3DGraphicsDSV*, D3DGraphicsSRV*> GraphicsManager::CreateDefaultDepthS
     TexDesc.CPUAccessFlags = 0;
     TexDesc.MiscFlags = 0;
 
-    DSVDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    DSVDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     DSVDesc.Texture2D.MipSlice = 0;
+    DSVDesc.Flags = 0;
 
-    SRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
+    SRVDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
     SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     SRVDesc.Texture2D.MostDetailedMip = 0;
     SRVDesc.Texture2D.MipLevels = 1;

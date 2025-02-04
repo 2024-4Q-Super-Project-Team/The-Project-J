@@ -34,6 +34,8 @@ void EditorManager::Initialize()
     InitMainWindow();
     // 컨텍스트 활성화
     ImGui::SetCurrentContext(mEditorContext);
+
+    UIManager::Initialize();
 }
 
 void EditorManager::Finalization()
@@ -110,6 +112,8 @@ void EditorManager::FocusWindowRender()
             // 카메라 렌더링 수행
             ///////////////////////////////////////////
             mEditorCamera.EditorRender();
+
+            UIManager::Render();
 
             ///////////////////////////////////////////
             // Guizmo 렌더링 수행

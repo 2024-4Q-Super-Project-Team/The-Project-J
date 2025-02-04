@@ -36,6 +36,7 @@ BOOL GameManager::Initialize()
 
 	GraphicsManager::Initialize();
 	ResourceManager::Initialize();
+	UIManager::Initialize();
 	ViewportManager::Initialize();
 	EditorManager::Initialize();
 	mComponentManager->Initialize();
@@ -57,6 +58,7 @@ void GameManager::Run()
 		Time::Update();
 		AudioHub::Update();
 		GameManager::UpdateGame();
+		UIManager::Update();
 
 		switch (mCurrRunType)
 		{
@@ -82,6 +84,7 @@ void GameManager::Finalization()
 	ResourceManager::Finalization();
 	ViewportManager::Finalization();
 	EditorManager::Finalization();
+	UIManager::Finalization();
 	mComponentManager->Finalization();
 	mPhysicsManager->Finalization();
 	SAFE_DELETE(mPhysicsManager);

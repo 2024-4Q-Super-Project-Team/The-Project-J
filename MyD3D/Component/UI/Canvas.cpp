@@ -122,9 +122,14 @@ void _CALLBACK Canvas::OnDestroy()
 
 json Canvas::Serialize()
 {
-    return json();
+    json ret;
+    ret["id"] = GetId();
+    ret["name"] = "Canvas";
+
+    return ret;
 }
 
 void Canvas::Deserialize(json& j)
 {
+    SetId(j["id"].get<unsigned int>());
 }

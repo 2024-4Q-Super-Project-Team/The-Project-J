@@ -51,6 +51,8 @@ void ViewportScene::PreUpdate()
 
 void ViewportScene::Update()
 {
+    UIManager::Update();
+
     if (mWorldManager)
     {
         mWorldManager->Update();
@@ -82,6 +84,8 @@ void ViewportScene::Render()
         mSwapChain->Clear();
 
         mWorldManager->Render();
+
+        UIManager::Render();
 
         EditorManager::Render();
 
@@ -116,7 +120,7 @@ void ViewportScene::EditorRender()
         mSwapChain->Clear();
 
         mWorldManager->EditorRender();
-
+        
         EditorManager::EditorRender();
 
         mSwapChain->EndDraw();

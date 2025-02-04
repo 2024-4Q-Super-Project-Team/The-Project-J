@@ -64,6 +64,12 @@ void UIText::SetFont(ResourceHandle _handle)
 
 	if (!path.empty())
 	{
+		if (m_pSpriteFont != nullptr)
+		{
+			delete m_pSpriteFont;
+			m_pSpriteFont = nullptr;
+		}
+
 		m_pSpriteFont = new SpriteFont(D3DGraphicsDevice::GetDevice(), path.c_str());
 	}
 }

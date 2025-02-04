@@ -8,6 +8,7 @@ LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
 
 void LowerPlatformButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
+    // 나무판자가 앞쪽으로 넘어진다
     Object* interactingObject = _destination->GetOwner();
     if (isUp.val && CanInteract(interactingObject))
     {
@@ -18,13 +19,7 @@ void LowerPlatformButtonScript::OnTriggerEnter(Collider* _origin, Collider* _des
 
 void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-    // 나무판자가 앞쪽으로 넘어진다
-    Object* interactingObject = _destination->GetOwner();
-    if (isUp.val && CanInteract(interactingObject))
-    {
-        isUp.val = false;
-        OnButtonPressed();
-    }
+    
 
 }
 

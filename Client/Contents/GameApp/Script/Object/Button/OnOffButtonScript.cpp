@@ -24,6 +24,18 @@ void OnOffButtonScript::Start()
         }
     }
 }
+void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
+{
+    Object* interactingObject = _destination->GetOwner();
+    if (CanInteract(interactingObject))
+    {
+        if (isUp.val)
+        {
+            OnButtonPressed(); // 상대 버튼 올리고, 내 버튼 내리기
+            isUp.val = false;
+        }
+    }
+}
 void OnOffButtonScript::OnButtonPressed()
 {
     if (isProcessing) return; // 이미 처리 중이면 반환
@@ -33,7 +45,8 @@ void OnOffButtonScript::OnButtonPressed()
     {
         // 상대 버튼 올리기
         otherButton->OnButtonReleased();
-        Display::Console::Log(otherButton->gameObject->GetTag(), "Button Up!\n");
+		otherButton->isUp.val = true;
+        Display::Console::Log(otherButton->gameObject->GetTag(), "Up!\n");
 
     }
 
@@ -61,33 +74,15 @@ void OnOffButtonScript::OnButtonReleased()
 
 void OnOffButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        if (isUp.val)
-        {
-            OnButtonPressed(); // 상대 버튼 올리고, 내 버튼 내리기
-            isUp.val = false;
-        }
-    }
-}
-
-//void OnOffButtonScript::OnTriggerExit(Collider* _origin, Collider* _destination)
-//{
-//    Object* interactingObject = _destination->GetOwner();
-//    if (CanInteract(interactingObject))
-//    {
-//        if (!isUp.val)
-//        {
-//			OnButtonReleased(); // 내 버튼 올리기
-//            isUp.val = true;
-//        }
-//    }
-//}
-
-void OnOffButtonScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
-{
-       
+    //Object* interactingObject = _destination->GetOwner();
+    //if (CanInteract(interactingObject))
+    //{
+    //    if (isUp.val)
+    //    {
+    //        OnButtonPressed(); // 상대 버튼 올리고, 내 버튼 내리기
+    //        isUp.val = false;
+    //    }
+    //}
 }
 
 bool OnOffButtonScript::CanInteract(Object* _object)
@@ -98,6 +93,7 @@ bool OnOffButtonScript::CanInteract(Object* _object)
 std::wstring OnOffButtonScript::GetOtherButtonTag()
 {
 	// 현재 버튼의 태그를 기반으로 상대 버튼의 태그 반환 (1_1밟으면 1_2반환, 2_2밟으면 2_1반환...)
+    // 1_1은 1_2와 짝이고, 2_1은 2_2와 짝이고 ...
     std::wstring currentTag = gameObject->GetTag();
     if (currentTag.find(L"_1") != std::wstring::npos)
     {

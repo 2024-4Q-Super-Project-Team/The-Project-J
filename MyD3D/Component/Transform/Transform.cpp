@@ -98,14 +98,12 @@ void Transform::EditorUpdate()
         rotationElapsedTime += Time::GetScaledDeltaTime();
         float t = rotationElapsedTime / rotationDuration;           // 버튼 누르고 지난 시간 / duration
 		UpdateRotation(t, easingEffect);							// t가 1이 될 때까지 회전
-        Display::Console::Log("Transform Updating... : " , rotationElapsedTime);
         Display::Console::Log(rotationElapsedTime, "\n");
 
         if (rotationElapsedTime >= rotationDuration)
         {
             isRotating = false;                 // 회전 완료
 			rotationElapsedTime = 0.0f;         // 초기화
-            Display::Console::Log("Rotate Finished, flag :  " ,isRotating,  "\n");
             UpdateRotation(1.0f, easingEffect); // 최종 위치로 설정
         }
     }
@@ -116,14 +114,12 @@ void Transform::EditorUpdate()
         rotationElapsedTime += Time::GetScaledDeltaTime();
         float t = rotationElapsedTime / rotationDuration;
         UpdateLookAt(t, easingEffect);
-        Display::Console::Log("Transform Updating... : ", rotationElapsedTime);
         Display::Console::Log(rotationElapsedTime, "\n");
 
         if (rotationElapsedTime >= rotationDuration)
         {
             isLookingAt = false;               
             rotationElapsedTime = 0.0f;         
-            Display::Console::Log("Rotate Finished, flag : ", isRotating, "\n");
             UpdateLookAt(1.0f, easingEffect);  
         }
     }

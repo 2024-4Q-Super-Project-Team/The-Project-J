@@ -2,6 +2,7 @@
 #include "MonsterScript.h"
 
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+#include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 
 void MonsterScript::Start()
 {
@@ -9,27 +10,23 @@ void MonsterScript::Start()
 
 	// Init Setting
 	mFSM = eMonsterStateType::IDLE;
-	bIsTarget = false;
-	bIsBurn = false;
 
 	// Add componenet
 	
 	{	// Animator Component
-		m_pAnimator = gameObject->GetComponent<Animator>();
-		if (m_pAnimator == nullptr)
-			m_pAnimator = gameObject->AddComponent<Animator>();
+		m_pAnimator = gameObject->AddComponent<Animator>();
 	}
 
 	{	// Head Collider Component
-		m_pHeadCollider = gameObject->GetComponent<BoxCollider>();
-		if (m_pHeadCollider == nullptr)
-			m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
+		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
 	}
 
-	{	// Foot Collider Component
-		m_pFootCollider = gameObject->GetComponent<BoxCollider>();
-		if (m_pFootCollider == nullptr)
-			m_pFootCollider = gameObject->AddComponent<BoxCollider>();
+	{	// Body Collider Component
+		m_pBodyCollider = gameObject->AddComponent<SphereCollider>();
+	}
+
+	{	// BurnObjectScript Component
+		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
 	}
 }
 
@@ -57,7 +54,7 @@ void MonsterScript::Update()
 	switch (mFSM)
 	{
 	case eMonsterStateType::IDLE:
-		Display::Console::Log("IDLE");
+		//Display::Console::Log("IDLE");
 		if (m_pAnimator)
 		{
 			// TODO : 아이들 애니메이션 재생
@@ -68,18 +65,31 @@ void MonsterScript::Update()
 		if (m_pAnimator)
 		{
 			// TODO : 무브 애니메이션 재생
+			m_pAnimator->Play();
 		}
-
-		if (bIsTarget)
+		// 타겟이 존재하는가?
+		if (m_pTarget)
 		{
-			// TODO : 타겟 위치로 천천히 이동하기
-			//gameObject->transform->position
-			// 타겟과의 거리가 N distance 내라면 공격
-			mFSM = eMonsterStateType::ATTACK;
-		}
+			Vector3 dir = m_pTarget->transform->position - gameObject->transform->position;
+			float distance = dir.Length();	// 거리 구하기
+			dir.Normalize();  // 방향 구하기
+			if (distance > mAttackDistance.val)
+			{	// 타겟과의 거리가 범위 밖이라면 이동
+				gameObject->transform->position += dir * mMoveSpeed.val;
+			}
+			else
+			{
+				// 타겟과의 거리가 범위 내라면 공격
+				mFSM = eMonsterStateType::ATTACK;
+			}
+		} // 타겟이 존재하지 않는가?
 		else
 		{
-			// TODO : 랜덤 방향으로 이동
+			Vector3 dir = mRandomPos - gameObject->transform->position;
+			float distance = dir.Length();	// 거리 구하기
+			dir.Normalize();  // 방향 구하기
+			// 랜덤 방향으로 이동
+			gameObject->transform->position += dir * mMoveSpeed.val;
 		}
 		break;
 	case eMonsterStateType::ATTACK:
@@ -89,9 +99,15 @@ void MonsterScript::Update()
 			// TODO : 추격 애니메이션 재생
 		}
 
-		if (bIsTarget)
+		if (m_pTarget)
 		{
-			// TODO : 타겟 위치로 빠르게 이동
+			// 방향 벡터 구하기
+			Vector3 dir = m_pTarget->transform->position - gameObject->transform->position;
+			float distance = dir.Length();	// 거리 구하기
+			dir.Normalize();  // 방향 구하기
+
+			// 타겟 위치로 빠르게 이동
+			gameObject->transform->position += dir * mMoveSpeed.val * 1.5f;
 		}
 		break;
 	case eMonsterStateType::HIT:
@@ -105,13 +121,17 @@ void MonsterScript::Update()
 			// TODO : 기절 애니메이션 재생
 		}
 
-		// 기절 하던 중 불이 붙었다면
-		if (bIsBurn)
-		{
+		mGroggyCount += Time::GetUnScaledDeltaTime();
+
+		if (mGroggyCount < mGroggyTick.val) // && m_pBurnObjectScript->IsBurning()
+		{	// N초 안에 불이 붙었다면
+			mGroggyCount = 0.f;
 			mFSM = eMonsterStateType::DIE;
 		}
-		else  // N초안에 붙지 않았다면 애니메이션 역재생 후
-		{
+		else
+		{	// N초안에 불이 붙지 않았다면 
+			// TODO : 애니메이션 역재생
+			mGroggyCount = 0.f;
 			mFSM = eMonsterStateType::IDLE;
 		}
 		break;
@@ -119,8 +139,7 @@ void MonsterScript::Update()
 		Display::Console::Log("DIE");
 		if (m_pAnimator)
 		{
-			// TODO : 
-			// 죽는 애니메이션 재생 후
+			// TODO : 죽는 애니메이션 재생 후
 			// 오브젝트 삭제
 		}
 		break;
@@ -135,7 +154,7 @@ void MonsterScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination
 	if (_destination->gameObject->GetTag() == L"Player")
 	{
 		auto* player = _destination->GetOwner()->GetComponent<PlayerScript>();
-		if (player && m_pAnimator)
+		if (player)
 		{
 			// TODO :
 			// 몬스터가 공격 애니메이션 중일 때에
@@ -162,10 +181,6 @@ void MonsterScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 	// 플레이어가 머리에 닿았을 때
 	if (_destination->gameObject->GetTag() == L"Player")
 	{
-		auto* player = _destination->gameObject->GetComponent<PlayerScript>();
-		// TODO : 
-		// 플레이어에게 불붙이기 상태가 가능하도록 해주기
-
 		// 몬스터 기절상태로 바꿔주기
 		mFSM = eMonsterStateType::GROGGY;
 	}

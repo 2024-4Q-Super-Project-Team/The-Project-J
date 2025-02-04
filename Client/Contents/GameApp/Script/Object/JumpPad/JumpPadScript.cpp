@@ -14,8 +14,8 @@ void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
     if (_destination->gameObject->GetComponent<PlayerController>())
     {
         auto* playerController = _destination->gameObject->GetComponent<PlayerController>();
-        playerController->SetJumpSpeed(mJumpForce.val);
-        playerController->StartJump();
+        //playerController->SetJumpSpeed(mJumpForce.val);
+        //playerController->StartJump(); TODO: 점프 기능 클라로 뺐음. 따로 점프스크립트 구현필요.
 		Display::Console::Log("Jump!");
     }
 }

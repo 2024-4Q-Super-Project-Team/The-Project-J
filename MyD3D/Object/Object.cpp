@@ -508,6 +508,13 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                     Component* component = *itr;
                     std::string compUID = "##" + std::to_string(reinterpret_cast<uintptr_t>(component));
                     
+                    bool isComponentActive = component->IsActive();
+                    if (ImGui::Checkbox((compUID).c_str(), &isComponentActive))
+                    {
+                        component->SetActive(isComponentActive);
+                    }
+                    ImGui::SameLine();
+
                     bool isTreeOpen = ImGui::TreeNodeEx((component->GetEID() + compUID).c_str(), EDITOR_FLAG_MAIN);
                     
                     // 버튼을 오른쪽 끝에 배치

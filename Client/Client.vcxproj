@@ -174,12 +174,11 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Application\GameApp.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\ModelSpawner.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\World\TestWorld.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
+    <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="pch.cpp">
@@ -187,6 +186,8 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
+    <ClCompile Include="Manager\PlayerManager.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
   </ItemGroup>
@@ -195,16 +196,17 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
-    <ClInclude Include="Contents\GameApp\Script\ModelSpawner.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
-    <ClInclude Include="Contents\GameApp\World\TestWorld.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
+    <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
+    <ClInclude Include="Manager\PlayerManager.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="ScriptRegister.h" />
   </ItemGroup>

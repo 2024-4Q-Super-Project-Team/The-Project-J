@@ -8,17 +8,10 @@ void ScopeScript::Start()
 {
 	gameObject->SetTag(L"Scope");
 
-	// Init Setting
-	bIsPlayer = false;
-
 	// Add componenet
 	
 	{	// Collider Component
-		m_pCollider = gameObject->GetComponent<SphereCollider>();
-		if (m_pCollider == nullptr)
-		{
-			m_pCollider = gameObject->AddComponent<SphereCollider>();
-		}
+		m_pCollider = gameObject->AddComponent<SphereCollider>();
 	}
 }
 
@@ -31,7 +24,7 @@ void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
 	{	// 플레이어 범위 내 있을 시 체크
-		bIsPlayer = true;
+		m_pPlayer = _destination->gameObject;
 	}
 }
 
@@ -40,8 +33,10 @@ void ScopeScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 	if (_destination->gameObject->GetTag() == L"Monster")
 	{	// 플레이어 범위 내 존재 여부 전달
 		auto* monster = _destination->GetOwner()->GetComponent<MonsterScript>();
-		if(monster)
-			monster->bIsTarget = bIsPlayer;
+		if (monster)
+		{
+			monster->SetTarget(m_pPlayer);
+		}
 	}
 }
 
@@ -49,13 +44,13 @@ void ScopeScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
 	{	// 플레이어 범위 내 없을 시 체크
-		bIsPlayer = false;
+		m_pPlayer = nullptr;
 	}
 
 	if (_destination->gameObject->GetTag() == L"Monster")
 	{	// 반경 내 에서 몬스터가 나갈 시 반경 센터로 이동
 		auto* monster = _destination->GetOwner()->GetComponent<MonsterScript>();
 		if (monster)
-			monster->mTarget = gameObject->transform->position;
+			monster->SetDirectPos(gameObject->transform->position);
 	}
 }

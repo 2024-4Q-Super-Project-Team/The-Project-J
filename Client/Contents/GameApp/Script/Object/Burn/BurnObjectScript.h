@@ -9,6 +9,7 @@ public:
 public:
 	virtual void Update() override;
 public:
+	inline void SetBurn(bool _isBurn) { isBurning.val = _isBurn; }
 	inline void SetBurnMesh(RendererComponent* _burnMesh) { mBurnMesh = _burnMesh; }
 	inline void SetBurnCount(FLOAT _val) { mFireMoveCount = _val; }
 	inline void ProcessBurn(BurnObjectScript* _dst) { isProcessing = true; mDstObject = _dst; }

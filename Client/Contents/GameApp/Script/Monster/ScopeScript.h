@@ -12,5 +12,5 @@ public:
 	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)  override;
 private:
 	SphereCollider* m_pCollider = nullptr;
-	bool bIsPlayer = false;
+	Object* m_pPlayer = nullptr;
 };

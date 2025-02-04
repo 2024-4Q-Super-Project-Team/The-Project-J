@@ -10,8 +10,7 @@ enum class eMonsterStateType
 	DIE			// 죽음
 };
 
-class BoxCollider;
-class Animator;
+class BurnObjectScript;
 
 class MonsterScript : public MonoBehaviour
 {
@@ -28,19 +27,36 @@ public:
 	virtual void OnTriggerEnter(Collider* _origin, Collider* _destination)	override;
 	virtual void OnTriggerStay(Collider* _origin, Collider* _destination)	override;
 	virtual void OnTriggerExit(Collider* _origin, Collider* _destination)	override;
-
-protected:
-	// Monster가 가지고 있을 컴포넌트
+public:
+	void SetTarget(Object* _target)		{ m_pTarget = _target; }
+	void SetDirectPos(Vector3 _pos)		{ mRandomPos = _pos; }
+	void SetSpeed(float _speed)			{ mMoveSpeed.val = _speed; }
+	void SetDistance(float _distance)	{ mAttackDistance.val = _distance; }
+	void SetGroggyTick(float _tick)		{ mGroggyTick.val = _tick; }
+public:
+	Object* GetTarget()		{ return m_pTarget; }
+	Vector3 GetDirectPos()	{ return mRandomPos; }
+	float	GetSpeed()		{ return mMoveSpeed.val; }
+	float	GetDistance()	{ return mAttackDistance.val; }
+	float	GetGroggyTick() { return mGroggyTick.val; }
+private:
+	// Monster 상태
 	eMonsterStateType mFSM = eMonsterStateType::IDLE;
+	// Monster가 가지고 있을 컴포넌트
 	Animator* m_pAnimator = nullptr;
 	BoxCollider* m_pHeadCollider = nullptr;
-	BoxCollider* m_pFootCollider = nullptr;
+	SphereCollider* m_pBodyCollider = nullptr;
+	BurnObjectScript* m_pBurnObjectScript = nullptr;
+private:
+	// Target
+	Object* m_pTarget;
+	// 원래 위치로!
+	Vector3 mRandomPos;
+	// 기절 타이머
+	float mGroggyCount = 0.0f;
 
-public:
-	// 가고자 하는 타겟 위치 (플레이어 없을 시 랜덤 있을 시 플레이어 위치로)
-	Vector3 mTarget{};
-	// Player 가 범위 내에 존재하는가
-	bool bIsTarget = false;
-	bool bIsBurn = false;
+	SerializeField(FLOAT, mGroggyTick, 5.f);		// 기절 tick
+	SerializeField(FLOAT, mMoveSpeed, 10.f);		// 이동 속도
+	SerializeField(FLOAT, mAttackDistance, 10.f);	// 공격 범위
 };
 

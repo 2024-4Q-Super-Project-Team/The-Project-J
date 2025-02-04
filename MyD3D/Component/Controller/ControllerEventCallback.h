@@ -3,8 +3,15 @@
 
 class ControllerEventCallback : public PxUserControllerHitReport
 {
-private:
+public:
 	std::unordered_map<PxController*, std::unordered_set<PxActor*>> mCollisions;
+
+	void EraseCollideActor(PxController* _controller, PxActor* _actor)
+	{
+		auto& actors = mCollisions[_controller];
+		actors.erase(_actor);
+	}
+private:
 
 	virtual void onShapeHit(const PxControllerShapeHit& hit)
 	{
@@ -56,3 +63,4 @@ private:
 
 };
 
+//collider controller에서 erase 할 떄 callback의 map에서도 erase 해줘야 함. 

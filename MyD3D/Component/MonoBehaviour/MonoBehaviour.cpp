@@ -146,7 +146,10 @@ json MonoBehaviour::Serialize()
 void MonoBehaviour::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
-	isActive = j["initial active"].get<bool>();
+	if (j.contains("initial active"))
+	{
+		isActive = j["initial active"].get<bool>();
+	}
 }
 
 void MonoBehaviour::EditorRendering(EditorViewerType _viewerType)

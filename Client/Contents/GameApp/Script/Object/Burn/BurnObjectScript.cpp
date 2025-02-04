@@ -27,7 +27,7 @@ void BurnObjectScript::Update()
         {
             SetBurnCount(0.0f);
         }
-        if (mBurnMesh->IsActive() == true)
+        if (mBurnMesh && mBurnMesh->IsActive() == true)
         {
             mBurnMesh->SetActive(false);
         }
@@ -35,7 +35,7 @@ void BurnObjectScript::Update()
     else
     {
         SetBurnCount(0.0f);
-        if (mBurnMesh->IsActive() == false)
+        if (mBurnMesh && mBurnMesh->IsActive() == false)
         {
             mBurnMesh->SetActive(true);
         }

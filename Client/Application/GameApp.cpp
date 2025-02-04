@@ -3,7 +3,7 @@
 //#include "Contents/GameApp/World/TestWorld.h"
 #include "ScriptRegister.h"
 #include "Save/SaveManager.h"
-
+#include "Helper/InputSyncer.h"
 ViewportScene* GameApp::mMainScene = nullptr;
 Display::IWindow* GameApp::mGameWindow = nullptr;
 
@@ -11,6 +11,8 @@ BOOL GameApp::OnPreInitialize()
 {
     ScriptRegister sr;
     sr.Register();
+
+    InputSyncer::Initialize();
     return TRUE;
 }
 

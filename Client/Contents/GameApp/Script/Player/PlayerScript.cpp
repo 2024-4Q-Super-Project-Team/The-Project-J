@@ -25,7 +25,7 @@ void PlayerScript::Update()
 {
     // HP 갱신
     UpdatePlayerHP();
-
+    UpdateInput();
     if (isAction)
     {
         // 컨트롤러 움직이지 못하게
@@ -93,15 +93,15 @@ void PlayerScript::Reset()
 {
     isAction = false;
     mBurnObjectScript->SetBurn(true);
-    mPlayerHP.val = mPlayerMaxHP.val;
-    mHpReduceCount.val = 0.0f;
+    mPlayerCurHP = mPlayerMaxHP.val;
+    mHpReduceCount = 0.0f;
 }
 
 void PlayerScript::SetHP(INT _val)
 {
     if (mPlayerState != ePlayerStateType::DEAD)
     {
-        mPlayerHP.val = _val;
+        mPlayerCurHP = _val;
     }
 }
 
@@ -113,7 +113,7 @@ void PlayerScript::Hit(INT _damage)
         if (mAnimator->GetActiveAnimationKey() != L"Hit")
         {
             mAnimator->SetCurrentAnimation(L"Hit");
-            mPlayerHP.val -= _damage;
+            mPlayerCurHP -= _damage;
         }
     }
 }
@@ -127,16 +127,16 @@ void PlayerScript::UpdatePlayerHP()
         if (mBurnObjectScript->IsBurning())
         {
             // 체력 감소 카운트 틱 계산
-            mHpReduceCount.val += Time::GetUnScaledDeltaTime();
+            mHpReduceCount += Time::GetUnScaledDeltaTime();
             // 체력 감소 카운트가 틱보다 높은 경우 HP감소
-            while (mHpReduceCount.val >= mHpReduceTick.val)
+            while (mHpReduceCount >= mHpReduceTick.val)
             {
-                --mPlayerHP.val;
-                mHpReduceCount.val -= mHpReduceTick.val;
+                --mPlayerCurHP;
+                mHpReduceCount -= mHpReduceTick.val;
             }
         }
         // 플레이어의 체력이 0 이하일 경우
-        if (mPlayerHP.val <= 0)
+        if (mPlayerCurHP <= 0)
         {
             mPlayerState = ePlayerStateType::DEAD;
             // 애니메이션 Dead재생
@@ -149,10 +149,23 @@ void PlayerScript::UpdatePlayerHP()
 void PlayerScript::UpdateInput()
 {
     Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
+    Vector2 moveForce = Vector2::Zero;
     // 인풋을 통해 Direction값이 있다고 판정되면
     if (moveDirection != Vector2::Zero)
     {
-
+        moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+        moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+    }
+    mPlayerController->SetMoveForceX(moveForce.x);
+    mPlayerController->SetMoveForceZ(moveForce.y);
+    if (mPlayerController->IsGround() == true && isAction == false)
+    {
+        // 점프 중이 아닐 때 점프키를 누르면 점프
+        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
+        {
+            mPlayerController->SetMoveForceY(0.0f);
+            mPlayerController->AddMoveForceY(mJumpPower.val);
+        }
     }
 }
 
@@ -163,6 +176,8 @@ json PlayerScript::Serialize()
     ret["player handle"] = mPlayerHandle.val;
     ret["player max hp"] = mPlayerMaxHP.val;
     ret["player hp reduce tick"] = mHpReduceTick.val;
+    ret["player move speed"] = mJumpPower.val;
+    ret["player jump power"] = mJumpPower.val;
 
     return ret;
 }
@@ -181,5 +196,13 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player hp reduce tick"))
     {
         mHpReduceTick.val = j["player hp reduce tick"].get<FLOAT>();
+    }
+    if (j.contains("player move speed"))
+    {
+        mMoveSpeed.val = j["player move speed"].get<FLOAT>();
+    }
+    if (j.contains("player jump power"))
+    {
+        mJumpPower.val = j["player jump power"].get<FLOAT>();
     }
 }

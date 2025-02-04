@@ -53,6 +53,7 @@ bool InputSyncer::IsKeyDown(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
+	return false;
 }
 
 bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
@@ -76,6 +77,7 @@ bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
+	return false;
 }
 
 bool InputSyncer::IsKeyUp(UINT _handle, eInputType _type)
@@ -97,6 +99,7 @@ bool InputSyncer::IsKeyUp(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
+	return false;
 }
 
 Vector2 InputSyncer::GetInputDirection(UINT _handle)

@@ -33,8 +33,13 @@ public:
 
 public:
     float t;
+    inline bool IsGround() { return mIsOnGround; }
     ///move///
     void Move(Vector3 _displacement);
+    void SetMoveForceX(FLOAT _x);
+    void SetMoveForceY(FLOAT _y);
+    void SetMoveForceZ(FLOAT _z);
+    void AddMoveForceY(FLOAT _y);
     void CheckOnGround();
 
     bool GetIsOnGround();

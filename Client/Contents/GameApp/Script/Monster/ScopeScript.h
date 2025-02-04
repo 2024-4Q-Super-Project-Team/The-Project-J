@@ -11,6 +11,7 @@ public:
 	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)  override;
 	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)  override;
 private:
-	SphereCollider* m_pCollider = nullptr;
+	Rigidbody* m_pRigidBody = nullptr;
+	BoxCollider* m_pCollider = nullptr;
 	Object* m_pPlayer = nullptr;
 };

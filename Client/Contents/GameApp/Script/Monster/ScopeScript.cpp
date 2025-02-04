@@ -10,8 +10,13 @@ void ScopeScript::Start()
 
 	// Add componenet
 	
+	{	// RigidBody Component
+		m_pRigidBody = gameObject->AddComponent<Rigidbody>();
+	}
+
 	{	// Collider Component
-		m_pCollider = gameObject->AddComponent<SphereCollider>();
+		m_pCollider = gameObject->AddComponent<BoxCollider>();
+		m_pCollider->SetPosition();
 	}
 }
 

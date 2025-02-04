@@ -17,12 +17,18 @@ void MonsterScript::Start()
 		m_pAnimator = gameObject->AddComponent<Animator>();
 	}
 
+	{	// RigidBody Component
+		m_pRigidBody = gameObject->AddComponent<Rigidbody>();
+	}
+
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
+		m_pHeadCollider->SetPosition();
 	}
 
 	{	// Body Collider Component
-		m_pBodyCollider = gameObject->AddComponent<SphereCollider>();
+		m_pBodyCollider = gameObject->AddComponent<BoxCollider>();
+		m_pBodyCollider->SetPosition();
 	}
 
 	{	// BurnObjectScript Component

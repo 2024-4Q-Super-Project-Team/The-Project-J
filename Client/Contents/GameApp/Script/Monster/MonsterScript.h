@@ -44,8 +44,9 @@ private:
 	eMonsterStateType mFSM = eMonsterStateType::IDLE;
 	// Monster가 가지고 있을 컴포넌트
 	Animator* m_pAnimator = nullptr;
+	Rigidbody* m_pRigidBody = nullptr;
 	BoxCollider* m_pHeadCollider = nullptr;
-	SphereCollider* m_pBodyCollider = nullptr;
+	BoxCollider* m_pBodyCollider = nullptr;
 	BurnObjectScript* m_pBurnObjectScript = nullptr;
 private:
 	// Target

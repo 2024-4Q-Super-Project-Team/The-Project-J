@@ -48,6 +48,11 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
 
 World::~World()
 {
+    for (auto& obj : mObjectArray)
+    {
+        obj->transform->SetParent(nullptr);
+    }
+
     SAFE_DELETE_VECTOR(mObjectArray);
     SAFE_DELETE(mPickingRay);
 

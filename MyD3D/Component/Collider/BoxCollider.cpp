@@ -176,7 +176,7 @@ void BoxCollider::SetRotation()
 void BoxCollider::SetExtents()
 {
 	Vector3 size = gameObject->transform->scale;
-	mGeometry = (PxVec3(size.x * mExtents.x, size.y * mExtents.y, size.z * mExtents.z));
+	mGeometry = PxBoxGeometry(PxVec3(size.x * mExtents.x, size.y * mExtents.y, size.z * mExtents.z));
 	mShape->setGeometry(mGeometry);
 
 	mOBB.Extents.x = size.x * mExtents.x;

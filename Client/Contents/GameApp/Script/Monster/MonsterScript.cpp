@@ -9,7 +9,7 @@ void MonsterScript::Start()
 	gameObject->SetTag(L"Monster");
 
 	// Init Setting
-	mFSM = eMonsterStateType::IDLE;
+	mFSM = eMonsterStateType::MOVE;
 
 	// Add componenet
 	
@@ -71,7 +71,7 @@ void MonsterScript::Update()
 		if (m_pAnimator)
 		{
 			// TODO : 무브 애니메이션 재생
-			m_pAnimator->Play();
+			//m_pAnimator->Play();
 		}
 		// 타겟이 존재하는가?
 		if (m_pTarget)
@@ -113,7 +113,7 @@ void MonsterScript::Update()
 			dir.Normalize();  // 방향 구하기
 
 			// 타겟 위치로 빠르게 이동
-			gameObject->transform->position += dir * mMoveSpeed.val * 1.5f;
+			gameObject->transform->position += dir * mMoveSpeed.val;
 		}
 		break;
 	case eMonsterStateType::HIT:

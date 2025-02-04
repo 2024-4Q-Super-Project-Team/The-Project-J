@@ -272,7 +272,7 @@ void PlayerController::CheckNowColliding()
 			for (auto script : otherScripts)
 				script->OnCollisionExit(collidingRigidbody, mRigid);
 
-			mActorsColliding.erase(it);
+			it = mActorsColliding.erase(it);
 		}
 		else
 		{

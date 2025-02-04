@@ -53,7 +53,6 @@ bool InputSyncer::IsKeyDown(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
-	return false;
 }
 
 bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
@@ -77,7 +76,6 @@ bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
-	return false;
 }
 
 bool InputSyncer::IsKeyUp(UINT _handle, eInputType _type)
@@ -99,24 +97,4 @@ bool InputSyncer::IsKeyUp(UINT _handle, eInputType _type)
 			return true;
 		}
 	}
-	return false;
-}
-
-Vector2 InputSyncer::GetInputDirection(UINT _handle)
-{
-	Vector2 force = Vector2::Zero;
-
-	if (Input::GetPadStickForce(GamePad::LEFT).x != 0 ||
-		Input::GetPadStickForce(GamePad::LEFT).y != 0)
-	{
-		force = Input::GetPadStickForce(GamePad::LEFT, _handle);
-	}
-	else
-	{
-		if (IsKeyHold(_handle, LEFT)) force.x -= 1;
-		if (IsKeyHold(_handle, RIGHT)) force.x += 1;
-		if (IsKeyHold(_handle, UP)) force.y += 1;
-		if (IsKeyHold(_handle, DOWN)) force.y -= 1;
-	}
-	return force;
 }

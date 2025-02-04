@@ -32,12 +32,9 @@ public:
 	void SetHP(INT _val);	// 플레이어의 HP를 변경
 	void Hit(INT _damage);	// 플레이어에게 피격을 시키는 함수
 
-	inline INT GetPlayerHandle() { return mPlayerHandle.val; }
-	inline INT GetCurrentHP() { return mPlayerCurHP; }
 	//////////////////////////////////////////////////////////////////////
 
 private:
-	void UpdateInput();
 	void UpdatePlayerHP(); // 플레이어의 체력에 대한 업데이트
 private:
 	// 1p, 2p 플레이어 구분용도
@@ -54,12 +51,10 @@ private:
 	// 2. 체력 소모 틱 (몇 초마다 체력을 깎을 것인가? 에 대한 틱)
 	// 3. 체력 소모 카운터 (체력 소모가 되는 틱을 계산하기 위한 카운터)
 	////////////////////////////////////////////////
-	INT						mPlayerCurHP = 100;
+	SerializeField(INT,		mPlayerHP, 100);			// Player Hp (0~100의 정수 값)
 	SerializeField(INT,		mPlayerMaxHP, 100);			// Player Hp (0~100의 정수 값)
 	SerializeField(FLOAT,	mHpReduceTick, 1.0f);		// 불이 켜져있을 때 몇 초 마다 HP가 깎일 것인가?
-	FLOAT					mHpReduceCount = 0.0f;		
-	SerializeField(FLOAT,	mMoveSpeed, 1.0f);			
-	SerializeField(FLOAT,	mJumpPower, 1.0f);			
+	SerializeField(FLOAT,	mHpReduceCount, 0.0f);		// 몇 초가 지났는가? mHpReduceTick보다 높으면 체력을 깎고 카운터를 Tick만큼 감소
 	////////////////////////////////////////////////
 	// [02/02 ~] 주형 작업 - 플레이어 FSM
 	// 필요 변수 : 

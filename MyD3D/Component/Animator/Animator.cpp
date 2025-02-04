@@ -148,8 +148,6 @@ void _CALLBACK Animator::OnDestroy()
 
 void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
 {
-    if (mActiveAnimationKey == _key)
-        return;
     auto itr = mAnimationTable.find(_key);
     if (FIND_FAILED(itr, mAnimationTable))
     {

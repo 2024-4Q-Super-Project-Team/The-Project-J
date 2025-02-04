@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+
 void PlayerScript::Start()
 {
     // 초기화 코드
@@ -146,6 +147,32 @@ void PlayerScript::UpdatePlayerHP()
     }
 }
 
+void PlayerScript::UpdateInput()
+{
+    Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
+    Vector2 moveForce = Vector2::Zero;
+    // 인풋을 통해 Direction값이 있다고 판정되면
+    if (moveDirection != Vector2::Zero)
+    {
+        moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+        moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+        // 이동 방향에 따른 회전 각도 계산
+        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
+        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY, 0.0f));
+    }
+    mPlayerController->SetMoveForceX(moveForce.x);
+    mPlayerController->SetMoveForceZ(moveForce.y);
+    if (mPlayerController->IsGround() == true && isAction == false)
+    {
+        // 점프 중이 아닐 때 점프키를 누르면 점프
+        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
+        {
+            mPlayerController->SetMoveForceY(0.0f);
+            mPlayerController->AddMoveForceY(mJumpPower.val);
+        }
+    }
+}
+
 json PlayerScript::Serialize()
 {
     json ret = MonoBehaviour::Serialize();
@@ -153,6 +180,8 @@ json PlayerScript::Serialize()
     ret["player handle"] = mPlayerHandle.val;
     ret["player max hp"] = mPlayerMaxHP.val;
     ret["player hp reduce tick"] = mHpReduceTick.val;
+    ret["player move speed"] = mMoveSpeed.val;
+    ret["player jump power"] = mJumpPower.val;
 
     return ret;
 }

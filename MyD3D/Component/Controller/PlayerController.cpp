@@ -105,12 +105,10 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
-	t = Time::GetScaledDeltaTime();
-
-	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, t, mCharacterControllerFilters);
+	GravityUpdate();
+	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 	mIsOnGround = flags & PxControllerCollisionFlag::eCOLLISION_DOWN;
 
-	GravityUpdate();
 }
 
 void PlayerController::PostUpdate()
@@ -164,6 +162,26 @@ void PlayerController::Move(Vector3 _displacement)
 	mDisplacement = PxVec3(_displacement.x, _displacement.y, _displacement.z);
 }
 
+void PlayerController::SetMoveForceX(FLOAT _x)
+{
+	mDisplacement.x = _x;
+}
+
+void PlayerController::SetMoveForceY(FLOAT _y)
+{
+	mDisplacement.y = _y;
+}
+
+void PlayerController::SetMoveForceZ(FLOAT _z)
+{
+	mDisplacement.z = _z;
+}
+
+void PlayerController::AddMoveForceY(FLOAT _y)
+{
+	mDisplacement.y += _y;
+}
+
 
 void PlayerController::SetSlopeMode(SlopeMode _mode)
 {
@@ -179,12 +197,8 @@ void PlayerController::GravityUpdate()
 	//ม฿ทย 
 	if (mIsOnGround == false)
 	{
-		mGravityElapsedTime += t;
-		float gt = mGravityElapsedTime;
-		float s = gt + (1 / 2) * mGravity * gt * gt;
+		mDisplacement.y -= mGravity * Time::GetScaledDeltaTime();
 	}
-	else
-		mGravityElapsedTime = 0.f;
 }
 
 void PlayerController::CheckNowColliding()

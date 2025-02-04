@@ -92,7 +92,7 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 		   name = Helper::ToString(m_pTexture->GetKey());
 		   widgetID = m_pTexture->GetEID();
 
-		   ImGui::DragFloat3("color", &mColor.x, 1.0f, 0.0f, 1.f);
+		   ImGui::ColorEdit4("color", &mColor.x);
 		   ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
        }
        else

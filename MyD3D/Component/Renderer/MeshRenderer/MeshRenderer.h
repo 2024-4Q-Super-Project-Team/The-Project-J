@@ -43,6 +43,12 @@ public:
     virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
     virtual eRasterizerStateType GetCullingMode() override;
 public:
+    // 외곽선 관련 함수
+    void SetOutlineColor(Color _color)  { mOutlineCBuffer.outlineColor = _color; }
+    void SetOutlineScale(float _offset) { mOutlineCBuffer.outlineOffset = _offset; }
+    Color GetOutlineColor()             { return mOutlineCBuffer.outlineColor; }
+    float GetOutlineScale()             { return mOutlineCBuffer.outlineOffset; }
+public:
     virtual void _CALLBACK OnEnable() override;
     virtual void _CALLBACK OnDisable() override;
     virtual void _CALLBACK OnDestroy() override;
@@ -57,8 +63,10 @@ private:
 
 	TransformCBuffer    mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
     MaterialCBuffer     mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
+    OutlineCBuffer      mOutlineCBuffer;       // 아웃라인 상수 버퍼 (셰이더로 전달)
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
+    bool isCastOutline = false;               // 외곽선 렌더링 여부
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
     void ShowMaerialProperties(eMaterialMapType _type, const char* _label);

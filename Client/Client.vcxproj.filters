@@ -16,6 +16,8 @@
     <FxCompile Include="resource\shader\Standard_VS.hlsl" />
     <FxCompile Include="resource\shader\Grid_VS.hlsl" />
     <FxCompile Include="resource\shader\Grid_PS.hlsl" />
+    <FxCompile Include="resource\shader\Outline_PS.hlsl" />
+    <FxCompile Include="resource\shader\Outline_VS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
@@ -32,6 +34,8 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
     <ClCompile Include="Manager\PlayerManager.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -49,6 +53,8 @@
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Manager\PlayerManager.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

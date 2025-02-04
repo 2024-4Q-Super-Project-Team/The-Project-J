@@ -1,7 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
-
 void PlayerScript::Start()
 {
     // 초기화 코드
@@ -27,7 +26,6 @@ void PlayerScript::Update()
     // HP 갱신
     UpdatePlayerHP();
     UpdateInput();
-    
     if (isAction)
     {
         // 컨트롤러 움직이지 못하게
@@ -157,9 +155,6 @@ void PlayerScript::UpdateInput()
     {
         moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
         moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
-        // 이동 방향에 따른 회전 각도 계산
-        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
-        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY, 0.0f));
     }
     mPlayerController->SetMoveForceX(moveForce.x);
     mPlayerController->SetMoveForceZ(moveForce.y);
@@ -181,7 +176,7 @@ json PlayerScript::Serialize()
     ret["player handle"] = mPlayerHandle.val;
     ret["player max hp"] = mPlayerMaxHP.val;
     ret["player hp reduce tick"] = mHpReduceTick.val;
-    ret["player move speed"] = mMoveSpeed.val;
+    ret["player move speed"] = mJumpPower.val;
     ret["player jump power"] = mJumpPower.val;
 
     return ret;

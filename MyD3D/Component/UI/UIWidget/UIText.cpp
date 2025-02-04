@@ -64,6 +64,12 @@ void UIText::SetFont(ResourceHandle _handle)
 
 	if (!path.empty())
 	{
+		if (m_pSpriteFont != nullptr)
+		{
+			delete m_pSpriteFont;
+			m_pSpriteFont = nullptr;
+		}
+
 		m_pSpriteFont = new SpriteFont(D3DGraphicsDevice::GetDevice(), path.c_str());
 	}
 }
@@ -160,9 +166,9 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 		ImGui::NewLine();
 
 		ImGui::Text("Text INFO : ");
-		ImGui::DragFloat("line", &mLine, 1.0f, 1.0f, 100.f);
-		ImGui::DragFloat3("color", &mColor.x, 1.0f, 0.0f, 1.f);
-		ImGui::DragFloat("alpha", &mAlpha, 1.0f, 0.0f, 1.f);
+		ImGui::DragFloat("line", &mLine, 0.5f, 1.0f, 100.f);
+		ImGui::ColorEdit3("color", &mColor.x);
+		ImGui::DragFloat("alpha", &mAlpha, 0.5f, 0.0f, 1.f);
 
 		ImGui::NewLine();
 		ImGui::Checkbox("Use Outline", &bUseOutline);
@@ -173,7 +179,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 			ImGui::Text("Text Outline INFO : ");
 			ImGui::DragFloat("outline Offset", &mOutlineOffset, 0.5f, 0.f, 2.0f);
-			ImGui::DragFloat3("outline Color", &mOutlineColor.x, 1.0f, 0.0f, 1.0f);
+			ImGui::DragFloat3("outline Color", &mOutlineColor.x, 0.5f, 0.0f, 1.0f);
 		}
 
 		EDITOR_COLOR_POP(1);

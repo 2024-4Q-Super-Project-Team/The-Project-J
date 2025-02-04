@@ -10,6 +10,8 @@
 #include "Contents/GameApp/Script/Object/Button/OnOffButtonScript.h"
 
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Contents/GameApp/Script/Monster/MonsterScript.h"
+#include "Contents/GameApp/Script/Monster/ScopeScript.h"
 
 void ScriptRegister::Register()
 {
@@ -20,4 +22,6 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(LowerPlatformButtonScript);
 	REGISTER_COMPONENT(OnOffButtonScript);
 	REGISTER_COMPONENT(BurnObjectScript);
+	REGISTER_COMPONENT(MonsterScript);
+	REGISTER_COMPONENT(ScopeScript);
 }

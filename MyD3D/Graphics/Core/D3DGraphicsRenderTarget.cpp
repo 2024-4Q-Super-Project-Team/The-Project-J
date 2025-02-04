@@ -41,6 +41,30 @@ void D3DGraphicsRenderTarget::Clear(FLOAT* _color)
     }
 }
 
+void D3DGraphicsRenderTarget::ClearStencil()
+{
+    auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        if (mDepthStencilView)
+        {
+            pDeviceContext->ClearDepthStencilView(mDepthStencilView->mDSV, D3D11_CLEAR_STENCIL, 1.f, 0.f);
+        }
+    }
+}
+
+void D3DGraphicsRenderTarget::ClearDepth()
+{
+    auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();
+    if (pDeviceContext)
+    {
+        if (mDepthStencilView)
+        {
+            pDeviceContext->ClearDepthStencilView(mDepthStencilView->mDSV, D3D11_CLEAR_DEPTH, 1.f, 0.f);
+        }
+    }
+}
+
 BOOL D3DGraphicsRenderTarget::SetTarget()
 {
     auto pDeviceContext = D3DGraphicsRenderer::GetDevicecontext();

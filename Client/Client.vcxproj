@@ -180,13 +180,15 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Manager\PlayerManager.cpp" />
-    <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
+    <ClCompile Include="Manager\PlayerManager.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,10 +202,12 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
-    <ClInclude Include="Manager\PlayerManager.h" />
-    <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
+    <ClInclude Include="Manager\PlayerManager.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="ScriptRegister.h" />
   </ItemGroup>
   <ItemGroup>
@@ -259,6 +263,16 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="resource\shader\Outline_PS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)resource\shader\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="resource\shader\Outline_VS.hlsl">
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)resource\shader\%(Filename).cso</ObjectFileOutput>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="resource\shader\Particle_GS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>

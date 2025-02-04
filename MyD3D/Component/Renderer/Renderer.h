@@ -49,9 +49,5 @@ public:
 public:
     virtual json Serialize() = 0;
     virtual void Deserialize(json& j) = 0;
-public:
-    Vector3     mOffsetPosition = Vector3::Zero;
-    Quaternion  mOffsetRotation = Quaternion::Identity;
-    Vector3     mOffsetScale = Vector3::One;
 };
 

@@ -5,9 +5,10 @@ void PlayerScript::Start()
 {
     // 초기화 코드
     gameObject->SetTag(L"Player");
-    SetPlayerAnimation();
 
-
+    {
+        mAnimator = gameObject->GetComponent<Animator>();
+    }
     {   // PlayerController컴포넌트 저장, 없으면 추가
         mPlayerController = gameObject->GetComponent<PlayerController>();
         if (mPlayerController == nullptr)
@@ -20,6 +21,13 @@ void PlayerScript::Start()
 
 void PlayerScript::Update()
 {
+    if (isAction)
+    {
+        // 컨트롤러 움직이지 못하게
+    }
+    InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE);
+    InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::JUMP);
+    InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::OFF_FIRE);
 }
 
 void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
@@ -47,12 +55,13 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
                 // TODO : 캐릭터(gameO-bject)의 머리 위에 불 옮기기 UI 팝업
 
                 // 불 옮기기 키를 눌렀을 때
-                if (GetKeyForce(ePlayerInputType::ACTION_MOVE_FIRE) != 0.0f)
+                if(InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
                 {
                     // BurnObjectScript의 불옮기기 작업을 한다.
                     if (dstBurnObject->IsProcessing() == false)
                     {
                         dstBurnObject->ProcessBurn(mBurnObjectScript);
+                        mPlayerState = ePlayerStateType::MOVE_FIRE;
                     }
                 }
                 else
@@ -63,7 +72,9 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
                     {
                         dstBurnObject->CancleProcess();
                     }
-                    // TODO : 애니메이션을 IDLE로 변경
+                    // 애니메이션을 IDLE로 변경
+                    mAnimator->SetCurrentAnimation(L"Idle");
+                    isAction = false;
                 }
             }
         }
@@ -75,43 +86,20 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
  
 }
 
-void PlayerScript::SetPlayerHandle(UINT _Index)
+json PlayerScript::Serialize()
 {
-    mPlayerHandle = _Index;
+    json ret = MonoBehaviour::Serialize();
+
+    ret["player handle"] = mPlayerHandle.val;
+
+    return ret;
 }
 
-void PlayerScript::SetPlayerAnimation()
+void PlayerScript::Deserialize(json& j)
 {
-    {   // Animator컴포넌트 저장, 없으면 추가
-        mAnimator = gameObject->GetComponent<Animator>();
-        if (mAnimator == nullptr)
-            mAnimator = gameObject->AddComponent<Animator>();
-    }
-    //mAnimator->AddAnimation();
-}
-
-// 반환 값이 float인 이유는, pad의 조이스틱은 0~1의 값을 반환하기 때문
-// 조이스틱을 빼면 1.0f를 반환
-float PlayerScript::GetKeyForce(ePlayerInputType _inputType)
-{
-    switch (_inputType)
+    MonoBehaviour::Deserialize(j);
+    if (j.contains("player handle"))
     {
-    case ePlayerInputType::MOVE_LEFT:
-        break;
-    case ePlayerInputType::MOVE_RIGHT:
-        break;
-    case ePlayerInputType::MOVE_FORWARD:
-        break;
-    case ePlayerInputType::MOVE_BACKWARD:
-        break;
-    case ePlayerInputType::JUMP:
-        break;
-    case ePlayerInputType::ACTION_MOVE_FIRE:
-        break;
-    case ePlayerInputType::ACTION_OFF_FIRE:
-        break;
-    default:
-        break;
+        mPlayerHandle.val = j["player handle"].get<INT>();
     }
-    return false;
 }

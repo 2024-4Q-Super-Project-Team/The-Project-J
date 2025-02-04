@@ -198,14 +198,18 @@ json AudioSource::Serialize()
 
 	ret["active audio"] = Helper::ToString(mActiveKey);
 
-	json tableJson;
-	for (auto& audio : mAudioTable)
+	json tableJson = json::array(); // JSON 배열로 초기화
+
+	for (auto& anim : mAudioTable)
 	{
-		tableJson["key"] = audio.first;
-		tableJson["handle"] = audio.second.Serialize();
+		json entry;
+		entry["key"] = Helper::ToString(anim.first);
+		entry["handle"] = anim.second.Serialize();
+
+		tableJson.push_back(entry); // 배열에 추가
 	}
 
-	ret["table"] += tableJson;
+	ret["table"] = tableJson; // 배열을 최종 JSON 객체에 추가
 
 	return ret;
 }

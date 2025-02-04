@@ -26,7 +26,8 @@ void PlayerScript::Update()
 {
     // HP 갱신
     UpdatePlayerHP();
-
+    UpdateInput();
+    
     if (isAction)
     {
         // 컨트롤러 움직이지 못하게
@@ -94,15 +95,15 @@ void PlayerScript::Reset()
 {
     isAction = false;
     mBurnObjectScript->SetBurn(true);
-    mPlayerHP.val = mPlayerMaxHP.val;
-    mHpReduceCount.val = 0.0f;
+    mPlayerCurHP = mPlayerMaxHP.val;
+    mHpReduceCount = 0.0f;
 }
 
 void PlayerScript::SetHP(INT _val)
 {
     if (mPlayerState != ePlayerStateType::DEAD)
     {
-        mPlayerHP.val = _val;
+        mPlayerCurHP = _val;
     }
 }
 
@@ -114,7 +115,7 @@ void PlayerScript::Hit(INT _damage)
         if (mAnimator->GetActiveAnimationKey() != L"Hit")
         {
             mAnimator->SetCurrentAnimation(L"Hit");
-            mPlayerHP.val -= _damage;
+            mPlayerCurHP -= _damage;
         }
     }
 }
@@ -128,16 +129,16 @@ void PlayerScript::UpdatePlayerHP()
         if (mBurnObjectScript->IsBurning())
         {
             // 체력 감소 카운트 틱 계산
-            mHpReduceCount.val += Time::GetUnScaledDeltaTime();
+            mHpReduceCount += Time::GetUnScaledDeltaTime();
             // 체력 감소 카운트가 틱보다 높은 경우 HP감소
-            while (mHpReduceCount.val >= mHpReduceTick.val)
+            while (mHpReduceCount >= mHpReduceTick.val)
             {
-                --mPlayerHP.val;
-                mHpReduceCount.val -= mHpReduceTick.val;
+                --mPlayerCurHP;
+                mHpReduceCount -= mHpReduceTick.val;
             }
         }
         // 플레이어의 체력이 0 이하일 경우
-        if (mPlayerHP.val <= 0)
+        if (mPlayerCurHP <= 0)
         {
             mPlayerState = ePlayerStateType::DEAD;
             // 애니메이션 Dead재생
@@ -200,5 +201,13 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player hp reduce tick"))
     {
         mHpReduceTick.val = j["player hp reduce tick"].get<FLOAT>();
+    }
+    if (j.contains("player move speed"))
+    {
+        mMoveSpeed.val = j["player move speed"].get<FLOAT>();
+    }
+    if (j.contains("player jump power"))
+    {
+        mJumpPower.val = j["player jump power"].get<FLOAT>();
     }
 }

@@ -258,6 +258,7 @@ void PlayerController::CheckNowColliding()
 	{
 		if ((*it).second == false) //이번에 충돌하지 않았음 
 		{
+			mEventCallback->EraseCollideActor(mCapsuleController, (*it).first);
 
 			Rigidbody* collidingRigidbody = static_cast<Rigidbody*>((*it).first->userData);
 
@@ -272,7 +273,6 @@ void PlayerController::CheckNowColliding()
 			for (auto script : otherScripts)
 				script->OnCollisionExit(collidingRigidbody, mRigid);
 
-			mEventCallback->EraseCollideActor(mCapsuleController, (*it).first);
 			it = mActorsColliding.erase(it);
 		}
 		else

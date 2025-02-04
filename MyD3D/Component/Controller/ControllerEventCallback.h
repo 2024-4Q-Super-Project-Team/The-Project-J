@@ -8,7 +8,8 @@ public:
 
 	void EraseCollideActor(PxController* _controller, PxActor* _actor)
 	{
-		mCollisions[_controller].erase(_actor);
+		auto& actors = mCollisions[_controller];
+		actors.erase(_actor);
 	}
 private:
 

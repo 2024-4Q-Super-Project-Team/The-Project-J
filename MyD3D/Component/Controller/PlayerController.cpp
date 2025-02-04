@@ -25,9 +25,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
-	mCapsuleDesc.stepOffset = 0.f;
+	mCapsuleDesc.stepOffset = mStepOffset;
 	mCapsuleDesc.scaleCoeff = 1.0f;
-	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.behaviorCallback = mBehaviorCallback;
 	mCapsuleDesc.reportCallback = mEventCallback;
 	mCapsuleDesc.maxJumpHeight = 20.f;
@@ -86,9 +85,9 @@ void PlayerController::Start()
 
 	mCapsuleController->setHeight(mHeight);
 	mCapsuleController->setRadius(mRadius);
-	mCapsuleController->setContactOffset(0.f);
+	mCapsuleController->setContactOffset(mContactOffset);
 	mCapsuleController->setSlopeLimit(mSlopeLimit);
-	mCapsuleController->setStepOffset(0.f);
+	mCapsuleController->setStepOffset(mStepOffset);
 }
 
 void PlayerController::Tick()
@@ -112,8 +111,6 @@ void PlayerController::Update()
 	mIsOnGround = flags & PxControllerCollisionFlag::eCOLLISION_DOWN;
 
 	GravityUpdate();
-
-
 }
 
 void PlayerController::PostUpdate()

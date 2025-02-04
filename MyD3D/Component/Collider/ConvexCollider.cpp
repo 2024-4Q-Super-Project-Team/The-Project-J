@@ -50,6 +50,9 @@ void ConvexCollider::Start()
 
 		AddShapeToRigidbody();
 	}
+
+	SetPosition();
+	SetRotation();
 }
 
 void ConvexCollider::Tick()
@@ -158,19 +161,19 @@ void ConvexCollider::DrawWire()
 
 void ConvexCollider::SetPosition()
 {
-	//PxTransform currentTransform = mShape->getLocalPose();
-	//mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
+	PxTransform currentTransform = mShape->getLocalPose();
+	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
 }
 
 void ConvexCollider::SetRotation()
 {
-	//PxTransform currentTransform = mShape->getLocalPose();
-	//Vector3 rot = gameObject->transform->GetEulerAngles();
-	//mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
-	//Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
-	//PxQuat pxRot;
-	//memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
-	//mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+	PxTransform currentTransform = mShape->getLocalPose();
+	Vector3 rot = gameObject->transform->GetEulerAngles();
+	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
+	Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
+	PxQuat pxRot;
+	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
+	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
 
 void ConvexCollider::EditorRendering(EditorViewerType _type)

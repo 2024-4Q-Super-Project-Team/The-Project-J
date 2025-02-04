@@ -185,6 +185,8 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
+    <ClCompile Include="Manager\PlayerManager.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -200,6 +202,8 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
+    <ClInclude Include="Manager\PlayerManager.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="ScriptRegister.h" />
   </ItemGroup>
   <ItemGroup>

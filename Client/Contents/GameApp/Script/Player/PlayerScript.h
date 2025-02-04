@@ -32,6 +32,7 @@ public:
 	void SetHP(INT _val);	// 플레이어의 HP를 변경
 	void Hit(INT _damage);	// 플레이어에게 피격을 시키는 함수
 
+	INT GetPlayerHandle() { return mPlayerHandle.val; }
 	INT GetMaxHpValue() { return mPlayerMaxHP.val; }
 	//////////////////////////////////////////////////////////////////////
 

@@ -30,6 +30,8 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
+    <ClCompile Include="Manager\PlayerManager.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -45,6 +47,8 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
+    <ClInclude Include="Manager\PlayerManager.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

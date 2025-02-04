@@ -32,6 +32,7 @@ public:
     virtual void EditorRender() override;
 
 public:
+    float t;
     inline bool IsGround() { return mIsOnGround; }
     ///move///
     void Move(Vector3 _displacement);

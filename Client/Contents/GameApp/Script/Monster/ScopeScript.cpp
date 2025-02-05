@@ -16,7 +16,7 @@ void ScopeScript::Start()
 			m_pRigidBody = gameObject->AddComponent<Rigidbody>();
 	}
 	{	// Collider Component
-		m_pCollider = gameObject->AddComponent<BoxCollider>();
+		m_pCollider = gameObject->GetComponent<BoxCollider>();
 
 		if (!m_pCollider)
 			m_pCollider = gameObject->AddComponent<BoxCollider>();

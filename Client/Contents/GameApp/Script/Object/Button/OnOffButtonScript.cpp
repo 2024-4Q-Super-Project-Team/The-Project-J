@@ -12,8 +12,8 @@ void OnOffButtonScript::Start()
     gameObject->AddComponent<Rigidbody>();
 
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-    boxCol->SetPosition(Vector3(0, 163, 0));
-    boxCol->SetExtents(Vector3(30, 8, 30));
+    boxCol->SetPosition(Vector3(0, 81.5f, 0));
+    boxCol->SetExtents(Vector3(35, 4, 35));
 
     // 상대 버튼 찾기
     std::wstring otherButtonTag = GetOtherButtonTag();

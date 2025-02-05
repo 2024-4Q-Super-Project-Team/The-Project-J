@@ -119,9 +119,8 @@ private:
 
 public:
     void EditorRendering(EditorViewerType _viewerType);
-
-// dotween 함수
 public:
+    void LookAt(const Vector3& _target, const Vector3& _up);
     // dotween 함수
     void Rotate90(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);

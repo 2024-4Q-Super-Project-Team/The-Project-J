@@ -6,16 +6,16 @@ public:
     _MONOBEHAVIOUR_INIT(CameraController);
     void Start();
     void Update();
+private:
+    void UpdateDistance();
+    void UpdateRotation();
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
 public:
-    SerializeField(INT, mLevel, 0);
-    SerializeField(FLOAT, mMoveSpeed, 100.0f);
-    SerializeField(FLOAT, sensitivity, 5.0f);
-    SerializeField(FLOAT, maxYAngle, 3.0f);
+    SerializeField(FLOAT, mCameraDistance, 200.0f);
+    SerializeField(Vector3, mCameraDirection, Vector3::One);
     FLOAT CurrentAngles[3];
-    Transform* mTr;
     Camera* mCamera;
 public:
     enum AxisType

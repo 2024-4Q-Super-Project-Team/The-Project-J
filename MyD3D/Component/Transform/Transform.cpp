@@ -477,6 +477,13 @@ void Transform::EditorRendering(EditorViewerType _viewerType)
     }
 }
 
+void Transform::LookAt(const Vector3& _target, const Vector3& _up)
+{
+    Vector3 direction = _target - position;
+    direction.Normalize();
+    rotation = Quaternion::LookRotation(direction, _up);
+}
+
 void Transform::Rotate90(float _duration, Dotween::EasingEffect _easingEffect)
 {
     if (isRotating) return; // 이미 회전 중이면 중복 실행 X

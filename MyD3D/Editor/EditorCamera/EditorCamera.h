@@ -57,7 +57,7 @@ public:
 
     UINT                    mDrawedMeshCount;
     UINT                    mDrawedLightCount;
-    bool                    mIsSkyBoxRendering = FALSE;
+    bool                    mIsSkyBoxRendering = TRUE;
     bool                    mIsColliderRendering = TRUE;
 public:
     void EditorRendering(EditorViewerType _viewerType);

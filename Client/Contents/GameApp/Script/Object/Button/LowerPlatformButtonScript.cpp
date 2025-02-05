@@ -22,8 +22,8 @@ void LowerPlatformButtonScript::Start()
     else if (currentTag.find(L"_2") != std::wstring::npos)
     {
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-        boxCol->SetPosition(Vector3(17.0f, -18.8f, -3.0f));
-        boxCol->SetExtents(Vector3(190.0f, 1.0f, 130.0f));
+        boxCol->SetPosition(Vector3(0.0f, -1.0f, -3.0f));
+        boxCol->SetExtents(Vector3(190.0f, 15.0f, 130.0f));
     }
 
     // 발판 찾기
@@ -47,8 +47,6 @@ void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* 
 {
     // 나무판자가 앞쪽으로 넘어진다
 	Object* interactingObject = _destination->GetOwner();
-
-    
 
     if (CanInteract(interactingObject))
     {
@@ -103,7 +101,7 @@ void LowerPlatformButtonScript::OnButtonPressed()
                 rotationAxis = forward;
             }
 
-            float rotationAngle = -XM_PIDIV2; // 90도 회전 
+            float rotationAngle = XM_PIDIV2; // 90도 회전 
             platformTransform->RotateByPivot(pivotPoint, rotationAxis, rotationAngle, 3.5f, Dotween::EasingEffect::OutBounce);
         }
         else

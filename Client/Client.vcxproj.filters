@@ -33,9 +33,10 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
     <ClCompile Include="Manager\PlayerManager.cpp" />
-    <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -52,9 +53,10 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Manager\PlayerManager.h" />
-    <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\SavePointScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

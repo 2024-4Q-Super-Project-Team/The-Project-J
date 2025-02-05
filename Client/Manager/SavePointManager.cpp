@@ -2,6 +2,13 @@
 #include "SavePointManager.h"
 #include "PlayerManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+#include "Contents/GameApp/Script/Object/Button/SavePointScript.h"
+
+SavePointManager& SavePointManager::GetInstance()
+{
+	static SavePointManager instance;
+	return instance;
+}
 
 void SavePointManager::Reset()
 {
@@ -12,6 +19,7 @@ void SavePointManager::AddSavePoint(SavePointScript* _savePoint)
 {
 	if (_savePoint)
 	{
+		_savePoint->SetIndex(mCurrentIndex++);
 		mSavePointArray.push_back(_savePoint);
 	}
 }
@@ -21,9 +29,30 @@ void SavePointManager::GoBackSavePoint()
 	auto* Player1 = PlayerManager::GetPlayerInfo(0);
 	auto* Player2 = PlayerManager::GetPlayerInfo(1);
 
-	// 세이브포인트 위치를 찾는다.
-	//Vector3 spawnPoint = mSavePointArray.back()->GetSavePoint;
+    // 가장 큰 인덱스를 가진 세이브 포인트 찾기
+    SavePointScript* lastSavePoint = nullptr;
+    for (auto* savePoint : mSavePointArray)
+    {
+        if (!lastSavePoint || savePoint->GetIndex() > lastSavePoint->GetIndex())
+        {
+            lastSavePoint = savePoint;
+        }
+    }
 
-	// Player위치를 바꿔준다. 근데 여기서 CharactorController때문에 위치가 안 바뀔 가능성도 있다. 안바뀌면 고려해보자
-	//Player1->gameObject->transform->position = 
+    if (!lastSavePoint) return;
+
+    // 마지막 세이브 포인트의 위치 찾아서
+    Vector3 spawnPoint = lastSavePoint->GetSavePointPosition();
+
+    // 거기로 Player 위치를 바꿔주고, Player 상태 Reset
+    if (Player1)
+    {
+        Player1->gameObject->transform->position = spawnPoint;
+        Player1->Reset();
+    }
+    if (Player2)
+    {
+        Player2->gameObject->transform->position = spawnPoint;
+        Player2->Reset();
+    }
 }

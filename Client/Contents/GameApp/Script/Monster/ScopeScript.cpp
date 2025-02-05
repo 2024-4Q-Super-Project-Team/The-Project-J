@@ -21,7 +21,7 @@ void ScopeScript::Start()
 			m_pCollider = gameObject->AddComponent<BoxCollider>();
 
 		m_pCollider->SetIsTrigger(true);
-		m_pCollider->SetExtents(Vector3{ 100, 100, 100 });
+		m_pCollider->SetExtents(Vector3{ 200, 200, 200 });
 	}
 }
 
@@ -43,10 +43,7 @@ void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 
 void ScopeScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-	if (_destination->gameObject->GetTag() == L"Player")
-	{	// 플레이어 범위 내 있을 시 체크
-		m_pPlayer = _destination->gameObject;
-	}
+
 }
 
 void ScopeScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)

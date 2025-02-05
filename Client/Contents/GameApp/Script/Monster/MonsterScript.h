@@ -3,11 +3,11 @@
 enum class eMonsterStateType
 {
 	IDLE,		// 대기 중
-	MOVE,		// 움직이는 중
-	ATTACK,		// 공격 중
-	HIT,		// 맞는 중
-	GROGGY,		// 기절
-	DIE			// 죽음
+	WALK,		// 움직이는 중
+	FAST_WALK,	// 좀 더 빨리 움직이는 중
+	RUN,		// 공격 중
+	HIT,		// 기절
+	DEAD		// 죽음
 };
 
 class BurnObjectScript;
@@ -19,6 +19,14 @@ public:
 public:
 	void Start();
 	void Update();
+private:
+	void UpdateIdle();
+	void UpdateWalk();
+	void UpdateFastWalk();
+	void UpdateRun();
+	void UpdateHit();
+	void UpdateDead();
+	void UpdateMonsterAnim();
 public:
 	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)  override;
@@ -41,7 +49,7 @@ public:
 	float	GetGroggyTick() { return mGroggyTick.val; }
 private:
 	// Monster 상태
-	eMonsterStateType mFSM = eMonsterStateType::MOVE;
+	eMonsterStateType mFSM = eMonsterStateType::IDLE;
 	// Monster가 가지고 있을 오브젝트
 	Object* m_pScope = nullptr;
 	// Monster가 가지고 있을 컴포넌트
@@ -54,12 +62,16 @@ private:
 	// Target
 	Object* m_pTarget;
 	// 기절 타이머
+	float mResetCount1 = 0.0f;
+	float mResetCount2 = 0.0f;
 	float mGroggyCount = 0.0f;
 	// 범위 밖으로 나갔는지 체크
 	bool bIsScope = true;
-
-	SerializeField(FLOAT, mGroggyTick, 5.f);		// 기절 tick
+	SerializeField(FLOAT, mGroggyTick, 10.f);		// 기절 tick
 	SerializeField(FLOAT, mMoveSpeed, 10.f);		// 이동 속도
-	SerializeField(FLOAT, mAttackDistance, 0.1f);	// 공격 범위
+	SerializeField(FLOAT, mAttackDistance, 10.f);	// 공격 범위
+public:
+	virtual json Serialize() override;
+	virtual void Deserialize(json& j) override;
 };
 

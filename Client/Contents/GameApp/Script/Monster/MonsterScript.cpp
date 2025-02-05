@@ -18,10 +18,7 @@ void MonsterScript::Start()
 	{
 		m_pScope = CreateObject(L"Scope_01", L"Scope");
 		m_pScope->transform->position = gameObject->transform->position;
-		auto* scope = m_pScope->AddComponent<ScopeScript>();
-
-		if (scope)
-			scope->SetMonster(gameObject);
+		m_pScope->AddComponent<ScopeScript>();
 	}
 
 	// Add componenet
@@ -49,6 +46,11 @@ void MonsterScript::Start()
 
 void MonsterScript::Update()
 {
+	auto* scope = m_pScope->GetComponent<ScopeScript>();
+
+	if (scope)
+		scope->SetMonster(gameObject);
+
 	switch (mFSM)
 	{
 	case eMonsterStateType::MOVE:
@@ -64,11 +66,10 @@ void MonsterScript::Update()
 			Vector3 dir = m_pTarget->transform->position - gameObject->transform->position;
 			float distance = dir.Length();	// 거리 구하기
 			dir.Normalize();  // 방향 구하기
-			if (distance > mAttackDistance.val)
-			{	// 타겟과의 거리가 범위 밖이라면 이동
-				gameObject->transform->position += dir * mMoveSpeed.val;
-			}
-			else
+
+			gameObject->transform->position += dir * mMoveSpeed.val;
+
+			if (distance < mAttackDistance.val)
 			{
 				// 타겟과의 거리가 범위 내라면 공격
 				mFSM = eMonsterStateType::ATTACK;

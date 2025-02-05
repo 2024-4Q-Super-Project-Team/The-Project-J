@@ -23,22 +23,17 @@ void ScopeScript::Start()
 		m_pCollider->SetIsTrigger(true);
 		m_pCollider->SetExtents(Vector3{ 100, 100, 100 });
 	}
-
-	// Init Setting
-	{
-		if (m_pMonster)
-		{
-			auto* monster = m_pMonster->GetComponent<MonsterScript>();
-
-			if (monster)
-				monster->SetTarget(m_pPlayer);
-		}
-	}
 }
 
 void ScopeScript::Update()
 {
+	if (m_pMonster)
+	{
+		auto* monster = m_pMonster->GetComponent<MonsterScript>();
 
+		if (monster)
+			monster->SetTarget(m_pPlayer);
+	}
 }
 
 void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)

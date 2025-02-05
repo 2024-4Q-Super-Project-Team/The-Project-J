@@ -42,6 +42,8 @@ public:
 private:
 	// Monster 상태
 	eMonsterStateType mFSM = eMonsterStateType::IDLE;
+	// Monster가 가지고 있을 오브젝트
+	Object* m_pScope = nullptr;
 	// Monster가 가지고 있을 컴포넌트
 	Animator* m_pAnimator = nullptr;
 	Rigidbody* m_pRigidBody = nullptr;
@@ -58,6 +60,6 @@ private:
 
 	SerializeField(FLOAT, mGroggyTick, 5.f);		// 기절 tick
 	SerializeField(FLOAT, mMoveSpeed, 10.f);		// 이동 속도
-	SerializeField(FLOAT, mAttackDistance, 10.f);	// 공격 범위
+	SerializeField(FLOAT, mAttackDistance, 0.1f);	// 공격 범위
 };
 

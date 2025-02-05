@@ -40,9 +40,10 @@ public:
     static bool bDrawMode;
 public:
     Object* GetOwner() { return gameObject; }
+    void SetIsTrigger();
+    void SetIsTrigger(bool _isTrigger) { mIsTrigger = _isTrigger; }
 
 protected:
-    void SetIsTrigger();
     virtual void SetPosition() {}
     virtual void SetRotation() {}
     void AddShapeToRigidbody();

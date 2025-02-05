@@ -3,13 +3,19 @@
 
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Contents/GameApp/Script/Monster/ScopeScript.h"
 
 void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
 
 	// Init Setting
-	mFSM = eMonsterStateType::MOVE;
+	{
+		mFSM = eMonsterStateType::MOVE;
+
+		m_pScope = CreateObject(L"Scope", L"Scope");
+		m_pScope->transform->position = gameObject->transform->position;
+	}
 
 	// Add componenet
 	
@@ -23,12 +29,14 @@ void MonsterScript::Start()
 
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
-		m_pHeadCollider->SetPosition();
+		m_pHeadCollider->SetPosition(Vector3{0,85,0});
+		m_pHeadCollider->SetExtents(Vector3{ 15,15,15 });
 	}
 
 	{	// Body Collider Component
 		m_pBodyCollider = gameObject->AddComponent<BoxCollider>();
-		m_pBodyCollider->SetPosition();
+		m_pHeadCollider->SetPosition(Vector3{ 0,12,0 });
+		m_pHeadCollider->SetExtents(Vector3{ 30,30,30 });
 	}
 
 	{	// BurnObjectScript Component
@@ -56,6 +64,12 @@ void MonsterScript::Update()
 	//				ㄴ안붙었다면 다시 IDLE
 	//
 	// 4. 몬스터가 범위 밖으로 나가지 않도록 주의가 필요함
+
+	auto* scope = m_pScope->GetComponent<ScopeScript>();
+	if (scope)
+	{
+		scope->SetMonster(gameObject);
+	}
 
 	switch (mFSM)
 	{
@@ -91,11 +105,11 @@ void MonsterScript::Update()
 		} // 타겟이 존재하지 않는가?
 		else
 		{
-			Vector3 dir = mRandomPos - gameObject->transform->position;
-			float distance = dir.Length();	// 거리 구하기
-			dir.Normalize();  // 방향 구하기
-			// 랜덤 방향으로 이동
-			gameObject->transform->position += dir * mMoveSpeed.val;
+			//Vector3 dir = mRandomPos - gameObject->transform->position;
+			//float distance = dir.Length();	// 거리 구하기
+			//dir.Normalize();  // 방향 구하기
+			//// 랜덤 방향으로 이동
+			//gameObject->transform->position += dir * mMoveSpeed.val;
 		}
 		break;
 	case eMonsterStateType::ATTACK:
@@ -113,7 +127,7 @@ void MonsterScript::Update()
 			dir.Normalize();  // 방향 구하기
 
 			// 타겟 위치로 빠르게 이동
-			gameObject->transform->position += dir * mMoveSpeed.val;
+			gameObject->transform->position += dir * mMoveSpeed.val * 2.f;
 		}
 		break;
 	case eMonsterStateType::HIT:

@@ -141,6 +141,11 @@ void Object::PostUpdate()
             child->gameObject->PostUpdate();
         }
     }
+
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
 }
 
 void Object::PreRender()
@@ -160,11 +165,6 @@ void Object::PreRender()
         {
             child->gameObject->PreRender();
         }
-    }
-
-    if (!transform->GetParent())
-    {
-        transform->UpdateMatrix();
     }
 }
 

@@ -58,7 +58,7 @@ void Transform::FixedUpdate()
 
 void Transform::PreUpdate()
 {
-    UpdatePxTransform();
+   
 }
 
 void Transform::Update()
@@ -90,6 +90,7 @@ void Transform::Update()
         }
     }
 
+    UpdatePxTransform();
     
 }
 
@@ -225,6 +226,7 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
+    UpdatePxTransform();
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const

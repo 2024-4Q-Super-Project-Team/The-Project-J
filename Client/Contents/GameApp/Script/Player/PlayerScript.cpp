@@ -54,7 +54,6 @@ void PlayerScript::Start()
 void PlayerScript::Update()
 {
     UpdatePlayerHP();
-    UpdatePlayerMove();
 
     // FSMUpdate
     switch (mPlayerState)
@@ -184,10 +183,14 @@ void PlayerScript::UpdatePlayerHP()
         {
             mPlayerState = ePlayerStateType::DEAD;
             // 애니메이션 Dead재생
-            mAnimator->SetCurrentAnimation(L"Dead");
-            mAnimator->SetLoop(false);
+            mBodyAnimator->SetCurrentAnimation(L"Dead");
+            mBodyAnimator->SetLoop(false);
         }
     }
+}
+
+void PlayerScript::UpdateIdle()
+{
 }
 
 void PlayerScript::UpdateMove()
@@ -203,13 +206,13 @@ void PlayerScript::UpdateMove()
         // 이동 방향에 따른 회전 각도 계산
         float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
         gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
+        mPlayerController->SetMoveForceX(moveForce.x);
+        mPlayerController->SetMoveForceZ(moveForce.y);
     }
     else
     {
         SetState(ePlayerStateType::IDLE);
     }
-    mPlayerController->SetMoveForceX(moveForce.x);
-    mPlayerController->SetMoveForceZ(moveForce.y);
     if (mPlayerController->IsGround() == true && isAction == false)
     {
         // 점프 중이 아닐 때 점프키를 누르면 점프

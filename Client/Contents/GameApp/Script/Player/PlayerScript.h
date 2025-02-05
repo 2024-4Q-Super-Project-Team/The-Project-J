@@ -37,9 +37,7 @@ public:
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
-	void UpdatePlayerMove();		// 플레이어의 인풋에 관련된 업데이트
 	void UpdatePlayerHP();			// 플레이어의 체력에 대한 업데이트
-
 	void UpdateIdle();
 	void UpdateMove();
 	void UpdateJump();

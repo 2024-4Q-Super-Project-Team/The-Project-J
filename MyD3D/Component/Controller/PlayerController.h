@@ -32,7 +32,6 @@ public:
     virtual void EditorRender() override;
 
 public:
-    float t;
     inline bool IsGround() { return mIsOnGround; }
     ///move///
     void Move(Vector3 _displacement);
@@ -40,9 +39,7 @@ public:
     void SetMoveForceY(FLOAT _y);
     void SetMoveForceZ(FLOAT _z);
     void AddMoveForceY(FLOAT _y);
-    void CheckOnGround();
 
-    bool GetIsOnGround();
     void SetSlopeMode(SlopeMode _mode);
 
 public:
@@ -83,7 +80,8 @@ private:
     int mSlopeModeIdx = 0;
 
     //Force
-    float mGravity = 80.f;
+    float mGravity = 0.5f;
+    float mMaxGravity = 100.0f;
     float mGravityElapsedTime = 0.f;
 
     //Actor and Shapes

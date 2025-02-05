@@ -106,10 +106,9 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
-	t = Time::GetScaledDeltaTime();
-	GravityUpdate();
-	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, t, mCharacterControllerFilters);
+	PxControllerCollisionFlags flags = mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 	mIsOnGround = flags & PxControllerCollisionFlag::eCOLLISION_DOWN;
+	GravityUpdate();
 }
 
 void PlayerController::PostUpdate()
@@ -197,13 +196,9 @@ void PlayerController::GravityUpdate()
 	//ม฿ทย 
 	if (mIsOnGround == false)
 	{
-		mGravityElapsedTime += t;
-		float gt = mGravityElapsedTime;
-		float s = 0.5f * mGravity * gt * gt;
-		mDisplacement.y -= s;
+		mDisplacement.y -= mGravity * Time::GetUnScaledDeltaTime();
+		//mDisplacement.y = Clamp(mDisplacement.y, -mMaxGravity, 9999999999.9f);
 	}
-	else
-		mGravityElapsedTime = 0.f;
 }
 
 void PlayerController::CheckNowColliding()
@@ -252,6 +247,7 @@ json PlayerController::Serialize()
 	ret["stepOffset"] = mStepOffset;
 
 	ret["gravity"] = mGravity;
+	ret["max gravity"] = mMaxGravity;
 
 	ret["material"] = mMaterialIdx;
 
@@ -276,6 +272,8 @@ void PlayerController::Deserialize(json& j)
 
 	if (j.contains("gravity"))
 		mGravity = j["gravity"].get<float>();
+	if (j.contains("max gravity"))
+		mMaxGravity = j["max gravity"].get<float>();
 
 	if (j.contains("slope mode"))
 	{

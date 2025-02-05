@@ -54,7 +54,6 @@ void PlayerScript::Start()
 void PlayerScript::Update()
 {
     UpdatePlayerHP();
-
     // FSMUpdate
     switch (mPlayerState)
     {
@@ -64,9 +63,6 @@ void PlayerScript::Update()
     case ePlayerStateType::MOVE:
         UpdateMove();
         break;
-    case ePlayerStateType::JUMP:
-        UpdateJump();
-        break;
     case ePlayerStateType::MOVE_FIRE:
         break;
     case ePlayerStateType::DEAD:
@@ -75,6 +71,7 @@ void PlayerScript::Update()
     default:
         break;
     }
+    UpdatePlayerAnim();
 
     mFireObject->transform->position = mCandleTopBone->GetWorldPosition();
 }
@@ -181,52 +178,58 @@ void PlayerScript::UpdatePlayerHP()
         // 플레이어의 체력이 0 이하일 경우
         if (mPlayerCurHP <= 0)
         {
-            mPlayerState = ePlayerStateType::DEAD;
-            // 애니메이션 Dead재생
-            mBodyAnimator->SetCurrentAnimation(L"Dead");
-            mBodyAnimator->SetLoop(false);
+            SetState(ePlayerStateType::DEAD);
         }
+    }
+}
+
+void PlayerScript::UpdatePlayerAnim()
+{
+    switch (mPlayerState)
+    {
+    case ePlayerStateType::IDLE:
+    {
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE);
+        break;
+    }
+    case ePlayerStateType::MOVE:
+    {
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK);
+        break;
+    } 
+    case ePlayerStateType::MOVE_FIRE:
+    {
+        break;
+    }
+    case ePlayerStateType::DEAD:
+    {
+        mBodyAnimator->SetLoop(false);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_DEAD);
+        break;
+    }
+    default:
+        break;
     }
 }
 
 void PlayerScript::UpdateIdle()
 {
+    ProcessJump();
+    if (ProcessMove() == true)
+    {
+        SetState(ePlayerStateType::MOVE);
+        return;
+    }
 }
 
 void PlayerScript::UpdateMove()
 {
-    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK);
-    Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
-    Vector2 moveForce = Vector2::Zero;
-    // 인풋을 통해 Direction값이 있다고 판정되면
-    if (moveDirection != Vector2::Zero)
-    {
-        moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
-        moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
-        // 이동 방향에 따른 회전 각도 계산
-        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
-        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
-        mPlayerController->SetMoveForceX(moveForce.x);
-        mPlayerController->SetMoveForceZ(moveForce.y);
-    }
-    else
+    ProcessJump();
+    if (ProcessMove() == false)
     {
         SetState(ePlayerStateType::IDLE);
+        return;
     }
-    if (mPlayerController->IsGround() == true && isAction == false)
-    {
-        // 점프 중이 아닐 때 점프키를 누르면 점프
-        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
-        {
-            mPlayerController->SetMoveForceY(0.0f);
-            mPlayerController->AddMoveForceY(mJumpPower.val);
-            SetState(ePlayerStateType::JUMP);
-        }
-    }
-}
-
-void PlayerScript::UpdateJump()
-{
 }
 
 void PlayerScript::UpdateAction()
@@ -235,6 +238,61 @@ void PlayerScript::UpdateAction()
 
 void PlayerScript::UpdateDead()
 {
+}
+
+bool PlayerScript::ProcessMove()
+{
+    Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
+    Vector2 moveForce = Vector2::Zero;
+    // 인풋을 통해 Direction값이 있다고 판정되면
+    if (moveDirection != Vector2::Zero)
+    {
+        moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetScaledDeltaTime();
+        moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetScaledDeltaTime();
+        // 이동 방향에 따른 회전 각도 계산
+        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
+        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
+    }
+    mPlayerController->SetMoveForceX(moveForce.x);
+    mPlayerController->SetMoveForceZ(moveForce.y);
+
+    return moveDirection != Vector2::Zero ? true : false;
+}
+
+void PlayerScript::ProcessJump()
+{
+    if (isJump == false)
+    {
+        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
+        {
+            isJump = true;
+            mJumpTrigger = true;
+            mJumpTimeCount = 0.0f;
+            mPlayerController->AddMoveForceY(mJumpPower.val);
+        }
+    }
+    else  if (isJump == true)
+    {
+        if (mPlayerController->IsGround())
+        {
+            isJump = false;
+            mJumpTrigger = false;
+            mPlayerController->SetMoveForceY(0.0f);
+        }
+    }
+    if (mJumpTrigger == true)
+    {
+        mJumpTimeCount += Time::GetScaledDeltaTime();
+        if (mJumpTimeCount >= mMaxJumpTimeTick.val ||
+            InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::JUMP))
+        {
+            mJumpTrigger = false;
+            mJumpTimeCount = mMaxJumpTimeTick.val;
+        }
+        float jumpTimeRatio = (mMaxJumpTimeTick.val - mJumpTimeCount) * 0.01f;
+        mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
+    }
+   
 }
 
 void PlayerScript::InitFireLight()
@@ -265,6 +323,7 @@ json PlayerScript::Serialize()
     ret["player hp reduce tick"] = mHpReduceTick.val;
     ret["player move speed"] = mMoveSpeed.val;
     ret["player jump power"] = mJumpPower.val;
+    ret["player jump tick"] = mMaxJumpTimeTick.val;
 
     return ret;
 }
@@ -291,5 +350,9 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player jump power"))
     {
         mJumpPower.val = j["player jump power"].get<FLOAT>();
+    }
+    if (j.contains("player jump tick"))
+    {
+        mMaxJumpTimeTick.val = j["player jump tick"].get<FLOAT>();
     }
 }

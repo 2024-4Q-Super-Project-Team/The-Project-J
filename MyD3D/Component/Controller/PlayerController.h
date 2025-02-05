@@ -44,6 +44,9 @@ public:
     inline void SetGravity(FLOAT _val) { mGravity = _val; }
     inline void SetMaxGravity(FLOAT _val) { mMaxGravity = _val; }
     void SetSlopeMode(SlopeMode _mode);
+
+    inline auto GetSlopeMode() { return mSlopeMode; }
+
     void SetGravity(float _gravity) { mGravity = _gravity; }
     float GetGravity() { return mGravity; }
 public:

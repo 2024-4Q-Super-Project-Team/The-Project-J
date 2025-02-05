@@ -193,7 +193,7 @@ void PlayerController::SetSlopeMode(SlopeMode _mode)
 void PlayerController::GravityUpdate()
 {
 	//ม฿ทย 
-	if (mIsOnGround == false)
+	if (mIsOnGround == false || mSlopeMode == SlopeMode::Slide)
 	{
 		mDisplacement.y -= mGravity * Time::GetUnScaledDeltaTime();
 		//mDisplacement.y = Clamp(mDisplacement.y, -mMaxGravity, 9999999999.9f);

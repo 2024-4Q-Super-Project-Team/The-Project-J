@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Manager/PlayerManager.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 
 #define PLAYER_ANIM_IDLE L"003"
@@ -52,6 +53,8 @@ void PlayerScript::Start()
         mBodyObject->AddComponent<CheckIceSlope>();
     }
     InitFireLight();
+
+    PlayerManager::SetPlayerInfo(this);
 }
 
 void PlayerScript::Update()
@@ -129,11 +132,22 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
             }
         }
     }
+
+    if (_destination->gameObject->GetTag() == L"IceSlope" 
+        && mBurnObjectScript->IsBurning() == true)
+    {
+        mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Slide);
+    }
 }
 
 void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
- 
+    if (_destination->gameObject->GetTag() == L"IceSlope" 
+        && mPlayerController->GetSlopeMode() == PlayerController::SlopeMode::Slide)
+    {
+        mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
+        mPlayerController->SetMoveForceY(0.0f);
+    }
 }
 
 void PlayerScript::Reset()
@@ -315,11 +329,13 @@ void PlayerScript::ProcessJump()
 {
     if (isJump == false)
     {
-        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
+        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP) &&
+            mPlayerController->GetSlopeMode() == PlayerController::SlopeMode::Ride)
         {
             isJump = true;
             mJumpTrigger = true;
             mJumpTimeCount = 0.0f;
+            mPlayerController->SetMoveForceY(0.0f);
             mPlayerController->AddMoveForceY(mJumpPower.val);
         }
     }

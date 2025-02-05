@@ -8,7 +8,6 @@ LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
 
 void LowerPlatformButtonScript::Start()
 {
-    // 컴포넌트 추가하자
     gameObject->AddComponent<Rigidbody>();
 
     std::wstring currentTag = gameObject->GetTag();

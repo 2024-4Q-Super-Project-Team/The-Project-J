@@ -42,7 +42,11 @@ public:
     inline void SetLightType(eLightType _type) { mLightProp.LightType = static_cast<INT>(_type); }
     inline void SetLightRange(float _range) { mLightProp.LightRadius = _range; }
     inline void SetLightCutOff(float _cutOff) { mLightProp.LightCutOff = _cutOff; }
+    inline void SetLightStrengh(float _strengh) { mLightProp.LightStrengh = _strengh; }
     inline void SetLightColor(ColorF _color) { mLightProp.Radiance = _color; }
+    inline void SetLightNear(float _val) { mLightNear = _val; }
+    inline void SetLightFar(float _val) { mLightFar = _val; }
+    inline void SetShadowDistance(float _val) { mShadowDistance = _val; }
 public:
     inline auto GetShadowViewport() { return mShadowViewport; }
     inline auto GetShadowRenderTarget() { return mShadowRenderTarget; }

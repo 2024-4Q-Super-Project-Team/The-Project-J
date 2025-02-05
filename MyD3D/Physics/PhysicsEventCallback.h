@@ -47,6 +47,9 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 					script->OnTriggerEnter(triggerCollider, otherCollider);
 				for (auto script : otherScripts)
 					script->OnTriggerEnter(otherCollider, triggerCollider);
+
+				triggerCollider->AddTriggerOther(otherCollider);
+				otherCollider->AddTriggerOther(triggerCollider);
 			}
 			// 충돌이 끝나는 때
 			else if (cp & PxPairFlag::eNOTIFY_TOUCH_LOST)
@@ -55,13 +58,9 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 					script->OnTriggerExit(triggerCollider, otherCollider);
 				for (auto script : otherScripts)
 					script->OnTriggerExit(otherCollider, triggerCollider);
-			} //충돌중~
-			else
-			{
-				for (auto script : triggerScripts)
-					script->OnTriggerStay(triggerCollider, otherCollider);
-				for (auto script : otherScripts)
-					script->OnTriggerStay(otherCollider, triggerCollider);
+
+				triggerCollider->RemoveTriggerOther(otherCollider);
+				otherCollider->RemoveTriggerOther(triggerCollider);
 			}
 		}
 	}
@@ -90,6 +89,9 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 				script->OnCollisionEnter(contactRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
 				script->OnCollisionEnter(otherRigidbody, contactRigidbody);
+
+			contactRigidbody->AddContactOther(otherRigidbody);
+			otherRigidbody->AddContactOther(contactRigidbody);
 		}
 		// 충돌이 끝나는 때
 		else if (cp & PxContactPairFlag::eACTOR_PAIR_LOST_TOUCH)
@@ -98,14 +100,10 @@ class PhysicsEventCallback : public PxSimulationEventCallback
 				script->OnCollisionExit(contactRigidbody, otherRigidbody);
 			for (auto script : otherScripts)
 				script->OnCollisionExit(otherRigidbody, contactRigidbody);
-		} //충돌중~
-		else
-		{
-			for (auto script : contactScripts)
-				script->OnCollisionStay(contactRigidbody, otherRigidbody);
-			for (auto script : otherScripts)
-				script->OnCollisionStay(otherRigidbody, contactRigidbody);
-		}
+
+			contactRigidbody->RemoveContactOther(otherRigidbody);
+			otherRigidbody->RemoveContactOther(contactRigidbody);
+		} 
 	}
 
 	virtual void onAdvance(const PxRigidBody* const* bodyBuffer, const PxTransform* poseBuffer, const PxU32 count)

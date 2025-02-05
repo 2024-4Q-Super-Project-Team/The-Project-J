@@ -33,7 +33,7 @@ void UIText::DrawWidget(Vector2 _scale)
 		OutlinedTextRender(_scale, objPos);
 	}
 
-	Color color = Color(mColor.x, mColor.y, mColor.z, mAlpha);
+	Color color = Color(mColor.x, mColor.y, mColor.z, mColor.w);
 
 	m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, Vector2(objPos.x * _scale.x, objPos.y * _scale.y), color, 0.f, Vector2(0.0f, 0.0f), _scale.x);
 }
@@ -167,8 +167,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 		ImGui::Text("Text INFO : ");
 		ImGui::DragFloat("line", &mLine, 0.5f, 1.0f, 100.f);
-		ImGui::ColorEdit3("color", &mColor.x);
-		ImGui::DragFloat("alpha", &mAlpha, 0.5f, 0.0f, 1.f);
+		ImGui::ColorEdit4("color", &mColor.x);
 
 		ImGui::NewLine();
 		ImGui::Checkbox("Use Outline", &bUseOutline);
@@ -179,7 +178,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 			ImGui::Text("Text Outline INFO : ");
 			ImGui::DragFloat("outline Offset", &mOutlineOffset, 0.5f, 0.f, 2.0f);
-			ImGui::DragFloat3("outline Color", &mOutlineColor.x, 0.5f, 0.0f, 1.0f);
+			ImGui::ColorEdit4("outline Color", &mColor.x);
 		}
 
 		EDITOR_COLOR_POP(1);
@@ -215,8 +214,7 @@ json UIText::Serialize()
 	ret["font handle"] = mFontHandle.Serialize();
 
 	ret["ui type"] = mUIType;
-	ret["color"] = { mColor.x, mColor.y, mColor.z };
-	ret["alpha"] = mAlpha;
+	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w };
 	ret["line"] = mLine;
 	ret["format"] = mFormat;
 
@@ -244,7 +242,7 @@ void UIText::Deserialize(json& j)
 
 	if (j.contains("color")) {
 		auto color = j["color"];
-		if (color.is_array() && color.size() == 3)
+		if (color.is_array() && color.size() == 4)
 		{
 			Color col = {	color[0].get<float>(),
 							color[1].get<float>(),
@@ -255,11 +253,6 @@ void UIText::Deserialize(json& j)
 		}
 	}
 
-	if (j.contains("alpha"))
-	{
-		SetAlpha(j["alpha"].get<float>());
-	}
-
 	if (j.contains("line"))
 	{
 		SetTextLine(j["line"].get<float>());
@@ -267,7 +260,7 @@ void UIText::Deserialize(json& j)
 
 	if (j.contains("format"))
 	{
-		SetTextFormat(j["line"].get<std::wstring>().c_str());
+		SetTextFormat(j["format"].get<std::wstring>().c_str());
 	}
 
 	if (j.contains("use outline"))
@@ -282,7 +275,7 @@ void UIText::Deserialize(json& j)
 
 	if (j.contains("outline color")) {
 		auto outcolor = j["outline color"];
-		if (outcolor.is_array() && outcolor.size() == 3)
+		if (outcolor.is_array() && outcolor.size() == 4)
 		{
 			Color col = {	outcolor[0].get<float>(),
 							outcolor[1].get<float>(),

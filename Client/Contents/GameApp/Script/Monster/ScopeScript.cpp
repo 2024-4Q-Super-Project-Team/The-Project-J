@@ -17,7 +17,6 @@ void ScopeScript::Start()
 	}
 	{	// Collider Component
 		m_pCollider = gameObject->GetComponent<BoxCollider>();
-
 		if (!m_pCollider)
 			m_pCollider = gameObject->AddComponent<BoxCollider>();
 
@@ -50,7 +49,7 @@ void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 void ScopeScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
-	{	// ÇÃ·¹ÀÌ¾î ¹üÀ§ ³» ÀÖÀ» ½Ã Ã¼Å©
+	{	// í”Œë ˆì´ì–´ ë²”ìœ„ ë‚´ ìžˆì„ ì‹œ ì²´í¬
 		m_pPlayer = _destination->gameObject;
 	}
 }
@@ -63,7 +62,7 @@ void ScopeScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 void ScopeScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
-	{	// ÇÃ·¹ÀÌ¾î ¹üÀ§ ³» ÀÖÀ» ½Ã Ã¼Å©
+	{	// í”Œë ˆì´ì–´ ë²”ìœ„ ë‚´ ìžˆì„ ì‹œ ì²´í¬
 		m_pPlayer = _destination->gameObject;
 	}
 }
@@ -76,12 +75,12 @@ void ScopeScript::OnTriggerStay(Collider* _origin, Collider* _destination)
 void ScopeScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
-	{	// ÇÃ·¹ÀÌ¾î ¹üÀ§ ³» ¾øÀ» ½Ã Ã¼Å©
+	{	// í”Œë ˆì´ì–´ ë²”ìœ„ ë‚´ ì—†ì„ ì‹œ ì²´í¬
 		m_pPlayer = nullptr;
 	}
 
 	if (_destination->gameObject->GetTag() == L"Monster")
-	{	// ¹Ý°æ ³» ¿¡¼­ ¸ó½ºÅÍ°¡ ³ª°¥ ½Ã ¹üÀ§ ÀÌÅ» Àü´Þ
+	{	// ë°˜ê²½ ë‚´ ì—ì„œ ëª¬ìŠ¤í„°ê°€ ë‚˜ê°ˆ ì‹œ ë²”ìœ„ ì´íƒˆ ì „ë‹¬
 		auto* monster = _destination->GetOwner()->GetComponent<MonsterScript>();
 		if (monster)
 			monster->SetIsScope(false);

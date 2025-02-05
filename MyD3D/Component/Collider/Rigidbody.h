@@ -34,9 +34,15 @@ public:
     void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
 public:
     Object* GetOwner() { return gameObject; }
+
+    void AddContactOther(Rigidbody* _rigid);
+    void RemoveContactOther(Rigidbody* _rigid);
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;
+
+private:
+    void CheckContacts();
 private:
 	PxRigidActor* mRigidActor;
 	bool mIsDynamic = false;
@@ -51,5 +57,8 @@ public:
 
     friend class Collider;
     friend class PlayerController;
+
+private:
+    std::unordered_set<Rigidbody*> mContactOthers;
 };
 

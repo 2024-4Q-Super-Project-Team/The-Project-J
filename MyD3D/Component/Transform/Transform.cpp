@@ -14,6 +14,8 @@ Transform::Transform(Object* _owner)
     , scale(Vector3::One)
 {
     SetEID("Transform");
+
+    UpdatePxTransform();
 }
 // 객체의 계층적 삭제는 소유자에게 책임을 전달한다.
 // 왜 Why? 소유자가 이미 삭제한 댕글링포인터에 접근할 가능성이 있기 때문에.
@@ -39,8 +41,6 @@ Transform::~Transform()
     {
         child->SetParent(nullptr);
     }
-
-    UpdatePxTransform();
 }
 
 void Transform::Start()
@@ -88,7 +88,7 @@ void Transform::Update()
             UpdateRotation(1.0f, easingEffect); 
         }
     }
-    UpdatePxTransform();
+ 
 }
 
 void Transform::PostUpdate()

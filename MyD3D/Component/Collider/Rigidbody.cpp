@@ -71,12 +71,13 @@ void Rigidbody::PreUpdate()
 
 void Rigidbody::Update()
 {
-
 }
 
 void Rigidbody::PostUpdate()
 {	
 	//리지드액터 -> 오브젝트 동기화 
+
+	
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 
 	//PostUpdate가 모두 끝난 후, 여기서 simulate 함S

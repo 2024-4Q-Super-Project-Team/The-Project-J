@@ -13,6 +13,7 @@
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
+#include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 
 void ScriptRegister::Register()
 {
@@ -26,5 +27,6 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(MonsterScript);
 	REGISTER_COMPONENT(ScopeScript);
 	REGISTER_COMPONENT(SavePointScript);
+	REGISTER_COMPONENT(CheckIceSlope);
 
 }

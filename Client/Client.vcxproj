@@ -172,6 +172,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
@@ -194,6 +195,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />

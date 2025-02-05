@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
@@ -47,6 +48,9 @@ void PlayerScript::Start()
     {   // BurnObjectScriptÃß°¡
         mBurnObjectScript = mBodyObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnMesh(mFireObject->GetComponent<MeshRenderer>());
+    }
+    {
+        mBodyObject->AddComponent<CheckIceSlope>();
     }
     InitFireLight();
 }

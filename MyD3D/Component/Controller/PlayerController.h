@@ -42,7 +42,8 @@ public:
     void AddMoveForceY(FLOAT _y);
 
     void SetSlopeMode(SlopeMode _mode);
-
+    void SetGravity(float _gravity) { mGravity = _gravity; }
+    float GetGravity() { return mGravity; }
 public:
     ///Jump///
 

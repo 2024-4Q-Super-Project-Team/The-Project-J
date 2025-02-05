@@ -110,12 +110,12 @@ Vector2 GamePad::GetStickForce(int _type) const
     if (_type == LEFT)
     {
         xForce = static_cast<float>(mCurrState.Gamepad.sThumbLX) / 32768.0f;
-        yForce = static_cast<float>(mCurrState.Gamepad.sThumbLY) / 32768.0f;
+        yForce = -static_cast<float>(mCurrState.Gamepad.sThumbLY) / 32768.0f;
     }
     else if (_type == RIGHT)
     {
         xForce = static_cast<float>(mCurrState.Gamepad.sThumbRX) / 32768.0f;
-        yForce = static_cast<float>(mCurrState.Gamepad.sThumbRY) / 32768.0f;
+        yForce = -static_cast<float>(mCurrState.Gamepad.sThumbRY) / 32768.0f;
     }
 
     if (std::abs(xForce) < mDeadZone) xForce = 0.0f;

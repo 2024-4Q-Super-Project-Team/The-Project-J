@@ -168,6 +168,13 @@ void EditorCamera::PushWireList(IRenderContext* _renderContext)
     mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
 }
 
+void EditorCamera::PushOutlineDrawList(IRenderContext* _renderContext)
+{
+    if (_renderContext == nullptr) return;
+    eBlendModeType blendMode = eBlendModeType::OUTLINE_BLEND;
+    mDrawQueue[static_cast<UINT>(blendMode)].push_back(_renderContext);
+}
+
 void EditorCamera::ExcuteDrawList()
 {
     GraphicsManager::GetConstantBuffer(eCBufferType::Light)->UpdateGPUResoure(&mLightCBuffer);
@@ -276,6 +283,34 @@ void EditorCamera::DrawWire()
     mDrawQueue[(UINT)eBlendModeType::WIREFRAME_BELND].clear();
 
     DebugRenderer::EndDraw();
+}
+
+void EditorCamera::DrawOutlineList()
+{
+    GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+    GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
+    // ÀÌ°Å ºí·»µå ½ºÅ×ÀÌÆ® ¹Ù²ã¾ßµÇ³ª? ±»ÀÌ? ÀÏ´Ü ÇØº¾¼¼
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::STENCIL_WRITE)->Bind();
+    mMainRenderTarget->ClearStencil();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::STENCIL_READ)->Bind();
+
+    GraphicsManager::GetVertexShader(eVertexShaderType::OUTLINE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::OUTLINE)->Bind();
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND].clear();
+
+    GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
 }
 
 void EditorCamera::DrawSwapChain()

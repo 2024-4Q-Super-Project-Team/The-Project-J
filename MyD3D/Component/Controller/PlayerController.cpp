@@ -22,12 +22,11 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.radius = mRadius;
 	mCapsuleDesc.position = PxExtendedVec3(0, 0, 0);
 	mCapsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
-	mCapsuleDesc.density = 10.f;
+	mCapsuleDesc.density = 0.01f;
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = 0.f;
 	mCapsuleDesc.scaleCoeff = 1.0f;
-	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.behaviorCallback = mBehaviorCallback;
 	mCapsuleDesc.reportCallback = mEventCallback;
 	mCapsuleDesc.maxJumpHeight = 20.f;

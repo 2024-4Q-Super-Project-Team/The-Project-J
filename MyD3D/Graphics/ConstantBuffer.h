@@ -65,7 +65,7 @@ struct CameraCBuffer
     Matrix  InverseProjection;
 };
 
-#define MAX_BONE_COUNT 128
+#define MAX_BONE_COUNT 150
 struct BoneMatrixCBuffer
 {
     Matrix  finalBoneMatrix[MAX_BONE_COUNT];
@@ -100,6 +100,6 @@ struct ParticleSizeCBuffer
 struct OutlineCBuffer
 {
     Color outlineColor;
-    float outlineOffset;
+    float outlineOffset = 0.1f;
     float paddingg[3];
 };

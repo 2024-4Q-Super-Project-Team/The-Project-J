@@ -62,7 +62,7 @@ void OnOffButtonScript::OnButtonPressed()
     }
 
     // 현재 버튼 내리기
-    MoveButton(-150.0f, 1.0f);
+    MoveButton(-80.0f, 1.0f);
 
     isProcessing = false; // 처리 완료
 }
@@ -79,7 +79,7 @@ void OnOffButtonScript::OnButtonReleased()
     }
 
     // 현재 버튼 올리기
-    MoveButton(150.0f, 1.0f);
+    MoveButton(80.0f, 1.0f);
     isProcessing = false; // 처리 완료
 }
 
@@ -102,17 +102,4 @@ std::wstring OnOffButtonScript::GetOtherButtonTag()
         return currentTag.replace(currentTag.find(L"_2"), 2, L"_1");
     }
     return L"";
-}
-
-void OnOffButtonScript::MoveButton(float yOffset, float duration)
-{
-    Transform* transform = gameObject->transform;
-    if (transform)
-    {
-        Vector3 startPosition = transform->position;
-        Vector3 endPosition = startPosition;
-        endPosition.y += yOffset;
-
-        transform->MoveTo(endPosition, duration, Dotween::EasingEffect::OutSine);
-    }
 }

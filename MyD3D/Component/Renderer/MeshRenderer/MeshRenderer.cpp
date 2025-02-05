@@ -94,6 +94,12 @@ void MeshRenderer::EditorRender()
     if (mMesh)
     {
         EditorManager::mEditorCamera.PushDrawList(this);
+
+        if (Editor::InspectorViewer::IsFocusObject(gameObject))
+        {
+            GraphicsManager::GetConstantBuffer(eCBufferType::Outline)->UpdateGPUResoure(&mOutlineCBuffer);
+            EditorManager::mEditorCamera.PushOutlineDrawList(this);
+        }
     }
 }
 

@@ -6,7 +6,7 @@ enum class ePlayerStateType
 {
 	IDLE,		// 대기 중
 	MOVE,		// 움직이는 중
-	AIRBONE,	// 공중에 떠있는 중
+	HIT,		// 맞는 중
 	MOVE_FIRE,	// 불을 옮기는 중
 	DEAD,		// 사ㅋ망ㅋ
 };
@@ -43,11 +43,13 @@ private:
 
 	void UpdateIdle();
 	void UpdateMove();
-	void UpdateAction();
+	void UpdateHit();
+	void UpdateMoveFire();
 	void UpdateDead();
 
 	bool ProcessMove();
 	void ProcessJump();
+	void ProcessMoveFire();
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 private:
@@ -72,8 +74,8 @@ private:
 	SerializeField(FLOAT,	mHpReduceTick, 1.0f);		// 불이 켜져있을 때 몇 초 마다 HP가 깎일 것인가?
 	FLOAT					mHpReduceCount = 0.0f;		
 	SerializeField(FLOAT,	mMoveSpeed, 200.0f);			
-	SerializeField(FLOAT,	mJumpPower, 0.5f);			
-	SerializeField(FLOAT,	mMaxJumpTimeTick, 0.5f);	
+	SerializeField(FLOAT,	mJumpPower, 0.3f);			
+	SerializeField(FLOAT,	mMaxJumpTimeTick, 0.4f);	
 	FLOAT					mJumpTimeCount = 0.0f;
 	bool					mJumpTrigger = false;
 	////////////////////////////////////////////////
@@ -83,7 +85,7 @@ private:
 	// 
 	////////////////////////////////////////////////
 	bool					isAction = false;
-	bool					isJump = false;
+	bool					isJump = true;
 	ePlayerStateType		mPlayerState = ePlayerStateType::IDLE;
 public:
 	virtual json Serialize() override;

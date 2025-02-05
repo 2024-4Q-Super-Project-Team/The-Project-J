@@ -58,7 +58,7 @@ void Transform::FixedUpdate()
 
 void Transform::PreUpdate()
 {
-    UpdatePxTransform();
+   
 }
 
 void Transform::Update()
@@ -90,6 +90,7 @@ void Transform::Update()
         }
     }
 
+    UpdatePxTransform();
     
 }
 
@@ -154,8 +155,15 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
+    XMVECTOR wscale;
+    XMVECTOR wrotation;
+    XMVECTOR wtranslation;
+
+    // 행렬 분해
+    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix))
+
     memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
-    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
@@ -218,6 +226,7 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
+    UpdatePxTransform();
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const
@@ -533,7 +542,6 @@ void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
     position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-
     UpdateMatrix();
 }
 
@@ -541,7 +549,6 @@ void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-
     UpdateMatrix();
 }
 

@@ -58,6 +58,7 @@ void Transform::FixedUpdate()
 
 void Transform::PreUpdate()
 {
+   
 }
 
 void Transform::Update()
@@ -88,7 +89,9 @@ void Transform::Update()
             UpdateRotation(1.0f, easingEffect); 
         }
     }
- 
+
+    UpdatePxTransform();
+    
 }
 
 void Transform::PostUpdate()
@@ -152,8 +155,15 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
+    XMVECTOR wscale;
+    XMVECTOR wrotation;
+    XMVECTOR wtranslation;
+
+    // 행렬 분해
+    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix))
+
     memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
-    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
@@ -216,6 +226,7 @@ void Transform::UpdateMatrix()
     {
         child->UpdateMatrix();
     }
+    UpdatePxTransform();
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const

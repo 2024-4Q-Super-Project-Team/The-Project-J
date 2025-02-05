@@ -91,3 +91,39 @@ PxConvexMesh* PhysicsManager::CreateConvexMesh(PxU32 numVerts, const PxVec3* ver
 
 	return convex;
 }
+
+PxTriangleMesh* PhysicsManager::CreateTriangleMesh(PxU32 numVerts, const PxVec3* verts, PxU32 numTriangles, const PxU32* indices)
+{
+	PxTriangleMeshDesc meshDesc;
+	meshDesc.points.count = numVerts;
+	meshDesc.points.data = verts;
+	meshDesc.points.stride = sizeof(PxVec3);
+	meshDesc.triangles.count = numTriangles;
+	meshDesc.triangles.data = indices;
+	meshDesc.triangles.stride = 3 * sizeof(PxU32);
+
+	PxTolerancesScale scale;
+	PxCookingParams params(scale);
+
+	// Create BVH33 midphase
+	params.midphaseDesc = PxMeshMidPhase::eBVH33;
+
+	// setup common cooking params
+	params.suppressTriangleMeshRemapTable = true;
+	params.meshPreprocessParams |= PxMeshPreprocessingFlag::eDISABLE_CLEAN_MESH;
+	params.meshPreprocessParams &= ~static_cast<PxMeshPreprocessingFlags>(PxMeshPreprocessingFlag::eDISABLE_ACTIVE_EDGES_PRECOMPUTE);
+	params.midphaseDesc.mBVH33Desc.meshCookingHint = PxMeshCookingHint::eCOOKING_PERFORMANCE;
+	params.midphaseDesc.mBVH33Desc.meshSizePerformanceTradeOff = 0.55f;
+
+#if defined(PX_CHECKED) || defined(PX_DEBUG)
+
+	PX_ASSERT(PxValidateTriangleMesh(params, meshDesc));
+
+#endif // DEBUG
+
+	PxTriangleMesh* triMesh = NULL;
+	PxU32 meshSize = 0;
+	triMesh = PxCreateTriangleMesh(params, meshDesc, mPhysics->getPhysicsInsertionCallback());
+
+	return triMesh;
+}

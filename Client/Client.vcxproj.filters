@@ -37,6 +37,7 @@
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -57,6 +58,7 @@
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\SavePointScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

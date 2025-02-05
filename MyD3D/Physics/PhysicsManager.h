@@ -30,6 +30,8 @@ public:
 	std::unordered_map<std::string, PxMaterial*> GetMaterials() { return mMaterials; }
 
 	PxConvexMesh* CreateConvexMesh(PxU32 numVerts, const PxVec3* verts);
+	PxTriangleMesh* CreateTriangleMesh(PxU32 numVerts, const PxVec3* verts, PxU32 numTriangles, const PxU32* indices);
+
 private:
 	PxFoundation* mFoundation;
 	bool  recordMemoryAllocations = true;

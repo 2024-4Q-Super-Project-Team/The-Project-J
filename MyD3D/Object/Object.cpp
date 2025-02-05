@@ -141,6 +141,11 @@ void Object::PostUpdate()
             child->gameObject->PostUpdate();
         }
     }
+
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
 }
 
 void Object::PreRender()
@@ -165,10 +170,6 @@ void Object::PreRender()
 
 void Object::Render()
 {
-    if (!transform->GetParent())
-    {
-        transform->UpdateMatrix();
-    }
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])

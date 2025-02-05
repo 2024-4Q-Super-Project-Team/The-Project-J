@@ -263,7 +263,7 @@ json PlayerScript::Serialize()
     ret["player handle"] = mPlayerHandle.val;
     ret["player max hp"] = mPlayerMaxHP.val;
     ret["player hp reduce tick"] = mHpReduceTick.val;
-    ret["player move speed"] = mJumpPower.val;
+    ret["player move speed"] = mMoveSpeed.val;
     ret["player jump power"] = mJumpPower.val;
 
     return ret;

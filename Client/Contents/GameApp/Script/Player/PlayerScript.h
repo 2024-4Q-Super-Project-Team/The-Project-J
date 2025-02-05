@@ -6,7 +6,7 @@ enum class ePlayerStateType
 {
 	IDLE,		// 대기 중
 	MOVE,		// 움직이는 중
-	JUMP,		// 점프 중
+	AIRBONE,	// 공중에 떠있는 중
 	MOVE_FIRE,	// 불을 옮기는 중
 	DEAD,		// 사ㅋ망ㅋ
 };
@@ -31,18 +31,23 @@ public:
 	void SetHP(INT _val);			// 플레이어의 HP를 변경
 	void Hit(INT _damage);			// 플레이어에게 피격을 시키는 함수
 
-	inline INT GetPlayerHandle() { return mPlayerHandle.val; }
-	inline INT GetCurrentHP() { return mPlayerCurHP; }
-	inline INT GetMaxHpValue() { return mPlayerMaxHP.val; }
+	inline INT	GetPlayerHandle() { return mPlayerHandle.val; }
+	inline INT	GetCurrentHP() { return mPlayerCurHP; }
+	inline INT	GetMaxHpValue() { return mPlayerMaxHP.val; }
+	inline bool IsJump() { return mPlayerController->IsGround() == false; }
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
 	void UpdatePlayerHP();			// 플레이어의 체력에 대한 업데이트
+	void UpdatePlayerAnim();		// 플레이어의 애니메이션에 대한 업데이트
+
 	void UpdateIdle();
 	void UpdateMove();
-	void UpdateJump();
 	void UpdateAction();
 	void UpdateDead();
+
+	bool ProcessMove();
+	void ProcessJump();
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 private:
@@ -57,14 +62,10 @@ private:
 	Animator*				mBodyAnimator = nullptr;
 	Animator*				mCandleAnimator = nullptr;
 	PlayerController*		mPlayerController = nullptr;
-	BurnObjectScript*		mBurnObjectScript;
+	BurnObjectScript*		mBurnObjectScript = nullptr;
 
 	////////////////////////////////////////////////
-	// [02/02 ~] 주형 작업 - 플레이어 체력 관련
-	// 필요 변수 : 
-	// 1. 플레이어의 체력 (0~100의 정수 값)
-	// 2. 체력 소모 틱 (몇 초마다 체력을 깎을 것인가? 에 대한 틱)
-	// 3. 체력 소모 카운터 (체력 소모가 되는 틱을 계산하기 위한 카운터)
+	// [02/02 ~] 주형 작업 - 플레이어 스탯 관련
 	////////////////////////////////////////////////
 	INT						mPlayerCurHP = 100;
 	SerializeField(INT,		mPlayerMaxHP, 100);			// Player Hp (0~100의 정수 값)
@@ -72,6 +73,9 @@ private:
 	FLOAT					mHpReduceCount = 0.0f;		
 	SerializeField(FLOAT,	mMoveSpeed, 200.0f);			
 	SerializeField(FLOAT,	mJumpPower, 0.5f);			
+	SerializeField(FLOAT,	mMaxJumpTimeTick, 0.5f);	
+	FLOAT					mJumpTimeCount = 0.0f;
+	bool					mJumpTrigger = false;
 	////////////////////////////////////////////////
 	// [02/02 ~] 주형 작업 - 플레이어 FSM
 	// 필요 변수 : 
@@ -79,6 +83,7 @@ private:
 	// 
 	////////////////////////////////////////////////
 	bool					isAction = false;
+	bool					isJump = false;
 	ePlayerStateType		mPlayerState = ePlayerStateType::IDLE;
 public:
 	virtual json Serialize() override;

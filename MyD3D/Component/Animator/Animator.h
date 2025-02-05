@@ -52,7 +52,7 @@ public:
         isPlaying = TRUE;
     }
     inline void SetFrame(FLOAT _val) { mDuration = _val; }
-    inline void SetFremeRateScale(FLOAT _val) { mFrameRateScale = _val; }
+    inline void SetFrameRateScale(FLOAT _val) { mFrameRateScale = _val; }
     inline void SetLoop(bool _isLoop) { isLoop = _isLoop; }
 public:
     bool IsPlaying();
@@ -61,6 +61,7 @@ public:
     inline const auto& GetActiveAnimationKey()      { return mActiveAnimationKey; }
     inline const auto& GetActiveAnimationHandle()   { return mActiveAnimationHandle; }
     inline const auto  GetActiveAnimationResource() { return mActiveAnimation; }
+    inline const FLOAT GetDuration() { return mDuration; }
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);

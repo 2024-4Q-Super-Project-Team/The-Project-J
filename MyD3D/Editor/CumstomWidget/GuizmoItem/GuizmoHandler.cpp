@@ -34,6 +34,7 @@ namespace Editor
             {
                 if (ImGui::Button("Stop", buttonSize))
                 {
+                    EditorManager::mEditorCamera.ClearDrawList();
                     GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
                 }
             }

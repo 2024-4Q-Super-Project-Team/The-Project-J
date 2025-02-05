@@ -10,7 +10,7 @@ public:
 	virtual void Update() override;
 public:
 	inline void SetBurn(bool _isBurn) { isBurning.val = _isBurn; }
-	inline void SetBurnMesh(RendererComponent* _burnMesh) { mBurnMesh = _burnMesh; }
+	inline void SetBurnObject(Object* _burnObject) { mBurnObject = _burnObject; }
 	inline void SetBurnCount(FLOAT _val) { mFireMoveCount = _val; }
 	inline void ProcessBurn(BurnObjectScript* _dst) { isProcessing = true; mDstObject = _dst; }
 	inline void CancleProcess() { isProcessing = false; }
@@ -28,7 +28,7 @@ private:
 	// 불 옮기기에 필요한 키 다운 틱
 	// 불 옮기기 게이지 카운터
 	////////////////////////////////////////////////
-	RendererComponent* mBurnMesh = nullptr;
+	Object* mBurnObject = nullptr;
 	BurnObjectScript* mDstObject = nullptr;
 	SerializeField(bool, isBurning, true);
 	bool isProcessing = false;

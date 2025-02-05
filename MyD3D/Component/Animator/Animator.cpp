@@ -157,9 +157,8 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
 
 void Animator::SetCurrentAnimation(std::wstring _key, float _blendScale)
 {
-    if (mActiveAnimationKey == _key) 
+    if (mActiveAnimationKey == _key)
         return;
-
     auto itr = mAnimationTable.find(_key);
     if (FIND_SUCCESS(itr, mAnimationTable))
     {

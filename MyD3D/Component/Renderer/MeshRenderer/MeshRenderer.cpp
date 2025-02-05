@@ -101,10 +101,6 @@ void MeshRenderer::Draw(Camera* _camera)
 {
     if (mMesh)
     {
-        mTransformMatrices.World        = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
-        mTransformMatrices.View         = XMMatrixTranspose(_camera->GetView());
-        mTransformMatrices.Projection   = XMMatrixTranspose(_camera->GetProjection());
-
         _camera->PushDrawList(this);
         //_camera->PushWireList(this);
 
@@ -135,7 +131,7 @@ void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
         }
         // 메쉬 바인딩
         mMesh->Bind();
-        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+        mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
         mTransformMatrices.View = XMMatrixTranspose(_view);
         mTransformMatrices.Projection = XMMatrixTranspose(_projection);
         // 트랜스폼 상수 버퍼 바인딩
@@ -153,7 +149,7 @@ void MeshRenderer::DrawShadow(Light* _pLight)
         {
             mMesh->Bind();
             // View, Projection은 그림자의 V,P로 써야한다.
-            mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
+            mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
             mTransformMatrices.View = _pLight->GetProperty().ShadowView;
             mTransformMatrices.Projection = _pLight->GetProperty().ShadowProjection;
             // 트랜스폼 상수 버퍼 바인딩
@@ -168,7 +164,7 @@ void MeshRenderer::DrawWire()
     if (mMesh)
     {
         mMesh->Bind();
-        DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix());
+        DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
         D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
@@ -289,6 +285,10 @@ json MeshRenderer::Serialize()
 
     ret["use map"] = mMatCBuffer.UseMapFlag;
 
+    ret["position"] = { mOffsetPosition.x, mOffsetPosition.y, mOffsetPosition.z };
+    ret["rotation"] = { mOffsetRotation.x, mOffsetRotation.y, mOffsetRotation.z, mOffsetRotation.w };
+    ret["scale"] = { mOffsetScale.x, mOffsetScale.y, mOffsetScale.z };
+
     ret["cast outline"] = isCastOutline;
 
     json outline;
@@ -338,6 +338,26 @@ void MeshRenderer::Deserialize(json& j)
             mMatCBuffer.MatProp.MetallicScale = propJson["metallic"].get<float>();
         if (propJson.contains("ao"))
             mMatCBuffer.MatProp.AmbienOcclusionScale = propJson["ao"].get<float>();
+    }
+
+    if (j.contains("position") && j["position"].size() == 3)
+    {
+        mOffsetPosition.x = j["position"][0].get<float>();
+        mOffsetPosition.y = j["position"][1].get<float>();
+        mOffsetPosition.z = j["position"][2].get<float>();
+    }
+    if (j.contains("rotation") && j["rotation"].size() == 4)
+    {
+        mOffsetRotation.x = j["rotation"][0].get<float>();
+        mOffsetRotation.y = j["rotation"][1].get<float>();
+        mOffsetRotation.z = j["rotation"][2].get<float>();
+        mOffsetRotation.w = j["rotation"][3].get<float>();
+    }
+    if (j.contains("scale") && j["scale"].size() == 3)
+    {
+        mOffsetScale.x = j["scale"][0].get<float>();
+        mOffsetScale.y = j["scale"][1].get<float>();
+        mOffsetScale.z = j["scale"][2].get<float>();
     }
 
     if (j.contains("use map"))
@@ -486,6 +506,39 @@ void MeshRenderer::EditorRendering(EditorViewerType _viewerType)
         {
             ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
             ImGui::TreePop();
+        }
+    }
+    ImGui::Separator();
+    {
+        ImGui::Text("Offset Position : ");
+        if (ImGui::DragFloat3((uid + "Position").c_str(), &mOffsetPosition.x, 0.1f))
+        {
+            UpdateOffsetMatrix();
+        }
+    }
+    {
+        // 쿼터니언에서 오일러로
+        Vector3 Euler = mOffsetRotation.ToEuler();
+        Vector3 EulerDegrees;
+        EulerDegrees.x = DirectX::XMConvertToDegrees(Euler.x);
+        EulerDegrees.y = DirectX::XMConvertToDegrees(Euler.y);
+        EulerDegrees.z = DirectX::XMConvertToDegrees(Euler.z);
+        ImGui::Text("Offset Rotation : ");
+        if (ImGui::DragFloat3((uid + "Rotation").c_str(), &EulerDegrees.x, 0.1f))
+        {
+            Euler.x = DirectX::XMConvertToRadians(EulerDegrees.x);
+            Euler.y = DirectX::XMConvertToRadians(EulerDegrees.y);
+            Euler.z = DirectX::XMConvertToRadians(EulerDegrees.z);
+            // 라디안에서 쿼터니언으로
+            mOffsetRotation = Quaternion::CreateFromYawPitchRoll(Euler.y, Euler.x, Euler.z);
+            UpdateOffsetMatrix();
+        }
+    }
+    {
+        ImGui::Text("Offset Scale : ");
+        if (ImGui::DragFloat3((uid + "Scale").c_str(), &mOffsetScale.x, 0.1f))
+        {
+            UpdateOffsetMatrix();
         }
     }
     EDITOR_COLOR_POP(1);

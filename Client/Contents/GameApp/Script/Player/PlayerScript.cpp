@@ -1,39 +1,82 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+
+#define PLAYER_ANIM_IDLE L"003"
+#define PLAYER_ANIM_WALK L"004"
+#define PLAYER_ANIM_JUMP L"005"
+#define PLAYER_ANIM_MOVE_FIRE_RIGHT L"006"
+#define PLAYER_ANIM_MOVE_FIRE_LEFT L"007"
+#define PLAYER_ANIM_OFF_FIRE L"008"
+#define PLAYER_ANIM_HIT L"009"
+#define PLAYER_ANIM_DEAD L"010"
+
 void PlayerScript::Start()
 {
     // 초기화 코드
     gameObject->SetTag(L"Player");
 
     {
-        mAnimator = gameObject->GetComponent<Animator>();
+        Object* RootObject = gameObject->transform->GetParent()->gameObject;
+        auto& Children = RootObject->transform->GetChildren();
+        for (Transform* child : Children)
+        {
+            if (child->gameObject->GetName() == L"Player_Body")
+                mBodyObject = child->gameObject;
+            if (child->gameObject->GetName() == L"Player_Candle")
+                mCandleObject = child->gameObject;
+            if (child->gameObject->GetName() == L"Player_Fire")
+                mFireObject = child->gameObject;
+        }
+        if (mBodyObject == nullptr) Helper::HRT(E_FAIL, "Player_Body Object is nullptr");
+        if (mCandleObject == nullptr) Helper::HRT(E_FAIL, "Player_Candle Object is nullptr");
+        if (mFireObject == nullptr) Helper::HRT(E_FAIL, "Player_Fire Object is nullptr");
+
+        // Object -> RootNode -> Amature -> Bone -> TopBone
+        mCandleTopBone = mCandleObject->transform->GetChild()->GetChild()->GetChild()->GetChild();
+    }
+    {
+        mBodyAnimator = mBodyObject->GetComponent<Animator>();
+        mCandleAnimator = mCandleObject->GetComponent<Animator>();
     }
     {   // PlayerController컴포넌트 저장, 없으면 추가
         mPlayerController = gameObject->GetComponent<PlayerController>();
         if (mPlayerController == nullptr)
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
-    {   // BurnObject추가
-        mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
-        // JH TODO : 불 메쉬 넣어주기
-        mBurnObjectScript->SetBurnMesh(nullptr);
+    {   // BurnObjectScript추가
+        mBurnObjectScript = mBodyObject->AddComponent<BurnObjectScript>();
+        mBurnObjectScript->SetBurnMesh(mFireObject->GetComponent<MeshRenderer>());
     }
+    InitFireLight();
 }
 
 void PlayerScript::Update()
 {
-    // HP 갱신
     UpdatePlayerHP();
-    UpdateInput();
-    if (isAction)
-    {
-        // 컨트롤러 움직이지 못하게
-    }
-    else
-    {
 
+    // FSMUpdate
+    switch (mPlayerState)
+    {
+    case ePlayerStateType::IDLE:
+        UpdateIdle();
+        break;
+    case ePlayerStateType::MOVE:
+        UpdateMove();
+        break;
+    case ePlayerStateType::JUMP:
+        UpdateJump();
+        break;
+    case ePlayerStateType::MOVE_FIRE:
+        break;
+    case ePlayerStateType::DEAD:
+        UpdateDead();
+        break;
+    default:
+        break;
     }
+
+    mFireObject->transform->position = mCandleTopBone->GetWorldPosition();
 }
 
 void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
@@ -76,8 +119,8 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
                     dstBurnObject->CancleProcess();
                 }
                 // 애니메이션 Idle재생
-                mAnimator->SetCurrentAnimation(L"Idle");
-                mAnimator->SetLoop(true);
+              
+                mBodyAnimator->SetLoop(true);
                 isAction = false;
             }
         }
@@ -110,9 +153,9 @@ void PlayerScript::Hit(INT _damage)
     if (mPlayerState != ePlayerStateType::DEAD)
     {
         // 피격 애니메이션이 재생중인 동안에는 무적이다.
-        if (mAnimator->GetActiveAnimationKey() != L"Hit")
+        if (mBodyAnimator->GetActiveAnimationKey() != L"Hit")
         {
-            mAnimator->SetCurrentAnimation(L"Hit");
+            mBodyAnimator->SetCurrentAnimation(L"Hit");
             mPlayerCurHP -= _damage;
         }
     }
@@ -140,14 +183,19 @@ void PlayerScript::UpdatePlayerHP()
         {
             mPlayerState = ePlayerStateType::DEAD;
             // 애니메이션 Dead재생
-            mAnimator->SetCurrentAnimation(L"Dead");
-            mAnimator->SetLoop(false);
+            mBodyAnimator->SetCurrentAnimation(L"Dead");
+            mBodyAnimator->SetLoop(false);
         }
     }
 }
 
-void PlayerScript::UpdateInput()
+void PlayerScript::UpdateIdle()
 {
+}
+
+void PlayerScript::UpdateMove()
+{
+    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK);
     Vector2 moveDirection = InputSyncer::GetInputDirection(mPlayerHandle.val);
     Vector2 moveForce = Vector2::Zero;
     // 인풋을 통해 Direction값이 있다고 판정되면
@@ -155,9 +203,16 @@ void PlayerScript::UpdateInput()
     {
         moveForce.x = moveDirection.x * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
         moveForce.y = moveDirection.y * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+        // 이동 방향에 따른 회전 각도 계산
+        float PlayerDirectionY = atan2(moveDirection.x, moveDirection.y); // 라디안 단위
+        gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
+        mPlayerController->SetMoveForceX(moveForce.x);
+        mPlayerController->SetMoveForceZ(moveForce.y);
     }
-    mPlayerController->SetMoveForceX(moveForce.x);
-    mPlayerController->SetMoveForceZ(moveForce.y);
+    else
+    {
+        SetState(ePlayerStateType::IDLE);
+    }
     if (mPlayerController->IsGround() == true && isAction == false)
     {
         // 점프 중이 아닐 때 점프키를 누르면 점프
@@ -165,8 +220,40 @@ void PlayerScript::UpdateInput()
         {
             mPlayerController->SetMoveForceY(0.0f);
             mPlayerController->AddMoveForceY(mJumpPower.val);
+            SetState(ePlayerStateType::JUMP);
         }
     }
+}
+
+void PlayerScript::UpdateJump()
+{
+}
+
+void PlayerScript::UpdateAction()
+{
+}
+
+void PlayerScript::UpdateDead()
+{
+}
+
+void PlayerScript::InitFireLight()
+{
+    //////////////////////////////////////////////////////////
+    // PointLight
+    //////////////////////////////////////////////////////////
+    Object* FireLightObject = CreateObject(L"Fire_Light", L"Light");
+    FireLightObject->transform->SetParent(mFireObject->transform);
+    FireLightObject->transform->position = Vector3(0.0f, 0.5f, 0.0f);
+    Light* FireLight = FireLightObject->AddComponent<Light>();
+    FireLight->SetLightType(eLightType::Point);
+    FireLight->SetLightCutOff(0.0f);
+    FireLight->SetLightRange(15.0f);
+    FireLight->SetLightStrengh(50.0f);
+    FireLight->SetLightNear(300.0f);
+    FireLight->SetLightFar(5000.0f);
+    FireLight->SetShadowDistance(3000.0f);
+    FireLight->SetLightColor(ColorF(0.3f, 0.15f, 0.0f));
 }
 
 json PlayerScript::Serialize()

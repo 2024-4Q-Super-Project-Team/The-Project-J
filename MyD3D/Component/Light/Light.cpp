@@ -9,8 +9,8 @@
 
 Light::Light(Object* _owner)
     : Component(_owner)
-    , mShadowResolution(4096.0f)
-    , mShadowDistance(4096.0f)
+    , mShadowResolution(8192.0f)
+    , mShadowDistance(8192.0f)
     , mShadowViewport(nullptr)
     , mShadowRenderTarget(nullptr)
 {
@@ -18,7 +18,6 @@ Light::Light(Object* _owner)
     mType = eComponentType::LIGHT;
     SetLightType(eLightType::Direction);
     mLightProp.Direction = Vector4(0, 0, 1, 0);
-    AllocShadowMap();
 }
 
 Light::~Light()
@@ -60,43 +59,37 @@ void Light::Render()
 
 void Light::Draw(Camera* _camera)
 {
-    if (!mShadowRenderTarget && !mShadowViewport)
+    if (!mShadowRenderTarget || !mShadowViewport)
     {
         AllocShadowMap();
     }
-    // 그림자 계산 수행
-	// 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
-    if (mLightProp.UseShadow == TRUE && mShadowViewport && mShadowRenderTarget)
+    Vector3 eye = _camera->gameObject->transform->GetWorldPosition();
+    Vector3 forward = _camera->gameObject->transform->Forward();
+
+    // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
+    Vector3 shadowPos = eye + forward * mCameraDist;
+    // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
+    Vector3 lightPos = Vector3{};
+    if (mLightProp.LightType == 0)
     {
-        mShadowViewport->Bind();
-
-        Vector3 eye = _camera->gameObject->transform->GetWorldPosition();
-        Vector3 forward = _camera->gameObject->transform->Forward();
-
-        // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
-        Vector3 shadowPos = eye + forward * mCameraDist;
-        // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
-        Vector3 lightPos = Vector3{};
-        if (mLightProp.LightType == 0)
-        {
-            lightPos = shadowPos - (mLightProp.Direction * mUpDist);
-        }
-        else if (mLightProp.LightType == 1)
-        {
-            lightPos = gameObject->transform->GetWorldPosition();
-        }
-        else if (mLightProp.LightType == 2)
-        {
-            // TODO : 스팟 라이트 그림자 처리?????
-        }
-
-        // Eye = 광원의 위치 LookAt = 그림자의 위치
-        // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
-        mLightProp.ShadowView       = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
-        mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
+        lightPos = shadowPos - (mLightProp.Direction * mUpDist);
     }
+    else if (mLightProp.LightType == 1)
+    {
+        lightPos = gameObject->transform->GetWorldPosition();
+    }
+    else if (mLightProp.LightType == 2)
+    {
+        // TODO : 스팟 라이트 그림자 처리?????
+    }
+    // Eye = 광원의 위치 LookAt = 그림자의 위치
+    // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
+    mLightProp.ShadowView = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
+    mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
+
     Vector3 WolrdPos = gameObject->transform->GetWorldPosition();
     memcpy(&mLightProp.Position, &WolrdPos, sizeof(Vector3)); // 3원소만 복사
+
     _camera->PushLightList(this);
 }
 
@@ -106,27 +99,37 @@ void Light::PostRender()
 
 void Light::EditorUpdate()
 {
-    // 그림자 계산 수행
-    // 이걸 한번이라도 안거치면 라이트가 안된다. 초기 view나 Projection이 제대로된 값이 아닌듯?
-    if (mLightProp.UseShadow == TRUE && mShadowViewport && mShadowRenderTarget)
+    if (!mShadowRenderTarget || !mShadowViewport)
     {
-        mShadowViewport->Bind();
-
-        Vector3 eye = EditorManager::mEditorCamera.mPosition;
-        Vector3 forward = EditorManager::mEditorCamera.mDirection;
-
-        // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
-        Vector3 shadowPos = eye + forward * mCameraDist;
-        // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
-        Vector3 lightPos = shadowPos - (mLightProp.Direction * mUpDist);
-
-        // Eye = 광원의 위치 LookAt = 그림자의 위치
-        // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
-        mLightProp.ShadowView = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
-        mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
+        AllocShadowMap();
     }
+    Vector3 eye = EditorManager::mEditorCamera.mPosition;
+    Vector3 forward = EditorManager::mEditorCamera.mDirection;
+
+    // 그람자의 위치 (카메라 위치 + 카메라 방향만큼의 Distance)
+    Vector3 shadowPos = eye + forward * mCameraDist;
+    // 광원의 위치 (그림자 위치 + 조명 방향만큼의 Distance)
+    Vector3 lightPos = Vector3{};
+    if (mLightProp.LightType == 0)
+    {
+        lightPos = shadowPos - (mLightProp.Direction * mUpDist);
+    }
+    else if (mLightProp.LightType == 1)
+    {
+        lightPos = gameObject->transform->GetWorldPosition();
+    }
+    else if (mLightProp.LightType == 2)
+    {
+        // TODO : 스팟 라이트 그림자 처리?????
+    }
+    // Eye = 광원의 위치 LookAt = 그림자의 위치
+    // 둘 다 셰이더로 보낼 땐 전치하여 보내야한다.
+    mLightProp.ShadowView = XMMatrixTranspose(XMMatrixLookAtLH(lightPos, shadowPos, Vector3::Up));
+    mLightProp.ShadowProjection = XMMatrixTranspose(XMMatrixOrthographicLH(mShadowDistance, mShadowDistance, mLightNear, mLightFar));
+   
     Vector3 WolrdPos = gameObject->transform->GetWorldPosition();
     memcpy(&mLightProp.Position, &WolrdPos, sizeof(Vector3)); // 3원소만 복사
+
     EditorManager::mEditorCamera.PushLightList(this);
 }
 
@@ -136,7 +139,6 @@ void Light::EditorRender()
 
 void _CALLBACK Light::OnEnable()
 {
-    AllocShadowMap();
     return void _CALLBACK();
 }
 

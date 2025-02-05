@@ -94,6 +94,7 @@ public:
     // 부모를 변경한다.
     void SetParent(Transform* _parent);
     void SetLocalMatrix(Matrix& _matrix);
+    void SetPxWorldTransform(PxTransform _transform) { mPxWorldTransform = _transform; }
 
     virtual json Serialize();
     virtual void Deserialize(json& j);

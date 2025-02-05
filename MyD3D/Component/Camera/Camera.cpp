@@ -208,22 +208,26 @@ void Camera::DrawShadowList()
         if (mSceneLights[i]->GetProperty().UseShadow)
         {
             auto rt = mSceneLights[i]->GetShadowRenderTarget();
-            auto ShaderSRV = rt->GetSRV(rt->GetDSV());
-            ShaderSRV->Reset();
-            ShaderSRV->SetBindSlot(24 + i);
-            // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
-            mSceneLights[i]->GetShadowRenderTarget()->BeginDraw();
-            mSceneLights[i]->GetShadowRenderTarget()->Clear();
-            // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
-            for (auto& drawQueue : mDrawQueue)
+            if (rt && rt->GetDSV())
             {
-                for (auto& drawInfo : drawQueue)
+                auto ShaderSRV = rt->GetSRV(rt->GetDSV());
+                ShaderSRV->Reset();
+                ShaderSRV->SetBindSlot(24 + i);
+                // 해당 라이트의 뎁스 뷰, 뷰포트 등을 바인드해준다.
+                mSceneLights[i]->GetShadowRenderTarget()->BeginDraw();
+                mSceneLights[i]->GetShadowRenderTarget()->Clear();
+                mSceneLights[i]->GetShadowViewport()->Bind();
+                // 각 오브젝트에 대한 깊이 버퍼 Draw를 수행한다
+                for (auto& drawQueue : mDrawQueue)
                 {
-                    drawInfo->DrawShadow(mSceneLights[i]);
+                    for (auto& drawInfo : drawQueue)
+                    {
+                        drawInfo->DrawShadow(mSceneLights[i]);
+                    }
                 }
+                mSceneLights[i]->GetShadowRenderTarget()->EndDraw();
+                ShaderSRV->Bind();
             }
-            mSceneLights[i]->GetShadowRenderTarget()->EndDraw();
-            ShaderSRV->Bind();
         }
     }
 }

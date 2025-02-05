@@ -44,11 +44,12 @@ private:
 	void UpdateIdle();
 	void UpdateMove();
 	void UpdateHit();
-	void UpdateAction();
+	void UpdateMoveFire();
 	void UpdateDead();
 
 	bool ProcessMove();
 	void ProcessJump();
+	void ProcessMoveFire();
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 private:

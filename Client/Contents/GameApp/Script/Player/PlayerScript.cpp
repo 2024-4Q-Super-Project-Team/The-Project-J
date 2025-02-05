@@ -5,8 +5,7 @@
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
 #define PLAYER_ANIM_JUMP L"005"
-#define PLAYER_ANIM_MOVE_FIRE_RIGHT L"006"
-#define PLAYER_ANIM_MOVE_FIRE_LEFT L"007"
+#define PLAYER_ANIM_MOVE_FIRE L"006"
 #define PLAYER_ANIM_OFF_FIRE L"008"
 #define PLAYER_ANIM_HIT L"009"
 #define PLAYER_ANIM_DEAD L"010"
@@ -67,6 +66,7 @@ void PlayerScript::Update()
         UpdateHit();
         break;
     case ePlayerStateType::MOVE_FIRE:
+        UpdateMoveFire();
         break;
     case ePlayerStateType::DEAD:
         UpdateDead();
@@ -193,7 +193,9 @@ void PlayerScript::UpdatePlayerAnim()
     {
     case ePlayerStateType::IDLE:
     {
-        mBodyAnimator->SetLoop(true);
+        isJump == false ?
+            mBodyAnimator->SetLoop(true) :
+            mBodyAnimator->SetLoop(false);
         isJump == false ?
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE) :
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
@@ -201,7 +203,9 @@ void PlayerScript::UpdatePlayerAnim()
     }
     case ePlayerStateType::MOVE:
     {
-        mBodyAnimator->SetLoop(true);
+        isJump == false ?
+        mBodyAnimator->SetLoop(true) :
+        mBodyAnimator->SetLoop(false);
         isJump == false ?
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK) :
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
@@ -236,6 +240,10 @@ void PlayerScript::UpdateIdle()
         SetState(ePlayerStateType::MOVE);
         return;
     }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessMoveFire();
+    }
 }
 
 void PlayerScript::UpdateMove()
@@ -246,6 +254,8 @@ void PlayerScript::UpdateMove()
         SetState(ePlayerStateType::IDLE);
         return;
     }
+    
+   
 }
 
 void PlayerScript::UpdateHit()
@@ -257,8 +267,21 @@ void PlayerScript::UpdateHit()
     }
 }
 
-void PlayerScript::UpdateAction()
+void PlayerScript::UpdateMoveFire()
 {
+    if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
+    {
+
+        //if (mBodyAnimator->IsEnd())
+        //{
+        //
+        //}
+        //else
+        //{
+        //    isAction = true;
+        //}
+    }
+    
 }
 
 void PlayerScript::UpdateDead()
@@ -318,6 +341,14 @@ void PlayerScript::ProcessJump()
         mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
     }
    
+}
+
+void PlayerScript::ProcessMoveFire()
+{
+    if (mBurnObjectScript->IsBurning() == true)
+    {
+        SetState(ePlayerStateType::MOVE_FIRE);
+    }
 }
 
 void PlayerScript::InitFireLight()

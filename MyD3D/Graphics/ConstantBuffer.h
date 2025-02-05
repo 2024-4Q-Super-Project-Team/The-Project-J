@@ -65,7 +65,7 @@ struct CameraCBuffer
     Matrix  InverseProjection;
 };
 
-#define MAX_BONE_COUNT 128
+#define MAX_BONE_COUNT 150
 struct BoneMatrixCBuffer
 {
     Matrix  finalBoneMatrix[MAX_BONE_COUNT];

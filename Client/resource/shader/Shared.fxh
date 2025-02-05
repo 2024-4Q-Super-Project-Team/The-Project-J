@@ -1,5 +1,5 @@
 #define MAX_LIGHT 10
-#define MAX_BONES 100
+#define MAX_BONES 150
 #define MAX_BONE_WEIGHTS 4
 
 struct STD_VS_INPUT

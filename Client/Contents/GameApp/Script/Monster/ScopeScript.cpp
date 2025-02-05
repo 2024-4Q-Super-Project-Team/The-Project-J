@@ -17,7 +17,6 @@ void ScopeScript::Start()
 	}
 	{	// Collider Component
 		m_pCollider = gameObject->GetComponent<BoxCollider>();
-
 		if (!m_pCollider)
 			m_pCollider = gameObject->AddComponent<BoxCollider>();
 

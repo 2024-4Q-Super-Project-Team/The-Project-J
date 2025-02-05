@@ -123,8 +123,7 @@ json UISprite::Serialize()
 	ret["texture handle"] = mTextureHandle.Serialize();
 
 	ret["ui type"] = mUIType;
-	ret["color"] = { mColor.x, mColor.y, mColor.z };
-	ret["alpha"] = mAlpha;
+	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w};
 
 	return ret;
 }
@@ -146,19 +145,14 @@ void UISprite::Deserialize(json& j)
 
 	if (j.contains("color")) {
 		auto color = j["color"];
-		if (color.is_array() && color.size() == 3) 
+		if (color.is_array() && color.size() == 4) 
 		{
 			Color col = {	color[0].get<float>(), 
 							color[1].get<float>(), 
 							color[2].get<float>(),
-							1.f						};
+							color[3].get<float>() };
 
 			SetColor(col);
 		}
-	}
-
-	if (j.contains("alpha"))
-	{
-		SetAlpha(j["alpha"].get<float>());
 	}
 }

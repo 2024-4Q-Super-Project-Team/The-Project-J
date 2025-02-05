@@ -46,16 +46,15 @@ void EditorManager::Render()
 {
     // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
     ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
-    
-    if (pCurrentViewport == mEditorViewport)
-    {
-        // 에디터 윈도우 렌더링
-        EditorWindowRender();
-    }
     if (pCurrentViewport == mFocusViewport)
     {
         // 포커스 윈도우(게임 씬) 렌더링
         FocusWindowRender();
+    }
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
     }
 }
 
@@ -64,15 +63,15 @@ void EditorManager::EditorRender()
     // 액티브 뷰포트를 가져와서 현재 뷰포트를 확인
     ViewportScene* pCurrentViewport = ViewportManager::GetActiveViewport();
 
-    if (pCurrentViewport == mEditorViewport)
-    {
-        // 에디터 윈도우 렌더링
-        EditorWindowRender();
-    }
     if (pCurrentViewport == mFocusViewport)
     {
         // 포커스 윈도우(게임 씬) 렌더링
         FocusWindowRender();
+    }
+    if (pCurrentViewport == mEditorViewport)
+    {
+        // 에디터 윈도우 렌더링
+        EditorWindowRender();
     }
 }
 

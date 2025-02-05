@@ -19,11 +19,13 @@ public:
     void PushDrawList(IRenderContext* _renderContext);
     void PushLightList(Light* _lightComponent);
     void PushWireList(IRenderContext* _renderContext);
+    void PushOutlineDrawList(IRenderContext* _renderContext);
     void ExcuteDrawList();
 public:
     void DrawShadow();
     void DrawObject();
     void DrawWire();
+    void DrawOutlineList();
     void DrawSwapChain();
 public:
     // 현재 카메라가 쓰고 있는 리소스 뷰
@@ -34,8 +36,8 @@ public:
     Matrix                  mRotation = Matrix::Identity;
 
     Vector3                 mDirection = Vector3::Backward;
-    FLOAT                   mCameraMoveSpeed = 10.0f;
-    FLOAT                   mCameraRotateSpeed = 10.0f;
+    FLOAT                   mCameraMoveSpeed = 1000.0f;
+    FLOAT                   mCameraRotateSpeed = 4.0f;
     FLOAT                   mCameraMaxAngle = 1.0f;
 
     Vector2                 mSize = Vector2::Zero;

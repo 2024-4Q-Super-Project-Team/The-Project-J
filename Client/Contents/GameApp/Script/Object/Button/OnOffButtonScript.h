@@ -14,6 +14,7 @@ public:
 
     virtual void OnButtonPressed() override;
 	virtual void OnButtonReleased() override;
+
 public:
 	void SetOtherButton(OnOffButtonScript* _otherButton) { otherButton = _otherButton; }
 
@@ -25,6 +26,4 @@ protected:
 private:
     OnOffButtonScript* otherButton;
     std::wstring GetOtherButtonTag();
-    void MoveButton(float yOffset, float duration);
-
 };

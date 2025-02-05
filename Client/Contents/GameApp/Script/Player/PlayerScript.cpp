@@ -6,8 +6,7 @@
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
 #define PLAYER_ANIM_JUMP L"005"
-#define PLAYER_ANIM_MOVE_FIRE_RIGHT L"006"
-#define PLAYER_ANIM_MOVE_FIRE_LEFT L"007"
+#define PLAYER_ANIM_MOVE_FIRE L"006"
 #define PLAYER_ANIM_OFF_FIRE L"008"
 #define PLAYER_ANIM_HIT L"009"
 #define PLAYER_ANIM_DEAD L"010"
@@ -67,7 +66,11 @@ void PlayerScript::Update()
     case ePlayerStateType::MOVE:
         UpdateMove();
         break;
+    case ePlayerStateType::HIT:
+        UpdateHit();
+        break;
     case ePlayerStateType::MOVE_FIRE:
+        UpdateMoveFire();
         break;
     case ePlayerStateType::DEAD:
         UpdateDead();
@@ -154,9 +157,10 @@ void PlayerScript::Hit(INT _damage)
     if (mPlayerState != ePlayerStateType::DEAD)
     {
         // 피격 애니메이션이 재생중인 동안에는 무적이다.
-        if (mBodyAnimator->GetActiveAnimationKey() != L"Hit")
+        if (mBodyAnimator->GetActiveAnimationKey() != PLAYER_ANIM_HIT)
         {
-            mBodyAnimator->SetCurrentAnimation(L"Hit");
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
+            SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
         }
     }
@@ -193,14 +197,30 @@ void PlayerScript::UpdatePlayerAnim()
     {
     case ePlayerStateType::IDLE:
     {
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE);
+        isJump == false ?
+            mBodyAnimator->SetLoop(true) :
+            mBodyAnimator->SetLoop(false);
+        isJump == false ?
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
         break;
     }
     case ePlayerStateType::MOVE:
     {
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK);
+        isJump == false ?
+        mBodyAnimator->SetLoop(true) :
+        mBodyAnimator->SetLoop(false);
+        isJump == false ?
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
         break;
     } 
+    case ePlayerStateType::HIT:
+    {
+        mBodyAnimator->SetLoop(false);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
+        break;
+    }
     case ePlayerStateType::MOVE_FIRE:
     {
         break;
@@ -224,6 +244,10 @@ void PlayerScript::UpdateIdle()
         SetState(ePlayerStateType::MOVE);
         return;
     }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessMoveFire();
+    }
 }
 
 void PlayerScript::UpdateMove()
@@ -234,10 +258,34 @@ void PlayerScript::UpdateMove()
         SetState(ePlayerStateType::IDLE);
         return;
     }
+    
+   
 }
 
-void PlayerScript::UpdateAction()
+void PlayerScript::UpdateHit()
 {
+    if (mBodyAnimator->IsEnd())
+    {
+        // 애니메이션 블렌드
+        SetState(ePlayerStateType::IDLE);
+    }
+}
+
+void PlayerScript::UpdateMoveFire()
+{
+    if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
+    {
+
+        //if (mBodyAnimator->IsEnd())
+        //{
+        //
+        //}
+        //else
+        //{
+        //    isAction = true;
+        //}
+    }
+    
 }
 
 void PlayerScript::UpdateDead()
@@ -275,7 +323,7 @@ void PlayerScript::ProcessJump()
             mPlayerController->AddMoveForceY(mJumpPower.val);
         }
     }
-    else  if (isJump == true)
+    else if (isJump == true)
     {
         if (mPlayerController->IsGround())
         {
@@ -297,6 +345,14 @@ void PlayerScript::ProcessJump()
         mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
     }
    
+}
+
+void PlayerScript::ProcessMoveFire()
+{
+    if (mBurnObjectScript->IsBurning() == true)
+    {
+        SetState(ePlayerStateType::MOVE_FIRE);
+    }
 }
 
 void PlayerScript::InitFireLight()

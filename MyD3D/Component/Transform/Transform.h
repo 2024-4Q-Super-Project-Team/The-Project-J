@@ -85,7 +85,7 @@ public:
     inline const Vector3  Up() { return GetWorldMatrix().Up(); }     
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
-    inline const PxTransform  GetPxTransform() { return mPxTransform; }
+    inline const PxTransform  GetPxWorldTransform() { return mPxWorldTransform; }
 	inline const float GetHeight() { return scale.y; }
     Vector3 LocalToWorld(const Vector3& localPosition) const;
 public:
@@ -114,6 +114,7 @@ private:
     std::vector<Transform*> mChildren;
     // ====================================
     PxTransform mPxTransform{};
+    PxTransform mPxWorldTransform{};
 
 public:
     void EditorRendering(EditorViewerType _viewerType);

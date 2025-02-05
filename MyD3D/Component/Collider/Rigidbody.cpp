@@ -31,16 +31,16 @@ void Rigidbody::Start()
 	if (mIsDynamic == false)
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidStatic(gameObject->transform->GetPxTransform());
+			->createRigidStatic(gameObject->transform->GetPxWorldTransform());
 	}
 	else
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidDynamic(gameObject->transform->GetPxTransform());
+			->createRigidDynamic(gameObject->transform->GetPxWorldTransform());
 	}
 
 	
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
@@ -76,10 +76,9 @@ void Rigidbody::Update()
 
 void Rigidbody::PostUpdate()
 {	
-	//오브젝트 -> 리지드액터 동기화 
-	gameObject->transform->UpdatePxTransform();
 
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	//리지드액터 -> 오브젝트 동기화 
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 
 
 	//PostUpdate가 모두 끝난 후, 여기서 simulate 함
@@ -87,7 +86,9 @@ void Rigidbody::PostUpdate()
 
 void Rigidbody::PreRender()
 {
-	//리지드액터 -> 오브젝트 동기화 
+	//오브젝트 -> 리지드액터 동기화 
+	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
+
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
 	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
 

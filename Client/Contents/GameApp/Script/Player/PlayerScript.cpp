@@ -313,7 +313,7 @@ bool PlayerScript::ProcessMove()
 
 void PlayerScript::ProcessJump()
 {
-    if (isJump == false)
+    if (isJump == false && mPlayerController->GetSlopeMode() != PlayerController::SlopeMode::Slide)
     {
         if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
         {

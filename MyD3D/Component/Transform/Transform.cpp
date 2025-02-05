@@ -531,7 +531,6 @@ void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
     position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-
     UpdateMatrix();
 }
 
@@ -539,7 +538,6 @@ void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-
     UpdateMatrix();
 }
 

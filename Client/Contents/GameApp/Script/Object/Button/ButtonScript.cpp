@@ -61,3 +61,16 @@ bool ButtonScript::CanInteract(Object* _object)
 {
     return true;
 }
+
+void ButtonScript::MoveButton(float yOffset, float duration)
+{
+    Transform* transform = gameObject->transform;
+    if (transform)
+    {
+        Vector3 startPosition = transform->position;
+        Vector3 endPosition = startPosition;
+        endPosition.y += yOffset;
+
+        transform->MoveTo(endPosition, duration, Dotween::EasingEffect::OutSine);
+    }
+}

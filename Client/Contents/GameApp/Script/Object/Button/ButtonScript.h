@@ -16,6 +16,8 @@ public:
 
     virtual void OnButtonPressed();
 	virtual void OnButtonReleased();
+    virtual void MoveButton(float yOffset, float duration);
+
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;

@@ -88,7 +88,7 @@ void Transform::Update()
             UpdateRotation(1.0f, easingEffect); 
         }
     }
- 
+    gameObject->transform->UpdatePxTransform();
 }
 
 void Transform::PostUpdate()

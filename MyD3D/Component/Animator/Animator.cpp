@@ -51,41 +51,44 @@ void Animator::PreRender()
 
 void Animator::Render()
 {
-    if (isPlaying && mActiveAnimation)
+    if (mActiveAnimation)
     {
-        float AnimCount = Time::GetScaledDeltaTime() *
-            mActiveAnimation->GetFramePerSecond() *
-            mFrameRateScale;
-        float TotalFrame = mActiveAnimation->GetTotalFrame();
-        // TotalFrame이 0이면 무한루프를 돌아버리므로 예외처리
-        if (TotalFrame <= 0.0f) return;
-        if (isReverse == FALSE)
+        if (isPlaying)
         {
-            mDuration += AnimCount;
-            while (mDuration > TotalFrame)
+            float AnimCount = Time::GetScaledDeltaTime() *
+                mActiveAnimation->GetFramePerSecond() *
+                mFrameRateScale;
+            float TotalFrame = mActiveAnimation->GetTotalFrame();
+            // TotalFrame이 0이면 무한루프를 돌아버리므로 예외처리
+            if (TotalFrame <= 0.0f) return;
+            if (isReverse == FALSE)
             {
-                if (isLoop == TRUE)
+                mDuration += AnimCount;
+                while (mDuration > TotalFrame)
                 {
-                    mDuration -= TotalFrame;
-                }
-                else
-                {
-                    mDuration = TotalFrame;
+                    if (isLoop == TRUE)
+                    {
+                        mDuration -= TotalFrame;
+                    }
+                    else
+                    {
+                        mDuration = TotalFrame;
+                    }
                 }
             }
-        }
-        else if (isReverse == TRUE)
-        {
-            mDuration -= AnimCount;
-            while (mDuration < 0)
+            else if (isReverse == TRUE)
             {
-                if (isLoop == TRUE)
+                mDuration -= AnimCount;
+                while (mDuration < 0)
                 {
-                    mDuration += TotalFrame;
-                }
-                else
-                {
-                    mDuration = 0.0f;
+                    if (isLoop == TRUE)
+                    {
+                        mDuration += TotalFrame;
+                    }
+                    else
+                    {
+                        mDuration = 0.0f;
+                    }
                 }
             }
         }

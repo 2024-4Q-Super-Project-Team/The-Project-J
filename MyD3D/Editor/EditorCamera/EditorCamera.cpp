@@ -210,6 +210,14 @@ void EditorCamera::ExcuteDrawList()
     mLightCBuffer.NumLight = 0;
 }
 
+void EditorCamera::ClearDrawList()
+{
+    for (auto& drawInfo : mDrawQueue)
+    {
+        mDrawQueue->clear();
+    }
+}
+
 void EditorCamera::DrawShadow()
 {
     GraphicsManager::GetVertexShader(eVertexShaderType::SHADOW)->Bind();

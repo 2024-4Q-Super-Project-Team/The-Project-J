@@ -7,6 +7,7 @@ class ControllerEventCallback;
 
 class PlayerController : public Component
 {
+public:
     enum SlopeMode
     {
         Ride, Slide

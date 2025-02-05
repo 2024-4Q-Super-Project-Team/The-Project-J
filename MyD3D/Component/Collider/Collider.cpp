@@ -44,10 +44,12 @@ void Collider::FixedUpdate()
 
 void Collider::PreUpdate()
 {
+	CheckTriggers();
 }
 
 void Collider::Update()
 {
+	
 }
 
 void Collider::PostUpdate()
@@ -106,6 +108,17 @@ void Collider::DrawWire()
 {
 }
 
+void Collider::AddTriggerOther(Collider* _collider)
+{
+	mTriggerOthers.insert(_collider);
+}
+
+void Collider::RemoveTriggerOther(Collider* _collider)
+{
+	if (mTriggerOthers.find(_collider) != mTriggerOthers.end())
+		mTriggerOthers.erase(_collider);
+}
+
 void Collider::SetIsTrigger()
 {
 	if (mIsTrigger == true)
@@ -127,3 +140,17 @@ void Collider::SetMaterial(std::string _name)
 	mShape->setMaterials(&material, 1);
 }
 
+void Collider::CheckTriggers()
+{
+	auto triggerScripts = gameObject->GetComponents<MonoBehaviour>();
+
+	for (Collider* col : mTriggerOthers)
+	{
+		auto otherScripts = col->gameObject->GetComponents<MonoBehaviour>();
+
+		for (auto script : triggerScripts)
+			script->OnTriggerStay(this, col);
+		for (auto script : otherScripts)
+			script->OnTriggerStay(col, this);
+	}
+}

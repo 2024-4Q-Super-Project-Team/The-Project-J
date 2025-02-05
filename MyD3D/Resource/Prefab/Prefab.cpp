@@ -37,6 +37,11 @@ PrefabResource::PrefabResource(ResourceHandle _handle, FBXModelResource* _pModel
 
 PrefabResource::~PrefabResource()
 {
+    for (auto& obj : mObjectList)
+    {
+        obj->transform->SetParent(nullptr);
+    }
+
     SAFE_DELETE_ARRAY(mObjectList);
 }
 

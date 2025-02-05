@@ -40,13 +40,19 @@ public:
     static bool bDrawMode;
 public:
     Object* GetOwner() { return gameObject; }
+    void AddTriggerOther(Collider* _collider);
+    void RemoveTriggerOther(Collider* _collider);
+    void SetIsTrigger();
+    void SetIsTrigger(bool _isTrigger) { mIsTrigger = _isTrigger; }
 
 protected:
-    void SetIsTrigger();
     virtual void SetPosition() {}
     virtual void SetRotation() {}
     void AddShapeToRigidbody();
     void SetMaterial(std::string _name);
+
+private:
+    void CheckTriggers();
 protected:
 	PxShape* mShape = nullptr;
     bool mIsTrigger;
@@ -65,5 +71,8 @@ protected:
 	friend class PlayerController;
 
     bool addedToRigid = false;
+
+private:
+    std::unordered_set<Collider*> mTriggerOthers;
 };
 

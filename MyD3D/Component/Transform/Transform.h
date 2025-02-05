@@ -85,7 +85,7 @@ public:
     inline const Vector3  Up() { return GetWorldMatrix().Up(); }     
     inline const Vector3  Right() { return GetWorldMatrix().Right(); }
     inline const Vector3  Backward() { return GetWorldMatrix().Backward(); }
-    inline const PxTransform  GetPxTransform() { return mPxTransform; }
+    inline const PxTransform  GetPxWorldTransform() { return mPxWorldTransform; }
 	inline const float GetHeight() { return scale.y; }
     Vector3 LocalToWorld(const Vector3& localPosition) const;
 public:
@@ -94,6 +94,7 @@ public:
     // 부모를 변경한다.
     void SetParent(Transform* _parent);
     void SetLocalMatrix(Matrix& _matrix);
+    void SetPxWorldTransform(PxTransform _transform) { mPxWorldTransform = _transform; }
 
     virtual json Serialize();
     virtual void Deserialize(json& j);
@@ -114,6 +115,7 @@ private:
     std::vector<Transform*> mChildren;
     // ====================================
     PxTransform mPxTransform{};
+    PxTransform mPxWorldTransform{};
 
 public:
     void EditorRendering(EditorViewerType _viewerType);

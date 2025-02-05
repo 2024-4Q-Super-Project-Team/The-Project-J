@@ -31,16 +31,16 @@ void Rigidbody::Start()
 	if (mIsDynamic == false)
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidStatic(gameObject->transform->GetPxTransform());
+			->createRigidStatic(gameObject->transform->GetPxWorldTransform());
 	}
 	else
 	{
 		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
-			->createRigidDynamic(gameObject->transform->GetPxTransform());
+			->createRigidDynamic(gameObject->transform->GetPxWorldTransform());
 	}
 
 	
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
 
@@ -66,28 +66,29 @@ void Rigidbody::FixedUpdate()
 
 void Rigidbody::PreUpdate()
 {
-
+	CheckContacts();
 }
 
 void Rigidbody::Update()
 {
-	
+
 }
 
 void Rigidbody::PostUpdate()
 {	
-	//오브젝트 -> 리지드액터 동기화 
+	//리지드액터 -> 오브젝트 동기화 
 	gameObject->transform->UpdatePxTransform();
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxTransform());
-
-
-	//PostUpdate가 모두 끝난 후, 여기서 simulate 함
+	//PostUpdate가 모두 끝난 후, 여기서 simulate 함S
 }
 
 void Rigidbody::PreRender()
 {
-	//리지드액터 -> 오브젝트 동기화 
+	//오브젝트 -> 리지드액터 동기화 
+	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
+	
+
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
 	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
 
@@ -173,6 +174,17 @@ void Rigidbody::AddForce(Vector3 force, PxForceMode::Enum forceMode)
 	rigid->addForce(PxVec3(force.x, force.y, force.z), forceMode);
 }
 
+void Rigidbody::AddContactOther(Rigidbody* _rigid)
+{
+	mContactOthers.insert(_rigid);
+}
+
+void Rigidbody::RemoveContactOther(Rigidbody* _rigid)
+{
+	if (mContactOthers.find(_rigid) != mContactOthers.end())
+		mContactOthers.erase(_rigid);
+}
+
 json Rigidbody::Serialize()
 {
 	json ret;
@@ -195,6 +207,21 @@ void Rigidbody::Deserialize(json& j)
 		mIsKinematic = j["isKinematic"].get<bool>();
 	if (j.contains("mass"))
 		mMass = j["mass"].get<float>();
+}
+
+void Rigidbody::CheckContacts()
+{
+	auto triggerScripts = gameObject->GetComponents<MonoBehaviour>();
+
+	for (Rigidbody* rigid : mContactOthers)
+	{
+		auto otherScripts = rigid->gameObject->GetComponents<MonoBehaviour>();
+
+		for (auto script : triggerScripts)
+			script->OnCollisionStay(this, rigid);
+		for (auto script : otherScripts)
+			script->OnCollisionStay(rigid, this);
+	}
 }
 
 void Rigidbody::EditorRendering(EditorViewerType _type)

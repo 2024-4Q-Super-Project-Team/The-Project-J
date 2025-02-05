@@ -14,6 +14,8 @@ Transform::Transform(Object* _owner)
     , scale(Vector3::One)
 {
     SetEID("Transform");
+
+    UpdatePxTransform();
 }
 // 객체의 계층적 삭제는 소유자에게 책임을 전달한다.
 // 왜 Why? 소유자가 이미 삭제한 댕글링포인터에 접근할 가능성이 있기 때문에.
@@ -34,6 +36,10 @@ Transform::~Transform()
                 mParent->mChildren.erase(itr);
             }
         }
+    }
+    for (auto& child : mChildren)
+    {
+        child->SetParent(nullptr);
     }
 }
 
@@ -82,6 +88,7 @@ void Transform::Update()
             UpdateRotation(1.0f, easingEffect); 
         }
     }
+ 
 }
 
 void Transform::PostUpdate()
@@ -145,18 +152,31 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
-    memcpy_s(&mPxTransform.p, sizeof(float) * 3, &position, sizeof(float) * 3);
-    memcpy_s(&mPxTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
+    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &rotation, sizeof(float) * 4);
 }
 
-void Transform::UpdateFromPxTransform(PxTransform pxTransform)
+void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
 {
-    mPxTransform = pxTransform;
-    PxTransform localTransform = mPxTransform;
+    mPxWorldTransform = _pxWorldTransform;
 
+    if (mParent)
+    {
 
-    memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
-    memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
+        PxMat44 parentWorldMatrix = PxMat44(mParent->mPxWorldTransform);
+        PxMat44 parentWorldInverse = parentWorldMatrix.inverseRT();
+        PxMat44 pxWorldMatrix = PxMat44(mPxWorldTransform);
+        PxMat44 pxLocalMatrix = parentWorldInverse * pxWorldMatrix;
+        PxTransform localTransform = PxTransform(pxLocalMatrix);
+
+        memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
+        memcpy_s(&rotation, sizeof(float) * 4, &localTransform.q, sizeof(float) * 4);
+    }
+    else
+    {
+        memcpy_s(&position, sizeof(float) * 3, &mPxWorldTransform.p, sizeof(float) * 3);
+        memcpy_s(&rotation, sizeof(float) * 4, &mPxWorldTransform.q, sizeof(float) * 4);
+    }
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)

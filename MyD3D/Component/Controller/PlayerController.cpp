@@ -22,7 +22,7 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleDesc.radius = mRadius;
 	mCapsuleDesc.position = PxExtendedVec3(0, 0, 0);
 	mCapsuleDesc.material = GameManager::GetPhysicsManager()->GetDefaultMaterial();
-	mCapsuleDesc.density = 0.01f;
+	mCapsuleDesc.density = 10.f;
 	mCapsuleDesc.contactOffset = mContactOffset;
 	mCapsuleDesc.slopeLimit = mSlopeLimit;
 	mCapsuleDesc.stepOffset = 0.f;
@@ -193,7 +193,7 @@ void PlayerController::SetSlopeMode(SlopeMode _mode)
 void PlayerController::GravityUpdate()
 {
 	//ม฿ทย 
-	if (mIsOnGround == false)
+	if (mIsOnGround == false || mSlopeMode == SlopeMode::Slide)
 	{
 		mDisplacement.y -= mGravity * Time::GetUnScaledDeltaTime();
 		//mDisplacement.y = Clamp(mDisplacement.y, -mMaxGravity, 9999999999.9f);

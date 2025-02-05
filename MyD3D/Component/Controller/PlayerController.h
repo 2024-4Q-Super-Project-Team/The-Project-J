@@ -40,7 +40,9 @@ public:
     void SetMoveForceY(FLOAT _y);
     void SetMoveForceZ(FLOAT _z);
     void AddMoveForceY(FLOAT _y);
-
+    
+    inline void SetGravity(FLOAT _val) { mGravity = _val; }
+    inline void SetMaxGravity(FLOAT _val) { mMaxGravity = _val; }
     void SetSlopeMode(SlopeMode _mode);
 
 public:

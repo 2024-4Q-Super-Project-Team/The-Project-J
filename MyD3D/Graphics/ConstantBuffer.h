@@ -100,6 +100,6 @@ struct ParticleSizeCBuffer
 struct OutlineCBuffer
 {
     Color outlineColor;
-    float outlineOffset;
+    float outlineOffset = 0.1f;
     float paddingg[3];
 };

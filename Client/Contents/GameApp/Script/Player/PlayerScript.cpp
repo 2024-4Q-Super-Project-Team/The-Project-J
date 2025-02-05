@@ -63,6 +63,9 @@ void PlayerScript::Update()
     case ePlayerStateType::MOVE:
         UpdateMove();
         break;
+    case ePlayerStateType::HIT:
+        UpdateHit();
+        break;
     case ePlayerStateType::MOVE_FIRE:
         break;
     case ePlayerStateType::DEAD:
@@ -150,9 +153,10 @@ void PlayerScript::Hit(INT _damage)
     if (mPlayerState != ePlayerStateType::DEAD)
     {
         // 피격 애니메이션이 재생중인 동안에는 무적이다.
-        if (mBodyAnimator->GetActiveAnimationKey() != L"Hit")
+        if (mBodyAnimator->GetActiveAnimationKey() != PLAYER_ANIM_HIT)
         {
-            mBodyAnimator->SetCurrentAnimation(L"Hit");
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
+            SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
         }
     }
@@ -189,14 +193,26 @@ void PlayerScript::UpdatePlayerAnim()
     {
     case ePlayerStateType::IDLE:
     {
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE);
+        mBodyAnimator->SetLoop(true);
+        isJump == false ?
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
         break;
     }
     case ePlayerStateType::MOVE:
     {
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK);
+        mBodyAnimator->SetLoop(true);
+        isJump == false ?
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
         break;
     } 
+    case ePlayerStateType::HIT:
+    {
+        mBodyAnimator->SetLoop(false);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
+        break;
+    }
     case ePlayerStateType::MOVE_FIRE:
     {
         break;
@@ -229,6 +245,15 @@ void PlayerScript::UpdateMove()
     {
         SetState(ePlayerStateType::IDLE);
         return;
+    }
+}
+
+void PlayerScript::UpdateHit()
+{
+    if (mBodyAnimator->IsEnd())
+    {
+        // 애니메이션 블렌드
+        SetState(ePlayerStateType::IDLE);
     }
 }
 
@@ -271,7 +296,7 @@ void PlayerScript::ProcessJump()
             mPlayerController->AddMoveForceY(mJumpPower.val);
         }
     }
-    else  if (isJump == true)
+    else if (isJump == true)
     {
         if (mPlayerController->IsGround())
         {

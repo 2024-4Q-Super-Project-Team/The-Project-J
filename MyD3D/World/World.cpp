@@ -35,7 +35,7 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     mPickingRay = new PickingRay;
 
     PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
-    sceneDesc.gravity = PxVec3(0.f, -19.8f, 0.f);
+    sceneDesc.gravity = PxVec3(0.f, -98.f, 0.f);
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = CustomFilterShader;
     sceneDesc.simulationEventCallback = GameManager::GetPhysicsManager()->GetCallback();

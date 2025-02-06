@@ -10,10 +10,6 @@ Rigidbody::Rigidbody(Object* _owner) :Component(_owner)
 	SetEID("Rigidbody");
 	mType = eComponentType::RIGIDBODY;
 	mRigidActor = nullptr;
-
-	gameObject->transform->UpdateMatrix();
-	gameObject->transform->UpdatePxTransform();
-
 }
 
 Rigidbody::~Rigidbody()
@@ -75,21 +71,20 @@ void Rigidbody::Update()
 
 void Rigidbody::PostUpdate()
 {	
-	//리지드액터 -> 오브젝트 동기화 
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 
-
-
-	//PostUpdate가 모두 끝난 후, 여기서 simulate 함S
+	//PostUpdate가 모두 끝난 후, 여기서 simulate 함
 }
 
 void Rigidbody::PreRender()
 {
 	//오브젝트 -> 리지드액터 동기화 
+	if (mIsDynamic)
+	{
+		PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
+	}
 	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
 	
-
-
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
 	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
 	
@@ -103,23 +98,25 @@ void Rigidbody::PreRender()
 	
 	
 	//Rotation Freeze!
-	if (mFreezeRotation[0])
+
+	if (mFreezeRotation[0] || mFreezeRotation[1] || mFreezeRotation[2])
 	{
 		Quaternion q = { updatedQuaternion.x,updatedQuaternion.y, updatedQuaternion.z, updatedQuaternion.w };
 		Vector3 updatedRotation = q.ToEuler();
-		
+
 		if (mFreezeRotation[0])
 			updatedRotation.x = gameObject->transform->GetWorldRotation().x;
 		if (mFreezeRotation[1])
 			updatedRotation.y = gameObject->transform->GetWorldRotation().y;
 		if (mFreezeRotation[2])
 			updatedRotation.z = gameObject->transform->GetWorldRotation().z;
-	
-		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.z, updatedRotation.x );
+
+		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.x, updatedRotation.z);
 		XMStoreFloat4(&q, quat);
 		updatedQuaternion = PxQuat(q.x, q.y, q.z, q.w);
+
 	}
-	
+
 	PxTransform finalTransform(updatedPosition, updatedQuaternion);
 	gameObject->transform->UpdateFromPxTransform(finalTransform);
 }
@@ -161,10 +158,57 @@ void Rigidbody::SetIsKinematic(bool b)
 	rigid->setRigidBodyFlag(PxRigidBodyFlag::eKINEMATIC, b);
 }
 
+void Rigidbody::SetIsDynamic(bool _isDynamic)
+{
+	mIsDynamic = _isDynamic;
+
+	PxActor* prevActor = mRigidActor;
+	if (mIsDynamic == false)
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidStatic(gameObject->transform->GetPxWorldTransform());
+	}
+	else
+	{
+		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+			->createRigidDynamic(gameObject->transform->GetPxWorldTransform());
+	}
+
+	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
+	gameObject->GetOwnerWorld()->RemovePxActor(prevActor);
+
+	SetMass(mMass);
+	SetIsKinematic(mIsKinematic);
+
+	auto& colliders = gameObject->GetComponents<Collider>();
+	for (auto& collider : colliders)
+	{
+		collider->AddShapeToRigidbody();
+	}
+	mRigidActor->userData = this;
+}
+
 void Rigidbody::SetDisableGravity(bool b)
 {
 	if (!mRigidActor) return;
 	mRigidActor->setActorFlag(PxActorFlag::eDISABLE_GRAVITY, b);
+	
+	PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
+	rigid->setLinearVelocity(PxVec3(0, 0, 0));
+}
+
+void Rigidbody::SetFreezePosition(bool bx, bool by, bool bz)
+{
+	mFreezePosition[0] = bx;
+	mFreezePosition[1] = by;
+	mFreezePosition[2] = bz;
+}
+
+void Rigidbody::SetFreezeRotation(bool bx, bool by, bool bz)
+{
+	mFreezeRotation[0] = bx;
+	mFreezeRotation[1] = by;
+	mFreezeRotation[2] = bz;
 }
 
 void Rigidbody::AddForce(Vector3 force, PxForceMode::Enum forceMode)

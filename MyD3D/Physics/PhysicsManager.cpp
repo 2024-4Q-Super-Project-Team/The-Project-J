@@ -17,16 +17,18 @@ void PhysicsManager::Initialize()
     PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("localhost", 5425, 10);
     mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
+	PxTolerancesScale scale{};
+	scale.length = 100.0f;
+
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation,
-        PxTolerancesScale(), recordMemoryAllocations, mPvd);
+		scale, recordMemoryAllocations, mPvd);
     if (!mPhysics)
         assert(mFoundation, "PxCreatePhysics failed");
 
     mEventCallback = new PhysicsEventCallback;
 
-    mMaterials["Default"] = mPhysics->createMaterial(0.9f, 0.9f, 0.f);
+    mMaterials["Default"] = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
     mMaterials[u8"얼음"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
-    mMaterials[u8"적당히 적은 마찰력"] = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
 
    PxCudaContextManagerDesc cudaContextManagerDesc;
    mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);

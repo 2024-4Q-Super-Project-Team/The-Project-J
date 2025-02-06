@@ -44,7 +44,7 @@ void Object::Start()
 }
 
 void Object::Tick()
-{    
+{
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
@@ -463,7 +463,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
         if (EditorDragNDrop::ReceiveDragAndDropObjectData((widgetID).c_str(), &receiveObject))
         {
             // 자기자신이 아니거나 대상 오브젝트가 내 자식에 속해있지 않는 경우
-            if (receiveObject != this && 
+            if (receiveObject != this &&
                 transform->IsBelong(receiveObject->transform) == false)
             {
                 receiveObject->transform->SetParent(transform);
@@ -471,7 +471,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
             }
         }
         break;
-    } 
+    }
     case EditorViewerType::HIERARCHY:
         break;
     case EditorViewerType::INSPECTOR:
@@ -508,7 +508,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                 {
                     Component* component = *itr;
                     std::string compUID = "##" + std::to_string(reinterpret_cast<uintptr_t>(component));
-                    
+
                     bool isComponentActive = component->IsActive();
                     if (ImGui::Checkbox((compUID).c_str(), &isComponentActive))
                     {
@@ -517,7 +517,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                     ImGui::SameLine();
 
                     bool isTreeOpen = ImGui::TreeNodeEx((component->GetEID() + compUID).c_str(), EDITOR_FLAG_MAIN);
-                    
+
                     // 버튼을 오른쪽 끝에 배치
                     ImGui::SameLine(); // 같은 줄에 추가
                     float cursorX = ImGui::GetCursorPosX();
@@ -533,7 +533,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                     // 팝업 메뉴
                     if (ImGui::BeginPopup("Component Config"))
                     {
-                        if (ImGui::Button("Remove Component", ImVec2(100,50)))
+                        if (ImGui::Button("Remove Component", ImVec2(100, 50)))
                         {
                             delete component;
                             itr = componentVec.erase(itr);

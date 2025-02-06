@@ -91,7 +91,6 @@ void Transform::Update()
     }
 
     UpdatePxTransform();
-    
 }
 
 void Transform::PostUpdate()

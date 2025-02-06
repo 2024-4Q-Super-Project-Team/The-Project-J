@@ -158,13 +158,26 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
     }
 }
 
-void Animator::SetCurrentAnimation(std::wstring _key, float _blendScale)
+void Animator::SetCurrentAnimation(std::wstring _key, float _blendTime)
 {
     if (mActiveAnimationKey == _key)
         return;
     auto itr = mAnimationTable.find(_key);
     if (FIND_SUCCESS(itr, mAnimationTable))
     {
+        mBlendTime = _blendTime;
+        mBlendDuration = mDuration;
+        mBlendElapsed = 0.0f;
+        if (_blendTime == 0.0f)
+        {
+            
+            mBlendAnimation = nullptr;
+        }
+        else
+        {
+            mBlendAnimation = mActiveAnimation;
+        }
+       
         SetCurrentAnimation(itr->second);
         mActiveAnimationKey = _key;
     }
@@ -277,12 +290,44 @@ void Animator::Deserialize(json& j)
 
 void Animator::CalculateAnimationTramsform(Transform* _pBone)
 {
-    auto pChannel = mActiveAnimation->GetChannel(_pBone->gameObject->GetName());
-    if (pChannel)
+    auto pActiveChannel = mActiveAnimation->GetChannel(_pBone->gameObject->GetName());
+   
+    if (pActiveChannel)
     {
-        _pBone->position = CalculateAnimationPosition(pChannel) + mOffsetPosition;
-        _pBone->rotation = CalculateAnimationRotation(pChannel) * mOffsetRotation;
-        _pBone->scale    = CalculateAnimationScaling(pChannel) * mOffsetScale;
+        Vector3     AnimPosition;
+        Quaternion  AnimQuaternion;
+        Vector3     AnimScaling;
+
+        AnimPosition = CalculateAnimationPosition(pActiveChannel, mDuration);
+        AnimQuaternion = CalculateAnimationRotation(pActiveChannel, mDuration);
+        AnimScaling = CalculateAnimationScaling(pActiveChannel, mDuration);
+        
+        if (mBlendAnimation)
+        {
+            auto pBlendChannel = mBlendAnimation->GetChannel(_pBone->gameObject->GetName());
+            if (pBlendChannel)
+            {
+                Vector3     BlendPosition = CalculateAnimationPosition(pBlendChannel, mBlendDuration);
+                Quaternion  BlendQuaternion = CalculateAnimationRotation(pBlendChannel, mBlendDuration);
+                Vector3     BlendScaling = CalculateAnimationScaling(pBlendChannel, mBlendDuration);
+
+                FLOAT BlendFactor = Clamp(mBlendElapsed / mBlendTime, 0.0f, 1.0f);
+
+                AnimPosition = Vector3::Lerp(BlendPosition, AnimPosition, BlendFactor);
+                AnimQuaternion = Quaternion::Lerp(BlendQuaternion, AnimQuaternion, BlendFactor);
+                AnimScaling = Vector3::Lerp(BlendScaling, AnimScaling, BlendFactor);
+
+                if (BlendFactor == 1.0f)
+                {
+                    mBlendAnimation = nullptr;
+                }
+                mBlendElapsed += Time::GetScaledDeltaTime();
+            }
+        }
+        
+        _pBone->position = AnimPosition;
+        _pBone->rotation = AnimQuaternion;
+        _pBone->scale    = AnimScaling;
     }
     for (auto child : _pBone->GetChildren())
     {
@@ -290,67 +335,79 @@ void Animator::CalculateAnimationTramsform(Transform* _pBone)
     }
 }
 
-Vector3 Animator::CalculateAnimationPosition(AnimationNode* _pChannel)
+Vector3 Animator::CalculateAnimationPosition(AnimationNode* _pChannel, FLOAT _duration)
 {
-    Vector3 Position = Vector3::Zero;
-    int     NextFrame = 1;
-    int     CurrFrame = 0;
-    while (_pChannel->mPositionKeys[NextFrame].Time < mDuration)
+    if (_pChannel)
     {
-        ++NextFrame;
+        Vector3 Position = Vector3::Zero;
+        int     NextFrame = 1;
+        int     CurrFrame = 0;
+        while (_pChannel->mPositionKeys[NextFrame].Time < _duration)
+        {
+            ++NextFrame;
+        }
+        CurrFrame = NextFrame - 1;
+        float FrameRatio = (_duration - _pChannel->mPositionKeys[CurrFrame].Time) /
+            (_pChannel->mPositionKeys[NextFrame].Time - _pChannel->mPositionKeys[CurrFrame].Time);
+
+        Position = Vector3::Lerp(
+            _pChannel->mPositionKeys[CurrFrame].Value,
+            _pChannel->mPositionKeys[NextFrame].Value,
+            FrameRatio);
+
+        return Position;
     }
-    CurrFrame = NextFrame - 1;
-    float FrameRatio = (mDuration - _pChannel->mPositionKeys[CurrFrame].Time) /
-        (_pChannel->mPositionKeys[NextFrame].Time - _pChannel->mPositionKeys[CurrFrame].Time);
-
-    Position = Vector3::Lerp(
-        _pChannel->mPositionKeys[CurrFrame].Value,
-        _pChannel->mPositionKeys[NextFrame].Value,
-        FrameRatio);
-
-    return Position;
+    return Vector3::Zero;
 }
 
-Quaternion Animator::CalculateAnimationRotation(AnimationNode* _pChannel)
+Quaternion Animator::CalculateAnimationRotation(AnimationNode* _pChannel, FLOAT _duration)
 {
-    Quaternion Rotation = Quaternion::Identity;
-    int     NextFrame = 1;
-    int     CurrFrame = 0;
-    while (_pChannel->mRotationKeys[NextFrame].Time < mDuration)
+    if (_pChannel)
     {
-        ++NextFrame;
+        Quaternion Rotation = Quaternion::Identity;
+        int     NextFrame = 1;
+        int     CurrFrame = 0;
+        while (_pChannel->mRotationKeys[NextFrame].Time < _duration)
+        {
+            ++NextFrame;
+        }
+        CurrFrame = NextFrame - 1;
+        float FrameRatio = (_duration - _pChannel->mRotationKeys[CurrFrame].Time) /
+            (_pChannel->mRotationKeys[NextFrame].Time - _pChannel->mRotationKeys[CurrFrame].Time);
+
+        Rotation = Quaternion::Lerp(
+            _pChannel->mRotationKeys[CurrFrame].Value,
+            _pChannel->mRotationKeys[NextFrame].Value,
+            FrameRatio);
+
+        return Rotation;
     }
-    CurrFrame = NextFrame - 1;
-    float FrameRatio = (mDuration - _pChannel->mRotationKeys[CurrFrame].Time) /
-        (_pChannel->mRotationKeys[NextFrame].Time - _pChannel->mRotationKeys[CurrFrame].Time);
-
-    Rotation = Quaternion::Lerp(
-        _pChannel->mRotationKeys[CurrFrame].Value,
-        _pChannel->mRotationKeys[NextFrame].Value,
-        FrameRatio);
-
-    return Rotation;
+    return Quaternion::Identity;
 }
 
-Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel)
+Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel, FLOAT _duration)
 {
-    Vector3 Scaling = Vector3::Zero;
-    int     NextFrame = 1;
-    int     CurrFrame = 0;
-    while (_pChannel->mScalingKeys[NextFrame].Time < mDuration)
+    if (_pChannel)
     {
-        ++NextFrame;
+        Vector3 Scaling = Vector3::Zero;
+        int     NextFrame = 1;
+        int     CurrFrame = 0;
+        while (_pChannel->mScalingKeys[NextFrame].Time < _duration)
+        {
+            ++NextFrame;
+        }
+        CurrFrame = NextFrame - 1;
+        float FrameRatio = (_duration - _pChannel->mScalingKeys[CurrFrame].Time) /
+            (_pChannel->mScalingKeys[NextFrame].Time - _pChannel->mScalingKeys[CurrFrame].Time);
+
+        Scaling = Vector3::Lerp(
+            _pChannel->mScalingKeys[CurrFrame].Value,
+            _pChannel->mScalingKeys[NextFrame].Value,
+            FrameRatio);
+
+        return Scaling;
     }
-    CurrFrame = NextFrame - 1;
-    float FrameRatio = (mDuration - _pChannel->mScalingKeys[CurrFrame].Time) /
-        (_pChannel->mScalingKeys[NextFrame].Time - _pChannel->mScalingKeys[CurrFrame].Time);
-
-    Scaling = Vector3::Lerp(
-        _pChannel->mScalingKeys[CurrFrame].Value,
-        _pChannel->mScalingKeys[NextFrame].Value,
-        FrameRatio);
-
-    return Scaling;
+    return Vector3::One;
 }
 
 void Animator::EditorRendering(EditorViewerType _viewerType)

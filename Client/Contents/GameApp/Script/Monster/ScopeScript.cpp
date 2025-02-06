@@ -9,7 +9,6 @@ void ScopeScript::Start()
 	gameObject->SetTag(L"Scope");
 
 	// Add componenet
-	
 	{	// RigidBody Component
 		m_pRigidBody = gameObject->GetComponent<Rigidbody>();
 		if (!m_pRigidBody)

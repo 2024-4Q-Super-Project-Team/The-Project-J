@@ -34,7 +34,7 @@ public:
     virtual void _CALLBACK OnDestroy() override;
 public:
     void AddAnimation(std::wstring _key, ResourceHandle _handle);
-    void SetCurrentAnimation(std::wstring _key, float _blendScale = 0.0f);
+    void SetCurrentAnimation(std::wstring _key, float _blendTime = 0.0f);
     void SetCurrentAnimation(ResourceHandle _handle);
 public:
     inline void Play() {    // 처음으로 돌아가서 재생
@@ -67,9 +67,9 @@ public:
     virtual void Deserialize(json& j);
 private:
     void        CalculateAnimationTramsform(Transform* _pBone);
-    Vector3     CalculateAnimationPosition(AnimationNode* _pChannel);
-    Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel);
-    Vector3     CalculateAnimationScaling(AnimationNode* _pChannel);
+    Vector3     CalculateAnimationPosition(AnimationNode* _pChannel, FLOAT _duration);
+    Quaternion  CalculateAnimationRotation(AnimationNode* _pChannel, FLOAT _duration);
+    Vector3     CalculateAnimationScaling(AnimationNode* _pChannel, FLOAT _duration);
 private:
     std::wstring        mActiveAnimationKey;
     ResourceHandle      mActiveAnimationHandle;
@@ -79,6 +79,12 @@ private:
     BOOL  isReverse;
     FLOAT mDuration;
     FLOAT mFrameRateScale;
+    // 애니메이션 블렌드용
+    AnimationResource*  mBlendAnimation = nullptr;
+    FLOAT               mBlendTime = 0.0f;
+    FLOAT               mBlendElapsed = 0.0f;
+    FLOAT               mBlendDuration = 0.0f;
+
     std::unordered_map<std::wstring, ResourceHandle> mAnimationTable;
 
     Vector3     mOffsetPosition = Vector3::Zero;

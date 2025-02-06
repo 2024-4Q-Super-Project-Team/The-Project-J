@@ -172,6 +172,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
@@ -191,10 +192,12 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
     <ClCompile Include="Manager\PlayerManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />
@@ -212,6 +215,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
     <ClInclude Include="Manager\PlayerManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="ScriptRegister.h" />
   </ItemGroup>
   <ItemGroup>

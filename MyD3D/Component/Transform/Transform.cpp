@@ -155,8 +155,10 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
-    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
-    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &GetWorldRotation(), sizeof(float) * 4);
+    Vector3 worldPosition = GetWorldPosition();
+    Quaternion worldRotation = GetWorldRotation();
+    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &worldPosition, sizeof(float) * 3);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &worldRotation, sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
@@ -224,18 +226,33 @@ void Transform::UpdateMatrix()
     UpdatePxTransform();
 }
 
-inline const Quaternion& Transform::GetWorldRotation()
+const Quaternion& Transform::GetWorldRotation()
 {
     XMVECTOR wscale;
     XMVECTOR wrotation;
     XMVECTOR wtranslation;
 
     // 행렬 분해
-    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix));
+    XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix);
 
-    Quaternion quat;
-    memcpy_s(&quat, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
-    return quat;
+    XMFLOAT4 quatFloat;
+    XMStoreFloat4(&quatFloat, wrotation);
+    return Quaternion(quatFloat.x, quatFloat.y, quatFloat.z, quatFloat.w);
+}
+
+const Vector3& Transform::GetWorldScale()
+{
+    XMVECTOR wscale;
+    XMVECTOR wrotation;
+    XMVECTOR wtranslation;
+
+    // 행렬 분해
+    XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix);
+
+    XMFLOAT3 scaleFloat;
+    XMStoreFloat3(&scaleFloat, wscale);
+
+    return Vector3(scaleFloat.x, scaleFloat.y, scaleFloat.z);
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const

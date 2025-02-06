@@ -41,6 +41,10 @@ void SphereCollider::PreUpdate()
 void SphereCollider::Update()
 {
 	Collider::Update();
+
+	SetRadius();
+	SetRotation();
+	SetPosition();
 }
 
 void SphereCollider::PostUpdate()
@@ -137,6 +141,8 @@ void SphereCollider::DrawObject(Matrix& _view, Matrix& _projection)
 
 void SphereCollider::DrawWire()
 {
+	mBS.Center = gameObject->transform->GetWorldPosition() + mPosition;
+	mBS.Radius = gameObject->transform->GetWorldScale().x * mRadius;
 	Debug::Draw(DebugRenderer::GetBatch(), mBS, mBaseColor);
 }
 
@@ -144,7 +150,6 @@ void SphereCollider::SetPosition()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
 	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
-	mBS.Center = gameObject->transform->GetWorldPosition() + mPosition;
 }
 
 void SphereCollider::SetRotation()
@@ -154,7 +159,6 @@ void SphereCollider::SetRotation()
 void SphereCollider::SetRadius()
 {
 	mGeometry.radius = gameObject->transform->scale.x * mRadius;
-	mBS.Radius = gameObject->transform->scale.x * mRadius;
 }
 
 void SphereCollider::EditorRendering(EditorViewerType _type)

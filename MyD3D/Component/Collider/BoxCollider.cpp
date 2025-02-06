@@ -47,6 +47,10 @@ void BoxCollider::PreUpdate()
 void BoxCollider::Update()
 {
 	Collider::Update();
+
+	SetExtents();
+	SetRotation();
+	SetPosition();
 }
 
 void BoxCollider::PostUpdate()
@@ -79,6 +83,9 @@ void BoxCollider::PostRender()
 
 void BoxCollider::EditorUpdate()
 {
+	SetExtents();
+	SetRotation();
+	SetPosition();
 	if (EditorManager::mEditorCamera.mIsColliderRendering)
 	{
 		EditorManager::mEditorCamera.PushWireList(this);
@@ -150,6 +157,9 @@ void BoxCollider::Deserialize(json& j)
 
 void BoxCollider::DrawWire()
 {
+	mOBB.Center = gameObject->transform->GetWorldPosition() + mPosition;
+	mOBB.Orientation = gameObject->transform->GetWorldRotation() *  mQuatRotation;
+	mOBB.Extents = gameObject->transform->GetWorldScale() * mExtents;
 	Debug::Draw(DebugRenderer::GetBatch(), mOBB, mBaseColor);
 }
 
@@ -157,7 +167,7 @@ void BoxCollider::SetPosition()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
 	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
-	mOBB.Center = gameObject->transform->GetWorldPosition() + mPosition;
+	
 }
 
 void BoxCollider::SetRotation()
@@ -169,8 +179,6 @@ void BoxCollider::SetRotation()
 	PxQuat pxRot;
 	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
-
-	mOBB.Orientation = mQuatRotation;
 }
 
 void BoxCollider::SetExtents()
@@ -178,10 +186,6 @@ void BoxCollider::SetExtents()
 	Vector3 size = gameObject->transform->scale;
 	mGeometry = PxBoxGeometry(PxVec3(size.x * mExtents.x, size.y * mExtents.y, size.z * mExtents.z));
 	mShape->setGeometry(mGeometry);
-
-	mOBB.Extents.x = size.x * mExtents.x;
-	mOBB.Extents.y = size.y * mExtents.y;
-	mOBB.Extents.z = size.z * mExtents.z;
 }
 
 Vector3 BoxCollider::GetSize()

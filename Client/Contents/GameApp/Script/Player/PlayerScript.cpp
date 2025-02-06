@@ -136,7 +136,7 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     ////////////////////////////////////////////////
     // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (isJump == false && InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
         return;
@@ -279,10 +279,11 @@ void PlayerScript::UpdateIdle()
     ProcessJump();
     if (ProcessMove() == true)
     {
+        // 움직임 시도가 있었다면 MOVE스테이트로 변경
         SetState(ePlayerStateType::MOVE);
         return;
     }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
+    if (isJump == false && InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
     {
         ProcessOffFire(nullptr);
     }
@@ -296,7 +297,7 @@ void PlayerScript::UpdateMove()
         SetState(ePlayerStateType::IDLE);
         return;
     }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
+    if (isJump == false && InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
     {
         ProcessOffFire(nullptr);
     }

@@ -102,7 +102,6 @@ void MonsterScript::Update()
 
 void MonsterScript::UpdateIdle()
 {
-	m_pAnimator->SetLoop(true);
 	mResetCount += Time::GetUnScaledDeltaTime();
 
 	if (mResetCount > 3.f)
@@ -114,7 +113,6 @@ void MonsterScript::UpdateIdle()
 
 void MonsterScript::UpdateWalk()
 {
-	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
@@ -161,7 +159,6 @@ void MonsterScript::UpdateWalk()
 
 void MonsterScript::UpdateFastWalk()
 {
-	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
@@ -187,7 +184,6 @@ void MonsterScript::UpdateFastWalk()
 
 void MonsterScript::UpdateRun()
 {
-	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
@@ -317,21 +313,27 @@ void MonsterScript::UpdateMonsterAnim()
 	switch (mFSM)
 	{
 	case eMonsterStateType::IDLE:
+		m_pAnimator->SetLoop(true);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE);
 		break;
 	case eMonsterStateType::WALK:
+		m_pAnimator->SetLoop(true);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_WALK);
 		break;
 	case eMonsterStateType::FAST_WALK:
+		m_pAnimator->SetLoop(true);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_FAST_WALK);
 		break;
 	case eMonsterStateType::RUN:
+		m_pAnimator->SetLoop(true);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_RUN);
 		break;
 	case eMonsterStateType::HIT:
+		m_pAnimator->SetLoop(false);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT);
 		break;
 	case eMonsterStateType::DEAD:
+		m_pAnimator->SetLoop(false);
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_DEAD);
 		break;
 	}

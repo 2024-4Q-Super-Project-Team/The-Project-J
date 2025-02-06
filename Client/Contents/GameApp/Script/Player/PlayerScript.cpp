@@ -276,24 +276,35 @@ void PlayerScript::UpdateMoveFire()
 {
     if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
     {
-        // 애니메이션 도중에 불이 꺼진다면? 예외처리해야함
-        if (mCandleAnimator->IsEnd())
+        if (mBurnProcessTarget)
         {
-            // 대상이 불타고 내가 꺼져있음
-            if (mBurnProcessTarget->IsBurning() == false &&
-                mBurnObjectScript->IsBurning() == true)
+            // 로테이션 보간
+            Vector3 dstPos = mBurnProcessTarget->gameObject->transform->GetWorldPosition();
+            Vector3 srcPos = gameObject->transform->GetWorldPosition();
+            Vector2 viewDirection = { dstPos.x - srcPos.x, srcPos.y - srcPos.y };
+            viewDirection.Normalize();
+            float PlayerDirectionY = atan2(viewDirection.x, viewDirection.y); // 라디안 단위
+            gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
+
+            // 애니메이션 도중에 불이 꺼진다면? 예외처리해야함
+            if (mCandleAnimator->IsEnd())
             {
-                mBurnProcessTarget->SetBurn(false);
-                mBurnObjectScript->SetBurn(true);
+                // 대상이 불타고 내가 꺼져있음
+                if (mBurnProcessTarget->IsBurning() == false &&
+                    mBurnObjectScript->IsBurning() == true)
+                {
+                    mBurnProcessTarget->SetBurn(false);
+                    mBurnObjectScript->SetBurn(true);
+                }
+                // 대상이 꺼져있고 내가 불타는 중
+                if (mBurnProcessTarget->IsBurning() == true &&
+                    mBurnObjectScript->IsBurning() == false)
+                {
+                    mBurnProcessTarget->SetBurn(true);
+                    mBurnObjectScript->SetBurn(false);
+                }
+                SetState(ePlayerStateType::IDLE);
             }
-            // 대상이 꺼져있고 내가 불타는 중
-            if (mBurnProcessTarget->IsBurning() == true &&
-                mBurnObjectScript->IsBurning() == false)
-            {
-                mBurnProcessTarget->SetBurn(true);
-                mBurnObjectScript->SetBurn(false);
-            }
-            SetState(ePlayerStateType::IDLE);
         }
     }
 }

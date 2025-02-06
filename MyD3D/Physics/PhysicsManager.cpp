@@ -17,17 +17,14 @@ void PhysicsManager::Initialize()
     PxPvdTransport* transport = PxDefaultPvdSocketTransportCreate("localhost", 5425, 10);
     mPvd->connect(*transport, PxPvdInstrumentationFlag::eALL);
 
-	PxTolerancesScale scale{};
-	scale.length = 100.0f;
-
     mPhysics = PxCreatePhysics(PX_PHYSICS_VERSION, *mFoundation,
-		scale, recordMemoryAllocations, mPvd);
+		PxTolerancesScale(), recordMemoryAllocations, mPvd);
     if (!mPhysics)
         assert(mFoundation, "PxCreatePhysics failed");
 
     mEventCallback = new PhysicsEventCallback;
 
-    mMaterials["Default"] = mPhysics->createMaterial(2.0f, 2.0f, 0.f);
+    mMaterials["Default"] = mPhysics->createMaterial(7.0f, 7.0f, 0.f);
     mMaterials[u8"¾óÀ½"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
 
    PxCudaContextManagerDesc cudaContextManagerDesc;

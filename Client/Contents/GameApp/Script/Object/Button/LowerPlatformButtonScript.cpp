@@ -8,35 +8,22 @@ LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
 
 void LowerPlatformButtonScript::Start()
 {
-    Transform* platformTransform = gameObject->transform;
-    auto child = platformTransform->GetChild();
-
+    gameObject->AddComponent<Rigidbody>();
     std::wstring currentTag = gameObject->GetTag();
 
     if (currentTag.find(L"_1") != std::wstring::npos)
     {
-        gameObject->AddComponent<Rigidbody>();
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 1, 0));
         boxCol->SetExtents(Vector3(100, 1, 100));
     }
 
-    // 회전은 부모(pivot을 회전시킨다)
-    // 자식에 딸린 Rigidbody와 Collider가 같이 회전해야 한다.
-    // 자식에다 둘을 넣으면 왜 회전을 같이 안함??
-    // 그럼 그냥 부모 회전축이 자식과 일치하지 않는거 아닌감... 잘 돌려봐..
-
     else if (currentTag.find(L"_2") != std::wstring::npos)
     {
-        //child->gameObject->AddComponent<Rigidbody>();
-        //BoxCollider* boxCol = child->gameObject->AddComponent<BoxCollider>();
-        //boxCol->SetPosition(Vector3(0.0f, 0.0f, 20.0f));
-        //boxCol->SetExtents(Vector3(200.0f, 135.0f, 20.0f));
-
-        gameObject->AddComponent<Rigidbody>();
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-        boxCol->SetPosition(Vector3(0, 120, 30));
-        boxCol->SetExtents(Vector3(130, 200, 20));
+        boxCol->SetPosition(Vector3(-10, 0, 20));
+        boxCol->SetRotation(Vector3(0, 0, 0));
+        boxCol->SetExtents(Vector3(130, 190, 30));
     }
 
     // 발판 찾기
@@ -89,21 +76,72 @@ void LowerPlatformButtonScript::OnButtonPressed()
         Vector3 right = platformTransform->Right();
 
         // 2. 발판 up 벡터를 사용하여 회전축 결정
-        // 오브젝트는 y축 기준, collider는 z기준으로 돈다.
         Vector3 rotationAxis;
-        if (abs(up.y) > 0.9f)
+        if (abs(forward.y) > 0.9f)
         {
             rotationAxis = right;
         }
         else
         {
-            rotationAxis = forward;
+            rotationAxis = up;
         }
 
+        // 오브젝트는 z 기준, 콜라이더는 y축 기준으로 돈다.
+        // 왜 시발롬아
         float rotationAngle = XM_PIDIV2; // 90도 회전 
         platformTransform->Rotate90(3.5f, rotationAxis, rotationAngle, Dotween::EasingEffect::OutBounce);
     }
 }
+
+//void LowerPlatformButtonScript::OnButtonPressed()
+//{
+//    Display::Console::Log("LowerPlatformButton Pressed!");
+//
+//    if (platform)
+//    {
+//        // 자식에 있는 피벗 오브젝트 찾고
+//        Transform* platformTransform = platform->transform;
+//        Object* pivotObject = nullptr;
+//        auto children = platformTransform->GetChildren();
+//        for (auto child : children)
+//        {
+//            if (child->gameObject->GetTag() == L"pivot")
+//            {
+//                pivotObject = child->gameObject;
+//                break;
+//            }
+//        }
+//
+//        if (pivotObject)
+//        {
+//            // 1. pivot 포지션 기준으로 회전
+//            Vector3 pivotPoint = platformTransform->LocalToWorld(pivotObject->transform->position);
+//
+//            Vector3 forward = platformTransform->Forward();
+//            Vector3 up = platformTransform->Up();
+//            Vector3 right = platformTransform->Right();
+//
+//            // 2. 발판 up 벡터를 사용하여 회전축 결정
+//            Vector3 rotationAxis;
+//            if (abs(forward.y) > 0.9f)
+//            {
+//                rotationAxis = right;
+//            }
+//            else
+//            {
+//                rotationAxis = up;
+//            }
+//
+//            float rotationAngle = -     XM_PIDIV2; // 90도 회전 
+//            platformTransform->RotateByPivot(pivotPoint, rotationAxis, rotationAngle, 3.5f, Dotween::EasingEffect::OutBounce);
+//        }
+//        else
+//        {
+//            Display::Console::Log("Pivot object not found!");
+//        }
+//    }
+//}
+
 
 void LowerPlatformButtonScript::OnButtonReleased()
 {

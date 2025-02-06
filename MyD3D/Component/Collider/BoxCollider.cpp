@@ -170,14 +170,37 @@ void BoxCollider::SetPosition()
 	
 }
 
+//void BoxCollider::SetRotation()
+//{
+//	PxTransform currentTransform = mShape->getLocalPose();
+//	Vector3 rot = gameObject->transform->GetEulerAngles();
+//	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
+//	Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
+//	PxQuat pxRot;
+//	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
+//	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
+//}
+
 void BoxCollider::SetRotation()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
-	Vector3 rot = gameObject->transform->GetEulerAngles();
-	mQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y + rot.y, mRotation.x + rot.x, mRotation.z + rot.z);
-	Quaternion PxQuatRotation = Quaternion::CreateFromYawPitchRoll(mRotation.y, mRotation.x, mRotation.z);
-	PxQuat pxRot;
-	memcpy_s(&pxRot, sizeof(float) * 4, &PxQuatRotation, sizeof(float) * 4);
+
+	Vector3 worldEuler = gameObject->transform->GetEulerAngles();
+
+	Quaternion localQuat = Quaternion::CreateFromYawPitchRoll(
+		XMConvertToRadians(mRotation.z),
+		XMConvertToRadians(mRotation.x),
+		XMConvertToRadians(mRotation.y)
+	);
+
+	mQuatRotation = Quaternion::CreateFromYawPitchRoll(
+		XMConvertToRadians(mRotation.z + worldEuler.z),
+		XMConvertToRadians(mRotation.x + worldEuler.x),
+		XMConvertToRadians(mRotation.y + worldEuler.y)
+	);
+
+	PxQuat pxRot(localQuat.x, localQuat.y, localQuat.z, localQuat.w);
+
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
 

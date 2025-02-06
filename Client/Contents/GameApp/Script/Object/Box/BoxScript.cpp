@@ -5,7 +5,6 @@ void BoxScript::Start()
 {
     mRigid = gameObject->AddComponent<Rigidbody>();
     mRigid->SetIsDynamic(true);
-    mRigid = gameObject->GetComponent<Rigidbody>();
     mCollider = gameObject->AddComponent<BoxCollider>();
     
 
@@ -17,7 +16,10 @@ void BoxScript::Start()
 
     //mPxRayDirection = PxVec3(0, -1, 0);
 
+   
     mRigid->SetFreezeRotation(true, true, true);
+    //mRigid->SetFreezePosition(false, true, false);
+    //mRigid->SetDisableGravity(true);
 }
 
 void BoxScript::Update()
@@ -38,5 +40,4 @@ void BoxScript::Update()
    //{
    //    mRigid->SetDisableGravity(false);
    //}
-
 }

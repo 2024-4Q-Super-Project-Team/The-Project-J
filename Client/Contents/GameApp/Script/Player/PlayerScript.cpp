@@ -278,6 +278,10 @@ void PlayerScript::UpdateIdle()
         SetState(ePlayerStateType::MOVE);
         return;
     }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessOffFire(nullptr);
+    }
 }
 
 void PlayerScript::UpdateMove()
@@ -287,6 +291,10 @@ void PlayerScript::UpdateMove()
     {
         SetState(ePlayerStateType::IDLE);
         return;
+    }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessOffFire(nullptr);
     }
 }
 

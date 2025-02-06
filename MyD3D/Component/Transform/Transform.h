@@ -123,7 +123,7 @@ public:
 public:
     void LookAt(const Vector3& _target, const Vector3& _up);
     // dotween ÇÔ¼ö
-    void Rotate90(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
+    void Rotate90(float duration, const Vector3& axis, float angle, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
 	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);

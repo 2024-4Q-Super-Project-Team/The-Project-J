@@ -100,10 +100,10 @@ namespace Editor
 
     void GuizmoManipulater::RotateFocusObject()
     {
-        if (mFocusObject)
-        {
-            mFocusObject->transform->Rotate90(2.0f, Dotween::EasingEffect::InOutQuad);
-        }
+        //if (mFocusObject)
+        //{
+        //    mFocusObject->transform->Rotate90(2.0f, Dotween::EasingEffect::InOutQuad);
+        //}
     }
 
 	void GuizmoManipulater::LookAtTargetObject()

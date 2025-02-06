@@ -13,7 +13,7 @@ void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
 void JumpPadScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-
+	// 점프한번하고 내려오면 다시 점프 안됨??
 	if (_destination->gameObject->GetComponent<PlayerController>())
 	{
 		auto* playerController = _destination->gameObject->GetComponent<PlayerController>();

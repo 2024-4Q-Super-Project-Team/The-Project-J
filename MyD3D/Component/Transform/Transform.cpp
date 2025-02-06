@@ -155,15 +155,8 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
-    XMVECTOR wscale;
-    XMVECTOR wrotation;
-    XMVECTOR wtranslation;
-
-    // 행렬 분해
-    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix))
-
     memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
-    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &GetWorldRotation(), sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
@@ -227,6 +220,20 @@ void Transform::UpdateMatrix()
         child->UpdateMatrix();
     }
     UpdatePxTransform();
+}
+
+inline const Quaternion& Transform::GetWorldRotation()
+{
+    XMVECTOR wscale;
+    XMVECTOR wrotation;
+    XMVECTOR wtranslation;
+
+    // 행렬 분해
+    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix));
+
+    Quaternion quat;
+    memcpy_s(&quat, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
+    return quat;
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const

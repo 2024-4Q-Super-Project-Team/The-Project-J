@@ -79,6 +79,7 @@ public:
     }
     inline const std::vector<Transform*>& GetChildren() { return mChildren; }
     inline const Vector3& GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
+    inline const Quaternion& GetWorldRotation();
     inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
     inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
     inline const Vector3  Forward() { return GetWorldMatrix().Forward(); }

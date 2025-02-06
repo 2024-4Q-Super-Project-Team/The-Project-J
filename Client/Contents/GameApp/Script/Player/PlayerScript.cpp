@@ -136,8 +136,6 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     ////////////////////////////////////////////////
     // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if (dstBurnObject)
-        Display::Console::Log(L"Can Fire \n");
     if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
@@ -282,7 +280,7 @@ void PlayerScript::UpdateIdle()
         SetState(ePlayerStateType::MOVE);
         return;
     }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
     {
         ProcessOffFire(nullptr);
     }
@@ -296,7 +294,7 @@ void PlayerScript::UpdateMove()
         SetState(ePlayerStateType::IDLE);
         return;
     }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
     {
         ProcessOffFire(nullptr);
     }
@@ -313,6 +311,8 @@ void PlayerScript::UpdateHit()
 
 void PlayerScript::UpdateMoveFire()
 {
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
     if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
     {
         if (mBurnProcessTarget)
@@ -329,6 +329,8 @@ void PlayerScript::UpdateMoveFire()
             if (InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
             {
                 SetState(ePlayerStateType::IDLE);
+                mBurnProcessTarget = nullptr;
+                mMoveFireCount = 0.0f;
                 return;
             }
             // 불 옮기기 카운트를 스케일이 적용된 델타타임으로 더한다.
@@ -344,16 +346,18 @@ void PlayerScript::UpdateMoveFire()
                 if (mBurnProcessTarget->IsBurning() == false &&
                     mBurnObjectScript->IsBurning() == true)
                 {
-                    mBurnProcessTarget->SetBurn(false);
-                    mBurnObjectScript->SetBurn(true);
-                }
-                // 대상이 꺼져있고 내가 불타는 중
-                if (mBurnProcessTarget->IsBurning() == true &&
-                    mBurnObjectScript->IsBurning() == false)
-                {
                     mBurnProcessTarget->SetBurn(true);
                     mBurnObjectScript->SetBurn(false);
                 }
+                // 대상이 꺼져있고 내가 불타는 중
+                else if (mBurnProcessTarget->IsBurning() == true &&
+                    mBurnObjectScript->IsBurning() == false)
+                {
+                    mBurnProcessTarget->SetBurn(false);
+                    mBurnObjectScript->SetBurn(true);
+                }
+                mBurnProcessTarget = nullptr;
+                mMoveFireCount = 0.0f;
                 SetState(ePlayerStateType::IDLE);
             }
         }
@@ -362,15 +366,12 @@ void PlayerScript::UpdateMoveFire()
 
 void PlayerScript::UpdateOffFire()
 {
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
     if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_OFF_FIRE)
     {
         if (mBodyAnimator->IsEnd())
         {
-            // 대상이 없는 상태면 자신의 불을 끈다.
-            if (mBurnProcessTarget == nullptr)
-            {
-                mBurnObjectScript->SetBurn(false);
-            }
             SetState(ePlayerStateType::IDLE);
         }
     }
@@ -442,7 +443,10 @@ void PlayerScript::ProcessJump()
 void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
 {
     // dst가 없으면 행동을 할 수 없다.
-    if (_dst == nullptr) return;
+    if (_dst == nullptr || _dst == mBurnObjectScript) return;
+
+    Display::Console::Log(L"Can Fire \n");
+
     if ((mBurnObjectScript->IsBurning() == true && _dst->IsBurning() == false) ||
         (mBurnObjectScript->IsBurning() == false && _dst->IsBurning() == true) )
     {
@@ -470,8 +474,9 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         // 불타는 중일 때만 가능
         if (mBurnObjectScript->IsBurning() == true)
         {
+            mBurnObjectScript->SetBurn(false);
             SetState(ePlayerStateType::OFF_FIRE);
-            mBurnProcessTarget = _dst;
+            mBurnProcessTarget = nullptr;
         }
     }
 }

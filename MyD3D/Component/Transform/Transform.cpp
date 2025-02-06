@@ -155,8 +155,10 @@ void Transform::EditorRender()
 
 void Transform::UpdatePxTransform()
 {
-    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &GetWorldPosition(), sizeof(float) * 3);
-    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &GetWorldRotation(), sizeof(float) * 4);
+    Vector3 worldPosition = GetWorldPosition();
+    Quaternion worldRotation = GetWorldRotation();
+    memcpy_s(&mPxWorldTransform.p, sizeof(float) * 3, &worldPosition, sizeof(float) * 3);
+    memcpy_s(&mPxWorldTransform.q, sizeof(float) * 4, &worldRotation, sizeof(float) * 4);
 }
 
 void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)

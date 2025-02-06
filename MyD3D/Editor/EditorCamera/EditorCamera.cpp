@@ -216,6 +216,7 @@ void EditorCamera::ClearDrawList()
     {
         mDrawQueue->clear();
     }
+    mSceneLights.clear();
 }
 
 void EditorCamera::DrawShadow()

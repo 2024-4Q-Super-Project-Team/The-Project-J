@@ -16,6 +16,15 @@ void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
 
+	Object* root = gameObject->transform->GetParent()->gameObject;
+	auto& Children = root->transform->GetChildren();
+	
+	for (Transform* child : Children)
+	{
+		if (child->gameObject->GetName() == L"Scope_A")
+			m_pScope = child->gameObject;
+	}
+
 	// Init Setting
 	{
 		mFSM = eMonsterStateType::IDLE;
@@ -23,7 +32,9 @@ void MonsterScript::Start()
 
 	// Add Object
 	{
-		m_pScope = CreateObject(L"Scope_01", L"Scope");
+		if (!m_pScope)
+			m_pScope = CreateObject(L"Scope_A", L"Scope");
+
 		m_pScope->transform->position = gameObject->transform->position;
 		m_pScope->AddComponent<ScopeScript>();
 	}
@@ -31,7 +42,7 @@ void MonsterScript::Start()
 	// Add componenet
 	{	// Animator Component
 		m_pAnimator = gameObject->GetComponent<Animator>();
-		if (m_pAnimator)
+		if (!m_pAnimator)
 		{
 			m_pAnimator = gameObject->AddComponent<Animator>();
 		}
@@ -91,17 +102,19 @@ void MonsterScript::Update()
 
 void MonsterScript::UpdateIdle()
 {
-	mResetCount1 += Time::GetUnScaledDeltaTime();
+	m_pAnimator->SetLoop(true);
+	mResetCount += Time::GetUnScaledDeltaTime();
 
-	if (mResetCount1 > 3.f)
+	if (mResetCount > 3.f)
 	{
-		mResetCount1 = 0.f;
+		mResetCount = 0.f;
 		mFSM = eMonsterStateType::WALK;
 	}
 }
 
 void MonsterScript::UpdateWalk()
 {
+	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
@@ -109,41 +122,57 @@ void MonsterScript::UpdateWalk()
 	}
 	else // 타겟이 존재하지 않는가?
 	{
-		// 랜덤 방향 설정
-		float x = Random::Range(-200.f, 200.f);  // x 랜덤
-		float z = Random::Range(-200.f, 200.f);  // z 랜덤
-		Vector3 TargetPos = { x, gameObject->transform->position.y, z }; // y 값은 유지
+		Vector3 TargetPos{};
 
-		// 범위 이탈시 원래 위치로 이동
-		if (!bIsScope)
+		if (bIsScope)
+		{
+			mResetCount += Time::GetUnScaledDeltaTime();
+
+			float x = 0.f;
+			float z = 0.f;
+
+			if (mResetCount > 5.f)
+			{
+				x = Random::Range(-240, 240);  // x 랜덤
+				z = Random::Range(-240, 240);  // z 랜덤
+			}
+			// 랜덤 방향 설정
+			TargetPos = { x, gameObject->transform->position.y, z }; // y 값은 유지
+
+			mResetCount = 0;
+		}	// 범위 이탈시 원래 위치로 이동
+		else
+		{
 			TargetPos = m_pScope->transform->position;
+		}
 
 		Vector3 dir = TargetPos - gameObject->transform->position;
-		float distance = dir.Length();	// 거리 구하기
-		dir.Normalize();  // 방향 구하기
+		Vector3 targetDir = { dir.x, gameObject->transform->position.y, dir.z };
+		float distance = targetDir.Length();	// 거리 구하기
+		targetDir.Normalize();  // 방향 구하기
 
-		if (gameObject->transform->position != TargetPos)
-		{
-			// 랜덤 방향으로 이동
-			//gameObject->transform->MoveTo(TargetPos, 5.f, Dotween::EasingEffect::InSine);
-			gameObject->transform->position += dir * mMoveSpeed.val;
-		}
+		// 랜덤 방향으로 이동
+		if (gameObject->transform->position.x != TargetPos.x || gameObject->transform->position.z != TargetPos.z)
+			gameObject->transform->position += targetDir * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+		else
+			mFSM = eMonsterStateType::IDLE;
 	}
 }
 
 void MonsterScript::UpdateFastWalk()
 {
+	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
 		Vector3 dir = m_pTarget->transform->position - gameObject->transform->position;
-		float distance = dir.Length();	// 거리 구하기
-		dir.Normalize();  // 방향 구하기
+		Vector3 targetDir = { dir.x, gameObject->transform->position.y, dir.z };
+		float distance = targetDir.Length();	// 거리 구하기
+		targetDir.Normalize();  // 방향 구하기
 
 		if (distance > mAttackDistance.val)
 		{
-			//gameObject->transform->MoveTo(m_pTarget->transform->position, 5.f, Dotween::EasingEffect::InSine);
-			gameObject->transform->position += dir * mMoveSpeed.val;
+			gameObject->transform->position += targetDir * mMoveSpeed.val * 1.5 * Time::GetUnScaledDeltaTime();
 		}
 		else // 타겟과의 거리가 범위 내라면 공격
 		{
@@ -158,16 +187,20 @@ void MonsterScript::UpdateFastWalk()
 
 void MonsterScript::UpdateRun()
 {
+	m_pAnimator->SetLoop(true);
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
 		Vector3 dir = m_pTarget->transform->position - gameObject->transform->position;
-		float distance = dir.Length();	// 거리 구하기
-		dir.Normalize();  // 방향 구하기
+		Vector3 targetDir = { dir.x, gameObject->transform->position.y, dir.z };
+		float distance = targetDir.Length();	// 거리 구하기
+		targetDir.Normalize();  // 방향 구하기
+
+		if (distance > mAttackDistance.val)
+			mFSM = eMonsterStateType::FAST_WALK;
 
 		// 타겟 위치로 빠르게 이동
-		//gameObject->transform->MoveTo(m_pTarget->transform->position, 1.f, Dotween::EasingEffect::InSine);
-		gameObject->transform->position += dir * mMoveSpeed.val * 2.f;
+		gameObject->transform->position += targetDir * mMoveSpeed.val * 2.f * Time::GetUnScaledDeltaTime();
 	}
 	else // 타겟이 존재하지 않는가?
 	{
@@ -180,6 +213,7 @@ void MonsterScript::UpdateHit()
 {
 	// GroggyCount 증가
 	mGroggyCount += Time::GetUnScaledDeltaTime();
+	m_pAnimator->SetLoop(false);
 
 	if (mGroggyCount > mGroggyTick.val)
 	{
@@ -188,6 +222,7 @@ void MonsterScript::UpdateHit()
 		{
 			if (m_pBurnObjectScript->IsBurning())
 			{
+
 				mGroggyCount = 0.f;
 				mFSM = eMonsterStateType::DEAD;
 			}
@@ -209,11 +244,11 @@ void MonsterScript::UpdateDead()
 		if (m_pAnimator->IsEnd())
 		{
 			// 애니메이션이 끝나면 몇 초뒤 옵젝 비활성화
-			mResetCount2 += Time::GetUnScaledDeltaTime();
+			mResetCount += Time::GetUnScaledDeltaTime();
 
-			if (mResetCount2 > 3.f)
+			if (mResetCount > 3.f)
 			{
-				mResetCount2 = 0.f;
+				mResetCount = 0.f;
 				gameObject->SetActive(false);
 			}
 		}
@@ -262,17 +297,17 @@ void MonsterScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 
 }
 
-json MonsterScript::Serialize()
-{
-	json ret = MonoBehaviour::Serialize();
-
-	return ret;
-}
-
-void MonsterScript::Deserialize(json& j)
-{
-	MonoBehaviour::Deserialize(j);
-}
+//json MonsterScript::Serialize()
+//{
+//	json ret = MonoBehaviour::Serialize();
+//
+//	return ret;
+//}
+//
+//void MonsterScript::Deserialize(json& j)
+//{
+//	MonoBehaviour::Deserialize(j);
+//}
 
 void MonsterScript::UpdateMonsterAnim()
 {

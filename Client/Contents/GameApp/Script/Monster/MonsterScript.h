@@ -62,16 +62,15 @@ private:
 	// Target
 	Object* m_pTarget;
 	// 기절 타이머
-	float mResetCount1 = 0.0f;
-	float mResetCount2 = 0.0f;
+	float mResetCount = 0.0f;
 	float mGroggyCount = 0.0f;
 	// 범위 밖으로 나갔는지 체크
 	bool bIsScope = true;
 	SerializeField(FLOAT, mGroggyTick, 10.f);		// 기절 tick
-	SerializeField(FLOAT, mMoveSpeed, 10.f);		// 이동 속도
-	SerializeField(FLOAT, mAttackDistance, 10.f);	// 공격 범위
+	SerializeField(FLOAT, mMoveSpeed, 40.f);		// 이동 속도
+	SerializeField(FLOAT, mAttackDistance, 100.f);	// 공격 범위
 public:
-	virtual json Serialize() override;
-	virtual void Deserialize(json& j) override;
+	//virtual json Serialize() override;
+	//virtual void Deserialize(json& j) override;
 };
 

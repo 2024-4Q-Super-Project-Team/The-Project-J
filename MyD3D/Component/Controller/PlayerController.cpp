@@ -232,8 +232,37 @@ void PlayerController::CheckNowColliding()
 		{
 			(*it).second = false;
 			++it;
+		}	
+	}
+
+	for (auto it = mControllersColliding.begin(); it != mControllersColliding.end();)
+	{
+		if ((*it).second == false) //이번에 충돌하지 않았음 
+		{
+			mEventCallback->EraseCollideController(mCapsuleController, (*it).first);
+
+			PlayerController* collidingController = static_cast<PlayerController*>((*it).first->getUserData());
+
+			Object* thisObject = static_cast<Object*>(mRigid->gameObject);
+			Object* otherObject = static_cast<Object*>(collidingController->gameObject);
+
+			auto otherRigidbody = collidingController->GetRigidbody();
+
+			auto thisScripts = thisObject->GetComponents<MonoBehaviour>();
+			auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
+
+			for (auto script : thisScripts)
+				script->OnCollisionExit(mRigid, otherRigidbody);
+			for (auto script : otherScripts)
+				script->OnCollisionExit(otherRigidbody, mRigid);
+
+			it = mControllersColliding.erase(it);
 		}
-			
+		else
+		{
+			(*it).second = false;
+			++it;
+		}
 	}
 }
 

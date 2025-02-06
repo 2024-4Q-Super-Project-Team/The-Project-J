@@ -46,6 +46,7 @@ public:
     void SetSlopeMode(SlopeMode _mode);
     float GetGravity() { return mGravity; }
     SlopeMode GetSlopeMode() { return mSlopeMode; }
+    Rigidbody* GetRigidbody() { return mRigid; }
 public:
     ///Jump///
 
@@ -94,6 +95,7 @@ private:
 
     //Colliding
     std::unordered_map<PxActor*, bool> mActorsColliding;
+    std::unordered_map<PxController*, bool> mControllersColliding;
 
     //Material
     std::vector<std::string> mMaterials;

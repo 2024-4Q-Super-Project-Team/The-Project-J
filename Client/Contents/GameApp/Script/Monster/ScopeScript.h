@@ -23,4 +23,5 @@ private:
 	BoxCollider* m_pCollider = nullptr;
 	Object* m_pPlayer = nullptr;
 	Object* m_pMonster = nullptr;
+
 };

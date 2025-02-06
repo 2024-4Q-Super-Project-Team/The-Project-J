@@ -21,24 +21,19 @@ void ScopeScript::Start()
 			m_pCollider = gameObject->AddComponent<BoxCollider>();
 
 		m_pCollider->SetIsTrigger(true);
-		m_pCollider->SetExtents(Vector3{ 100, 100, 100 });
-	}
-
-	// Init Setting
-	{
-		if (m_pMonster)
-		{
-			auto* monster = m_pMonster->GetComponent<MonsterScript>();
-
-			if (monster)
-				monster->SetTarget(m_pPlayer);
-		}
+		m_pCollider->SetExtents(Vector3{ 300, 300, 300 });
 	}
 }
 
 void ScopeScript::Update()
 {
+	if (m_pMonster)
+	{
+		auto* monster = m_pMonster->GetComponent<MonsterScript>();
 
+		if (monster)
+			monster->SetTarget(m_pPlayer);
+	}
 }
 
 void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
@@ -48,15 +43,12 @@ void ScopeScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 
 void ScopeScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-	if (_destination->gameObject->GetTag() == L"Player")
-	{	// 플레이어 범위 내 있을 시 체크
-		m_pPlayer = _destination->gameObject;
-	}
+
 }
 
 void ScopeScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-	
+
 }
 
 void ScopeScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -69,7 +61,12 @@ void ScopeScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
 void ScopeScript::OnTriggerStay(Collider* _origin, Collider* _destination)
 {
-
+	if (_destination->gameObject->GetTag() == L"Monster")
+	{	// 반경 내 에서 몬스터가 나갈 시 범위 이탈 전달
+		auto* monster = _destination->GetOwner()->GetComponent<MonsterScript>();
+		if (monster)
+			monster->SetIsScope(true);
+	}
 }
 
 void ScopeScript::OnTriggerExit(Collider* _origin, Collider* _destination)

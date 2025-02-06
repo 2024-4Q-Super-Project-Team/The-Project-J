@@ -54,10 +54,10 @@ void PlayerScript::Start()
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
-    {
-        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
-        mCollisionScript->SetOwnerPlayer(this);
-    }
+    //{
+    //    mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+    //    mCollisionScript->SetOwnerPlayer(this);
+    //}
 
     InitFireLight();
 
@@ -223,8 +223,8 @@ void PlayerScript::UpdatePlayerAnim()
             mBodyAnimator->SetLoop(true) :
             mBodyAnimator->SetLoop(false);
         isJump == false ?
-            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE) :
-            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_IDLE, 0.5f) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP, 0.5f);
         break;
     }
     case ePlayerStateType::MOVE:
@@ -233,32 +233,32 @@ void PlayerScript::UpdatePlayerAnim()
         mBodyAnimator->SetLoop(true) :
         mBodyAnimator->SetLoop(false);
         isJump == false ?
-            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK) :
-            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP);
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK, 0.5f) :
+            mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP, 0.5f);
         break;
     } 
     case ePlayerStateType::HIT:
     {
         mBodyAnimator->SetLoop(false);
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT, 0.5f);
         break;
     }
     case ePlayerStateType::MOVE_FIRE:
     {
         mBodyAnimator->SetLoop(false);
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_MOVE_FIRE);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_MOVE_FIRE, 0.5f);
         break;
     }
     case ePlayerStateType::OFF_FIRE:
     {
         mBodyAnimator->SetLoop(false);
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_OFF_FIRE);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_OFF_FIRE, 0.5f);
         break;
     }
     case ePlayerStateType::DEAD:
     {
         mBodyAnimator->SetLoop(false);
-        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_DEAD);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_DEAD, 0.5f);
         break;
     }
     default:

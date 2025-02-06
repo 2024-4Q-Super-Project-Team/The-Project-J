@@ -13,6 +13,7 @@ enum class ePlayerStateType
 };
 
 class BurnObjectScript;
+class PlayerCollisionScript;
 
 class PlayerScript : public MonoBehaviour
 {
@@ -21,17 +22,19 @@ public:
 public:
 	void Start();
 	void Update();
-	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
-	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
-	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+	void _CALLBACK OnTriggerStayCallback(Collider* _origin, Collider* _destination);
 public:
 	//////////////////////////////////////////////////////////////////////
 	/// 외부 사용을 위해 제공하는 메서드
 	//////////////////////////////////////////////////////////////////////
-	void Reset();					// 플레이어의 초기 상태를 되돌림
-	void SetHP(INT _val);			// 플레이어의 HP를 변경
-	void Hit(INT _damage);			// 플레이어에게 피격을 시키는 함수
-
+	void Reset();												// 플레이어의 초기 상태를 되돌림
+	void SetHP(INT _val);										// 플레이어의 HP를 변경
+	void Hit(INT _damage);										// 플레이어에게 피격을 시키는 함수
+	void Jump(FLOAT _scale = 1.0f, bool _canHold = true);		// 플레이어에게 점프를 시키는 함수
+	
 	inline INT	GetPlayerHandle() { return mPlayerHandle.val; }
 	inline INT	GetCurrentHP() { return mPlayerCurHP; }
 	inline INT	GetMaxHpValue() { return mPlayerMaxHP.val; }
@@ -39,6 +42,7 @@ public:
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
+
 	void UpdatePlayerHP();			// 플레이어의 체력에 대한 업데이트
 	void UpdatePlayerAnim();		// 플레이어의 애니메이션에 대한 업데이트
 
@@ -60,6 +64,7 @@ private:
 	Object* mBodyObject = nullptr;
 	Object* mCandleObject = nullptr;
 	Object* mFireObject = nullptr;
+	Object* mCollisionObject = nullptr;
 	Transform* mCandleTopBone = nullptr;
 	// 1p, 2p 플레이어 구분용도
 	SerializeField(INT,		mPlayerHandle, 0);
@@ -70,8 +75,9 @@ private:
 	BurnObjectScript*		mBurnObjectScript = nullptr;
 
 	BurnObjectScript*		mBurnProcessTarget = nullptr; // 불 끄기, 혹은 불 옮기기의 작업 대상
+	PlayerCollisionScript*	mCollisionScript = nullptr;
 	////////////////////////////////////////////////
-	// [02/02 ~] 주형 작업 - 플레이어 스탯 관련
+	// 플레이어 스탯 관련 변수
 	////////////////////////////////////////////////
 	INT						mPlayerCurHP = 100;
 	SerializeField(INT,		mPlayerMaxHP, 100);			// Player Hp (0~100의 정수 값)
@@ -83,14 +89,17 @@ private:
 	FLOAT					mJumpTimeCount = 0.0f;
 	bool					mJumpTrigger = false;
 	////////////////////////////////////////////////
-	// [02/02 ~] 주형 작업 - 플레이어 FSM
-	// 필요 변수 : 
-	// 액션 중인지 여부 (액션중에는 움직이지 못하게 하기 위해)
-	// 
+	// 플레이어 상태 체크용 변수
 	////////////////////////////////////////////////
 	bool					isAction = false;
 	bool					isJump = true;
 	ePlayerStateType		mPlayerState = ePlayerStateType::IDLE;
+	////////////////////////////////////////////////
+	// 플레이어 액션 관련 변수
+	////////////////////////////////////////////////
+	SerializeField(FLOAT, mMoveFireTick, 2.0f);
+	FLOAT mMoveFireCount = 0.0f;
+
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;

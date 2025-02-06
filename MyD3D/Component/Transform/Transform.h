@@ -79,7 +79,8 @@ public:
     }
     inline const std::vector<Transform*>& GetChildren() { return mChildren; }
     inline const Vector3& GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
-    inline const Quaternion& GetWorldRotation();
+    const Quaternion& GetWorldRotation();
+    const Vector3& GetWorldScale();
     inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
     inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
     inline const Vector3  Forward() { return GetWorldMatrix().Forward(); }
@@ -123,7 +124,7 @@ public:
 public:
     void LookAt(const Vector3& _target, const Vector3& _up);
     // dotween ÇÔ¼ö
-    void Rotate90(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
+    void Rotate90(float duration, const Vector3& axis, float angle, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
 	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);

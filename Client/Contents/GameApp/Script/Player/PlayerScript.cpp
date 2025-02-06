@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Manager/PlayerManager.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
@@ -28,10 +29,13 @@ void PlayerScript::Start()
                 mCandleObject = child->gameObject;
             if (child->gameObject->GetName() == L"Player_Fire")
                 mFireObject = child->gameObject;
+            if (child->gameObject->GetName() == L"Player_Collision")
+                mCollisionObject = child->gameObject;
         }
         if (mBodyObject == nullptr) Helper::HRT(E_FAIL, "Player_Body Object is nullptr");
         if (mCandleObject == nullptr) Helper::HRT(E_FAIL, "Player_Candle Object is nullptr");
         if (mFireObject == nullptr) Helper::HRT(E_FAIL, "Player_Fire Object is nullptr");
+        if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
 
         // Object -> RootNode -> Amature -> Bone -> TopBone
         mCandleTopBone = mCandleObject->transform->GetChild()->GetChild()->GetChild()->GetChild();
@@ -47,12 +51,14 @@ void PlayerScript::Start()
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
     {   // BurnObjectScript추가
-        mBurnObjectScript = mBodyObject->AddComponent<BurnObjectScript>();
+        mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
-    //{
-    //    mBodyObject->AddComponent<CheckIceSlope>();
-    //}
+    {
+        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+        mCollisionScript->SetOwnerPlayer(this);
+    }
+
     InitFireLight();
 
     PlayerManager::SetPlayerInfo(this);
@@ -96,24 +102,6 @@ void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 
 void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-    ////////////////////////////////////////////////
-    // 불 옮기기 시스템
-    // [02/02 ~ ] 작업자 : 주형 (기본 구조)
-    ////////////////////////////////////////////////
-    // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
-    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if(dstBurnObject)
-        Display::Console::Log(L"Can Fire \n");
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
-    {
-        ProcessMoveFire(dstBurnObject);
-        return;
-    }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
-    {
-        ProcessOffFire(dstBurnObject);
-        return;
-    }
     if (_destination->gameObject->GetTag() == L"IceSlope"
         && mBurnObjectScript->IsBurning() == true)
     {
@@ -128,6 +116,28 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
     {
         mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
         mPlayerController->SetMoveForceY(0.0f);
+    }
+}
+
+void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* _destination)
+{
+    ////////////////////////////////////////////////
+    // 불 옮기기 시스템
+    // [02/02 ~ ] 작업자 : 주형 (기본 구조)
+    ////////////////////////////////////////////////
+    // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
+    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+    if (dstBurnObject)
+        Display::Console::Log(L"Can Fire \n");
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessMoveFire(dstBurnObject);
+        return;
+    }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
+    {
+        ProcessOffFire(dstBurnObject);
+        return;
     }
 }
 
@@ -158,6 +168,23 @@ void PlayerScript::Hit(INT _damage)
             SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
         }
+    }
+}
+
+void PlayerScript::Jump(FLOAT _scale, bool _canHold)
+{
+    isJump = true;
+    mJumpTimeCount = 0.0f;
+    mPlayerController->SetMoveForceY(0.0f);
+    mPlayerController->AddMoveForceY(mJumpPower.val * _scale);
+
+    if (_canHold == TRUE)
+    {
+        mJumpTrigger = true;
+    }
+    else
+    {
+        mJumpTrigger = false;
     }
 }
 
@@ -286,10 +313,22 @@ void PlayerScript::UpdateMoveFire()
             float PlayerDirectionY = atan2(viewDirection.x, viewDirection.y); // 라디안 단위
             gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
 
-            // 애니메이션 도중에 불이 꺼진다면? 예외처리해야함
-            if (mCandleAnimator->IsEnd())
+            // 중간에 키를 떼면 취소한다.
+            if (InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
             {
-                // 대상이 불타고 내가 꺼져있음
+                SetState(ePlayerStateType::IDLE);
+                return;
+            }
+            // 불 옮기기 카운트를 스케일이 적용된 델타타임으로 더한다.
+            mMoveFireCount += Time::GetScaledDeltaTime();
+
+            // 불 옮기기 진행도를 비율화 한다. UI게이지를 위함.
+            FLOAT ProcessRatio = Clamp(mMoveFireCount / mMoveFireTick.val, 0.0f, 1.0f);
+
+            if (mMoveFireCount >= mMoveFireTick.val)
+            {
+                // ===== 불 옮기기 Action ====
+                 // 대상이 불타고 내가 꺼져있음
                 if (mBurnProcessTarget->IsBurning() == false &&
                     mBurnObjectScript->IsBurning() == true)
                 {
@@ -331,6 +370,8 @@ void PlayerScript::UpdateDead()
     {
         mBurnObjectScript->SetBurn(false);
     }
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
 }
 
 bool PlayerScript::ProcessMove()
@@ -359,11 +400,7 @@ void PlayerScript::ProcessJump()
         if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP) &&
             mPlayerController->GetSlopeMode() == PlayerController::SlopeMode::Ride)
         {
-            isJump = true;
-            mJumpTrigger = true;
-            mJumpTimeCount = 0.0f;
-            mPlayerController->SetMoveForceY(0.0f);
-            mPlayerController->AddMoveForceY(mJumpPower.val);
+            Jump();
         }
     }
     else if (isJump == true)
@@ -399,6 +436,7 @@ void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
     {
         SetState(ePlayerStateType::MOVE_FIRE);
         mBurnProcessTarget = _dst;
+        mMoveFireCount = 0.0f;
     }
 }
 
@@ -455,6 +493,7 @@ json PlayerScript::Serialize()
     ret["player move speed"] = mMoveSpeed.val;
     ret["player jump power"] = mJumpPower.val;
     ret["player jump tick"] = mMaxJumpTimeTick.val;
+    ret["player move fire tick"] = mMoveFireTick.val;
 
     return ret;
 }
@@ -485,5 +524,9 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player jump tick"))
     {
         mMaxJumpTimeTick.val = j["player jump tick"].get<FLOAT>();
+    }
+    if (j.contains("player move fire tick"))
+    {
+        mMoveFireTick.val = j["player move fire tick"].get<FLOAT>();
     }
 }

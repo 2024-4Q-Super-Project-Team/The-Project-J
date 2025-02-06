@@ -107,8 +107,8 @@ Vector2 InputSyncer::GetInputDirection(UINT _handle)
 	Vector2 force = Vector2::Zero;
 
 	// Pad의 왼쪽 조이스틱 우선 확인
-	if (Input::GetPadStickForce(GamePad::LEFT).x != 0 ||
-		Input::GetPadStickForce(GamePad::LEFT).y != 0)
+	if (Input::GetPadStickForce(GamePad::LEFT, _handle).x != 0 ||
+		Input::GetPadStickForce(GamePad::LEFT, _handle).y != 0)
 	{
 		force = Input::GetPadStickForce(GamePad::LEFT, _handle);
 	}

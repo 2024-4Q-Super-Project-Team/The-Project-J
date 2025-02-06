@@ -39,6 +39,7 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -60,7 +61,6 @@
     <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\SavePointScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

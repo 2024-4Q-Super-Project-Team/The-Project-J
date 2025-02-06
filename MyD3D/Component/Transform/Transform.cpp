@@ -225,18 +225,33 @@ void Transform::UpdateMatrix()
     UpdatePxTransform();
 }
 
-inline const Quaternion& Transform::GetWorldRotation()
+const Quaternion& Transform::GetWorldRotation()
 {
     XMVECTOR wscale;
     XMVECTOR wrotation;
     XMVECTOR wtranslation;
 
     // 행렬 분해
-    if (XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix));
+    XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix);
 
-    Quaternion quat;
-    memcpy_s(&quat, sizeof(float) * 4, &wrotation, sizeof(float) * 4);
-    return quat;
+    XMFLOAT4 quatFloat;
+    XMStoreFloat4(&quatFloat, wrotation);
+    return Quaternion(quatFloat.x, quatFloat.y, quatFloat.z, quatFloat.w);
+}
+
+const Vector3& Transform::GetWorldScale()
+{
+    XMVECTOR wscale;
+    XMVECTOR wrotation;
+    XMVECTOR wtranslation;
+
+    // 행렬 분해
+    XMMatrixDecompose(&wscale, &wrotation, &wtranslation, mWorldMatrix);
+
+    XMFLOAT3 scaleFloat;
+    XMStoreFloat3(&scaleFloat, wscale);
+
+    return Vector3(scaleFloat.x, scaleFloat.y, scaleFloat.z);
 }
 
 Vector3 Transform::LocalToWorld(const Vector3& localPosition) const
@@ -494,7 +509,7 @@ void Transform::LookAt(const Vector3& _target, const Vector3& _up)
     rotation = Quaternion::LookRotation(direction, _up);
 }
 
-void Transform::Rotate90(float _duration, Dotween::EasingEffect _easingEffect)
+void Transform::Rotate90(float _duration, const Vector3& axis, float angle, Dotween::EasingEffect _easingEffect)
 {
     if (isRotating) return; // 이미 회전 중이면 중복 실행 X
 
@@ -504,7 +519,8 @@ void Transform::Rotate90(float _duration, Dotween::EasingEffect _easingEffect)
     easingEffect = _easingEffect;
 
     startRotation = rotation;
-    endRotation = startRotation * Quaternion::CreateFromYawPitchRoll(0.0f, 0.0f, XM_PIDIV2); // 90도 회전
+    Quaternion rotationQuat = Quaternion::CreateFromAxisAngle(axis, angle);
+    endRotation = startRotation * rotationQuat;
 }
 
 void Transform::RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect)
@@ -558,7 +574,7 @@ void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-    position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+    //position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
     UpdateMatrix();
 }
 

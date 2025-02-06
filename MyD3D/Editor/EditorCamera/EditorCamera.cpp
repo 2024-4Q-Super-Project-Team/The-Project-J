@@ -217,6 +217,7 @@ void EditorCamera::ClearDrawList()
         mDrawQueue->clear();
     }
     mSceneLights.clear();
+    mLightCBuffer.NumLight = 0;
 }
 
 void EditorCamera::DrawShadow()

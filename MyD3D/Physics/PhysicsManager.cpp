@@ -27,7 +27,7 @@ void PhysicsManager::Initialize()
 
     mEventCallback = new PhysicsEventCallback;
 
-    mMaterials["Default"] = mPhysics->createMaterial(0.5f, 0.5f, 0.f);
+    mMaterials["Default"] = mPhysics->createMaterial(2.0f, 2.0f, -10.f);
     mMaterials[u8"¾óÀ½"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
 
    PxCudaContextManagerDesc cudaContextManagerDesc;

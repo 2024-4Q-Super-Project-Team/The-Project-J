@@ -274,6 +274,8 @@ void PlayerScript::UpdatePlayerAnim()
 
 void PlayerScript::UpdateIdle()
 {
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
     ProcessJump();
     if (ProcessMove() == true)
     {
@@ -317,14 +319,6 @@ void PlayerScript::UpdateMoveFire()
     {
         if (mBurnProcessTarget)
         {
-            // 로테이션 보간
-            Vector3 dstPos = mBurnProcessTarget->gameObject->transform->GetWorldPosition();
-            Vector3 srcPos = gameObject->transform->GetWorldPosition();
-            Vector2 viewDirection = { dstPos.x - srcPos.x, srcPos.y - srcPos.y };
-            viewDirection.Normalize();
-            float PlayerDirectionY = atan2(viewDirection.x, viewDirection.y); // 라디안 단위
-            gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
-
             // 중간에 키를 떼면 취소한다.
             if (InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
             {
@@ -333,6 +327,20 @@ void PlayerScript::UpdateMoveFire()
                 mMoveFireCount = 0.0f;
                 return;
             }
+
+            Vector3 dstPos = mBurnProcessTarget->gameObject->transform->GetWorldPosition();
+            Vector3 srcPos = gameObject->transform->GetWorldPosition();
+            Vector2 viewDirection = { dstPos.x - srcPos.x, dstPos.z - srcPos.z };
+            viewDirection.Normalize();
+            float targetAngleY = atan2(-viewDirection.x, -viewDirection.y);
+            if (targetAngleY < 0.0f)
+                targetAngleY += XM_2PI;  // 360도 대신 2π 사용
+            Vector3 CurrAngle = gameObject->transform->GetEulerAngles();
+            float currAngleY = CurrAngle.y;
+            float delta = fmod(targetAngleY - currAngleY + XM_PI, XM_2PI) - XM_PI;
+            float newAngleY = currAngleY + delta * 0.7f;
+            gameObject->transform->SetEulerAngles(Vector3(0.0f, newAngleY, 0.0f));
+
             // 불 옮기기 카운트를 스케일이 적용된 델타타임으로 더한다.
             mMoveFireCount += Time::GetScaledDeltaTime();
 
@@ -379,12 +387,12 @@ void PlayerScript::UpdateOffFire()
 
 void PlayerScript::UpdateDead()
 {
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
     if (mBurnObjectScript->IsBurning() == true)
     {
         mBurnObjectScript->SetBurn(false);
     }
-    mPlayerController->SetMoveForceX(0.0f);
-    mPlayerController->SetMoveForceZ(0.0f);
 }
 
 bool PlayerScript::ProcessMove()

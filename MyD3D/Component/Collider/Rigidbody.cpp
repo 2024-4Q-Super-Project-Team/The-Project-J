@@ -90,38 +90,38 @@ void Rigidbody::PreRender()
 	
 
 
-	//PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
-	//PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
-	//
-	////Position Freeze!
-	//if (mFreezePosition[0])
-	//	updatedPosition[0] = gameObject->transform->position.x;
-	//if (mFreezePosition[1])
-	//	updatedPosition[1] = gameObject->transform->position.y;
-	//if (mFreezePosition[2])
-	//	updatedPosition[2] = gameObject->transform->position.z;
-	//
-	//
-	////Rotation Freeze!
-	//if (mFreezeRotation[0])
-	//{
-	//	Quaternion q = { updatedQuaternion.x,updatedQuaternion.y, updatedQuaternion.z, updatedQuaternion.w };
-	//	Vector3 updatedRotation = q.ToEuler();
-	//	
-	//	if (mFreezeRotation[0])
-	//		updatedRotation.x = gameObject->transform->rotation.x;
-	//	if (mFreezeRotation[1])
-	//		updatedRotation.y = gameObject->transform->rotation.y;
-	//	if (mFreezePosition[2])
-	//		updatedRotation.z = gameObject->transform->rotation.z;
-	//
-	//	XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.z, updatedRotation.x );
-	//	XMStoreFloat4(&q, quat);
-	//	updatedQuaternion = PxQuat(q.x, q.y, q.z, q.w);
-	//}
-	//
-	//PxTransform finalTransform(updatedPosition, updatedQuaternion);
-	//gameObject->transform->UpdateFromPxTransform(finalTransform);
+	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
+	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
+	
+	//Position Freeze!
+	if (mFreezePosition[0])
+		updatedPosition[0] = gameObject->transform->GetWorldPosition().x;
+	if (mFreezePosition[1])
+		updatedPosition[1] = gameObject->transform->GetWorldPosition().y;
+	if (mFreezePosition[2])
+		updatedPosition[2] = gameObject->transform->GetWorldPosition().z;
+	
+	
+	//Rotation Freeze!
+	if (mFreezeRotation[0])
+	{
+		Quaternion q = { updatedQuaternion.x,updatedQuaternion.y, updatedQuaternion.z, updatedQuaternion.w };
+		Vector3 updatedRotation = q.ToEuler();
+		
+		if (mFreezeRotation[0])
+			updatedRotation.x = gameObject->transform->GetWorldRotation().x;
+		if (mFreezeRotation[1])
+			updatedRotation.y = gameObject->transform->GetWorldRotation().y;
+		if (mFreezeRotation[2])
+			updatedRotation.z = gameObject->transform->GetWorldRotation().z;
+	
+		XMVECTOR quat = XMQuaternionRotationRollPitchYaw(updatedRotation.y, updatedRotation.z, updatedRotation.x );
+		XMStoreFloat4(&q, quat);
+		updatedQuaternion = PxQuat(q.x, q.y, q.z, q.w);
+	}
+	
+	PxTransform finalTransform(updatedPosition, updatedQuaternion);
+	gameObject->transform->UpdateFromPxTransform(finalTransform);
 }
 
 void Rigidbody::Render()
@@ -195,6 +195,8 @@ json Rigidbody::Serialize()
 	ret["isDynamic"] = mIsDynamic;
 	ret["isKinematic"] = mIsKinematic;
 	ret["mass"] = mMass;
+	ret["freeze position"] = { mFreezePosition[0], mFreezePosition[1], mFreezePosition[2] };
+	ret["freeze rotation"] = { mFreezeRotation[0], mFreezeRotation[1], mFreezeRotation[2] };
 	return ret;
 }
 
@@ -208,6 +210,17 @@ void Rigidbody::Deserialize(json& j)
 		mIsKinematic = j["isKinematic"].get<bool>();
 	if (j.contains("mass"))
 		mMass = j["mass"].get<float>();
+
+	if (j.contains("freeze position"))
+	{
+		mFreezePosition[0] = j["freeze position"][0];
+		mFreezePosition[1] = j["freeze position"][1];
+		mFreezePosition[2] = j["freeze position"][2];
+
+		mFreezeRotation[0] = j["freeze rotation"][0];
+		mFreezeRotation[1] = j["freeze rotation"][1];
+		mFreezeRotation[2] = j["freeze rotation"][2];
+	}
 }
 
 void Rigidbody::CheckContacts()

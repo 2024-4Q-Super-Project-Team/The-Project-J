@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Manager/PlayerManager.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 
 #define PLAYER_ANIM_IDLE L"003"
@@ -38,6 +39,7 @@ void PlayerScript::Start()
     {
         mBodyAnimator = mBodyObject->GetComponent<Animator>();
         mCandleAnimator = mCandleObject->GetComponent<Animator>();
+        mCandleAnimator->Stop();
     }
     {   // PlayerController컴포넌트 저장, 없으면 추가
         mPlayerController = gameObject->GetComponent<PlayerController>();
@@ -46,17 +48,20 @@ void PlayerScript::Start()
     }
     {   // BurnObjectScript추가
         mBurnObjectScript = mBodyObject->AddComponent<BurnObjectScript>();
-        mBurnObjectScript->SetBurnMesh(mFireObject->GetComponent<MeshRenderer>());
+        mBurnObjectScript->SetBurnObject(mFireObject);
     }
-    {
-        mBodyObject->AddComponent<CheckIceSlope>();
-    }
+    //{
+    //    mBodyObject->AddComponent<CheckIceSlope>();
+    //}
     InitFireLight();
+
+    PlayerManager::SetPlayerInfo(this);
 }
 
 void PlayerScript::Update()
 {
     UpdatePlayerHP();
+    UpdatePlayerAnim();
     // FSMUpdate
     switch (mPlayerState)
     {
@@ -72,14 +77,15 @@ void PlayerScript::Update()
     case ePlayerStateType::MOVE_FIRE:
         UpdateMoveFire();
         break;
+    case ePlayerStateType::OFF_FIRE:
+        UpdateOffFire();
+        break;
     case ePlayerStateType::DEAD:
         UpdateDead();
         break;
     default:
         break;
     }
-    UpdatePlayerAnim();
-
     mFireObject->transform->position = mCandleTopBone->GetWorldPosition();
 }
 
@@ -94,46 +100,35 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
     // 불 옮기기 시스템
     // [02/02 ~ ] 작업자 : 주형 (기본 구조)
     ////////////////////////////////////////////////
-    // 불이 붙어있을 때
-    if (mBurnObjectScript->IsBurning())
+    // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
+    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+    if(dstBurnObject)
+        Display::Console::Log(L"Can Fire \n");
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
-        // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
-        BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-        // dstBurnObject가 맞고, dstBurnObject의 불이 붙어있지 않는 경우
-        if (dstBurnObject && dstBurnObject->IsBurning() == false)
-        {
-            // JH TODO : 캐릭터(gameO-bject)의 머리 위에 불 옮기기 UI 팝업
-
-            // 불 옮기기 키를 눌렀을 때
-            if (InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
-            {
-                // BurnObjectScript의 불옮기기 작업을 한다.
-                if (dstBurnObject->IsProcessing() == false)
-                {
-                    dstBurnObject->ProcessBurn(mBurnObjectScript);
-                    mPlayerState = ePlayerStateType::MOVE_FIRE;
-                }
-            }
-            else  if (InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
-            {
-                // BurnObjectScript의 불옮기기 작업을 취소시킨다.
-                if (dstBurnObject->IsProcessing() == true &&
-                    dstBurnObject->GetDestObject() == mBurnObjectScript)
-                {
-                    dstBurnObject->CancleProcess();
-                }
-                // 애니메이션 Idle재생
-              
-                mBodyAnimator->SetLoop(true);
-                isAction = false;
-            }
-        }
+        ProcessMoveFire(dstBurnObject);
+        return;
+    }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
+    {
+        ProcessOffFire(dstBurnObject);
+        return;
+    }
+    if (_destination->gameObject->GetTag() == L"IceSlope"
+        && mBurnObjectScript->IsBurning() == true)
+    {
+        mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Slide);
     }
 }
 
 void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
- 
+    if (_destination->gameObject->GetTag() == L"IceSlope" 
+        && mPlayerController->GetSlopeMode() == PlayerController::SlopeMode::Slide)
+    {
+        mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
+        mPlayerController->SetMoveForceY(0.0f);
+    }
 }
 
 void PlayerScript::Reset()
@@ -223,6 +218,14 @@ void PlayerScript::UpdatePlayerAnim()
     }
     case ePlayerStateType::MOVE_FIRE:
     {
+        mBodyAnimator->SetLoop(false);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_MOVE_FIRE);
+        break;
+    }
+    case ePlayerStateType::OFF_FIRE:
+    {
+        mBodyAnimator->SetLoop(false);
+        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_OFF_FIRE);
         break;
     }
     case ePlayerStateType::DEAD:
@@ -234,6 +237,10 @@ void PlayerScript::UpdatePlayerAnim()
     default:
         break;
     }
+
+    FLOAT totalFrame = mCandleAnimator->GetActiveAnimationResource()->GetTotalFrame();
+    FLOAT hpRatio = (FLOAT)mPlayerCurHP / (FLOAT)mPlayerMaxHP.val;
+    mCandleAnimator->SetFrame(totalFrame - (hpRatio * totalFrame));
 }
 
 void PlayerScript::UpdateIdle()
@@ -243,10 +250,6 @@ void PlayerScript::UpdateIdle()
     {
         SetState(ePlayerStateType::MOVE);
         return;
-    }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
-    {
-        ProcessMoveFire();
     }
 }
 
@@ -258,8 +261,6 @@ void PlayerScript::UpdateMove()
         SetState(ePlayerStateType::IDLE);
         return;
     }
-    
-   
 }
 
 void PlayerScript::UpdateHit()
@@ -275,21 +276,61 @@ void PlayerScript::UpdateMoveFire()
 {
     if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
     {
+        if (mBurnProcessTarget)
+        {
+            // 로테이션 보간
+            Vector3 dstPos = mBurnProcessTarget->gameObject->transform->GetWorldPosition();
+            Vector3 srcPos = gameObject->transform->GetWorldPosition();
+            Vector2 viewDirection = { dstPos.x - srcPos.x, srcPos.y - srcPos.y };
+            viewDirection.Normalize();
+            float PlayerDirectionY = atan2(viewDirection.x, viewDirection.y); // 라디안 단위
+            gameObject->transform->SetEulerAngles(Vector3(0.0f, PlayerDirectionY - Degree::ToRadian(180.0f), 0.0f));
 
-        //if (mBodyAnimator->IsEnd())
-        //{
-        //
-        //}
-        //else
-        //{
-        //    isAction = true;
-        //}
+            // 애니메이션 도중에 불이 꺼진다면? 예외처리해야함
+            if (mCandleAnimator->IsEnd())
+            {
+                // 대상이 불타고 내가 꺼져있음
+                if (mBurnProcessTarget->IsBurning() == false &&
+                    mBurnObjectScript->IsBurning() == true)
+                {
+                    mBurnProcessTarget->SetBurn(false);
+                    mBurnObjectScript->SetBurn(true);
+                }
+                // 대상이 꺼져있고 내가 불타는 중
+                if (mBurnProcessTarget->IsBurning() == true &&
+                    mBurnObjectScript->IsBurning() == false)
+                {
+                    mBurnProcessTarget->SetBurn(true);
+                    mBurnObjectScript->SetBurn(false);
+                }
+                SetState(ePlayerStateType::IDLE);
+            }
+        }
     }
-    
+}
+
+void PlayerScript::UpdateOffFire()
+{
+    if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_OFF_FIRE)
+    {
+        if (mBodyAnimator->IsEnd())
+        {
+            // 대상이 없는 상태면 자신의 불을 끈다.
+            if (mBurnProcessTarget == nullptr)
+            {
+                mBurnObjectScript->SetBurn(false);
+            }
+            SetState(ePlayerStateType::IDLE);
+        }
+    }
 }
 
 void PlayerScript::UpdateDead()
 {
+    if (mBurnObjectScript->IsBurning() == true)
+    {
+        mBurnObjectScript->SetBurn(false);
+    }
 }
 
 bool PlayerScript::ProcessMove()
@@ -313,13 +354,15 @@ bool PlayerScript::ProcessMove()
 
 void PlayerScript::ProcessJump()
 {
-    if (isJump == false)
+    if (isJump == false && mPlayerController->GetSlopeMode() != PlayerController::SlopeMode::Slide)
     {
-        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP))
+        if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::JUMP) &&
+            mPlayerController->GetSlopeMode() == PlayerController::SlopeMode::Ride)
         {
             isJump = true;
             mJumpTrigger = true;
             mJumpTimeCount = 0.0f;
+            mPlayerController->SetMoveForceY(0.0f);
             mPlayerController->AddMoveForceY(mJumpPower.val);
         }
     }
@@ -347,11 +390,39 @@ void PlayerScript::ProcessJump()
    
 }
 
-void PlayerScript::ProcessMoveFire()
+void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
 {
-    if (mBurnObjectScript->IsBurning() == true)
+    // dst가 없으면 행동을 할 수 없다.
+    if (_dst == nullptr) return;
+    if ((mBurnObjectScript->IsBurning() == true && _dst->IsBurning() == false) ||
+        (mBurnObjectScript->IsBurning() == false && _dst->IsBurning() == true) )
     {
         SetState(ePlayerStateType::MOVE_FIRE);
+        mBurnProcessTarget = _dst;
+    }
+}
+
+void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
+{
+    // dst가 있으면 대상의 불을 끄기
+    // dst가 없으면 나 자신의 불을 끄기
+    if (_dst)
+    {
+        // dst가 불타는 중일 때만 가능
+        if (_dst->IsBurning() == false)
+        {
+            SetState(ePlayerStateType::OFF_FIRE);
+            mBurnProcessTarget = _dst;
+        }
+    }
+    else
+    {
+        // 불타는 중일 때만 가능
+        if (mBurnObjectScript->IsBurning() == true)
+        {
+            SetState(ePlayerStateType::OFF_FIRE);
+            mBurnProcessTarget = _dst;
+        }
     }
 }
 

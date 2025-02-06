@@ -14,6 +14,7 @@
 #include "Component/Collider/BoxCollider.h"
 #include "Component/Collider/SphereCollider.h"
 #include "Component/Collider/ConvexCollider.h"
+#include "Component/Collider/TriangleCollider.h"
 #include "Component/Controller/PlayerController.h"
 #include "Component/ParticleSystem/ParticleSystem.h"
 #include "Component/UI/Canvas.h"

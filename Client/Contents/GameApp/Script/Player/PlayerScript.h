@@ -8,6 +8,7 @@ enum class ePlayerStateType
 	MOVE,		// 움직이는 중
 	HIT,		// 맞는 중
 	MOVE_FIRE,	// 불을 옮기는 중
+	OFF_FIRE,	// 불을 끄는 중
 	DEAD,		// 사ㅋ망ㅋ
 };
 
@@ -45,11 +46,13 @@ private:
 	void UpdateMove();
 	void UpdateHit();
 	void UpdateMoveFire();
+	void UpdateOffFire();
 	void UpdateDead();
 
 	bool ProcessMove();
 	void ProcessJump();
-	void ProcessMoveFire();
+	void ProcessMoveFire(BurnObjectScript* _dst);
+	void ProcessOffFire(BurnObjectScript* _dst);
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 private:
@@ -66,6 +69,7 @@ private:
 	PlayerController*		mPlayerController = nullptr;
 	BurnObjectScript*		mBurnObjectScript = nullptr;
 
+	BurnObjectScript*		mBurnProcessTarget = nullptr; // 불 끄기, 혹은 불 옮기기의 작업 대상
 	////////////////////////////////////////////////
 	// [02/02 ~] 주형 작업 - 플레이어 스탯 관련
 	////////////////////////////////////////////////

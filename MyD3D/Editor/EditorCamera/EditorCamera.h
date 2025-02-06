@@ -22,6 +22,7 @@ public:
     void PushOutlineDrawList(IRenderContext* _renderContext);
     void ExcuteDrawList();
 public:
+    void ClearDrawList();
     void DrawShadow();
     void DrawObject();
     void DrawWire();
@@ -57,7 +58,7 @@ public:
 
     UINT                    mDrawedMeshCount;
     UINT                    mDrawedLightCount;
-    bool                    mIsSkyBoxRendering = FALSE;
+    bool                    mIsSkyBoxRendering = TRUE;
     bool                    mIsColliderRendering = TRUE;
 public:
     void EditorRendering(EditorViewerType _viewerType);

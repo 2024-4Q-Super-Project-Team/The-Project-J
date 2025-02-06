@@ -79,6 +79,7 @@ public:
     }
     inline const std::vector<Transform*>& GetChildren() { return mChildren; }
     inline const Vector3& GetWorldPosition() { return Vector3(mWorldMatrix._41, mWorldMatrix._42, mWorldMatrix._43); }
+    inline const Quaternion& GetWorldRotation();
     inline const Matrix&  GetLocalMatrix() { return mLocalMatrix; }
     inline const Matrix&  GetWorldMatrix() { return mWorldMatrix; }
     inline const Vector3  Forward() { return GetWorldMatrix().Forward(); }
@@ -119,9 +120,8 @@ private:
 
 public:
     void EditorRendering(EditorViewerType _viewerType);
-
-// dotween 함수
 public:
+    void LookAt(const Vector3& _target, const Vector3& _up);
     // dotween 함수
     void Rotate90(float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);

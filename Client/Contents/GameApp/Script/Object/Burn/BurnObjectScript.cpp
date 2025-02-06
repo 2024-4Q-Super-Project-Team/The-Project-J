@@ -28,15 +28,16 @@ void BurnObjectScript::Update()
             SetBurnCount(0.0f);
         }
     }
-    if (mBurnMesh)
+    if (mBurnObject)
     {
-        if (mBurnMesh->IsActive() == false)
+        if (isBurning.val)
         {
-            mBurnMesh->SetActive(true);
+            mBurnObject->SetActive(true);
         }
         else
         {
-            mBurnMesh->SetActive(false);
+            mBurnObject->SetActive(false);
         }
     }
+   
 }

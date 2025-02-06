@@ -17,6 +17,11 @@ PxFilterFlags CustomFilterShader(
     pairFlags |= PxPairFlag::eTRIGGER_DEFAULT;
     pairFlags |= PxPairFlag::eNOTIFY_TOUCH_FOUND; //collision start/exit 판별위해.
 
+    if ((filterData0.word0 == 1 && filterData1.word0 == 1))
+    {
+        pairFlags |= PxPairFlag::eSOLVE_CONTACT;
+    }
+
     return PxFilterFlag::eDEFAULT;
 }
 
@@ -30,7 +35,7 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     mPickingRay = new PickingRay;
 
     PxSceneDesc sceneDesc(GameManager::GetPhysicsManager()->GetPhysics()->getTolerancesScale());
-    sceneDesc.gravity = PxVec3(0.f, -9.8f, 0.f);
+    sceneDesc.gravity = PxVec3(0.f, -19.8f, 0.f);
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = CustomFilterShader;
     sceneDesc.simulationEventCallback = GameManager::GetPhysicsManager()->GetCallback();

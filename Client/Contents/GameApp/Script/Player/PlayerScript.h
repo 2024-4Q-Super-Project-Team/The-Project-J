@@ -13,6 +13,7 @@ enum class ePlayerStateType
 };
 
 class BurnObjectScript;
+class PlayerCollisionScript;
 
 class PlayerScript : public MonoBehaviour
 {
@@ -21,9 +22,10 @@ public:
 public:
 	void Start();
 	void Update();
-	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
-	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
-	virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+	void _CALLBACK OnTriggerStayCallback(Collider* _origin, Collider* _destination);
 public:
 	//////////////////////////////////////////////////////////////////////
 	/// 외부 사용을 위해 제공하는 메서드
@@ -40,6 +42,7 @@ public:
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
+
 	void UpdatePlayerHP();			// 플레이어의 체력에 대한 업데이트
 	void UpdatePlayerAnim();		// 플레이어의 애니메이션에 대한 업데이트
 
@@ -61,6 +64,7 @@ private:
 	Object* mBodyObject = nullptr;
 	Object* mCandleObject = nullptr;
 	Object* mFireObject = nullptr;
+	Object* mCollisionObject = nullptr;
 	Transform* mCandleTopBone = nullptr;
 	// 1p, 2p 플레이어 구분용도
 	SerializeField(INT,		mPlayerHandle, 0);
@@ -71,6 +75,7 @@ private:
 	BurnObjectScript*		mBurnObjectScript = nullptr;
 
 	BurnObjectScript*		mBurnProcessTarget = nullptr; // 불 끄기, 혹은 불 옮기기의 작업 대상
+	PlayerCollisionScript*	mCollisionScript = nullptr;
 	////////////////////////////////////////////////
 	// 플레이어 스탯 관련 변수
 	////////////////////////////////////////////////

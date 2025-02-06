@@ -11,6 +11,7 @@
 #include "Contents/GameApp/Script/Object/Button/SavePointScript.h"
 
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
+#include "Contents/GameApp/Script/Object/Box/BoxScript.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
@@ -28,5 +29,6 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(ScopeScript);
 	REGISTER_COMPONENT(SavePointScript);
 	REGISTER_COMPONENT(CheckIceSlope);
+	REGISTER_COMPONENT(BoxScript);
 
 }

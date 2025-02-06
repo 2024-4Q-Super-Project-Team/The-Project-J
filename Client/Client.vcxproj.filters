@@ -38,6 +38,8 @@
     <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />

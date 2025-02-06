@@ -152,7 +152,7 @@ json TriangleCollider::Serialize()
 	json ret;
 
 	ret["id"] = GetId();
-	ret["name"] = "ConvexCollider";
+	ret["name"] = "TriangleCollider";
 	ret["mesh handle"] = mMeshHandle.Serialize();
 
 	return ret;

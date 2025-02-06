@@ -190,7 +190,7 @@ void BoxCollider::SetExtents()
 
 Vector3 BoxCollider::GetSize()
 {
-	return mExtents * gameObject->transform->scale;
+	return mExtents * gameObject->transform->GetWorldScale();
 }
 
 void BoxCollider::EditorRendering(EditorViewerType _type)

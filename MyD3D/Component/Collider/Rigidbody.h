@@ -28,9 +28,12 @@ public:
 public:
     void SetMaterial(std::string _name); 
 
+    void SetIsDynamic(bool _isDynamic);
     void SetMass(float mass);
     void SetIsKinematic(bool b);
     void SetDisableGravity(bool b);
+    void SetFreezePosition(bool bx, bool by, bool bz);
+    void SetFreezeRotation(bool bx, bool by, bool bz);
     void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
 public:
     Object* GetOwner() { return gameObject; }

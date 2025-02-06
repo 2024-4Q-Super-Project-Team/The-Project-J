@@ -41,6 +41,10 @@ void SphereCollider::PreUpdate()
 void SphereCollider::Update()
 {
 	Collider::Update();
+
+	SetRadius();
+	SetRotation();
+	SetPosition();
 }
 
 void SphereCollider::PostUpdate()

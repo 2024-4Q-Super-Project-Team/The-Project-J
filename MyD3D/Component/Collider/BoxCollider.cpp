@@ -47,6 +47,10 @@ void BoxCollider::PreUpdate()
 void BoxCollider::Update()
 {
 	Collider::Update();
+
+	SetExtents();
+	SetRotation();
+	SetPosition();
 }
 
 void BoxCollider::PostUpdate()

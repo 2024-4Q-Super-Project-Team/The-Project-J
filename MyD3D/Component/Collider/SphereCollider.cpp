@@ -158,7 +158,10 @@ void SphereCollider::SetRotation()
 
 void SphereCollider::SetRadius()
 {
-	mGeometry.radius = gameObject->transform->scale.x * mRadius;
+	float radius = gameObject->transform->scale.x * mRadius;
+
+	mGeometry = PxSphereGeometry(radius);
+	mShape->setGeometry(mGeometry);
 }
 
 void SphereCollider::EditorRendering(EditorViewerType _type)

@@ -41,12 +41,16 @@ public:
 	void SetSpeed(float _speed)			{ mMoveSpeed.val = _speed; }
 	void SetDistance(float _distance)	{ mAttackDistance.val = _distance; }
 	void SetGroggyTick(float _tick)		{ mGroggyTick.val = _tick; }
+	void SetDamage(int _damage)			{ mDamage.val = _damage; }
+	void SetRange(int _range)			{ mRange = _range; }
 public:
 	Object* GetTarget()		{ return m_pTarget; }
 	bool	IsScope()		{ return bIsScope; }
 	float	GetSpeed()		{ return mMoveSpeed.val; }
 	float	GetDistance()	{ return mAttackDistance.val; }
 	float	GetGroggyTick() { return mGroggyTick.val; }
+	int		GetDamage()		{ return mDamage.val; }
+	int		GetRange()		{ return mRange; }
 private:
 	// Monster 상태
 	eMonsterStateType mFSM = eMonsterStateType::IDLE;
@@ -61,14 +65,21 @@ private:
 private:
 	// Target
 	Object* m_pTarget;
-	// 기절 타이머
-	float mResetCount = 0.0f;
-	float mGroggyCount = 0.0f;
-	// 범위 밖으로 나갔는지 체크
-	bool bIsScope = true;
+
+	float mIdleCount = 0.0f;	// 아이들 대기 타이머
+	float mResetCount = 0.0f;	// 랜덤 리셋 타이머
+	float mGroggyCount = 0.0f;	// 그로기 타이머
+	float mRange = 0;			// 이동범위
+	float mDistance = 0.00f;	// 거리
+	bool bIsScope = true;		// 범위 밖으로 나갔는지 체크
+
+	Vector3 mRandomPos{};	// 기본 랜덤 포지션 값
+	Vector3 mRandomDir{};	// 랜덤 벡터
+public:
 	SerializeField(FLOAT, mGroggyTick, 10.f);		// 기절 tick
 	SerializeField(FLOAT, mMoveSpeed, 40.f);		// 이동 속도
 	SerializeField(FLOAT, mAttackDistance, 100.f);	// 공격 범위
+	SerializeField(FLOAT, mDamage, 1);				// 공격 데미지
 public:
 	//virtual json Serialize() override;
 	//virtual void Deserialize(json& j) override;

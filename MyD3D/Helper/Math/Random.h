@@ -13,6 +13,7 @@ public:
     template<typename T>
     static T Range(T _min, T _max)
     {
+        engine.seed(seed());
         std::uniform_real_distribution<T> dist(_min, _max);
         return dist(engine);
     }
@@ -21,11 +22,13 @@ public:
     template<>
     static int Range(int _min, int _max)
     {
+        engine.seed(seed());
         std::uniform_int_distribution<int> dist(_min, _max);
         return dist(engine);
     }
     static int Range(int _min, size_t _max)
     {
+        engine.seed(seed());
         std::uniform_int_distribution<int> dist(_min, (int)_max);
         return dist(engine);
     }

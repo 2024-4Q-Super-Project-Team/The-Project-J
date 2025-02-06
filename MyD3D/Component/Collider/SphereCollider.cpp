@@ -8,7 +8,7 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 	SetEID("SphereCollider");
 	mGeometry = PxSphereGeometry(mInitialRadius);
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
-		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial());
+		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(),true);
 	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 

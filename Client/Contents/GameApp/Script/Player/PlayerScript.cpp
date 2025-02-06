@@ -35,7 +35,7 @@ void PlayerScript::Start()
         if (mBodyObject == nullptr) Helper::HRT(E_FAIL, "Player_Body Object is nullptr");
         if (mCandleObject == nullptr) Helper::HRT(E_FAIL, "Player_Candle Object is nullptr");
         if (mFireObject == nullptr) Helper::HRT(E_FAIL, "Player_Fire Object is nullptr");
-        if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
+        //if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
 
         // Object -> RootNode -> Amature -> Bone -> TopBone
         mCandleTopBone = mCandleObject->transform->GetChild()->GetChild()->GetChild()->GetChild();

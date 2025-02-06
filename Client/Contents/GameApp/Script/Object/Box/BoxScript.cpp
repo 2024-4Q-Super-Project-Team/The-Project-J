@@ -9,7 +9,7 @@ void BoxScript::Start()
     mCollider = gameObject->AddComponent<BoxCollider>();
     
 
-    mCollider->SetExtents(Vector3(70, 70, 75));
+    mCollider->SetExtents(Vector3(150, 150, 150));
     mCollider->SetPosition(Vector3(0, 35, 0));
 
     Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0,-35.1f,0);

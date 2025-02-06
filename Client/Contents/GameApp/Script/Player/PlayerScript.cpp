@@ -35,7 +35,7 @@ void PlayerScript::Start()
         if (mBodyObject == nullptr) Helper::HRT(E_FAIL, "Player_Body Object is nullptr");
         if (mCandleObject == nullptr) Helper::HRT(E_FAIL, "Player_Candle Object is nullptr");
         if (mFireObject == nullptr) Helper::HRT(E_FAIL, "Player_Fire Object is nullptr");
-        //if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
+        if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
 
         // Object -> RootNode -> Amature -> Bone -> TopBone
         mCandleTopBone = mCandleObject->transform->GetChild()->GetChild()->GetChild()->GetChild();
@@ -54,10 +54,10 @@ void PlayerScript::Start()
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
-    //{
-    //    mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
-    //    mCollisionScript->SetOwnerPlayer(this);
-    //}
+    {
+        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+        mCollisionScript->SetOwnerPlayer(this);
+    }
 
     InitFireLight();
 
@@ -106,6 +106,15 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
         && mBurnObjectScript->IsBurning() == true)
     {
         mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Slide);
+        return;
+    }
+    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+    if (dstBurnObject)
+        Display::Console::Log(L"Can Fire \n");
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessMoveFire(dstBurnObject);
+        return;
     }
 }
 
@@ -132,11 +141,6 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
-        return;
-    }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
-    {
-        ProcessOffFire(dstBurnObject);
         return;
     }
 }

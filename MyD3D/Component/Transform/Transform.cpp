@@ -165,11 +165,11 @@ void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
 
     if (mParent)
     {
+        PxMat44 pxParentWorldTransform = mParent->mPxWorldTransform;
+        PxMat44 pxParentWorldInvert = pxParentWorldTransform.inverseRT();
 
-        PxMat44 parentWorldMatrix = PxMat44(mParent->mPxWorldTransform);
-        PxMat44 parentWorldInverse = parentWorldMatrix.inverseRT();
-        PxMat44 pxWorldMatrix = PxMat44(mPxWorldTransform);
-        PxMat44 pxLocalMatrix = parentWorldInverse * pxWorldMatrix;
+        PxMat44 pxWorldMatrix(_pxWorldTransform);
+        PxMat44 pxLocalMatrix = pxParentWorldInvert * pxWorldMatrix;
         PxTransform localTransform = PxTransform(pxLocalMatrix);
 
         memcpy_s(&position, sizeof(float) * 3, &localTransform.p, sizeof(float) * 3);
@@ -177,9 +177,11 @@ void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
     }
     else
     {
-        memcpy_s(&position, sizeof(float) * 3, &mPxWorldTransform.p, sizeof(float) * 3);
-        memcpy_s(&rotation, sizeof(float) * 4, &mPxWorldTransform.q, sizeof(float) * 4);
+        memcpy_s(&position, sizeof(float) * 3, &_pxWorldTransform.p, sizeof(float) * 3);
+        memcpy_s(&rotation, sizeof(float) * 4, &_pxWorldTransform.q, sizeof(float) * 4);
     }
+
+    UpdateMatrix();
 }
 
 void Transform::Clone(Object* _owner, std::unordered_map<std::wstring, Object*> _objTable)

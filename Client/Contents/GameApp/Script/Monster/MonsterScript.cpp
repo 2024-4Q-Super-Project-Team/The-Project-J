@@ -53,13 +53,13 @@ void MonsterScript::Start()
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
 		m_pHeadCollider->SetPosition(Vector3{0,85,0});
-		m_pHeadCollider->SetExtents(Vector3{ 15,5,15 });
+		m_pHeadCollider->SetExtents(Vector3{ 25,2,25 });
 		m_pHeadCollider->SetIsTrigger(true);
 	}
 	{	// Body Collider Component
 		m_pBodyCollider = gameObject->AddComponent<BoxCollider>();
-		m_pBodyCollider->SetPosition(Vector3{ 0,30,0 });
-		m_pBodyCollider->SetExtents(Vector3{ 30,45,30 });
+		m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+		m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 	}
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
@@ -133,11 +133,13 @@ void MonsterScript::UpdateWalk()
 
 			if (mResetCount > 5.f)
 			{
-				x = Random::Range(-240, 240);  // x 랜덤
-				z = Random::Range(-240, 240);  // z 랜덤
+				x = Random::Range(-170, 170);  // x 랜덤
+				z = Random::Range(-170, 170);  // z 랜덤
 			}
 			// 랜덤 방향 설정
-			TargetPos = { x, gameObject->transform->position.y, z }; // y 값은 유지
+			TargetPos = {	gameObject->transform->position.x + x, 
+							gameObject->transform->position.y,		// y 값은 유지
+							gameObject->transform->position.z + z }; 
 
 			mResetCount = 0;
 		}	// 범위 이탈시 원래 위치로 이동
@@ -153,7 +155,10 @@ void MonsterScript::UpdateWalk()
 
 		// 랜덤 방향으로 이동
 		if (gameObject->transform->position.x != TargetPos.x || gameObject->transform->position.z != TargetPos.z)
-			gameObject->transform->position += targetDir * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+		{
+			//gameObject->transform->position += targetDir * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
+			gameObject->transform->MoveTo(TargetPos, 5.f, Dotween::EasingEffect::InSine);
+		}
 		else
 			mFSM = eMonsterStateType::IDLE;
 	}
@@ -171,7 +176,8 @@ void MonsterScript::UpdateFastWalk()
 
 		if (distance > mAttackDistance.val)
 		{
-			gameObject->transform->position += targetDir * mMoveSpeed.val * 1.5 * Time::GetUnScaledDeltaTime();
+			//gameObject->transform->position += targetDir * mMoveSpeed.val * 1.5 * Time::GetUnScaledDeltaTime();
+			gameObject->transform->MoveTo(m_pTarget->transform->position, 5.f, Dotween::EasingEffect::InSine);
 		}
 		else // 타겟과의 거리가 범위 내라면 공격
 		{
@@ -198,7 +204,8 @@ void MonsterScript::UpdateRun()
 			mFSM = eMonsterStateType::FAST_WALK;
 
 		// 타겟 위치로 빠르게 이동
-		gameObject->transform->position += targetDir * mMoveSpeed.val * 2.f * Time::GetUnScaledDeltaTime();
+		//gameObject->transform->position += targetDir * mMoveSpeed.val * 2.f * Time::GetUnScaledDeltaTime();
+		gameObject->transform->MoveTo(m_pTarget->transform->position, 5.f, Dotween::EasingEffect::InSine);
 	}
 	else // 타겟이 존재하지 않는가?
 	{

@@ -36,10 +36,10 @@ public:
     void SetExtents();
     virtual Vector3 GetSize() override;
 
-    void SetPosition(const Vector3& position) { mPosition = position; }
-    void SetRotation(const Vector3& rotation) { mRotation = rotation; }
-    void SetExtents(const Vector3& extents) { mExtents = extents; }
-    void SetTrigger(bool isTrigger) { mIsTrigger = isTrigger; }
+    void SetPosition(const Vector3& position) { mPosition = position; SetPosition(); }
+    void SetRotation(const Vector3& rotation) { mRotation = rotation; SetRotation(); }
+    void SetExtents(const Vector3& extents) { mExtents = extents; SetExtents();}
+    void SetTrigger(bool isTrigger) { mIsTrigger = isTrigger; SetIsTrigger(); }
 
 private:
     const Vector3 mInitialSize = { 1, 1, 1 };

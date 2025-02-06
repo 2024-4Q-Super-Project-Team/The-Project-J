@@ -16,27 +16,27 @@ void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
 
-	Object* root = gameObject->transform->GetParent()->gameObject;
-	auto& Children = root->transform->GetChildren();
-	
-	for (Transform* child : Children)
-	{
-		if (child->gameObject->GetName() == L"Scope_A")
-			m_pScope = child->gameObject;
-	}
-
 	// Init Setting
 	{
-		mFSM = eMonsterStateType::IDLE;
-	}
+		Object* root = gameObject->transform->GetParent()->gameObject;
+		auto& Children = root->transform->GetChildren();
 
-	// Add Object
-	{
-		if (!m_pScope)
-			m_pScope = CreateObject(L"Scope_A", L"Scope");
+		for (Transform* child : Children)
+		{
+			if (child->gameObject->GetName() == L"Scope_A")
+			{
+				m_pScope = child->gameObject;
+
+				if (!m_pScope)
+				{
+					m_pScope = CreateObject(L"Scope_A", L"Scope");
+				}
+			}
+		}
 
 		m_pScope->transform->position = gameObject->transform->position;
-		m_pScope->AddComponent<ScopeScript>();
+
+		mFSM = eMonsterStateType::IDLE;
 	}
 
 	// Add componenet
@@ -64,6 +64,8 @@ void MonsterScript::Start()
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
 	}
+
+	auto* scope = m_pScope->GetComponent<ScopeScript>();
 }
 
 void MonsterScript::Update()

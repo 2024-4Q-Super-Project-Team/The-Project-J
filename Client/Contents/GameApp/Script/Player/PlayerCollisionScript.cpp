@@ -16,11 +16,11 @@ void PlayerCollisionScript::Start()
 
 void PlayerCollisionScript::Update()
 {
-    mRigidBody->SetDisableGravity(true);
-    if (mOwnerPlayer)
-    {
-        gameObject->transform->position = mOwnerPlayer->gameObject->transform->position;
-    }
+   mRigidBody->SetDisableGravity(true);
+   if (mOwnerPlayer)
+   {
+       gameObject->transform->position = mOwnerPlayer->gameObject->transform->position;
+   }
 }
 
 void _CALLBACK PlayerCollisionScript::OnTriggerStay(Collider* _origin, Collider* _destination)

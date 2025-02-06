@@ -9,12 +9,22 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 
+	virtual void OnCollisionStay(Rigidbody* box, Rigidbody* player) override;
+
+private:
+	void MoveBox(Vector3 displacement);
 private:
 	BoxCollider* mCollider;
 	Rigidbody* mRigid;
-	float mMaxDistance = .5f;
+	float mMaxDistance = 1.5f;
 	PxVec3 mPxRayOrigin;
 	PxVec3 mPxRayDirection;
 	PxRaycastBuffer mHitBuffer;
+
+	float mMoveSpeed = 200.f;
+	float mGravitySpeed = 100.f;
+	SerializeField(bool, mGravityOn, false);
+	SerializeField(Vector3, displacement, Vector3(0,0,0));
+
 };
 

@@ -43,7 +43,7 @@ public:
     void AddTriggerOther(Collider* _collider);
     void RemoveTriggerOther(Collider* _collider);
     void SetIsTrigger();
-    void SetIsTrigger(bool _isTrigger) { mIsTrigger = _isTrigger; }
+    void SetIsTrigger(bool _isTrigger) { mIsTrigger = _isTrigger; SetIsTrigger(); }
 
 protected:
     virtual void SetPosition() {}

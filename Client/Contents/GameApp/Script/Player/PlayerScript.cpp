@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Manager/PlayerManager.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
@@ -28,10 +29,13 @@ void PlayerScript::Start()
                 mCandleObject = child->gameObject;
             if (child->gameObject->GetName() == L"Player_Fire")
                 mFireObject = child->gameObject;
+            if (child->gameObject->GetName() == L"Player_Collision")
+                mCollisionObject = child->gameObject;
         }
         if (mBodyObject == nullptr) Helper::HRT(E_FAIL, "Player_Body Object is nullptr");
         if (mCandleObject == nullptr) Helper::HRT(E_FAIL, "Player_Candle Object is nullptr");
         if (mFireObject == nullptr) Helper::HRT(E_FAIL, "Player_Fire Object is nullptr");
+        if (mCollisionObject == nullptr) Helper::HRT(E_FAIL, "Player_Collision Object is nullptr");
 
         // Object -> RootNode -> Amature -> Bone -> TopBone
         mCandleTopBone = mCandleObject->transform->GetChild()->GetChild()->GetChild()->GetChild();
@@ -47,9 +51,14 @@ void PlayerScript::Start()
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
     {   // BurnObjectScript추가
-        mBurnObjectScript = mBodyObject->AddComponent<BurnObjectScript>();
+        mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
+    {
+        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+        mCollisionScript->SetOwnerPlayer(this);
+    }
+
     InitFireLight();
 
     PlayerManager::SetPlayerInfo(this);
@@ -93,24 +102,6 @@ void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 
 void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-    ////////////////////////////////////////////////
-    // 불 옮기기 시스템
-    // [02/02 ~ ] 작업자 : 주형 (기본 구조)
-    ////////////////////////////////////////////////
-    // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
-    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if(dstBurnObject)
-        Display::Console::Log(L"Can Fire \n");
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
-    {
-        ProcessMoveFire(dstBurnObject);
-        return;
-    }
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
-    {
-        ProcessOffFire(dstBurnObject);
-        return;
-    }
     if (_destination->gameObject->GetTag() == L"IceSlope"
         && mBurnObjectScript->IsBurning() == true)
     {
@@ -125,6 +116,28 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
     {
         mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
         mPlayerController->SetMoveForceY(0.0f);
+    }
+}
+
+void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* _destination)
+{
+    ////////////////////////////////////////////////
+    // 불 옮기기 시스템
+    // [02/02 ~ ] 작업자 : 주형 (기본 구조)
+    ////////////////////////////////////////////////
+    // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
+    BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+    if (dstBurnObject)
+        Display::Console::Log(L"Can Fire \n");
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    {
+        ProcessMoveFire(dstBurnObject);
+        return;
+    }
+    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::OFF_FIRE))
+    {
+        ProcessOffFire(dstBurnObject);
+        return;
     }
 }
 

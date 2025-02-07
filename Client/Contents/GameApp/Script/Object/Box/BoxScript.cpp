@@ -29,6 +29,10 @@ void BoxScript::Update()
    
    mGravityOn.val = !mHitBuffer.hasBlock;
 
+   if (mGravityOn.val)
+       displacement.val.y = -mGravitySpeed;
+
+
    MoveBox(displacement.val * Time::GetScaledDeltaTime());
 }
 
@@ -54,9 +58,6 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 
     displacement.val = direction * mMoveSpeed;
 
-    if (mGravityOn.val)
-        displacement.val.y = -mGravitySpeed;
- 
 }
 
 void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)

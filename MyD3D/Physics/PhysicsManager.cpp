@@ -30,6 +30,9 @@ void PhysicsManager::Initialize()
    PxCudaContextManagerDesc cudaContextManagerDesc;
    mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
    mCudaContext = mCudaContextManager->getCudaContext();
+
+   if (!mCudaContextManager->contextIsValid())
+	   bool jottatno = true;
 }
 
 void PhysicsManager::Finalization()

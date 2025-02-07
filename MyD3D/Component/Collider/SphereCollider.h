@@ -29,10 +29,12 @@ public:
 
     virtual MeshResource* GetMesh() { return nullptr; }
     virtual MaterialResource* GetMaterial() { return nullptr; }
+    float GetRadius() { return mRadius; }
 public:
     virtual void SetPosition();
     virtual void SetRotation();
     void SetRadius();
+    void SetRadius(float _radius) { mRadius = _radius; }
 private:
     const float mInitialRadius = 1.f;
 

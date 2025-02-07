@@ -16,12 +16,11 @@ public:
 	virtual void OnTriggerStay(Collider* _origin, Collider* _destination)	override;
 	virtual void OnTriggerExit(Collider* _origin, Collider* _destination)	override;
 public:
-	void SetPlayer(Object* _player) { m_pPlayer = _player; };
-	void SetMonster(Object* _monster) { m_pMonster = _monster; };
+	void	SetPlayer(Object* _player)		{ m_pPlayer = _player; };
+	void	SetMonster(Object* _monster)	{ m_pMonster = _monster; };
 private:
 	Rigidbody* m_pRigidBody = nullptr;
-	BoxCollider* m_pCollider = nullptr;
+	SphereCollider* m_pCollider = nullptr;
 	Object* m_pPlayer = nullptr;
 	Object* m_pMonster = nullptr;
-
 };

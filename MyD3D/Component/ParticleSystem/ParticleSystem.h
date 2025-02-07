@@ -47,6 +47,8 @@ public:
 	virtual void DrawObject(Matrix& _view, Matrix& _projection) override;
 	virtual void DrawShadow(Light* _pLight) override;
 	virtual void DrawWire() override;
+
+	virtual void EditorGlobalUpdate() override;
 public:
 	void SetTexture(ResourceHandle _handle);
 

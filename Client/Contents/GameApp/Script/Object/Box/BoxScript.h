@@ -9,7 +9,8 @@ public:
 	virtual void Start() override;
 	virtual void Update() override;
 
-	virtual void OnCollisionStay(Rigidbody* box, Rigidbody* player) override;
+	virtual void OnCollisionEnter(Rigidbody* box, Rigidbody* player) override;
+	virtual void OnCollisionExit(Rigidbody* box, Rigidbody* player) override;
 
 private:
 	void MoveBox(Vector3 displacement);

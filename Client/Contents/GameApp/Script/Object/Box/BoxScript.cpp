@@ -29,9 +29,10 @@ void BoxScript::Update()
    
    mGravityOn.val = !mHitBuffer.hasBlock;
 
+   MoveBox(displacement.val * Time::GetScaledDeltaTime());
 }
 
-void BoxScript::OnCollisionStay(Rigidbody* box, Rigidbody* player)
+void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 {
     if (player->gameObject->GetTag() != L"Player") return; 
 
@@ -47,6 +48,7 @@ void BoxScript::OnCollisionStay(Rigidbody* box, Rigidbody* player)
     if(localDirection.LengthSquared() > 0.f)
         localDirection.Normalize();
 
+
     XMVECTOR transformedDirection = XMVector3TransformNormal(localDirection, parentRotationMatrix);
     Vector3 direction = Vector3(transformedDirection);
 
@@ -55,7 +57,14 @@ void BoxScript::OnCollisionStay(Rigidbody* box, Rigidbody* player)
     if (mGravityOn.val)
         displacement.val.y = -mGravitySpeed;
  
-    MoveBox(displacement.val * Time::GetScaledDeltaTime());
+}
+
+void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)
+{
+    if (player->gameObject->GetTag() != L"Player") return;
+
+    displacement.val.x = 0.f;
+    displacement.val.z = 0.f;
 }
 
 void BoxScript::MoveBox(Vector3 displacement)

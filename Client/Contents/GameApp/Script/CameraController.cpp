@@ -12,8 +12,10 @@ void CameraController::Start()
 	CurrentAngles[Pitch] = 0;
 	CurrentAngles[Roll] = 0;
 
-    mCameraDistance.val = 1000.0f;
-	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.05f);
+    mCameraDistance.val = 700.0f;
+	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.035f);
+    mZoomSpeed = 5.0f;
+    mLerpSpeed = 3.0f;
 }
 
 void CameraController::Update()

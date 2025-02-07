@@ -61,6 +61,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 
 		shapes[i]->setSimulationFilterData(filterData);
 	}
+
+	mRayFilter = new CustomRaycastFilter;
 }
 
 PlayerController::~PlayerController()
@@ -76,7 +78,7 @@ PlayerController::~PlayerController()
 	}
 	SAFE_DELETE(mBehaviorCallback);
 	SAFE_DELETE(mEventCallback);
-
+	SAFE_DELETE(mRayFilter);
 }
 
 void PlayerController::Start()
@@ -108,32 +110,25 @@ void PlayerController::PreUpdate()
 {
 	//중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
 	PxVec3 pxRayOrigin = mCapsuleController->getActor()->getGlobalPose().p
-		- PxVec3(0, mCapsuleController->getRadius() + mCapsuleController->getHeight() / 2 + 1.0f, 0);
+		- PxVec3(0, mCapsuleController->getRadius() + mCapsuleController->getHeight() / 2 + 1.f , 0);
 	PxVec3 pxRayDirection = PxVec3(0, -1, 0);
 
 	PxRaycastBuffer hitBuffer;
-	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer);
+	PxQueryFilterData filterData(PxQueryFlag::eSTATIC); // 정적/동적 오브젝트만 검색
+	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer,PxHitFlag::eDEFAULT, filterData, mRayFilter);
 
-	if (hitBuffer.hasBlock)
-	{
-		if (static_cast<Rigidbody*>(hitBuffer.getAnyHit(0).actor->userData)->gameObject->GetTag() != L"Player_Collision")
-			mIsOnGround = true;
-		else
-			mIsOnGround = false;
-	}
-	else mIsOnGround = false;
+	mIsOnGround = hitBuffer.hasBlock;
 
 }
 
 void PlayerController::Update()
 {
 	mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
-
-	GravityUpdate();
 }
 
 void PlayerController::PostUpdate()
 {
+	GravityUpdate();
 	gameObject->transform->UpdatePxTransform();
 }
 

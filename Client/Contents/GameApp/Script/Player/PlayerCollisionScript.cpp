@@ -11,7 +11,7 @@ void PlayerCollisionScript::Start()
     mRigidBody->SetIsDynamic(true);
     mBoxCollider = gameObject->AddComponent<BoxCollider>();
     mBoxCollider->SetPosition(Vector3(0.0f, 70.0f, 0.0f));
-    mBoxCollider->SetExtents(Vector3(60.0f, 70.0f, 60.0f));
+    mBoxCollider->SetExtents(Vector3(60.0f, 50.0f, 60.0f));
     mBoxCollider->SetIsTrigger(true);
 }
 

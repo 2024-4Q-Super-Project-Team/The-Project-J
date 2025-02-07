@@ -3,8 +3,8 @@
 enum class eBossStateType
 {
 	IDLE,
-	ATTACK_01,
-	ATTACK_02,
+	ATTACK_01,	// 광선
+	ATTACK_02,	// 몬스터 소환
 	HIT,
 };
 
@@ -17,6 +17,7 @@ public:
 	void Update();
 private:
 	void UpdateTransform(); // 보스 위치를 갱신한다.
+	void UpdateAnimation();
 private:
 	Animator* mHeadAnimator;
 	Animator* mBodyAnimator;
@@ -27,7 +28,8 @@ private:
 	SerializeField(FLOAT, mMinIdleTick, 0);	// 다음 패턴을 위한 최소 대기 시간
 	SerializeField(FLOAT, mMaxIdleTick, 0);	// 다음 패턴을 위한 최대 대기 시간
 
-
+	eBossStateType mBossState;
+	BOOL isAttack;
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;

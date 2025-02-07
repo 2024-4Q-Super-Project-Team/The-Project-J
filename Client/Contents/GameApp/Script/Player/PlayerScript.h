@@ -86,6 +86,7 @@ private:
 	SerializeField(FLOAT,	mMoveSpeed, 200.0f);			
 	SerializeField(FLOAT,	mJumpPower, 0.3f);			
 	SerializeField(FLOAT,	mMaxJumpTimeTick, 0.4f);	
+	SerializeField(FLOAT,	mMaxJumpHoldScale, 1.0f);	
 	FLOAT					mJumpTimeCount = 0.0f;
 	bool					mJumpTrigger = false;
 	////////////////////////////////////////////////

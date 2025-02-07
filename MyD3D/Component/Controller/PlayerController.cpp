@@ -114,7 +114,7 @@ void PlayerController::PreUpdate()
 	PxVec3 pxRayDirection = PxVec3(0, -1, 0);
 
 	PxRaycastBuffer hitBuffer;
-	PxQueryFilterData filterData(PxQueryFlag::eSTATIC); // 정적/동적 오브젝트만 검색
+	PxQueryFilterData filterData(PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER); 
 	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer,PxHitFlag::eDEFAULT, filterData, mRayFilter);
 
 	mIsOnGround = hitBuffer.hasBlock;

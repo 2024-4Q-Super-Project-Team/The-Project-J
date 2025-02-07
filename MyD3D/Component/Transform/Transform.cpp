@@ -90,6 +90,20 @@ void Transform::Update()
         }
     }
 
+    if (isZooming)
+    {
+        zoomElapsedTime += Time::GetScaledDeltaTime();
+        float t = zoomElapsedTime / zoomDuration;
+        UpdateZoom(t, easingEffect);
+
+        if (zoomElapsedTime >= zoomDuration)
+        {
+            isZooming = false;
+            zoomElapsedTime = 0.0f;
+            UpdateZoom(1.0f, easingEffect);
+        }
+    }
+
     UpdatePxTransform();
 }
 
@@ -570,51 +584,42 @@ void Transform::MoveTo(const Vector3& targetPosition, float _duration, Dotween::
 	endPosition = targetPosition;
 }
 
-//void Transform::ZoomTo(float targetDistance, float duration, Dotween::EasingEffect easingEffect)
-//{
-//    if (isZooming) return;
-//
-//    isZooming = true;
-//    zoomDuration = duration;
-//    zoomElapsedTime = 0.0f;
-//    this->easingEffect = easingEffect;
-//
-//    startDistance = (position - mCameraTarget).Length();
-//    endDistance = targetDistance;
-//}
+void Transform::ZoomTo(float* targetDistance, float startValue, float endValue, float duration, Dotween::EasingEffect _easingEffect)
+{
+    if (isZooming) return;
+
+    isZooming = true;
+    zoomDuration = duration;
+    zoomElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
+    zoomTargetPtr = targetDistance;
+    zoomStartValue = startValue;
+    zoomEndValue = endValue;
+}
 
 void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
     position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-    UpdateMatrix();
 }
 
 void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-    UpdateMatrix();
 }
 
 void Transform::UpdateMove(float t, Dotween::EasingEffect easingEffect)
 {
 	position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-	UpdateMatrix();
 }
 
-//void Transform::UpdateZoom(float t, Dotween::EasingEffect easingEffect)
-//{
-//    // 현재 거리와 목표 거리 사이 보간
-//    float easedT = Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t);
-//    float currentDistance = startDistance + (endDistance - startDistance) * easedT;
-//
-//    Vector3 direction = mCameraDirection;
-//    direction.Normalize();
-//
-//    // 카메라 위치 업데이트
-//    position = mCameraTarget + direction * currentDistance;
-//    UpdateMatrix();
-//}
-
+void Transform::UpdateZoom(float t, Dotween::EasingEffect easingEffect)
+{
+    if (zoomTargetPtr)
+    {
+        *zoomTargetPtr = Lerp(zoomStartValue, zoomEndValue,
+            Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+    }
+}

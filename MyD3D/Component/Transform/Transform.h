@@ -61,10 +61,11 @@ private:
 	Vector3 endPosition;
 //카메라용
     bool isZooming = false;
-    float zoomDuration = 2.0f;
+    float zoomDuration = 0.5f;
     float zoomElapsedTime = 0.0f;
-    float startDistance;
-    float endDistance;
+    float* zoomTargetPtr = nullptr;
+    float zoomStartValue;
+    float zoomEndValue;
 
 public:
     inline Transform* GetParent() const { return mParent; }
@@ -134,11 +135,11 @@ public:
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
 	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
-    void ZoomTo(float targetDistance, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void ZoomTo(float* targetDistance, float startValue, float endValue, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void UpdateZoom(float t, Dotween::EasingEffect easingEffect);
 
 private:
     void UpdateLookAt(float t, Dotween::EasingEffect easingEffect);
     void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
 	void UpdateMove(float t, Dotween::EasingEffect easingEffect);
-    void UpdateZoom(float t, Dotween::EasingEffect easingEffect);
 };

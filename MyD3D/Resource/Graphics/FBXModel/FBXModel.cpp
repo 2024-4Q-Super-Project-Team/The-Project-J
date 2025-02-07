@@ -242,6 +242,7 @@ void FBXModelResource::EditorRendering(EditorViewerType _viewerType)
 				ImGui::TreePop();
 			}
 		}
+		ImGui::Text(("Num Node : " + std::to_string(mModelNodeArray.size())).c_str());
 		break;
 	}
 	default:

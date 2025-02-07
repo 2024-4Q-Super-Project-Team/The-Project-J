@@ -55,7 +55,9 @@ void PlayerScript::Start()
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
     {
-        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+        mCollisionScript = mCollisionObject->GetComponent<PlayerCollisionScript>();
+        if (mCollisionScript == nullptr)
+            mCollisionScript = mCollisionObject->AddComponent<PlayerCollisionScript>();
         mCollisionScript->SetOwnerPlayer(this);
     }
 
@@ -143,6 +145,22 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     }
 }
 
+void _CALLBACK PlayerScript::OnTriggerExitCallback(Collider* _origin, Collider* _destination)
+{
+    if (mPlayerState == ePlayerStateType::MOVE_FIRE)
+    {
+        BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+        // 나간 대상이 현재 불 옮기기 진행중인 오브젝트면 진행을 취소하고 IDLE로 변경
+        if (dstBurnObject == mBurnProcessTarget)
+        {
+            mBurnProcessTarget = nullptr;
+            mMoveFireCount = 0.0f;
+            SetState(ePlayerStateType::IDLE);
+        }
+    }
+    return void _CALLBACK();
+}
+
 void PlayerScript::Reset()
 {
     isAction = false;
@@ -169,6 +187,12 @@ void PlayerScript::Hit(INT _damage)
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
             SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
+
+            if (mPlayerState == ePlayerStateType::MOVE_FIRE)
+            {
+                mBurnProcessTarget = nullptr;
+                mMoveFireCount = 0.0f;
+            }
         }
     }
 }

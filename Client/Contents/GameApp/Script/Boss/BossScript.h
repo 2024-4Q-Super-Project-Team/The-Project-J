@@ -36,22 +36,22 @@ private:
 	Animator* mRingAnimator;
 	Animator* mBodyAnimator;
 
-	Transform* mAxisTransform;						// 보스의 기준 축이 될 트랜스폼
-	SerializeField(FLOAT, mDistanceFromAxis, 0.0f);	// 기준 축부터 몇 만큼 떨어져있을지
+	Transform* mAxisTransform;							// 보스의 기준 축이 될 트랜스폼
+	SerializeField(FLOAT, mDistanceFromAxis, 0.0f);		// 기준 축부터 몇 만큼 떨어져있을지
 
-	SerializeField(FLOAT, mMinIdleTick, 3.0f);	// 다음 패턴을 위한 최소 대기 시간
-	SerializeField(FLOAT, mMaxIdleTick, 5.0f);	// 다음 패턴을 위한 최대 대기 시간
-	FLOAT mCurIdleTime = 0.0f;					// Min~Max 사이에서 랜덤으로 나온 랜덤 값(다음 공격까지의 대기 시간)
-	FLOAT mIdleTickCounter = 0.0f;				// 다음 공격 패턴을 위한 시간 카운터
+	SerializeField(FLOAT, mMinIdleTick, 3.0f);			// 다음 패턴을 위한 최소 대기 시간
+	SerializeField(FLOAT, mMaxIdleTick, 5.0f);			// 다음 패턴을 위한 최대 대기 시간
+	FLOAT mCurIdleTime = 0.0f;							// Min~Max 사이에서 랜덤으로 나온 랜덤 값(다음 공격까지의 대기 시간)
+	FLOAT mIdleTickCounter = 0.0f;						// 다음 공격 패턴을 위한 시간 카운터
 
-	eBossStateType mBossState = eBossStateType::IDLE;
-	BOOL isAttack = FALSE;
-	eBossAttackType mCurrAttackType = NONE;
+	eBossStateType mBossState = eBossStateType::IDLE;	//
+	BOOL isAttack = FALSE;								//
+	eBossAttackType mCurrAttackType = NONE;				//
 
 	// Attack01 관련
-	SerializeField(FLOAT, mRazerScale, 0.0f);		// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
+	SerializeField(FLOAT, mRazerScale, 0.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
 	// Attack02 관련
-	SerializeField(INT, mMonstaerSpawnCount, 3);	// Attack02패턴의 몬스터 소환 수
+	SerializeField(INT, mMonstaerSpawnCount, 3);		// Attack02패턴의 몬스터 소환 수
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;

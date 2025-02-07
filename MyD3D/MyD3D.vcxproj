@@ -178,6 +178,7 @@
     <ClInclude Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.h" />
     <ClInclude Include="Editor\Handler\EditorCustumWidget.h" />
     <ClInclude Include="Editor\Handler\EditorDragNDrop.h" />
+    <ClInclude Include="Component\ParticleSystem\Effect.h" />
     <ClInclude Include="Physics\PhysicsEventCallback.h" />
     <ClInclude Include="Component\Controller\ControllerEventCallback.h" />
     <ClInclude Include="Resource\FontResource\FontResource.h" />
@@ -318,6 +319,7 @@
     <ClCompile Include="Editor\CumstomWidget\MenuItem\World\EditorWorldChanger.cpp" />
     <ClCompile Include="Editor\Handler\EditorCustumWidget.cpp" />
     <ClCompile Include="Editor\Handler\EditorDragNDrop.cpp" />
+    <ClCompile Include="Component\ParticleSystem\Effect.cpp" />
     <ClCompile Include="Physics\PhysicsEventCallback.cpp" />
     <ClCompile Include="Component\Controller\ControllerEventCallback.cpp" />
     <ClCompile Include="Resource\FontResource\FontResource.cpp" />

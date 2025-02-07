@@ -2,12 +2,13 @@
 
 enum class eMonsterStateType
 {
-	IDLE,		// 대기 중
+	IDLE,		// 대기
 	WALK,		// 움직이는 중
 	FAST_WALK,	// 좀 더 빨리 움직이는 중
-	RUN,		// 공격 중
-	HIT,		// 기절
-	DEAD		// 죽음
+	RUN,		// 공격
+	HIT,		// 피격
+	GROGGY,		// 기절
+	DEAD		// 죽음 -> 이펙트 애니메이션
 };
 
 class BurnObjectScript;
@@ -25,8 +26,10 @@ private:
 	void UpdateFastWalk();
 	void UpdateRun();
 	void UpdateHit();
+	void UpdateGroggy();
 	void UpdateDead();
 	void UpdateMonsterAnim();
+	void UpdateMonsterAngle();
 public:
 	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)  override;
@@ -64,7 +67,8 @@ private:
 	BurnObjectScript* m_pBurnObjectScript = nullptr;
 private:
 	// Target
-	Object* m_pTarget;
+	Object* m_pTarget = nullptr;
+	Object* m_pWeakness = nullptr;
 
 	float mIdleCount = 0.0f;	// 아이들 대기 타이머
 	float mResetCount = 0.0f;	// 랜덤 리셋 타이머
@@ -73,8 +77,8 @@ private:
 	float mDistance = 0.00f;	// 거리
 	bool bIsScope = true;		// 범위 밖으로 나갔는지 체크
 
-	Vector3 mRandomPos{};	// 기본 랜덤 포지션 값
-	Vector3 mRandomDir{};	// 랜덤 벡터
+	Vector3 mTargetPos{};	// 기본 랜덤 포지션 값
+	Vector3 mTargetDir{};	// 랜덤 벡터
 public:
 	SerializeField(FLOAT, mGroggyTick, 10.f);		// 기절 tick
 	SerializeField(FLOAT, mMoveSpeed, 40.f);		// 이동 속도

@@ -305,6 +305,8 @@ void PlayerScript::UpdateMove()
 
 void PlayerScript::UpdateHit()
 {
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
     if (mBodyAnimator->IsEnd())
     {
         // 애니메이션 블렌드
@@ -350,20 +352,12 @@ void PlayerScript::UpdateMoveFire()
 
             if (mMoveFireCount >= mMoveFireTick.val)
             {
-                // ===== 불 옮기기 Action ====
-                 // 대상이 불타고 내가 꺼져있음
+                // 대상이 꺼져있고 내가 불타는 중에만 동작한다.
                 if (mBurnProcessTarget->IsBurning() == false &&
                     mBurnObjectScript->IsBurning() == true)
                 {
                     mBurnProcessTarget->SetBurn(true);
                     mBurnObjectScript->SetBurn(false);
-                }
-                // 대상이 꺼져있고 내가 불타는 중
-                else if (mBurnProcessTarget->IsBurning() == true &&
-                    mBurnObjectScript->IsBurning() == false)
-                {
-                    mBurnProcessTarget->SetBurn(false);
-                    mBurnObjectScript->SetBurn(true);
                 }
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
@@ -443,10 +437,12 @@ void PlayerScript::ProcessJump()
             mJumpTrigger = false;
             mJumpTimeCount = mMaxJumpTimeTick.val;
         }
-        float jumpTimeRatio = (mMaxJumpTimeTick.val - mJumpTimeCount) * 0.01f;
-        mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
+        else
+        {
+            float jumpTimeRatio = (mMaxJumpTimeTick.val - mJumpTimeCount) * (mMaxJumpHoldScale.val * 0.01f);
+            mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
+        }
     }
-   
 }
 
 void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
@@ -454,10 +450,8 @@ void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
     // dst가 없으면 행동을 할 수 없다.
     if (_dst == nullptr || _dst == mBurnObjectScript) return;
 
-    Display::Console::Log(L"Can Fire \n");
-
-    if ((mBurnObjectScript->IsBurning() == true && _dst->IsBurning() == false) ||
-        (mBurnObjectScript->IsBurning() == false && _dst->IsBurning() == true) )
+    // 대상이 꺼져있고 내가 불타는 중에만 동작한다.
+    if (_dst->IsBurning() == false && mBurnObjectScript->IsBurning() == true)
     {
         SetState(ePlayerStateType::MOVE_FIRE);
         mBurnProcessTarget = _dst;
@@ -519,6 +513,7 @@ json PlayerScript::Serialize()
     ret["player move speed"] = mMoveSpeed.val;
     ret["player jump power"] = mJumpPower.val;
     ret["player jump tick"] = mMaxJumpTimeTick.val;
+    ret["player jump hold scale"] = mMaxJumpHoldScale.val;
     ret["player move fire tick"] = mMoveFireTick.val;
 
     return ret;
@@ -554,5 +549,9 @@ void PlayerScript::Deserialize(json& j)
     if (j.contains("player move fire tick"))
     {
         mMoveFireTick.val = j["player move fire tick"].get<FLOAT>();
+    }
+    if (j.contains("player jump hold scale"))
+    {
+        mMaxJumpHoldScale.val = j["player jump hold scale"].get<FLOAT>();
     }
 }

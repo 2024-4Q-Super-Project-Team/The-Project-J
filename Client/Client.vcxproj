@@ -172,6 +172,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
@@ -197,6 +198,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />

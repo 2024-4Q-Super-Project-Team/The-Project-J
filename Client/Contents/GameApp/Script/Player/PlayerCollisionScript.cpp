@@ -4,6 +4,7 @@
 
 void PlayerCollisionScript::Start()
 {
+    gameObject->SetTag(L"Player_Collision");
     mRigidBody = gameObject->AddComponent<Rigidbody>();
     mRigidBody->SetFreezeRotation(true, true, true);
     mRigidBody->SetFreezePosition(true, true, true);

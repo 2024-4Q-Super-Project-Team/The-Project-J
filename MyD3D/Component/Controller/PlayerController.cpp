@@ -106,21 +106,28 @@ void PlayerController::FixedUpdate()
 
 void PlayerController::PreUpdate()
 {
-}
-
-void PlayerController::Update()
-{
-	mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
-
 	//중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
-	Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0, 2.0f, 0);
-	PxVec3 pxRayOrigin = PxVec3(rayOriginPos.x, rayOriginPos.y, rayOriginPos.z);
+	PxVec3 pxRayOrigin = mCapsuleController->getActor()->getGlobalPose().p
+		- PxVec3(0, mCapsuleController->getRadius() + mCapsuleController->getHeight() / 2 + 1.0f, 0);
 	PxVec3 pxRayDirection = PxVec3(0, -1, 0);
 
 	PxRaycastBuffer hitBuffer;
 	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer);
 
-	mIsOnGround = !hitBuffer.hasBlock;
+	if (hitBuffer.hasBlock)
+	{
+		if (static_cast<Rigidbody*>(hitBuffer.getAnyHit(0).actor->userData)->gameObject->GetTag() != L"Player_Collision")
+			mIsOnGround = true;
+		else
+			mIsOnGround = false;
+	}
+	else mIsOnGround = false;
+
+}
+
+void PlayerController::Update()
+{
+	mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
 
 	GravityUpdate();
 }

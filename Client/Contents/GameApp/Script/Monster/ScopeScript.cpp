@@ -57,6 +57,9 @@ void ScopeScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
 	if (_destination->gameObject->GetTag() == L"Player")
 	{	// 플레이어 범위 내 있을 시 체크
+		if (m_pPlayer)
+			return;
+
 		m_pPlayer = _destination->gameObject;
 	}
 }

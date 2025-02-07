@@ -61,6 +61,8 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 
 		shapes[i]->setSimulationFilterData(filterData);
 	}
+
+	mRayFilter = new CustomRaycastFilter;
 }
 
 PlayerController::~PlayerController()
@@ -76,7 +78,7 @@ PlayerController::~PlayerController()
 	}
 	SAFE_DELETE(mBehaviorCallback);
 	SAFE_DELETE(mEventCallback);
-
+	SAFE_DELETE(mRayFilter);
 }
 
 void PlayerController::Start()
@@ -106,27 +108,27 @@ void PlayerController::FixedUpdate()
 
 void PlayerController::PreUpdate()
 {
+	//중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
+	PxVec3 pxRayOrigin = mCapsuleController->getActor()->getGlobalPose().p
+		- PxVec3(0, mCapsuleController->getRadius() + mCapsuleController->getHeight() / 2 + 1.f , 0);
+	PxVec3 pxRayDirection = PxVec3(0, -1, 0);
+
+	PxRaycastBuffer hitBuffer;
+	PxQueryFilterData filterData(PxQueryFlag::eSTATIC | PxQueryFlag::ePREFILTER); 
+	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer,PxHitFlag::eDEFAULT, filterData, mRayFilter);
+
+	mIsOnGround = hitBuffer.hasBlock;
+
 }
 
 void PlayerController::Update()
 {
 	mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
-
-	//중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
-	Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0, 2.0f, 0);
-	PxVec3 pxRayOrigin = PxVec3(rayOriginPos.x, rayOriginPos.y, rayOriginPos.z);
-	PxVec3 pxRayDirection = PxVec3(0, -1, 0);
-
-	PxRaycastBuffer hitBuffer;
-	GameManager::GetCurrentWorld()->GetPxScene()->raycast(pxRayOrigin, pxRayDirection, 1.0f, hitBuffer);
-
-	mIsOnGround = !hitBuffer.hasBlock;
-
-	GravityUpdate();
 }
 
 void PlayerController::PostUpdate()
 {
+	GravityUpdate();
 	gameObject->transform->UpdatePxTransform();
 }
 

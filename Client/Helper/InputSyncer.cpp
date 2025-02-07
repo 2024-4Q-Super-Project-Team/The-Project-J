@@ -27,7 +27,6 @@ void InputSyncer::Initialize()
 	mPadSet[RIGHT].push_back(GamePad::D_RIGHT);
 	mPadSet[UP].push_back(GamePad::D_UP);
 	mPadSet[DOWN].push_back(GamePad::D_DOWN);
-	mPadSet[MOVE_FIRE].push_back(GamePad::RIGHT_THUMB);
 	mPadSet[OFF_FIRE].push_back(GamePad::B);
 	mPadSet[OFF_FIRE].push_back(GamePad::Y);
 	mPadSet[JUMP].push_back(GamePad::A);
@@ -60,6 +59,11 @@ bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
 {
 	std::vector<UINT>& keyCodes = mKeySet[_handle][_type];
 	std::vector<UINT>& padCodes = mPadSet[_type];
+
+	if (_type == MOVE_FIRE)
+	{
+		return Input::GetPadTriggerForce(GamePad::RIGHT, _handle) != 0.0f ? true : false;
+	} 
 
 	for (auto keycode : keyCodes)
 	{

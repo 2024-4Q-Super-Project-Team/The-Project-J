@@ -30,7 +30,7 @@ private:
 	////////////////////////////////////////////////
 	Object* mBurnObject = nullptr;
 	BurnObjectScript* mDstObject = nullptr;
-	SerializeField(bool, isBurning, true);
+	SerializeField(bool, isBurning, false);
 	bool isProcessing = false;
 	SerializeField(FLOAT, mFireMoveTick, 1.0f);
 	FLOAT mFireMoveCount = 0.0f;

@@ -105,12 +105,12 @@ void SkinnedMeshRenderer::EditorRender()
         CalculateBoneTransform();
         EditorManager::mEditorCamera.PushDrawList(this);
 
-        if (Editor::InspectorViewer::IsFocusObject(gameObject))
-        {
-            mOutlineCBuffer.outlineOffset = 1.0f;
-            GraphicsManager::GetConstantBuffer(eCBufferType::Outline)->UpdateGPUResoure(&mOutlineCBuffer);
-            EditorManager::mEditorCamera.PushOutlineDrawList(this);
-        }
+        //if (Editor::InspectorViewer::IsFocusObject(gameObject))
+        //{
+        //    mOutlineCBuffer.outlineOffset = 1.0f;
+        //    GraphicsManager::GetConstantBuffer(eCBufferType::Outline)->UpdateGPUResoure(&mOutlineCBuffer);
+        //    EditorManager::mEditorCamera.PushOutlineDrawList(this);
+        //}
     }
 }
 

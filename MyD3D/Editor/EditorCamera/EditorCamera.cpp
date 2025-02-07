@@ -198,6 +198,11 @@ void EditorCamera::ExcuteDrawList()
                 SkyBox::GetDefaultSkyBox()->Draw(mViewMatrix, mProjectionMatrix, mProjectionFar);
             }
 
+            ////////////////////////////////////////////////////
+            // Outline Draw
+            ////////////////////////////////////////////////////
+            //DrawOutlineList();
+
             mMainRenderTarget->EndDraw();
 
             DrawSwapChain();
@@ -214,7 +219,7 @@ void EditorCamera::ClearDrawList()
 {
     for (auto& drawInfo : mDrawQueue)
     {
-        mDrawQueue->clear();
+        drawInfo.clear();
     }
     mSceneLights.clear();
     mLightCBuffer.NumLight = 0;

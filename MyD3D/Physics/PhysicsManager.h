@@ -46,4 +46,3 @@ private:
 	//Materials
 	std::unordered_map<std::string, PxMaterial*> mMaterials;
 };
-

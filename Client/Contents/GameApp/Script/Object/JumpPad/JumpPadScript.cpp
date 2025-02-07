@@ -1,10 +1,15 @@
 #include "pch.h"
 #include "JumpPadScript.h"
 #include "Component/Collider/Collider.h"
-#include "Component/Controller/PlayerController.h"
+#include "Contents/GameApp/Script/Player/PlayerScript.h"
 
 void JumpPadScript::Start()
 {
+	gameObject->AddComponent<Rigidbody>();
+
+	BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
+	boxCol->SetPosition(Vector3(0, 18, 0));
+	boxCol->SetExtents(Vector3(130, 10, 130));
 }
 
 void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -13,12 +18,20 @@ void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
 void JumpPadScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-	// 점프한번하고 내려오면 다시 점프 안됨??
-	if (_destination->gameObject->GetComponent<PlayerController>())
+	Object* interactingObject = _destination->gameObject;
+	PlayerScript* playerScript = interactingObject->GetComponent<PlayerScript>();
+
+	if (playerScript)
 	{
-		auto* playerController = _destination->gameObject->GetComponent<PlayerController>();
-		playerController->AddMoveForceY(mJumpForce.val * mJumpTimeRatio);
+		Display::Console::Log("jump!");
+		playerScript->Jump(mJumpScale.val);
 	}
+}
+
+void JumpPadScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
+{
+	Display::Console::Log("exit!");
+
 }
 
 json JumpPadScript::Serialize()
@@ -27,7 +40,7 @@ json JumpPadScript::Serialize()
 
 	ret["id"] = GetId();
 	ret["name"] = "JumpPadScript";
-	ret["jump force"] = mJumpForce.val;
+	ret["jump scale"] = mJumpScale.val;
 	
 	return ret;
 }
@@ -36,8 +49,8 @@ void JumpPadScript::Deserialize(json& j)
 {
 	MonoBehaviour::Deserialize(j);
 
-	if (j.contains("jump force"))
+	if (j.contains("jump scale"))
 	{
-		mJumpForce.val = j["jump force"].get<float>();
+		mJumpScale.val = j["jump scale"].get<float>();
 	}
 }

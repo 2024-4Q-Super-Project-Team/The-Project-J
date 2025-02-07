@@ -12,8 +12,10 @@ void CameraController::Start()
 	CurrentAngles[Pitch] = 0;
 	CurrentAngles[Roll] = 0;
 
-    mCameraDistance.val = 1000.0f;
-	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.05f);
+    mCameraDistance.val = 700.0f;
+	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.035f);
+    mZoomSpeed = 5.0f;
+    mLerpSpeed = 3.0f;
 }
 
 void CameraController::Update()
@@ -25,6 +27,22 @@ void CameraController::Update()
 
     // 플레이어 간의 거리 벡터 계산
     Vector3 Between = Player1WorldPos - Player2WorldPos;
+    float playerDistance = Between.Length();
+
+    // 플레이어 거리(200~1000)를 카메라 거리(600~1000)로 매핑
+    const float playerMinDist = 200.0f;
+    const float playerMaxDist = 1000.0f;
+    float distanceRatio = (playerDistance - playerMinDist) / (playerMaxDist - playerMinDist);
+    distanceRatio = std::clamp(distanceRatio, 0.0f, 1.0f);
+
+    float targetCameraDistance = mMinCameraDistance + (mMaxCameraDistance - mMinCameraDistance) * distanceRatio;
+
+    // 현재 거리와 목표 거리가 일정 이상 차이나면 부드러운 전환 시작
+    float threshold = 20.0f;
+    if (abs(mCameraDistance.val - targetCameraDistance) > threshold)
+    {
+        gameObject->transform->ZoomTo(&mCameraDistance.val, mCameraDistance.val, targetCameraDistance, 1.0f);
+    }
 
     // 중간 지점 계산
     Vector3 MidPoint = (Player1WorldPos + Player2WorldPos) * 0.5f;

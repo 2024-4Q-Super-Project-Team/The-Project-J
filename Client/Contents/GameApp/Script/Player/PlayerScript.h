@@ -26,6 +26,7 @@ public:
 	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
 	void _CALLBACK OnTriggerStayCallback(Collider* _origin, Collider* _destination);
+	void _CALLBACK OnTriggerExitCallback(Collider* _origin, Collider* _destination);
 public:
 	//////////////////////////////////////////////////////////////////////
 	/// 외부 사용을 위해 제공하는 메서드

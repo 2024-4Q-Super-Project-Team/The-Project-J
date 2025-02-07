@@ -6,7 +6,9 @@
 
 #define BOSS_ANIM_IDLE L"001"
 #define BOSS_ANIM_ATTACK_01 L"003"
-#define BOSS_ANIM_ATTACK_02 L"004"
+#define BOSS_ANIM_ATTACK_02 L"004"	// 005나 004중 하나임
+#define BOSS_ANIM_HIT				// 피격 애니메이션 X
+#define BOSS_LAMP_BONE_NAME L"Bone.121" // 보스의 램프 본
 
 void BossScript::Start()
 {
@@ -16,8 +18,8 @@ void BossScript::Update()
 {
 	UpdateTransform();
     UpdateAnimation();
+	UpdateState();
 }
-
 
 void BossScript::UpdateTransform()
 {
@@ -54,50 +56,99 @@ void BossScript::UpdateTransform()
 
 void BossScript::UpdateAnimation()
 {
-    //switch (mBossState)
-    //{
-    //case eBossStateType::IDLE:
-    //{
-    //    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP, 0.5f);
-    //    break;
-    //}
-    //case eBossStateType::MOVE:
-    //{
-    //    isJump == false ?
-    //        mBodyAnimator->SetLoop(true) :
-    //        mBodyAnimator->SetLoop(false);
-    //    isJump == false ?
-    //        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_WALK, 0.5f) :
-    //        mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_JUMP, 0.5f);
-    //    break;
-    //}
-    //case eBossStateType::HIT:
-    //{
-    //    mBodyAnimator->SetLoop(false);
-    //    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT, 0.5f);
-    //    break;
-    //}
-    //case eBossStateType::MOVE_FIRE:
-    //{
-    //    mBodyAnimator->SetLoop(false);
-    //    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_MOVE_FIRE, 0.5f);
-    //    break;
-    //}
-    //case eBossStateType::OFF_FIRE:
-    //{
-    //    mBodyAnimator->SetLoop(false);
-    //    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_OFF_FIRE, 0.5f);
-    //    break;
-    //}
-    //case eBossStateType::DEAD:
-    //{
-    //    mBodyAnimator->SetLoop(false);
-    //    mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_DEAD, 0.5f);
-    //    break;
-    //}
-    //default:
-    //    break;
-    //}
+    switch (mBossState)
+    {
+    case eBossStateType::IDLE:
+    {
+		mBodyAnimator->SetLoop(true);
+        mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+        break;
+    }
+	case eBossStateType::ATTACK:
+	{
+		mBodyAnimator->SetLoop(false);
+		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+		break;
+	}
+	case eBossStateType::HIT:
+	{
+		mBodyAnimator->SetLoop(false);
+		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+		break;
+	}
+    default:
+        break;
+    }
+}
+
+void BossScript::UpdateState()
+{
+	switch (mBossState)
+	{
+	case eBossStateType::IDLE:
+		UpdateIdle();
+		break;
+	case eBossStateType::ATTACK:
+		UpdateAttack();
+		break;
+	case eBossStateType::HIT:
+		UpdateHit();
+		break;
+	default:
+		break;
+	}
+}
+
+void BossScript::UpdateIdle()
+{
+	mIdleTickCounter += Time::GetScaledDeltaTime();
+	// 현재 대기 카운트가 현재 대기 시간보다 커지면
+	if (mIdleTickCounter >= mCurIdleTime)
+	{
+		mIdleTickCounter = 0.0f;
+		mCurIdleTime = Random::Range(mMinIdleTick.val, mMaxIdleTick.val);
+		// 다음 행동 패턴을 고른다.
+		mCurrAttackType = (eBossAttackType)Random::Range<INT>(ATTACK_01, ATTACK_02);
+		SetState(eBossStateType::ATTACK);
+	}
+}
+
+void BossScript::UpdateAttack()
+{
+	switch (mCurrAttackType)
+	{
+	case BossScript::NONE:
+		break;
+	case BossScript::ATTACK_01:
+		UpdateAttack01();
+		break;
+	case BossScript::ATTACK_02:
+		UpdateAttack02();
+		break;
+	default:
+		break;
+	}
+}
+
+#define BOSS_ATTACK_01_TRIGGER_FRAME 1	// 광선이 나가기 시작하는 프레임
+void BossScript::UpdateAttack01()
+{
+	// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
+	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
+	{
+
+	}
+}
+
+void BossScript::UpdateAttack02()
+{
+	// 머리 안에 손을 집어넣고 안에서 붉은 구체를 꺼내 하늘 위로 던진다. 이후 기본 몬스터 N마리(종류 랜덤)가 스테이지의 랜덤한 위치에 생성한다.
+
+}
+
+void BossScript::UpdateHit()
+{
+
 }
 
 json BossScript::Serialize()

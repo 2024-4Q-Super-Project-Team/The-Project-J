@@ -55,7 +55,9 @@ void PlayerScript::Start()
         mBurnObjectScript->SetBurnObject(mFireObject);
     }
     {
-        mCollisionScript =  mCollisionObject->AddComponent<PlayerCollisionScript>();
+        mCollisionScript = mCollisionObject->GetComponent<PlayerCollisionScript>();
+        if (mCollisionScript == nullptr)
+            mCollisionScript = mCollisionObject->AddComponent<PlayerCollisionScript>();
         mCollisionScript->SetOwnerPlayer(this);
     }
 
@@ -111,7 +113,7 @@ void PlayerScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
     if (dstBurnObject)
         Display::Console::Log(L"Can Fire \n");
-    if (InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
         return;
@@ -136,11 +138,27 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     ////////////////////////////////////////////////
     // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if (isJump == false && InputSyncer::IsKeyDown(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
         return;
     }
+}
+
+void _CALLBACK PlayerScript::OnTriggerExitCallback(Collider* _origin, Collider* _destination)
+{
+    if (mPlayerState == ePlayerStateType::MOVE_FIRE)
+    {
+        BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
+        // 나간 대상이 현재 불 옮기기 진행중인 오브젝트면 진행을 취소하고 IDLE로 변경
+        if (dstBurnObject == mBurnProcessTarget)
+        {
+            mBurnProcessTarget = nullptr;
+            mMoveFireCount = 0.0f;
+            SetState(ePlayerStateType::IDLE);
+        }
+    }
+    return void _CALLBACK();
 }
 
 void PlayerScript::Reset()
@@ -169,6 +187,12 @@ void PlayerScript::Hit(INT _damage)
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
             SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
+
+            if (mPlayerState == ePlayerStateType::MOVE_FIRE)
+            {
+                mBurnProcessTarget = nullptr;
+                mMoveFireCount = 0.0f;
+            }
         }
     }
 }
@@ -323,7 +347,7 @@ void PlayerScript::UpdateMoveFire()
         if (mBurnProcessTarget)
         {
             // 중간에 키를 떼면 취소한다.
-            if (InputSyncer::IsKeyUp(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+            if (false == InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
             {
                 SetState(ePlayerStateType::IDLE);
                 mBurnProcessTarget = nullptr;
@@ -357,7 +381,6 @@ void PlayerScript::UpdateMoveFire()
                     mBurnObjectScript->IsBurning() == true)
                 {
                     mBurnProcessTarget->SetBurn(true);
-                    mBurnObjectScript->SetBurn(false);
                 }
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
@@ -451,7 +474,9 @@ void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
     if (_dst == nullptr || _dst == mBurnObjectScript) return;
 
     // 대상이 꺼져있고 내가 불타는 중에만 동작한다.
-    if (_dst->IsBurning() == false && mBurnObjectScript->IsBurning() == true)
+    if (_dst->IsBurning() == false && 
+        mBurnObjectScript->IsBurning() == true &&
+        mPlayerState != ePlayerStateType::MOVE_FIRE)
     {
         SetState(ePlayerStateType::MOVE_FIRE);
         mBurnProcessTarget = _dst;

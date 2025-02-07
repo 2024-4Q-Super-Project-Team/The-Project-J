@@ -24,4 +24,10 @@ public:
         Pitch,
         Roll
     };
+private:
+    float mMinCameraDistance = 600.0f;
+    float mMaxCameraDistance = 1000.0f;
+    float mZoomSpeed;
+    float mLerpSpeed;
+
 };

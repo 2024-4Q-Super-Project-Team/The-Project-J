@@ -169,7 +169,7 @@ void BoxCollider::SetPosition()
 	mShape->setLocalPose(PxTransform(PxVec3(mPosition.x, mPosition.y, mPosition.z), currentTransform.q));
 	
 }
-
+//
 //void BoxCollider::SetRotation()
 //{
 //	PxTransform currentTransform = mShape->getLocalPose();

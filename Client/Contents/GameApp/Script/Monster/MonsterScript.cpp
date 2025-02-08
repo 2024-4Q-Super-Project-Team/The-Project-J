@@ -22,24 +22,18 @@ void MonsterScript::Start()
 	gameObject->SetTag(L"Monster");
 	
 	if (gameObject->GetName() == L"Monster_A")
-		mType = eMonsterType::A;
+		mType.val = (int)eMonsterType::A;
 	else
-		mType = eMonsterType::B;
+		mType.val = (int)eMonsterType::B;
 
 	// Init Setting
 	{
-		Object* root = gameObject->transform->GetParent()->gameObject;
-		auto& rootChildren = root->transform->GetChildren();
+		Transform* root = gameObject->transform->GetParent();
 
-		// find Scope
-		for (Transform* child : rootChildren)
-		{
-			if (child->gameObject->GetName() == L"Scope_A" || child->gameObject->GetName() == L"Scope_B")
-			{
-				m_pScope = child->gameObject;
-				m_pScope->transform->position = gameObject->transform->position;
-			}
-		}
+		m_pScope = CreateObject(L"Scope",L"Scope");
+		m_pScope->transform->SetParent(root);
+		m_pScope->AddComponent<ScopeScript>();
+		m_pScope->transform->position = gameObject->transform->position;
 
 		// find Weakness
 		auto& children = gameObject->transform->GetChildren();
@@ -51,7 +45,15 @@ void MonsterScript::Start()
 				m_pWeakness->SetTag(L"Weakness");
 				m_pWeakness->transform->scale = Vector3(30, 30, 22);
 				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
-				m_pWeakness->transform->position.y = 38;
+				
+				if (mType.val == (int)eMonsterType::A)
+				{
+					m_pWeakness->transform->position.y = 38;
+				}
+				else
+				{
+					m_pWeakness->transform->position.y = 5;
+				}
 			}
 		}
 
@@ -72,15 +74,15 @@ void MonsterScript::Start()
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
 
-		if (mType == eMonsterType::A)
+		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 25,2,25 });
 		}
 		else
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,88,0 });
-			m_pHeadCollider->SetExtents(Vector3{ 0.35f,0.02f,0.2f });
+			m_pHeadCollider->SetPosition(Vector3{ 0,86,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 35,2,20 });
 		}
 		
 		m_pHeadCollider->SetIsTrigger(true);
@@ -88,15 +90,15 @@ void MonsterScript::Start()
 	{	// Body Collider Component
 		m_pBodyCollider = gameObject->AddComponent<BoxCollider>();
 
-		if (mType == eMonsterType::A)
+		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 		else
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,47,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 0.35f,0.37f,0.2f });
+			m_pBodyCollider->SetPosition(Vector3{ 0,45,0 });
+			m_pBodyCollider->SetExtents(Vector3{ 35,35,20 });
 		}
 	}
 	{	// BurnObjectScript Component
@@ -106,19 +108,20 @@ void MonsterScript::Start()
 
 void MonsterScript::Update()
 {
-	auto* scope = m_pScope->GetComponent<ScopeScript>();
+	if (m_pScope)
+	{
+		auto* scope = m_pScope->GetComponent<ScopeScript>();
 
-	if (scope)
-		scope->SetMonster(gameObject);
+		if (scope)
+			scope->SetMonster(gameObject);
+	}
 
-	UpdateMonsterAngle();
-
-	if (mType == eMonsterType::A)
+	if (mType.val == (int)eMonsterType::A)
 	{
 		UpdateA();
 		UpdateMonsterAnim_A();
 	}
-	else if (mType == eMonsterType::B)
+	else if (mType.val == (int)eMonsterType::B)
 	{
 		UpdateB();
 		UpdateMonsterAnim_B();
@@ -189,7 +192,7 @@ void MonsterScript::UpdateIdle()
 	{
 		mIdleCount = 0.0f;
 
-		if (mType == eMonsterType::A)
+		if (mType.val == (int)eMonsterType::A)
 		{
 			mFSM = eMonsterStateType::WALK;
 		}
@@ -213,7 +216,7 @@ void MonsterScript::UpdateRotate()
 
 void MonsterScript::UpdateWalk()
 {
-	if (mType == eMonsterType::A)
+	if (mType.val == (int)eMonsterType::A)
 	{
 		// 타겟이 존재하는가?
 		if (m_pTarget)
@@ -247,8 +250,6 @@ void MonsterScript::UpdateWalk()
 		// 방향 연산
 		mTargetDir.Normalize();
 
-		UpdateMonsterAngle();
-
 		// 거리가 반지름 이상이면 스코프 바깥으로 설정
 		if (mDistance > 100.f)
 			bIsScope = false;
@@ -263,14 +264,22 @@ void MonsterScript::UpdateWalk()
 		}
 		else
 		{
-			if (mType == eMonsterType::A)
+			if (!bIsScope)
+			{
+				float distance = (m_pScope->transform->position - gameObject->transform->position).Length();
+				
+				if (distance < mRange)
+					bIsScope = true;
+			}
+
+			if (mType.val == (int)eMonsterType::A)
 			{
 				if (m_pAnimator->IsEnd())
 				{
 					mFSM = eMonsterStateType::IDLE;
 				}
 			}
-			else if (mType == eMonsterType::B)
+			else if (mType.val == (int)eMonsterType::B)
 			{
 				if (m_pAnimator->IsEnd())
 				{
@@ -297,8 +306,6 @@ void MonsterScript::UpdateFastWalk()
 		float distance = mTargetDir.Length();
 		// 방향 
 		mTargetDir.Normalize();
-
-		UpdateMonsterAngle();
 
 		// 거리가 몬스터의 공격 반경보다 클 때까지만 포즈값 더해주기
 		if (distance > mAttackDistance.val)
@@ -332,8 +339,6 @@ void MonsterScript::UpdateRun()
 		// 방향
 		mTargetDir.Normalize();
 
-		UpdateMonsterAngle();
-
 		// 거리가 공격 반경보다 크다면 다시 상태 전환
 		if (distance > mAttackDistance.val)
 			mFSM = eMonsterStateType::FAST_WALK;
@@ -355,7 +360,7 @@ void MonsterScript::UpdateHit()
 
 void MonsterScript::UpdateGroggy()
 {
-	if (mType == eMonsterType::A)
+	if (mType.val == (int)eMonsterType::A)
 	{
 		m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
 		m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
@@ -364,8 +369,11 @@ void MonsterScript::UpdateGroggy()
 	else
 	{
 		//m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
-		//m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
-		//m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+		m_pBodyCollider->SetPosition(Vector3{ 0,0,40 });
+		m_pBodyCollider->SetExtents(Vector3{ 35,6,40 });
+
+		mFSM = eMonsterStateType::DEAD;
+		return;
 	}
 
 	if (mGroggyCount < mGroggyTick.val)
@@ -385,17 +393,11 @@ void MonsterScript::UpdateGroggy()
 	}
 	else
 	{
-		if (mType == eMonsterType::A)
+		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
 			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
-		}
-		else
-		{
-			//m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
-			//m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
-			//m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
 		}
 
 		mGroggyCount = 0.f;
@@ -407,6 +409,18 @@ void MonsterScript::UpdateDead()
 {
 	if (m_pAnimator)
 	{
+		if (mType.val == (int)eMonsterType::B)
+		{
+			mResetCount += Time::GetUnScaledDeltaTime();
+
+			if (mResetCount > 3.f)
+			{
+				mResetCount = 0.f;
+				gameObject->transform->GetParent()->gameObject->SetActive(false);
+				return;
+			}
+		}
+
 		if (m_pAnimator->IsEnd())
 		{
 			// 애니메이션이 끝나면 몇 초뒤 옵젝 비활성화
@@ -438,7 +452,7 @@ void MonsterScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination
 		}
 
 		// 공격이 끝나면 다시 처음 상태로
-		mFSM = eMonsterStateType::IDLE;
+		//mFSM = eMonsterStateType::IDLE;
 	}
 }
 
@@ -458,7 +472,7 @@ void MonsterScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 		}
 
 		// 공격이 끝나면 다시 처음 상태로
-		mFSM = eMonsterStateType::IDLE;
+		//mFSM = eMonsterStateType::IDLE;
 	}
 }
 
@@ -552,8 +566,8 @@ void MonsterScript::UpdateMonsterAnim_B()
 		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_ROTATE_B, 0.5f);
 		break;
 	case eMonsterStateType::HIT:
-		//m_pAnimator->SetLoop(false);
-		//m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT_B, 0.5f);
+		m_pAnimator->SetLoop(false);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT_B, 0.5f);
 		break;
 	case eMonsterStateType::GROGGY:
 		m_pAnimator->SetLoop(false);
@@ -568,18 +582,23 @@ void MonsterScript::UpdateMonsterAngle()
 {
 	Vector3 pos = gameObject->transform->position;
 	Vector2 viewDir = { mTargetPos.x - pos.x, mTargetPos.z - pos.x };
-	float targetAngleY = atan2(-viewDir.x, -viewDir.y);
-	
-	if (targetAngleY < 0.0f)
+	Vector2 moveForce = Vector2::Zero;
+
+	if (viewDir != Vector2::Zero)
 	{
-		targetAngleY += XM_2PI;
+		float targetAngleY = atan2(viewDir.x, viewDir.y);
+
+		if (targetAngleY < 0.0f)
+		{
+			targetAngleY += XM_2PI;
+		}
+
+		Vector3 currAngle = gameObject->transform->GetEulerAngles();
+		float currAngleY = currAngle.y;
+
+		float delta = fmod(targetAngleY - currAngleY + XM_PI, XM_2PI) - XM_PI;
+		float newAngleY = currAngleY + delta * 0.7f;
+
+		gameObject->transform->SetEulerAngles(Vector3(0.f, newAngleY, 0.f));
 	}
-
-	Vector3 currAngle = gameObject->transform->GetEulerAngles();
-	float currAngleY = currAngle.y;
-
-	float delta = fmod(targetAngleY - currAngleY + XM_PI, XM_2PI) - XM_PI;
-	float newAngleY = currAngleY + delta * 0.7f;
-
-	gameObject->transform->SetEulerAngles(Vector3(0.f, newAngleY, 0.f));
 }

@@ -10,6 +10,7 @@ enum class eCBufferType
     Light,
     ParticleSize,
     Outline,
+    Fog,
     SIZE
 };
 #define CBUFFER_TYPE_COUNT static_cast<UINT>(eCBufferType::SIZE)

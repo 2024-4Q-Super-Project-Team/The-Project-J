@@ -143,6 +143,15 @@ void GraphicsManager::InitConstantBuffer()
         mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);
         mCBufferArray[slot]->Bind();
     }
+    // Fog
+    {
+        UINT slot = static_cast<UINT>(eCBufferType::Fog);
+        bufDesc.ByteWidth = sizeof(FogCBuffer);
+        mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
+        mCBufferArray[slot]->SetBindSlot(slot);
+        mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);
+        mCBufferArray[slot]->Bind();
+    }
 }
 
 void GraphicsManager::InitShader()

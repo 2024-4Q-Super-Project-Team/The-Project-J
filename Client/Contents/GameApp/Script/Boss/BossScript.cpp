@@ -60,17 +60,14 @@ void BossScript::UpdateTransform()
 	ViewDirection.Normalize();
 
 	// 보스의 위치 계산 (= 중심 축 + 보는 방향 * 중심 축으로부터의 거리)
-	gameObject->transform->position = AxisPos + (mDistanceFromAxis.val * ViewDirection);
+	Vector3 NewPosition = AxisPos + (mDistanceFromAxis.val * ViewDirection);
+	gameObject->transform->position.x = NewPosition.x;
+	gameObject->transform->position.z = NewPosition.z;
 
-	// 보스의 회전 계산
-	float targetAngleY = atan2(ViewDirection.x, ViewDirection.y);
+	float targetAngleY = atan2(-ViewDirection.x, -ViewDirection.z); // 라디안 단위
 	if (targetAngleY < 0.0f)
 		targetAngleY += XM_2PI;  // 360도 대신 2π 사용
-	Vector3 CurrAngle = gameObject->transform->GetEulerAngles();
-	float currAngleY = CurrAngle.y;
-	float delta = fmod(targetAngleY - currAngleY + XM_PI, XM_2PI) - XM_PI;
-	float newAngleY = currAngleY + delta * 0.7f;
-	gameObject->transform->SetEulerAngles(Vector3(0.0f, newAngleY, 0.0f));
+	mBodyObject->transform->SetEulerAngles(Vector3(0.0f, targetAngleY, 0.0f));
 }
 
 void BossScript::UpdateAnimation()

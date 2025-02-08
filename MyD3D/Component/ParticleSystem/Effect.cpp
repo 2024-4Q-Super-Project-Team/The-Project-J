@@ -159,12 +159,7 @@ Vector3 Effect::GetDistanceFromCamera(Camera* _camera)
 void Effect::DrawObject(Matrix& _view, Matrix& _projection)
 {
 	if (!mTexture) return;
-	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
 
-	//// 리소스 바인딩
-	GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
-	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
-	GraphicsManager::GetPixelShader(ePixelShaderType::PARTICLE)->Bind();
 	mTexture->Texture->SetBindSlot(25);
 	mTexture->Texture->SetBindStage(eShaderStage::PS);
 	mTexture->Texture->Bind();
@@ -182,9 +177,6 @@ void Effect::DrawObject(Matrix& _view, Matrix& _projection)
 	GraphicsManager::GetConstantBuffer(eCBufferType::ParticleSize)->UpdateGPUResoure(&pcb);
 
 	D3DGraphicsRenderer::DrawVertexCall(1, 0);
-
-	D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset(); 
 }
 
 void Effect::DrawShadow(Light* _pLight)

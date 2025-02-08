@@ -27,7 +27,7 @@ public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override; 
 
 public:
-	virtual eBlendModeType GetBlendMode() override { return eBlendModeType::TRANSPARENT_BLEND; }
+	virtual eBlendModeType GetBlendMode() override { return eBlendModeType::PARTICLE_BLEND; }
 	virtual eRasterizerStateType GetCullingMode() override { return eRasterizerStateType::NONE_CULLING; }
 	virtual Vector3 GetDistanceFromCamera(Camera* _camera) override;
 	virtual void DrawObject(Matrix& _view, Matrix& _projection) override;

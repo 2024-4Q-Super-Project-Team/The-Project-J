@@ -10,10 +10,8 @@ void BoxScript::Start()
     mCollider->SetExtents(Vector3(70, 75, 70));
     mCollider->SetPosition(Vector3(0, 40, 0));
 
-    Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0,-35.f,0);
-    mPxRayOrigin = PxVec3(rayOriginPos.x, rayOriginPos.y, rayOriginPos.z);
-
     mPxRayDirection = PxVec3(0, -1, 0);
+
 }
 
 void BoxScript::Update()
@@ -26,11 +24,12 @@ void BoxScript::Update()
    
    GameManager::GetCurrentWorld()->GetPxScene()
        ->raycast(mPxRayOrigin, mPxRayDirection, mMaxDistance, mHitBuffer);
-   
    mGravityOn.val = !mHitBuffer.hasBlock;
 
    if (mGravityOn.val)
-       displacement.val.y = -mGravitySpeed;
+       displacement.val.y -= mGravitySpeed;
+   else
+       displacement.val.y = 0;
 
 
    MoveBox(displacement.val * Time::GetScaledDeltaTime());
@@ -38,25 +37,32 @@ void BoxScript::Update()
 
 void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 {
-    if (player->gameObject->GetTag() != L"Player") return; 
+    if (player->gameObject->GetTag() != L"Player") {
 
-    Vector3 playerPos = player->gameObject->transform->GetWorldPosition();
-    Vector3 boxPos = box->gameObject->transform->GetWorldPosition();
-    Vector3 localDirection = -(boxPos - playerPos);
+        Vector3 playerPos = player->gameObject->transform->GetWorldPosition();
+        Vector3 boxPos = box->gameObject->transform->GetWorldPosition();
+        Vector3 localDirection = -(boxPos - playerPos);
 
-    // 부모의 회전 행렬 가져오기 (부모의 월드 변환 행렬에서 회전 부분만 추출)
-    Matrix parentWorldMatrix = box->gameObject->transform->GetParent()->GetWorldMatrix();
-    Matrix parentRotationMatrix = Matrix::CreateFromQuaternion(Quaternion::CreateFromRotationMatrix(parentWorldMatrix));
+        // 부모의 회전 행렬 가져오기 (부모의 월드 변환 행렬에서 회전 부분만 추출)
+        Matrix parentWorldMatrix = box->gameObject->transform->GetParent()->GetWorldMatrix();
+        Matrix parentRotationMatrix = Matrix::CreateFromQuaternion(Quaternion::CreateFromRotationMatrix(parentWorldMatrix));
 
-    localDirection.y = 0.f;
-    if(localDirection.LengthSquared() > 0.f)
-        localDirection.Normalize();
+        localDirection.y = 0.f;
+        if (localDirection.LengthSquared() > 0.f)
+            localDirection.Normalize();
 
 
-    XMVECTOR transformedDirection = XMVector3TransformNormal(localDirection, parentRotationMatrix);
-    Vector3 direction = Vector3(transformedDirection);
+        XMVECTOR transformedDirection = XMVector3TransformNormal(localDirection, parentRotationMatrix);
+        Vector3 direction = Vector3(transformedDirection);
 
-    displacement.val = direction * mMoveSpeed;
+        displacement.val = direction * mMoveSpeed;
+
+    }
+    else
+    {
+        mGravityOn.val = false;
+    }
+
 
 }
 

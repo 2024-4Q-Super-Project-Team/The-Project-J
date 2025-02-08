@@ -67,6 +67,7 @@ private:
     void DrawDeferredList();
     void DrawWireList();
     void DrawOutlineList();
+    void DrawParticle();
     void DrawSwapChain();
     // 렌더 큐의 Draw 작업 수행
     void ExcuteDrawList();

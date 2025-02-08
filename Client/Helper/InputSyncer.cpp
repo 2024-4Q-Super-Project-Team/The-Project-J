@@ -62,7 +62,10 @@ bool InputSyncer::IsKeyHold(UINT _handle, eInputType _type)
 
 	if (_type == MOVE_FIRE)
 	{
-		return Input::GetPadTriggerForce(GamePad::RIGHT, _handle) != 0.0f ? true : false;
+		if (Input::GetPadTriggerForce(GamePad::RIGHT, _handle) != 0.0f)
+		{
+			return true;
+		}
 	} 
 
 	for (auto keycode : keyCodes)

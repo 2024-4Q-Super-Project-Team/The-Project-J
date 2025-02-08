@@ -33,8 +33,11 @@ private:
 	void UpdateAttack02();
 	void UpdateHit();
 private:
-	Animator* mRingAnimator;
+	Object* mBodyObject;
+	Object* mHeadObject;
 	Animator* mBodyAnimator;
+	Animator* mHeadAnimator;
+	
 
 	Transform* mAxisTransform;							// 보스의 기준 축이 될 트랜스폼
 	SerializeField(FLOAT, mDistanceFromAxis, 0.0f);		// 기준 축부터 몇 만큼 떨어져있을지

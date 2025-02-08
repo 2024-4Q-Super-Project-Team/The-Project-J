@@ -13,19 +13,6 @@ void BoxScript::Start()
 
     mPxRayDirection = PxVec3(0, -1, 0);
 
-    // 부모의 회전 행렬 가져오기 (부모의 월드 변환 행렬에서 회전 부분만 추출)
-    Matrix parentWorldMatrix = gameObject->transform->GetParent()->GetWorldMatrix();
-    Matrix parentRotationMatrix = Matrix::CreateFromQuaternion(Quaternion::CreateFromRotationMatrix(parentWorldMatrix));
-
-    if (mPxRayDirection.magnitudeSquared() > 0.f)
-        mPxRayDirection.normalize();
-
-    Vector3 dir = Vector3(mPxRayDirection.x, mPxRayDirection.y, mPxRayDirection.z);
-
-    XMVECTOR transformedDirection = XMVector3TransformNormal(dir, parentRotationMatrix);
-    Vector3 direction = Vector3(transformedDirection);
-
-    mPxRayDirection = PxVec3(direction.x, direction.y, direction.z);
 }
 
 void BoxScript::Update()
@@ -55,6 +42,9 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
     Vector3 playerPos = player->gameObject->transform->GetWorldPosition();
     Vector3 boxPos = box->gameObject->transform->GetWorldPosition();
     Vector3 localDirection = -(boxPos - playerPos);
+
+    if (playerPos.y > boxPos.y) return;
+
 
     // 부모의 회전 행렬 가져오기 (부모의 월드 변환 행렬에서 회전 부분만 추출)
     Matrix parentWorldMatrix = box->gameObject->transform->GetParent()->GetWorldMatrix();

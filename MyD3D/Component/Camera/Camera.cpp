@@ -323,7 +323,7 @@ void Camera::DrawWireList()
 
 void Camera::DrawOutlineList()
 {
-    GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
     GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
     GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
     GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
@@ -347,6 +347,27 @@ void Camera::DrawOutlineList()
     mDrawQueue[(UINT)eBlendModeType::OUTLINE_BLEND].clear();
 
     GraphicsManager::GetDepthStencilState(eDepthStencilStateType::DEFAULT)->Bind();
+}
+
+void Camera::DrawParticle()
+{
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+    GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+
+    GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::PARTICLE)->Bind();
+    
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::PARTICLE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::PARTICLE_BLEND].clear();
+
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Camera::DrawSwapChain()
@@ -394,6 +415,7 @@ void Camera::ExcuteDrawList()
                 default:
                     break;
                 }
+                DrawParticle();
                 ////////////////////////////////////////////////////
                 // SkyBox Draw
                 ////////////////////////////////////////////////////

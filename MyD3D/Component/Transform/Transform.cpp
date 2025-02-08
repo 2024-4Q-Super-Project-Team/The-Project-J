@@ -180,8 +180,16 @@ void Transform::UpdateFromPxTransform(PxTransform _pxWorldTransform)
 
     if (mParent)
     {
-        PxMat44 pxParentWorldTransform = mParent->mPxWorldTransform;
-        PxMat44 pxParentWorldInvert = pxParentWorldTransform.inverseRT();
+        Vector3 parentWorldPosition = mParent->GetWorldPosition();
+        Quaternion parentWorldRotation = mParent->GetWorldRotation();
+
+        PxTransform pxParentWorldTransform;
+        memcpy_s(&pxParentWorldTransform.p, sizeof(float) * 3, &parentWorldPosition, sizeof(float) * 3);
+        memcpy_s(&pxParentWorldTransform.q, sizeof(float) * 4, &parentWorldRotation, sizeof(float) * 4);
+
+
+        PxMat44 pxParentWorldTransformmaxrix(pxParentWorldTransform);
+        PxMat44 pxParentWorldInvert = pxParentWorldTransformmaxrix.inverseRT();
 
         PxMat44 pxWorldMatrix(_pxWorldTransform);
         PxMat44 pxLocalMatrix = pxParentWorldInvert * pxWorldMatrix;
@@ -227,16 +235,18 @@ void Transform::UpdateMatrix()
     if (mParent)
     {
         mWorldMatrix = mLocalMatrix * mParent->mWorldMatrix;
+        UpdatePxTransform();
     }
     else
     {
         mWorldMatrix = mLocalMatrix;
+        UpdatePxTransform();
     }
     for (auto& child : mChildren)
     {
         child->UpdateMatrix();
     }
-    UpdatePxTransform();
+    
 }
 
 const Quaternion& Transform::GetWorldRotation()

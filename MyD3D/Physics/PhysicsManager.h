@@ -46,3 +46,31 @@ private:
 	//Materials
 	std::unordered_map<std::string, PxMaterial*> mMaterials;
 };
+
+
+class CustomRaycastFilter : public PxQueryFilterCallback
+{
+public:
+	// PxQueryFilterCallback의 필터 함수 구현
+	PxQueryHitType::Enum preFilter(
+		const PxFilterData& filterData,
+		const PxShape* shape,
+		const PxRigidActor* actor,
+		PxHitFlags& queryFlags) override
+	{
+		// Trigger Shape는 제외
+		if (shape->getFlags() & PxShapeFlag::eTRIGGER_SHAPE)
+		{
+			return PxQueryHitType::eNONE; // 충돌 무시
+		}
+
+		// Trigger가 아니면 충돌 처리
+		return PxQueryHitType::eBLOCK;
+	}
+
+	virtual PxQueryHitType::Enum postFilter(const PxFilterData& filterData, const PxQueryHit& hit, const PxShape* shape, const PxRigidActor* actor)
+	{
+		return PxQueryHitType::eBLOCK;
+	}
+
+};

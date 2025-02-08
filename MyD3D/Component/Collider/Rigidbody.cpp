@@ -68,7 +68,6 @@ void Rigidbody::Update()
 
 void Rigidbody::PostUpdate()
 {	
-	gameObject->transform->UpdateMatrix();
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 
 	//PostUpdate가 모두 끝난 후, 여기서 simulate 함

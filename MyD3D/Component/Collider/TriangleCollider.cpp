@@ -63,8 +63,7 @@ void TriangleCollider::Start()
 
 		mShape = GameManager::GetPhysicsManager()->GetPhysics()
 			->createShape(mTriangleGeom, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
-		mShape->setFlag(PxShapeFlag::eSIMULATION_SHAPE, false);
-
+		mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 		AddShapeToRigidbody();
 	}
 }

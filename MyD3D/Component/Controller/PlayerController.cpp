@@ -61,8 +61,6 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 
 		shapes[i]->setSimulationFilterData(filterData);
 	}
-
-	mRayFilter = new CustomRaycastFilter;
 }
 
 PlayerController::~PlayerController()
@@ -78,7 +76,6 @@ PlayerController::~PlayerController()
 	}
 	SAFE_DELETE(mBehaviorCallback);
 	SAFE_DELETE(mEventCallback);
-	SAFE_DELETE(mRayFilter);
 }
 
 void PlayerController::Start()

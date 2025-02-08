@@ -12,7 +12,26 @@
 
 void BossScript::Start()
 {
-}
+	// 축이 될 오브젝트를 찾는다.
+	Object* axisObject = FindObjectWithName(L"Stage_lighthouse.fbx");
+	if (axisObject)
+	{
+		// 축이 될 트랜스폼을 초기화해준다.
+		mAxisTransform = axisObject->transform;
+	}
+	auto& Children = gameObject->transform->GetChildren();
+	for (Transform* child : Children)
+	{
+		if (child->gameObject->GetName() == L"Boss_Body")
+			mBodyObject = child->gameObject;
+		if (child->gameObject->GetName() == L"Boss_Head")
+			mHeadObject = child->gameObject;
+	}
+
+	// 애니메이터 초기화
+	mBodyAnimator = mBodyObject->GetComponent<Animator>();
+	mHeadAnimator = mHeadObject->GetComponent<Animator>();
+}	
 
 void BossScript::Update()
 {
@@ -56,29 +75,29 @@ void BossScript::UpdateTransform()
 
 void BossScript::UpdateAnimation()
 {
-    switch (mBossState)
-    {
-    case eBossStateType::IDLE:
-    {
-		mBodyAnimator->SetLoop(true);
-        mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-        break;
-    }
-	case eBossStateType::ATTACK:
-	{
-		mBodyAnimator->SetLoop(false);
-		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-		break;
-	}
-	case eBossStateType::HIT:
-	{
-		mBodyAnimator->SetLoop(false);
-		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-		break;
-	}
-    default:
-        break;
-    }
+    //switch (mBossState)
+    //{
+    //case eBossStateType::IDLE:
+    //{
+	//	mBodyAnimator->SetLoop(true);
+    //    mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+    //    break;
+    //}
+	//case eBossStateType::ATTACK:
+	//{
+	//	mBodyAnimator->SetLoop(false);
+	//	mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+	//	break;
+	//}
+	//case eBossStateType::HIT:
+	//{
+	//	mBodyAnimator->SetLoop(false);
+	//	mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+	//	break;
+	//}
+    //default:
+    //    break;
+    //}
 }
 
 void BossScript::UpdateState()

@@ -108,6 +108,7 @@ enum class eBlendModeType
     TRANSPARENT_BLEND,      // Transparentºí·»µå
     WIREFRAME_BELND,        // WireFrameºí·»µå
     OUTLINE_BLEND,          // Outlineºí·»µå
+    PARTICLE_BLEND,          // Particleºí·»µå
     SIZE,
 };
 #define BLEND_MODE_TYPE_COUNT static_cast<UINT>(eBlendModeType::SIZE)

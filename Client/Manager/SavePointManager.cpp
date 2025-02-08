@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "SavePointManager.h"
-#include "PlayerManager.h"
+#include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Contents/GameApp/Script/Object/Button/SavePointScript.h"
 
@@ -26,8 +26,8 @@ void SavePointManager::AddSavePoint(SavePointScript* _savePoint)
 
 void SavePointManager::GoBackSavePoint()
 {
-	auto* Player1 = PlayerManager::GetPlayerInfo(0);
-	auto* Player2 = PlayerManager::GetPlayerInfo(1);
+	auto* Player1 = GameProgressManager::GetPlayerInfo(0);
+	auto* Player2 = GameProgressManager::GetPlayerInfo(1);
 
     // 가장 큰 인덱스를 가진 세이브 포인트 찾기
     SavePointScript* lastSavePoint = nullptr;

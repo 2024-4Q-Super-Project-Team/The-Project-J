@@ -32,7 +32,6 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
-    <ClCompile Include="Manager\PlayerManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
@@ -41,6 +40,7 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +57,6 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
-    <ClInclude Include="Manager\PlayerManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
@@ -66,6 +65,7 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
   </ItemGroup>
   <ItemGroup>

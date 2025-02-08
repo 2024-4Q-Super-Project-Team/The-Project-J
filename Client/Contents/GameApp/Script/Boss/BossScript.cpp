@@ -2,7 +2,7 @@
 #include "BossScript.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 
-#include "Manager/PlayerManager.h"
+#include "Contents/GameApp/Script/GameProgressManager.h"
 
 #define BOSS_ANIM_IDLE L"001"
 #define BOSS_ANIM_ATTACK_01 L"003"
@@ -26,8 +26,8 @@ void BossScript::UpdateTransform()
 	// 고민사항 : 월드내에 보스가 속하면 월드포지션에 대한 연산이 꼬일 것 같음. 맵 밖으로 뺄까?
 
 	// 두 플레이어의 사이 값을 먼저 구한다.
-	PlayerScript* Player1 = PlayerManager::GetPlayerInfo(0);
-	PlayerScript* Player2 = PlayerManager::GetPlayerInfo(1);
+	PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
+	PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
 
 	Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
 	Vector3 Player2WorldPos = Player2->gameObject->transform->GetWorldPosition();

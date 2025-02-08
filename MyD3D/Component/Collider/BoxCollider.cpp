@@ -11,7 +11,6 @@ BoxCollider::BoxCollider(Object* _owner) :Collider(_owner)
 	mGeometry = PxBoxGeometry(PxVec3(mExtents.x, mExtents.y, mExtents.z));
 	mShape = GameManager::GetPhysicsManager()->GetPhysics()
 		->createShape(mGeometry, *GameManager::GetPhysicsManager()->GetDefaultMaterial(), true);
-	mShape->userData = this;
 	mShape->setFlag(PxShapeFlag::eSCENE_QUERY_SHAPE, true);
 	
 	mOBB.Center = gameObject->transform->position;
@@ -188,15 +187,15 @@ void BoxCollider::SetRotation()
 	Vector3 worldEuler = gameObject->transform->GetEulerAngles();
 
 	Quaternion localQuat = Quaternion::CreateFromYawPitchRoll(
-		XMConvertToRadians(mRotation.z),
+		XMConvertToRadians(mRotation.y),
 		XMConvertToRadians(mRotation.x),
-		XMConvertToRadians(mRotation.y)
+		XMConvertToRadians(mRotation.z)
 	);
 
 	mQuatRotation = Quaternion::CreateFromYawPitchRoll(
-		XMConvertToRadians(mRotation.z + worldEuler.z),
+		XMConvertToRadians(mRotation.y + worldEuler.y),
 		XMConvertToRadians(mRotation.x + worldEuler.x),
-		XMConvertToRadians(mRotation.y + worldEuler.y)
+		XMConvertToRadians(mRotation.z + worldEuler.z)
 	);
 
 	PxQuat pxRot(localQuat.x, localQuat.y, localQuat.z, localQuat.w);

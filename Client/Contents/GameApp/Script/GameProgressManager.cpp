@@ -10,10 +10,10 @@ void GameProgressManager::Start()
 {
 	{
 		// 스테이지 등을 초기화
-		mStagearray[STAGE_01] = FindObjectWithName(L"Stage_01");
-		mStagearray[STAGE_02] = FindObjectWithName(L"Stage_02");
-		mStagearray[STAGE_03] = FindObjectWithName(L"Stage_03");
-		mStagearray[STAGE_04] = FindObjectWithName(L"Stage_04");
+		mStagearray[STAGE_01] = FindObjectWithName(L"MAP1");
+		mStagearray[STAGE_02] = FindObjectWithName(L"MAP2");
+		mStagearray[STAGE_03] = FindObjectWithName(L"MAP3");
+		mStagearray[STAGE_04] = FindObjectWithName(L"MAP4");
 	}
 }
 
@@ -34,13 +34,16 @@ void GameProgressManager::UpdateMap()
 {
 	for (int i = 0; i < STAGE_COUNT; ++i)
 	{
-		if (i == mCurrentStageNum)
+		if (mStagearray[i])
 		{
-			mStagearray[i]->SetActive(true);
-		}
-		else
-		{
-			mStagearray[i]->SetActive(false);
+			if (i == mCurrentStageNum)
+			{
+				mStagearray[i]->SetActive(true);
+			}
+			else
+			{
+				mStagearray[i]->SetActive(false);
+			}
 		}
 	}
 }

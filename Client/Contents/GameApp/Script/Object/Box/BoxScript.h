@@ -1,5 +1,6 @@
 #pragma once
 
+
 class BoxScript : public MonoBehaviour
 {
 public:
@@ -26,6 +27,4 @@ private:
 	float mGravitySpeed = 0.1f;
 	SerializeField(bool, mGravityOn, false);
 	SerializeField(Vector3, displacement, Vector3(0,0,0));
-
 };
-

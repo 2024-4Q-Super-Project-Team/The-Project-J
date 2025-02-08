@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "BoxScript.h"
 
+
 void BoxScript::Start()
 {
     mRigid = gameObject->AddComponent<Rigidbody>();
@@ -21,9 +22,10 @@ void BoxScript::Update()
    //중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
    Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0, -1.0f, 0);
    mPxRayOrigin = PxVec3(rayOriginPos.x, rayOriginPos.y, rayOriginPos.z);
-   
+
+   PxQueryFilterData filterData(PxQueryFlag::eSTATIC);
    GameManager::GetCurrentWorld()->GetPxScene()
-       ->raycast(mPxRayOrigin, mPxRayDirection, mMaxDistance, mHitBuffer);
+       ->raycast(mPxRayOrigin, mPxRayDirection, 1.0f, mHitBuffer);
    mGravityOn.val = !mHitBuffer.hasBlock;
 
    if (mGravityOn.val)
@@ -37,7 +39,7 @@ void BoxScript::Update()
 
 void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 {
-    if (player->gameObject->GetTag() != L"Player") {
+    if (player->gameObject->GetTag() != L"Player") return;
 
         Vector3 playerPos = player->gameObject->transform->GetWorldPosition();
         Vector3 boxPos = box->gameObject->transform->GetWorldPosition();
@@ -56,13 +58,6 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
         Vector3 direction = Vector3(transformedDirection);
 
         displacement.val = direction * mMoveSpeed;
-
-    }
-    else
-    {
-        mGravityOn.val = false;
-    }
-
 
 }
 

@@ -45,7 +45,7 @@ void GameProgressManager::UpdateMap()
 				mStagearray[i]->SetActive(false);
 			}
 		}
-	}
+	} 
 }
 
 void GameProgressManager::SetPlayerInfo(PlayerScript* _player)

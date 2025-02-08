@@ -46,11 +46,6 @@ void Rigidbody::Start()
 	SetMass(mMass);
 	SetIsKinematic(mIsKinematic);
 
-	auto& colliders = gameObject->GetComponents<Collider>();
-	for (auto& collider : colliders)
-	{
-		collider->AddShapeToRigidbody();
-	}
 	mRigidActor->userData = this;
 }
 

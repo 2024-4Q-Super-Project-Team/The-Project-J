@@ -29,6 +29,7 @@ void Collider::Start()
 {
 	if (mShape)
 	{
+		AddShapeToRigidbody();
 		SetMaterial(mMaterials[mMaterialIdx]);
 		mShape->userData = this;
 	}

@@ -31,8 +31,11 @@ void Rigidbody::Start()
 	}
 	else
 	{
-		mRigidActor = GameManager::GetPhysicsManager()->GetPhysics()
+		PxRigidDynamic* rigidDynamic = GameManager::GetPhysicsManager()->GetPhysics()
 			->createRigidDynamic(gameObject->transform->GetPxWorldTransform());
+
+		rigidDynamic->setRigidBodyFlag(PxRigidBodyFlag::eENABLE_SPECULATIVE_CCD, true);
+		mRigidActor = rigidDynamic;
 	}
 
 	
@@ -49,7 +52,6 @@ void Rigidbody::Start()
 		collider->AddShapeToRigidbody();
 	}
 	mRigidActor->userData = this;
-
 }
 
 void Rigidbody::Tick()
@@ -80,10 +82,6 @@ void Rigidbody::PostUpdate()
 void Rigidbody::PreRender()
 {
 	//오브젝트 -> 리지드액터 동기화 
-	if (mIsDynamic)
-	{
-		PxRigidDynamic* rigid = static_cast<PxRigidDynamic*>(mRigidActor);
-	}
 	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
 	
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;

@@ -5,10 +5,18 @@ enum class eMonsterStateType
 	IDLE,		// 대기
 	WALK,		// 움직이는 중
 	FAST_WALK,	// 좀 더 빨리 움직이는 중
+	ROTATE,		// 회전
 	RUN,		// 공격
 	HIT,		// 피격
 	GROGGY,		// 기절
 	DEAD		// 죽음 -> 이펙트 애니메이션
+};
+
+enum class eMonsterType
+{
+	A,
+	B,
+	SIZE
 };
 
 class BurnObjectScript;
@@ -21,14 +29,19 @@ public:
 	void Start();
 	void Update();
 private:
+	void UpdateA();
+	void UpdateB();
+private:
 	void UpdateIdle();
+	void UpdateRotate();
 	void UpdateWalk();
 	void UpdateFastWalk();
 	void UpdateRun();
 	void UpdateHit();
 	void UpdateGroggy();
 	void UpdateDead();
-	void UpdateMonsterAnim();
+	void UpdateMonsterAnim_A();
+	void UpdateMonsterAnim_B();
 	void UpdateMonsterAngle();
 public:
 	virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
@@ -57,6 +70,8 @@ public:
 private:
 	// Monster 상태
 	eMonsterStateType mFSM = eMonsterStateType::IDLE;
+	// Monster Type
+	eMonsterType mType;
 	// Monster가 가지고 있을 오브젝트
 	Object* m_pScope = nullptr;
 	// Monster가 가지고 있을 컴포넌트
@@ -85,7 +100,5 @@ public:
 	SerializeField(FLOAT, mAttackDistance, 100.f);	// 공격 범위
 	SerializeField(FLOAT, mDamage, 1);				// 공격 데미지
 public:
-	//virtual json Serialize() override;
-	//virtual void Deserialize(json& j) override;
 };
 

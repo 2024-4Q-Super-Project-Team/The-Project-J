@@ -5,16 +5,26 @@
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 
-#define MONSTER_ANIM_IDLE L"m001"
-#define MONSTER_ANIM_WALK L"m002"
-#define MONSTER_ANIM_FAST_WALK L"m003"
-#define MONSTER_ANIM_RUN L"m004" 
-#define MONSTER_ANIM_HIT L"m005"
-#define MONSTER_ANIM_GROGGY L"m006"
+#define MONSTER_ANIM_IDLE_A L"m001"
+#define MONSTER_ANIM_WALK_A L"m002"
+#define MONSTER_ANIM_FAST_WALK_A L"m003"
+#define MONSTER_ANIM_RUN_A L"m004"
+#define MONSTER_ANIM_HIT_A L"m005"
+#define MONSTER_ANIM_GROGGY_A L"m006"
+
+#define MONSTER_ANIM_IDLE_B L"mb001"
+#define MONSTER_ANIM_ROTATE_B L"mb002"
+#define MONSTER_ANIM_HIT_B L"mb003"
+#define MONSTER_ANIM_GROGGY_B L"mb004"
 
 void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
+	
+	if (gameObject->GetName() == L"Monster_A")
+		mType = eMonsterType::A;
+	else
+		mType = eMonsterType::B;
 
 	// Init Setting
 	{
@@ -24,7 +34,7 @@ void MonsterScript::Start()
 		// find Scope
 		for (Transform* child : rootChildren)
 		{
-			if (child->gameObject->GetName() == L"Scope_A")
+			if (child->gameObject->GetName() == L"Scope_A" || child->gameObject->GetName() == L"Scope_B")
 			{
 				m_pScope = child->gameObject;
 				m_pScope->transform->position = gameObject->transform->position;
@@ -35,7 +45,7 @@ void MonsterScript::Start()
 		auto& children = gameObject->transform->GetChildren();
 		for (Transform* child : children)
 		{
-			if (child->gameObject->GetName() == L"Weakness_A")
+			if (child->gameObject->GetName() == L"Weakness_A" || child->gameObject->GetName() == L"Weakness_B")
 			{
 				m_pWeakness = child->gameObject;
 				m_pWeakness->SetTag(L"Weakness");
@@ -61,14 +71,33 @@ void MonsterScript::Start()
 	}
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
-		m_pHeadCollider->SetPosition(Vector3{0,85,0});
-		m_pHeadCollider->SetExtents(Vector3{ 25,2,25 });
+
+		if (mType == eMonsterType::A)
+		{
+			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 25,2,25 });
+		}
+		else
+		{
+			m_pHeadCollider->SetPosition(Vector3{ 0,88,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 0.35f,0.02f,0.2f });
+		}
+		
 		m_pHeadCollider->SetIsTrigger(true);
 	}
 	{	// Body Collider Component
 		m_pBodyCollider = gameObject->AddComponent<BoxCollider>();
-		m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
-		m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
+
+		if (mType == eMonsterType::A)
+		{
+			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
+		}
+		else
+		{
+			m_pBodyCollider->SetPosition(Vector3{ 0,47,0 });
+			m_pBodyCollider->SetExtents(Vector3{ 0.35f,0.37f,0.2f });
+		}
 	}
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
@@ -82,6 +111,23 @@ void MonsterScript::Update()
 	if (scope)
 		scope->SetMonster(gameObject);
 
+	UpdateMonsterAngle();
+
+	if (mType == eMonsterType::A)
+	{
+		UpdateA();
+		UpdateMonsterAnim_A();
+	}
+	else if (mType == eMonsterType::B)
+	{
+		UpdateB();
+		UpdateMonsterAnim_B();
+	}
+
+}
+
+void MonsterScript::UpdateA()
+{
 	switch (mFSM)
 	{
 	case eMonsterStateType::IDLE:
@@ -108,9 +154,31 @@ void MonsterScript::Update()
 	default:
 		break;
 	}
+}
 
-	UpdateMonsterAnim();
-	UpdateMonsterAngle();
+void MonsterScript::UpdateB()
+{
+	switch (mFSM)
+	{
+	case eMonsterStateType::IDLE:
+		UpdateIdle();
+		break;
+	case eMonsterStateType::WALK:
+		UpdateWalk();
+		break;
+	case eMonsterStateType::ROTATE:
+		UpdateRotate();
+		break;
+	case eMonsterStateType::HIT:
+		UpdateHit();
+		break;
+	case eMonsterStateType::GROGGY:
+		UpdateGroggy();
+		break;
+	case eMonsterStateType::DEAD:
+		UpdateDead();
+		break;
+	}
 }
 
 void MonsterScript::UpdateIdle()
@@ -120,23 +188,43 @@ void MonsterScript::UpdateIdle()
 	if (mIdleCount > 3.0f)
 	{
 		mIdleCount = 0.0f;
+
+		if (mType == eMonsterType::A)
+		{
+			mFSM = eMonsterStateType::WALK;
+		}
+		else
+		{
+			mFSM = eMonsterStateType::ROTATE;
+		}
+	}
+}
+
+void MonsterScript::UpdateRotate()
+{
+	if (!m_pAnimator)
+		return;
+
+	if (m_pAnimator->IsEnd())
+	{
 		mFSM = eMonsterStateType::WALK;
 	}
 }
 
 void MonsterScript::UpdateWalk()
 {
-	UpdateMonsterAngle();
-
-	// 타겟이 존재하는가?
-	if (m_pTarget)
+	if (mType == eMonsterType::A)
 	{
-		mFSM = eMonsterStateType::FAST_WALK;
+		// 타겟이 존재하는가?
+		if (m_pTarget)
+		{
+			mFSM = eMonsterStateType::FAST_WALK;
+		}
 	}
 	
 	mResetCount += Time::GetUnScaledDeltaTime();
 
-	if (mResetCount > 3.0f)
+	if (mResetCount > 5.0f)
 	{
 		// 스코프 내에 있을 때는 랜덤 포즈로 변경해주기
 		if (bIsScope)
@@ -159,6 +247,8 @@ void MonsterScript::UpdateWalk()
 		// 방향 연산
 		mTargetDir.Normalize();
 
+		UpdateMonsterAngle();
+
 		// 거리가 반지름 이상이면 스코프 바깥으로 설정
 		if (mDistance > 100.f)
 			bIsScope = false;
@@ -167,34 +257,48 @@ void MonsterScript::UpdateWalk()
 	}
 	else
 	{
-		if (mDistance > 0.1f)
+		if (mDistance > 10.f)
 		{
 			gameObject->transform->position += mTargetDir * mMoveSpeed.val * Time::GetUnScaledDeltaTime();
 		}
-		else 
+		else
 		{
-			//m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE, 0.5f);
+			if (mType == eMonsterType::A)
+			{
+				if (m_pAnimator->IsEnd())
+				{
+					mFSM = eMonsterStateType::IDLE;
+				}
+			}
+			else if (mType == eMonsterType::B)
+			{
+				if (m_pAnimator->IsEnd())
+				{
+					mFSM = eMonsterStateType::IDLE;
+
+				}
+			}
 		}
 	}
 }
 
 void MonsterScript::UpdateFastWalk()
 {
-	UpdateMonsterAngle();
-
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
-								gameObject->transform->position.y, 
-								m_pTarget->transform->position.z };
+						gameObject->transform->position.y, 
+						m_pTarget->transform->position.z };
 		// 타겟 벡터
 		mTargetDir = mTargetPos - gameObject->transform->position;
 		// 거리
 		float distance = mTargetDir.Length();
 		// 방향 
 		mTargetDir.Normalize();
+
+		UpdateMonsterAngle();
 
 		// 거리가 몬스터의 공격 반경보다 클 때까지만 포즈값 더해주기
 		if (distance > mAttackDistance.val)
@@ -214,8 +318,6 @@ void MonsterScript::UpdateFastWalk()
 
 void MonsterScript::UpdateRun()
 {
-	UpdateMonsterAngle();
-
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
@@ -229,6 +331,8 @@ void MonsterScript::UpdateRun()
 		float distance = mTargetDir.Length();
 		// 방향
 		mTargetDir.Normalize();
+
+		UpdateMonsterAngle();
 
 		// 거리가 공격 반경보다 크다면 다시 상태 전환
 		if (distance > mAttackDistance.val)
@@ -251,15 +355,17 @@ void MonsterScript::UpdateHit()
 
 void MonsterScript::UpdateGroggy()
 {
-	m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
-	m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
-	m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
-
-	if (m_pAnimator->IsEnd())
+	if (mType == eMonsterType::A)
 	{
-		Vector3 pos = { m_pWeakness->transform->position.x,
-						m_pWeakness->transform->position.y + 0.f,
-						m_pWeakness->transform->position.z };
+		m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
+		m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
+		m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+	}
+	else
+	{
+		//m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
+		//m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
+		//m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
 	}
 
 	if (mGroggyCount < mGroggyTick.val)
@@ -272,10 +378,6 @@ void MonsterScript::UpdateGroggy()
 		{
 			if (m_pBurnObjectScript->IsBurning())
 			{
-				Vector3 pos = { m_pWeakness->transform->position.x,
-						m_pWeakness->transform->position.y - 0.f,
-						m_pWeakness->transform->position.z };
-
 				mFSM = eMonsterStateType::DEAD;
 				mGroggyCount = 0.f;
 			}
@@ -283,9 +385,18 @@ void MonsterScript::UpdateGroggy()
 	}
 	else
 	{
-		m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
-		m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
-		m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
+		if (mType == eMonsterType::A)
+		{
+			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
+		}
+		else
+		{
+			//m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
+			//m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
+			//m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+		}
 
 		mGroggyCount = 0.f;
 		mFSM = eMonsterStateType::IDLE;
@@ -320,19 +431,35 @@ void MonsterScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination
 		{
 			if (mFSM != eMonsterStateType::DEAD && mFSM != eMonsterStateType::GROGGY)
 			{
+				//mFSM = eMonsterStateType::HIT;
 				// 3만큼 데미지 입히기
 				player->Hit(mDamage.val);
 			}
 		}
 
 		// 공격이 끝나면 다시 처음 상태로
-		//mFSM = eMonsterStateType::IDLE;
+		mFSM = eMonsterStateType::IDLE;
 	}
 }
 
 void MonsterScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-	
+	// 몸통이랑 플레이어가 부딪혔을 때
+	if (_destination->gameObject->GetTag() == L"Player")
+	{
+		auto* player = _destination->GetOwner()->GetComponent<PlayerScript>();
+		if (player)
+		{
+			if (mFSM != eMonsterStateType::DEAD && mFSM != eMonsterStateType::GROGGY)
+			{
+				// 3만큼 데미지 입히기
+				player->Hit(mDamage.val);
+			}
+		}
+
+		// 공격이 끝나면 다시 처음 상태로
+		mFSM = eMonsterStateType::IDLE;
+	}
 }
 
 void MonsterScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
@@ -353,6 +480,7 @@ void MonsterScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 				player->Jump(0.5f, false);
 			}
 		}
+
 		// GROGGY로 바꿔주기
 		mFSM = eMonsterStateType::GROGGY;
 	}
@@ -368,19 +496,7 @@ void MonsterScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 
 }
 
-//json MonsterScript::Serialize()
-//{
-//	json ret = MonoBehaviour::Serialize();
-//
-//	return ret;
-//}
-//
-//void MonsterScript::Deserialize(json& j)
-//{
-//	MonoBehaviour::Deserialize(j);
-//}
-
-void MonsterScript::UpdateMonsterAnim()
+void MonsterScript::UpdateMonsterAnim_A()
 {
 	if (!m_pAnimator)
 		return;
@@ -389,27 +505,59 @@ void MonsterScript::UpdateMonsterAnim()
 	{
 	case eMonsterStateType::IDLE:
 		m_pAnimator->SetLoop(true);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE_A, 0.5f);
 		break;
 	case eMonsterStateType::WALK:
 		m_pAnimator->SetLoop(true);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_WALK, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_WALK_A, 0.5f);
 		break;
 	case eMonsterStateType::FAST_WALK:
 		m_pAnimator->SetLoop(true);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_FAST_WALK, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_FAST_WALK_A, 0.5f);
 		break;
 	case eMonsterStateType::RUN:
 		m_pAnimator->SetLoop(true);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_RUN, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_RUN_A, 0.5f);
 		break;
 	case eMonsterStateType::HIT:
 		m_pAnimator->SetLoop(false);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT_A, 0.5f);
 		break;
 	case eMonsterStateType::GROGGY:
 		m_pAnimator->SetLoop(false);
-		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_GROGGY, 0.5f);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_GROGGY_A, 0.5f);
+		break;
+	case eMonsterStateType::DEAD:
+		break;
+	}
+}
+
+void MonsterScript::UpdateMonsterAnim_B()
+{
+	if (!m_pAnimator)
+		return;
+
+	switch (mFSM)
+	{
+	case eMonsterStateType::IDLE:
+		m_pAnimator->SetLoop(true);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE_B, 0.5f);
+		break;
+	case eMonsterStateType::WALK:
+		m_pAnimator->SetLoop(true);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_IDLE_B, 0.5f);
+		break;
+	case eMonsterStateType::ROTATE:
+		m_pAnimator->SetLoop(false);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_ROTATE_B, 0.5f);
+		break;
+	case eMonsterStateType::HIT:
+		//m_pAnimator->SetLoop(false);
+		//m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_HIT_B, 0.5f);
+		break;
+	case eMonsterStateType::GROGGY:
+		m_pAnimator->SetLoop(false);
+		m_pAnimator->SetCurrentAnimation(MONSTER_ANIM_GROGGY_B, 0.5f);
 		break;
 	case eMonsterStateType::DEAD:
 		break;

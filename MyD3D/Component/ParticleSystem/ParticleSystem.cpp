@@ -11,6 +11,7 @@ ParticleSystem::ParticleSystem(Object* _owner)
     : Component(_owner)
 {
 	SetEID("ParticleSystem");
+	mType = eComponentType::EFFECT;
 
 	mParticleSystem = GameManager::GetPhysicsManager()->GetPhysics()
 		->createPBDParticleSystem(*GameManager::GetPhysicsManager()->GetCudaManager(), 96);
@@ -119,6 +120,7 @@ json ParticleSystem::Serialize()
 	json ret;
 
 	ret["id"] = GetId();
+	ret["name"] = "ParticleSystem";
 	ret["size"] = mTextureSize;
 	ret["func"] = mFuncIdx;
 	ret["count"] = mParticleCount;
@@ -303,7 +305,7 @@ void ParticleSystem::DrawObject(Matrix& _view, Matrix& _projection)
 	mTexture->Texture->Bind();
 	
 	TransformCBuffer cb;
-	cb.World = gameObject->transform->GetWorldMatrix();
+	cb.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix());
 	cb.View = XMMatrixTranspose(_view);
 	cb.Projection = XMMatrixTranspose(_projection);
 	
@@ -326,6 +328,12 @@ void ParticleSystem::DrawShadow(Light* _pLight)
 
 void ParticleSystem::DrawWire()
 {
+}
+
+void ParticleSystem::EditorGlobalUpdate()
+{
+	gameObject->GetOwnerWorld()->
+		mNeedResourceHandleTable.insert(mTextureHandle.GetParentkey());
 }
 
 void ParticleSystem::SetMaterial()

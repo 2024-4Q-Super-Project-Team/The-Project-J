@@ -6,8 +6,9 @@
 
 #define BOSS_ANIM_IDLE L"001"
 #define BOSS_ANIM_ATTACK_01 L"003"
-#define BOSS_ANIM_ATTACK_02 L"004" // 005나 004중 하나임
-#define BOSS_ANIM_HIT		// 피격 애니메이션 X
+#define BOSS_ANIM_ATTACK_02 L"004"	// 005나 004중 하나임
+#define BOSS_ANIM_HIT				// 피격 애니메이션 X
+#define BOSS_LAMP_BONE_NAME L"Bone.121" // 보스의 램프 본
 
 void BossScript::Start()
 {
@@ -129,10 +130,14 @@ void BossScript::UpdateAttack()
 	}
 }
 
+#define BOSS_ATTACK_01_TRIGGER_FRAME 1	// 광선이 나가기 시작하는 프레임
 void BossScript::UpdateAttack01()
 {
 	// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
+	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
+	{
 
+	}
 }
 
 void BossScript::UpdateAttack02()

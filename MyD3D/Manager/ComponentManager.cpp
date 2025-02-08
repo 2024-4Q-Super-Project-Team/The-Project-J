@@ -22,6 +22,7 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(Canvas);
 	REGISTER_COMPONENT(UISprite);
 	REGISTER_COMPONENT(UIText);
+	REGISTER_COMPONENT(Effect);
 
 	return true;
 }

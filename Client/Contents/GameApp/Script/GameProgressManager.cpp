@@ -21,7 +21,7 @@ void GameProgressManager::Update()
 {
 	// 게임 진행상황을 갱신한다. (게임 오버, 클리어 등)
 
-	UpdateMap();	// 맵을 활성화, 비활성화한다
+	//UpdateMap();	// 맵을 활성화, 비활성화한다
 }
 
 void GameProgressManager::ResetGame()
@@ -45,7 +45,7 @@ void GameProgressManager::UpdateMap()
 				mStagearray[i]->SetActive(false);
 			}
 		}
-	}
+	} 
 }
 
 void GameProgressManager::SetPlayerInfo(PlayerScript* _player)

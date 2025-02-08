@@ -182,6 +182,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="main.cpp" />
@@ -192,7 +193,6 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
-    <ClCompile Include="Manager\PlayerManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
@@ -211,13 +211,13 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Object\Button\SavePointScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
-    <ClInclude Include="Manager\PlayerManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="ScriptRegister.h" />

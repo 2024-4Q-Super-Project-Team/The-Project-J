@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "CameraController.h"
-#include "Manager/PlayerManager.h"
+#include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 
 void CameraController::Start()
@@ -20,8 +20,8 @@ void CameraController::Start()
 
 void CameraController::Update()
 {
-    PlayerScript* Player1 = PlayerManager::GetPlayerInfo(0);
-    PlayerScript* Player2 = PlayerManager::GetPlayerInfo(1);
+    PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
+    PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
     Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
     Vector3 Player2WorldPos = Player2->gameObject->transform->GetWorldPosition();
 

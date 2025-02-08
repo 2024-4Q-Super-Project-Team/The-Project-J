@@ -1,8 +1,8 @@
 #include "pch.h"
 #include "PlayerScript.h"
+#include "Contents/GameApp/Script/GameProgressManager.h"
 #include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
-#include "Manager/PlayerManager.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 
 #define PLAYER_ANIM_IDLE L"003"
@@ -63,7 +63,7 @@ void PlayerScript::Start()
 
     InitFireLight();
 
-    PlayerManager::SetPlayerInfo(this);
+    GameProgressManager::SetPlayerInfo(this);
 }
 
 void PlayerScript::Update()

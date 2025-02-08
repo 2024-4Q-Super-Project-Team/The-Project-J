@@ -34,7 +34,7 @@ public:
     virtual void SetPosition();
     virtual void SetRotation();
     void SetRadius();
-    void SetRadius(float _radius) { mRadius = _radius; }
+    void SetRadius(float _radius) {  mRadius = _radius; SetRadius(); }
 private:
     const float mInitialRadius = 1.f;
 

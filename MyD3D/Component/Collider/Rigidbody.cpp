@@ -38,7 +38,7 @@ void Rigidbody::Start()
 		mRigidActor = rigidDynamic;
 	}
 
-	
+	gameObject->transform->UpdateMatrix();
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);

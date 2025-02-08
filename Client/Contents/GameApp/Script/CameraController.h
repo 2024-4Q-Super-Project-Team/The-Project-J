@@ -15,6 +15,8 @@ public:
 public:
     SerializeField(FLOAT, mCameraDistance, 200.0f);
     SerializeField(Vector3, mCameraDirection, Vector3::One);
+    SerializeField(FLOAT, mMinCameraDistance, 600.0f);
+    SerializeField(FLOAT, mMaxCameraDistance, 1000.0f);
     FLOAT CurrentAngles[3];
     Camera* mCamera;
 public:
@@ -25,8 +27,6 @@ public:
         Roll
     };
 private:
-    float mMinCameraDistance = 600.0f;
-    float mMaxCameraDistance = 1000.0f;
     float mZoomSpeed;
     float mLerpSpeed;
 

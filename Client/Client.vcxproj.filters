@@ -50,6 +50,7 @@
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -70,7 +71,6 @@
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
-
     <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
@@ -82,6 +82,7 @@
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

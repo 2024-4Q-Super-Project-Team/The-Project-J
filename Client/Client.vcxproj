@@ -199,6 +199,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -227,6 +228,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="ScriptRegister.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyD3D\MyD3D.vcxproj">

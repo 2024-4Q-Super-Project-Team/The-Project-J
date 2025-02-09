@@ -82,29 +82,22 @@ void BossScript::UpdateTransform()
 
 void BossScript::UpdateAnimation()
 {
-    //switch (mBossState)
-    //{
-    //case eBossStateType::IDLE:
-    //{
-	//	mBodyAnimator->SetLoop(true);
-    //    mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-    //    break;
-    //}
-	//case eBossStateType::ATTACK:
-	//{
-	//	mBodyAnimator->SetLoop(false);
-	//	mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-	//	break;
-	//}
-	//case eBossStateType::HIT:
-	//{
-	//	mBodyAnimator->SetLoop(false);
-	//	mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
-	//	break;
-	//}
-    //default:
-    //    break;
-    //}
+    switch (mBossState)
+    {
+    case eBossStateType::IDLE:
+    {
+		mBodyAnimator->SetLoop(true);
+        mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+        break;
+    }
+	case eBossStateType::ATTACK:
+	{
+		mBodyAnimator->SetLoop(false);
+		break;
+	}
+    default:
+        break;
+    }
 }
 
 void BossScript::UpdateState()
@@ -162,7 +155,7 @@ void BossScript::UpdateAttack01()
 	// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
 	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
 	{
-		// 광선dl 비활성화 중이면 활성화
+		// 광선이 비활성화 중이면 활성화
 		if (mRazerObject->GetState() == EntityState::Passive)
 		{
 			mRazerObject->SetActive(true);
@@ -177,16 +170,17 @@ void BossScript::UpdateAttack01()
 			mRazerScript->SetAttackEnd();
 		}
 	}
+
 }
 
 #define BOSS_ATTACK_02_TRIGGER_FRAME 1	// 구체를 던지는 프레임
 void BossScript::UpdateAttack02()
 {
 	// 머리 안에 손을 집어넣고 안에서 붉은 구체를 꺼내 하늘 위로 던진다. 이후 기본 몬스터 N마리(종류 랜덤)가 스테이지의 랜덤한 위치에 생성한다.
-	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_02_TRIGGER_FRAME)
-	{
-
-	}
+	//if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_02_TRIGGER_FRAME)
+	//{
+	//
+	//}
 }
 
 void BossScript::UpdateHit()

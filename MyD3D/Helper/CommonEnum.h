@@ -11,6 +11,7 @@ enum class eCBufferType
     ParticleSize,
     Outline,
     Fog,
+    Sprite,
     SIZE
 };
 #define CBUFFER_TYPE_COUNT static_cast<UINT>(eCBufferType::SIZE)
@@ -48,6 +49,7 @@ enum class eVertexShaderType
     PARTICLE,
     GRID,
     OUTLINE,
+    QUADFRAME,
     SIZE,
 };
 #define VS_TYPE_COUNT static_cast<UINT>(eVertexShaderType::SIZE)
@@ -70,6 +72,7 @@ enum class ePixelShaderType
     PARTICLE,
     GRID,
     OUTLINE,
+    QUADFRAME,
     SIZE,
 };
 #define PS_TYPE_COUNT static_cast<UINT>(ePixelShaderType::SIZE)
@@ -108,6 +111,7 @@ enum class eBlendModeType
     OPAQUE_BLEND,           // Opaqueºí·»µå
     TRANSPARENT_BLEND,      // Transparentºí·»µå
     WIREFRAME_BELND,        // WireFrameºí·»µå
+    SPRITE_BLEND,
     OUTLINE_BLEND,          // Outlineºí·»µå
     PARTICLE_BLEND,          // Particleºí·»µå
     SIZE,

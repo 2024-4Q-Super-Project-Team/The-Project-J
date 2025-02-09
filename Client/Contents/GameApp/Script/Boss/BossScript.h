@@ -7,6 +7,8 @@ enum class eBossStateType
 	HIT,
 };
 
+class Boss_Attack01_Script;
+
 class BossScript : public MonoBehaviour
 {
 	enum eBossAttackType
@@ -37,10 +39,9 @@ private:
 	Object* mHeadObject;
 	Animator* mBodyAnimator;
 	Animator* mHeadAnimator;
-	
 
 	Transform* mAxisTransform;							// 보스의 기준 축이 될 트랜스폼
-	SerializeField(FLOAT, mDistanceFromAxis, 0.0f);		// 기준 축부터 몇 만큼 떨어져있을지
+	SerializeField(FLOAT, mDistanceFromAxis, 572.0f);	// 기준 축부터 몇 만큼 떨어져있을지
 
 	SerializeField(FLOAT, mMinIdleTick, 3.0f);			// 다음 패턴을 위한 최소 대기 시간
 	SerializeField(FLOAT, mMaxIdleTick, 5.0f);			// 다음 패턴을 위한 최대 대기 시간
@@ -52,9 +53,15 @@ private:
 	eBossAttackType mCurrAttackType = NONE;				//
 
 	// Attack01 관련
-	SerializeField(FLOAT, mRazerScale, 0.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
+	Object* mRazerObject = nullptr;
+	Boss_Attack01_Script* mRazerScript = nullptr;
+	SerializeField(FLOAT, mRazerScale, 1.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
+	SerializeField(FLOAT, mRazerTime, 3.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
+	BOOL isRazerSpawn = FALSE;
+	FLOAT mRazerElapsedTime = 0.0f;
 	// Attack02 관련
 	SerializeField(INT, mMonstaerSpawnCount, 3);		// Attack02패턴의 몬스터 소환 수
+	ResourceHandle mSpawnEffectTextrueHandle;
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;

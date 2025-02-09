@@ -125,11 +125,9 @@ void Effect::EditorRendering(EditorViewerType _viewerType)
 	ImGui::Text("Texture : ");
 
 	std::string widgetID = "NULL Texure";
-	std::string name = "NULL Texure";
 	if (mTexture)
 	{
 		mTexture->EditorRendering(EditorViewerType::DEFAULT);
-		name = Helper::ToString(mTexture->GetKey());
 		widgetID = mTexture->GetEID();
 		mTexture->EditorRendering(EditorViewerType::INSPECTOR);
 	}

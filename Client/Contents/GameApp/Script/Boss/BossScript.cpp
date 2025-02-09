@@ -3,6 +3,7 @@
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 
 #include "Contents/GameApp/Script/GameProgressManager.h"
+#include "Contents/GameApp/Script/Boss/Boss_Attack01_Script.h"
 
 #define BOSS_ANIM_IDLE L"001"
 #define BOSS_ANIM_ATTACK_01 L"003"
@@ -26,11 +27,20 @@ void BossScript::Start()
 			mBodyObject = child->gameObject;
 		if (child->gameObject->GetName() == L"Boss_Head")
 			mHeadObject = child->gameObject;
+		if (child->gameObject->GetName() == L"Boss_Attack01")
+			mRazerObject = child->gameObject;
 	}
 
 	// 애니메이터 초기화
 	mBodyAnimator = mBodyObject->GetComponent<Animator>();
 	mHeadAnimator = mHeadObject->GetComponent<Animator>();
+
+	// 이펙트 핸들
+	mSpawnEffectTextrueHandle.mResourceType = eResourceType::Texture2DResource;
+	mSpawnEffectTextrueHandle.mMainKey = L"";
+
+	mRazerObject->SetActive(false);
+	mRazerScript = mRazerObject->AddComponent<Boss_Attack01_Script>();
 }	
 
 void BossScript::Update()
@@ -152,14 +162,31 @@ void BossScript::UpdateAttack01()
 	// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
 	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
 	{
+		// 광선dl 비활성화 중이면 활성화
+		if (mRazerObject->GetState() == EntityState::Passive)
+		{
+			mRazerObject->SetActive(true);
+			isRazerSpawn = TRUE;
+			mRazerScript->SetAttackStart();
+			mRazerElapsedTime = 0.0f;
+		}
+		mRazerElapsedTime += Time::GetScaledDeltaTime();
 
+		if (mRazerElapsedTime > mRazerTime.val)
+		{
+			mRazerScript->SetAttackEnd();
+		}
 	}
 }
 
+#define BOSS_ATTACK_02_TRIGGER_FRAME 1	// 구체를 던지는 프레임
 void BossScript::UpdateAttack02()
 {
 	// 머리 안에 손을 집어넣고 안에서 붉은 구체를 꺼내 하늘 위로 던진다. 이후 기본 몬스터 N마리(종류 랜덤)가 스테이지의 랜덤한 위치에 생성한다.
+	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_02_TRIGGER_FRAME)
+	{
 
+	}
 }
 
 void BossScript::UpdateHit()

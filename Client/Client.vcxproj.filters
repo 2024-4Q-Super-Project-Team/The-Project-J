@@ -1,10 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <FxCompile Include="resource\shader\Grid_PS.hlsl" />
+    <FxCompile Include="resource\shader\Grid_VS.hlsl" />
     <FxCompile Include="resource\shader\DeferredPBR_PS.hlsl" />
     <FxCompile Include="resource\shader\GBuffer_PS.hlsl" />
     <FxCompile Include="resource\shader\BlinnPhong_PS.hlsl" />
     <FxCompile Include="resource\shader\FowardPBR_PS.hlsl" />
+    <FxCompile Include="resource\shader\Outline_PS.hlsl" />
+    <FxCompile Include="resource\shader\Outline_VS.hlsl" />
     <FxCompile Include="resource\shader\Particle_GS.hlsl" />
     <FxCompile Include="resource\shader\Particle_PS.hlsl" />
     <FxCompile Include="resource\shader\Particle_VS.hlsl" />
@@ -14,59 +18,59 @@
     <FxCompile Include="resource\shader\Sprite_PS.hlsl" />
     <FxCompile Include="resource\shader\Sprite_VS.hlsl" />
     <FxCompile Include="resource\shader\Standard_VS.hlsl" />
-    <FxCompile Include="resource\shader\Grid_VS.hlsl" />
-    <FxCompile Include="resource\shader\Grid_PS.hlsl" />
-    <FxCompile Include="resource\shader\Outline_PS.hlsl" />
-    <FxCompile Include="resource\shader\Outline_VS.hlsl" />
+    <FxCompile Include="resource\shader\QuadFrame_VS.hlsl" />
+    <FxCompile Include="resource\shader\QuadFrame_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="pch.cpp" />
-    <ClCompile Include="ScriptRegister.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
-    <ClCompile Include="Helper\InputSyncer.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\CameraController.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\ButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
-    <ClCompile Include="Manager\SavePointManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
+    <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
+    <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="pch.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
+    <ClCompile Include="ScriptRegister.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />
     <ClInclude Include="Contents\GameApp\Script\CameraController.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="ScriptRegister.h" />
-    <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
-    <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\ButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\OnOffButtonScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
-    <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
-    <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\SavePointScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
+    <ClInclude Include="Helper\InputSyncer.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
+    <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="pch.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
+    <ClInclude Include="ScriptRegister.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

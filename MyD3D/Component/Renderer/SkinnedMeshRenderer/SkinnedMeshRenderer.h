@@ -1,7 +1,6 @@
 #pragma once
 #include "Component/Renderer/Renderer.h"
 
-
 class Object;
 class Transform;
 class MeshResource;

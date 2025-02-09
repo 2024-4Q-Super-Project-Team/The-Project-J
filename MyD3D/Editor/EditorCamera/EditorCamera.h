@@ -26,6 +26,7 @@ public:
     void DrawShadow();
     void DrawObject();
     void DrawWire();
+    void DrawParticle();
     void DrawOutlineList();
     void DrawSwapChain();
 public:

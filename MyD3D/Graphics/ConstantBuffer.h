@@ -110,3 +110,9 @@ struct FogCBuffer
     float fogEnd = 0.1f;
     float paddingg[2];
 };
+
+struct SpriteCBuffer
+{
+    Vector2 uvMin;
+    Vector2 uvMax;
+};

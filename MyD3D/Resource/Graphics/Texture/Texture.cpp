@@ -17,6 +17,11 @@ Texture2DResource::~Texture2DResource()
 	SAFE_RELEASE(Texture);
 }
 
+Vector2 Texture2DResource::GetSize()
+{
+	return Vector2((FLOAT)Texture->GetWidth(), (FLOAT)Texture->GetHeight());
+}
+
 json Texture2DResource::Serialize()
 {
 	json ret;

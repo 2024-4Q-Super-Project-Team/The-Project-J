@@ -37,6 +37,9 @@ public:
     D3DGraphicsTexture2D* mRefTex = nullptr;
     UINT mWidth;
     UINT mHeight;
+public:
+    UINT GetWidth();
+    UINT GetHeight();
 };
 
 class D3DGraphicsRTV
@@ -107,6 +110,5 @@ public:
     virtual HRESULT Create() override;
     virtual HRESULT Bind() override;
     virtual HRESULT Reset() override;
-public:
     ID3D11ShaderResourceView* mSRV = nullptr;
 };

@@ -521,6 +521,16 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
     }
 }
 
+bool PlayerScript::IsBurning()
+{
+    return mBurnObjectScript->IsBurning();
+}
+
+bool PlayerScript::IsJump()
+{
+    return mPlayerController->IsGround() == false;
+}
+
 void PlayerScript::InitFireLight()
 {
     //////////////////////////////////////////////////////////

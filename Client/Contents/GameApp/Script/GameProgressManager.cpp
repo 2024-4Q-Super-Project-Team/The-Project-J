@@ -2,6 +2,7 @@
 #include "GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 
+eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
 Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr ,nullptr };
 INT	GameProgressManager::mCurrentStageNum = 0;
@@ -48,6 +49,22 @@ void GameProgressManager::UpdateMap()
 	} 
 }
 
+void GameProgressManager::UpdateGameOver()
+{
+	// 플레이어 둘 중 한명이라도 죽거나
+	if (mPlayer[0]->GetCurrentHP() == 0 ||
+		mPlayer[1]->GetCurrentHP() == 0)
+	{
+		mGameStatus = eGameProgressStatus::GAME_OVER;
+	}
+	// 플레이어 둘의 불이 다 꺼지거나
+	if (mPlayer[0]->IsBurning() == false &&
+		mPlayer[1]->IsBurning() == false)
+	{
+		mGameStatus = eGameProgressStatus::GAME_OVER;
+	}
+}
+
 void GameProgressManager::SetPlayerInfo(PlayerScript* _player)
 {
 	if (_player)
@@ -59,4 +76,9 @@ void GameProgressManager::SetPlayerInfo(PlayerScript* _player)
 PlayerScript* GameProgressManager::GetPlayerInfo(INT _handle)
 {
 	return mPlayer[_handle];
+}
+
+eGameProgressStatus GameProgressManager::GetGameStatus()
+{
+	return mGameStatus;
 }

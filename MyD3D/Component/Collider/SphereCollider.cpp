@@ -21,6 +21,9 @@ SphereCollider::SphereCollider(Object* _owner) : Collider(_owner)
 void SphereCollider::Start()
 {
 	Collider::Start();
+
+	SetPosition();
+	SetRadius();
 }
 
 void SphereCollider::Tick()
@@ -158,7 +161,7 @@ void SphereCollider::SetRotation()
 
 void SphereCollider::SetRadius()
 {
-	float radius = gameObject->transform->scale.x * mRadius;
+	float radius = gameObject->transform->GetWorldScale().x * mRadius;
 
 	mGeometry = PxSphereGeometry(radius);
 	mShape->setGeometry(mGeometry);

@@ -16,7 +16,6 @@ public:
 
 	PxPhysics* GetPhysics() const { return mPhysics; }
 	PxSimulationEventCallback* GetCallback() { return mEventCallback; }
-	static PickingRay GetPickingRay() { return ray; }
 	PxCudaContextManager* GetCudaManager() { return mCudaContextManager; }
 	PxCudaContext* GetCudaContext() { return mCudaContext; }
 
@@ -39,7 +38,6 @@ private:
 	PxPhysics* mPhysics;
 	PxSimulationEventCallback* mEventCallback;
 
-	static PickingRay ray;
 	PxCudaContextManager* mCudaContextManager;
 	PxCudaContext* mCudaContext;
 
@@ -58,13 +56,7 @@ public:
 		const PxRigidActor* actor,
 		PxHitFlags& queryFlags) override
 	{
-		// Trigger Shape는 제외
-		if (shape->getFlags() & PxShapeFlag::eTRIGGER_SHAPE)
-		{
-			return PxQueryHitType::eNONE; // 충돌 무시
-		}
 
-		// Trigger가 아니면 충돌 처리
 		return PxQueryHitType::eBLOCK;
 	}
 

@@ -159,5 +159,11 @@ float CaclulateAttenuation(float3 lightDir, float radius, float cutoff = 0.001f)
 float CaclulateSpotLight(float3 lightDir)
 {
     return float3(1.f, 1.f, 1.f);
+}
 
+float CaclulateFogFactor(float start, float end, float z)
+{
+    float fog = saturate((end - z) / (end - start));
+    
+    return fog;
 }

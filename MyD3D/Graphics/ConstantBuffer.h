@@ -103,3 +103,10 @@ struct OutlineCBuffer
     float outlineOffset = 0.1f;
     float paddingg[3];
 };
+
+struct FogCBuffer
+{
+    float fogStart = 0.1f;
+    float fogEnd = 0.1f;
+    float paddingg[2];
+};

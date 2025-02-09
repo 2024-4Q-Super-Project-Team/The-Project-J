@@ -202,3 +202,11 @@ cbuffer OutlineBuffer : register(b6)
     float outlineOffset;
     float paddingg[3];
 };
+
+cbuffer FogBuffer : register(b7)
+{
+    float fogStart = 100.f;
+    float fogEnd = 1000.f;
+    float padddinggg[2];
+};
+

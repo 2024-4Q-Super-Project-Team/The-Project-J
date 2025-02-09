@@ -10,6 +10,7 @@ public:
 	explicit UIText(Object* _owner);
 	virtual ~UIText();
 public:
+	void Start() override;
 	void PreUpdate() override;
 	void Update() override;
 	void EditorUpdate() override;

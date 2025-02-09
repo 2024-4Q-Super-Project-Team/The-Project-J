@@ -71,6 +71,25 @@ void UIManager::Render()
 	GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->Bind();
 }
 
+void UIManager::ClearDrawList()
+{
+	if (!mDrawWidgetList.empty())
+	{
+		Object* obj = mDrawWidgetList[0]->gameObject->transform->GetParent()->gameObject;
+		
+		if (obj)
+		{
+			auto* canvas = obj->GetComponent<Canvas>();
+
+			if (canvas)
+			{
+				canvas->mWidgets.clear();
+			}
+		}
+
+	}
+}
+
 void UIManager::SetFocusViewport(ViewportScene* _pViewport)
 {
 	if (_pViewport)

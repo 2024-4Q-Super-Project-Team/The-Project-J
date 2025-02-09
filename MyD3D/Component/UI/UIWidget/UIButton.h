@@ -1,12 +1,19 @@
 #pragma once
 #include "UIWidget.h"
 
-class UISprite
+enum class eButtonState
+{
+	DEFAULT,
+	SELECTED,
+	SIZE,
+};
+
+class UIButton
 	: public UIWidget
 {
 public:
-	explicit UISprite(Object* _owner);
-	virtual ~UISprite();
+	explicit UIButton(Object* _owner);
+	virtual ~UIButton();
 public:
 	void Start() override;
 	void PreUpdate() override;
@@ -16,6 +23,8 @@ public:
 	void EditorRendering(EditorViewerType _viewerType) override;
 public:
 	virtual void DrawWidget(Vector2 _scale)	override;
+	eButtonState GetState() { return mButtonState; }
+	void SetState(eButtonState _state) { mButtonState = _state; }
 public:
 	virtual void _CALLBACK OnEnable();
 	virtual void _CALLBACK OnDisable();
@@ -24,7 +33,12 @@ public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;
 private:
-	Texture2DResource* m_pTexture = nullptr;
-	ResourceHandle mTextureHandle;
+	ResourceHandle mDefaultTextureHandle;
+	ResourceHandle mSelectedTextureHandle;
+
+	Texture2DResource* m_pDefaultTexture = nullptr;
+	Texture2DResource* m_pSelectedTexture = nullptr;
+
+	eButtonState mButtonState = eButtonState::DEFAULT;
 };
 

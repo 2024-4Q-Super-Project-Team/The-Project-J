@@ -31,7 +31,7 @@ void UISprite::DrawWidget(Vector2 _scale)
 
 void _CALLBACK UISprite::OnEnable()
 {
-	SetTexture(mTextureHandle);
+	SetTexture(mTextureHandle, m_pTexture);
 	return void _CALLBACK();
 }
 
@@ -43,6 +43,10 @@ void _CALLBACK UISprite::OnDisable()
 void _CALLBACK UISprite::OnDestroy()
 {
 	return void _CALLBACK();
+}
+
+void UISprite::Start()
+{
 }
 
 void UISprite::PreUpdate()
@@ -103,8 +107,10 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 
 	   if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(uid.c_str(), &mTextureHandle))
 	   {
-		   SetTexture(mTextureHandle);
+		   SetTexture(mTextureHandle, m_pTexture);
 	   }
+
+	   ImGui::Checkbox("use fade", &bUseFade);
 
 	   EDITOR_COLOR_POP(1);
 
@@ -124,6 +130,7 @@ json UISprite::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w};
+	ret["use fade"] = bUseFade;
 
 	return ret;
 }
@@ -135,7 +142,10 @@ void UISprite::Deserialize(json& j)
 	if (j.contains("texture handle"))
 	{
 		mTextureHandle.Deserialize(j["texture handle"]);
-		SetTexture(mTextureHandle);
+		if (mTextureHandle.GetPath() != L"")
+		{
+			SetTexture(mTextureHandle, m_pTexture);
+		}
 	}
 
 	if (j.contains("ui type"))
@@ -154,5 +164,10 @@ void UISprite::Deserialize(json& j)
 
 			SetColor(col);
 		}
+	}
+
+	if (j.contains("use fade"))
+	{
+		bUseFade = j["use fade"].get<bool>();
 	}
 }

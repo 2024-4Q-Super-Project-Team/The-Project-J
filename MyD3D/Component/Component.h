@@ -38,6 +38,7 @@ enum class eComponentType
 	CANVAS,
 	UI_SPRITE,
 	UI_TEXT,
+	UI_BUTTON,
 	EFFECT,
 	SCRIPT,
 	UPDATE_END,  // 업데이트 루프를 도는 컴포넌트의 끝. 빈 배열 하나를 차지하더라도 있는게 나은듯

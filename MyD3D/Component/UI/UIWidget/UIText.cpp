@@ -19,6 +19,8 @@ UIText::~UIText()
 		delete m_pSpriteFont;
 		m_pSpriteFont = nullptr;
 	}
+
+
 }
 
 void UIText::DrawWidget(Vector2 _scale)
@@ -55,6 +57,9 @@ void UIText::OutlinedTextRender(Vector2 _scale, Vector3 _objPos)
 
 void UIText::SetFont(ResourceHandle _handle)
 {
+	if (_handle.mResourceType != eResourceType::FontResource)
+		return;
+
 	m_pFont = ResourceManager::GetResource<FontResource>(_handle);
 
 	if (!m_pFont)
@@ -76,8 +81,11 @@ void UIText::SetFont(ResourceHandle _handle)
 
 void UIText::SetTextLine(float _line)
 {
-	m_pSpriteFont->SetLineSpacing(_line);
-	m_pSpriteFont->SetDefaultCharacter(' ');
+	if (m_pSpriteFont)
+	{
+		m_pSpriteFont->SetLineSpacing(_line);
+		m_pSpriteFont->SetDefaultCharacter(' ');
+	}
 }
 
 void UIText::SetTextFormat(const wchar_t* _msg, ...)
@@ -89,6 +97,10 @@ void UIText::SetTextFormat(const wchar_t* _msg, ...)
 	va_end(args);
 }
 
+void UIText::Start()
+{
+}
+
 void UIText::PreUpdate()
 {
 	UIWidget::PreUpdate();
@@ -96,7 +108,7 @@ void UIText::PreUpdate()
 
 void UIText::Update()
 {
-	
+
 }
 
 void UIText::EditorUpdate()
@@ -178,8 +190,10 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 			ImGui::Text("Text Outline INFO : ");
 			ImGui::DragFloat("outline Offset", &mOutlineOffset, 0.5f, 0.f, 2.0f);
-			ImGui::ColorEdit4("outline Color", &mColor.x);
+			ImGui::ColorEdit4("outline Color", &mOutlineColor.x);
 		}
+
+		ImGui::Checkbox("use fade", &bUseFade);
 
 		EDITOR_COLOR_POP(1);
 
@@ -221,6 +235,8 @@ json UIText::Serialize()
 	ret["use outline"] = bUseOutline;
 	ret["outline offset"] = mOutlineOffset;
 	ret["outline color"] = { mOutlineColor.x, mOutlineColor.y, mOutlineColor.z , mOutlineColor.w};
+	
+	ret["use fade"] = bUseFade;
 
 	return ret;
 }
@@ -284,5 +300,10 @@ void UIText::Deserialize(json& j)
 
 			SetTextOutlineColor(col);
 		}
+	}
+
+	if (j.contains("use fade"))
+	{
+		bUseFade = j["use fade"].get<bool>();
 	}
 }

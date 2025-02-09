@@ -21,6 +21,7 @@
 #include "Component/UI/Canvas.h"
 #include "Component/UI/UIWidget/UISprite.h"
 #include "Component/UI/UIWidget/UIText.h"
+#include "Component/UI/UIWidget/UIButton.h"
 #include "Component/BoneAttacher/BoneAttacher.h"
 #include "Component/FSM/FiniteStateMachine.h"
 

@@ -539,6 +539,7 @@ void Object::EditorRendering(EditorViewerType _viewerType)
                             delete component;
                             itr = componentVec.erase(itr);
                             EditorManager::mEditorCamera.ClearDrawList();
+                            UIManager::ClearDrawList();
                             ImGui::EndPopup(); // ÆË¾÷ Á¾·á
                             if (isTreeOpen)
                                 ImGui::TreePop();

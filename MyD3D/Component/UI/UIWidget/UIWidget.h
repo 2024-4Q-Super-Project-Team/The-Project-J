@@ -28,6 +28,7 @@ public:
 	explicit UIWidget(Object* _owner);
 	virtual ~UIWidget();
 public:
+	virtual void Start() override;
 	virtual void Tick() override;
 	virtual void FixedUpdate() override;
 	virtual void PreUpdate() override;
@@ -43,15 +44,19 @@ public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 public:
 	// 기본 정보 설정
-	void SetTexture(ResourceHandle _handle);
+	void SetTexture(ResourceHandle _handle, Texture2DResource* _texture);
+	bool ProcessFadeIn(Color* _color);
+	bool ProcessFadeOut(Color* _color);
 
 	// 그래픽 정보 설정
 	void	SetColor(Color _color)	{ mColor = _color; }
 	Color	GetColor()				{ return mColor; }
 protected:
 	std::wstring mID = L"";
-	Texture2DResource* m_pTexture = nullptr;
 
 	eUIType	mUIType = eUIType::NON;
-	Color	mColor{ 1,1,1,1 };
+	Color	mColor{ 1,1,1,0 };
+	float a = 127.f;
+	float mFadeTime = 5.f;
+	bool bUseFade = false;
 };

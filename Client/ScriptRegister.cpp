@@ -21,6 +21,9 @@
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Boss/BossScript.h"
 
+// Scene
+#include "Contents/GameApp/Script/Scene/OpeningScript.h"
+
 void ScriptRegister::Register()
 {
 	REGISTER_COMPONENT(CameraController);
@@ -39,4 +42,5 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(BoxScript);
 	REGISTER_COMPONENT(GameProgressManager);
 	REGISTER_COMPONENT(BossScript);
+	REGISTER_COMPONENT(OpeningScript);
 }

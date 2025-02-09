@@ -10,6 +10,7 @@ public:
 public:
     static void Update();
     static void Render();
+    static void ClearDrawList();
 public:
     // 드로우할 위젯 모음
     static std::vector <UIWidget*> mDrawWidgetList;
@@ -25,6 +26,7 @@ private:
     static Vector2  mFocusScreen;                    // 원래 스크린 사이즈
     static Vector2  mCurrScreen;                     // 현재 스크린 사이즈
     static Vector2  mScale;                          // 화면 비율
+
 
     // 화면 비율 설정 함수
     static void SetScale() { mScale = mCurrScreen / mFocusScreen; }

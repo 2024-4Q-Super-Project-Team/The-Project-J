@@ -272,6 +272,7 @@
     <ClInclude Include="Component\UI\UIWidget\UIText.h" />
     <ClInclude Include="Component\UI\UIWidget\UISprite.h" />
     <ClInclude Include="Component\Camera\SkyBox\SkyBox.h" />
+    <ClInclude Include="Component\UI\UIWidget\UIButton.h" />
     <ClInclude Include="ViewportScene\ViewportManager.h" />
     <ClInclude Include="World\WorldManager.h" />
     <ClInclude Include="Resource\Graphics\FBXModel\FBXModel.h" />
@@ -410,6 +411,7 @@
     <ClCompile Include="Component\UI\UIWidget\UIText.cpp" />
     <ClCompile Include="Component\UI\UIWidget\UISprite.cpp" />
     <ClCompile Include="Component\Camera\SkyBox\SkyBox.cpp" />
+    <ClCompile Include="Component\UI\UIWidget\UIButton.cpp" />
     <ClCompile Include="ViewportScene\ViewportManager.cpp" />
     <ClCompile Include="World\WorldManager.cpp" />
     <ClCompile Include="Resource\Graphics\FBXModel\FBXModel.cpp" />

@@ -42,6 +42,7 @@
     <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -67,6 +68,7 @@
     <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

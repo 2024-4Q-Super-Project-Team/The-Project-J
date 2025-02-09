@@ -115,6 +115,7 @@ void LowerPlatformButtonScript::OnButtonPressed()
         {
             // 1. pivot 포지션 기준으로 회전
             Vector3 pivotPoint = platformTransform->LocalToWorld(pivotObject->transform->position);
+            pivotPoint = Vector3(pivotPoint.z, pivotPoint.y, pivotPoint.x);
 
             Vector3 forward = platformTransform->Forward();
             Vector3 up = platformTransform->Up();
@@ -122,16 +123,16 @@ void LowerPlatformButtonScript::OnButtonPressed()
 
             // 2. 발판 up 벡터를 사용하여 회전축 결정
             Vector3 rotationAxis;
-            if (abs(up.y) > 0.9f)
+            if (abs(forward.y) > 0.9f)
             {
                 rotationAxis = right;
             }
             else
             {
-                rotationAxis = forward;
+                rotationAxis = up;
             }
 
-            float rotationAngle = -XM_PIDIV2; // 90도 회전 
+            float rotationAngle = XM_PIDIV2; // 90도 회전 
             platformTransform->RotateByPivot(pivotPoint, rotationAxis, rotationAngle, 3.5f, Dotween::EasingEffect::OutBounce);
         }
         else

@@ -182,7 +182,6 @@ void PlayerController::AddMoveForceY(FLOAT _y)
 	mDisplacement.y += _y;
 }
 
-
 void PlayerController::SetSlopeMode(SlopeMode _mode)
 {
 	mSlopeMode = _mode; 
@@ -194,6 +193,7 @@ void PlayerController::SetSlopeMode(SlopeMode _mode)
 
 void PlayerController::Reset()
 {
+	OnEnable();
 	mDisplacement = PxVec3(0.0f);
 	mIsOnGround = false;
 	SetSlopeMode(SlopeMode::Ride);

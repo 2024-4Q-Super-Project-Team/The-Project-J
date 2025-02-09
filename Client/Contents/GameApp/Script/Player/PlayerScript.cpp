@@ -173,11 +173,12 @@ void _CALLBACK PlayerScript::OnTriggerExitCallback(Collider* _origin, Collider* 
 void PlayerScript::Reset()
 {
     isAction = false;
+    isJump = true;
     mBurnObjectScript->SetBurn(true);
     mPlayerCurHP = mPlayerMaxHP.val;
     mHpReduceCount = 0.0f;
 
-    mPlayerController->Reset();
+    ResetController();
     SetState(ePlayerStateType::IDLE);
 }
 
@@ -529,6 +530,15 @@ bool PlayerScript::IsBurning()
 bool PlayerScript::IsJump()
 {
     return mPlayerController->IsGround() == false;
+}
+
+void PlayerScript::ResetController()
+{
+    mPlayerController->SetMoveForceX(0.0f);
+    mPlayerController->SetMoveForceY(0.0f);
+    mPlayerController->SetMoveForceZ(0.0f);
+    // 기본 슬로프 모드로 설정
+    mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
 }
 
 void PlayerScript::InitFireLight()

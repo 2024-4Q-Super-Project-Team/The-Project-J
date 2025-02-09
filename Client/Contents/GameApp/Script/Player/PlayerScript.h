@@ -61,6 +61,7 @@ private:
 	void ProcessOffFire(BurnObjectScript* _dst);
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
+	void ResetController();
 private:
 	// 몸, 촛대, 불 자식 오브젝트
 	Object* mBodyObject = nullptr;

@@ -1,6 +1,8 @@
 #pragma once
 
 class SavePointScript;
+class PlayerScript;
+
 
 
 class SavePointManager
@@ -14,7 +16,7 @@ public:
 	// 세이브포인트 추가
 	void AddSavePoint(SavePointScript* _savePoint);
 	// 마지막 세이브 포인트로 이동한다.
-	void GoBackSavePoint();
+	void GoBackSavePoint(PlayerScript* deadPlayer);
 
 private:
 	// 싱글톤용 

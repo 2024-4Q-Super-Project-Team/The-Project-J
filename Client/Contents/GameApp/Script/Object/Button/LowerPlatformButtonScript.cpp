@@ -45,6 +45,7 @@ void LowerPlatformButtonScript::OnTriggerEnter(Collider* _origin, Collider* _des
 
 void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
+    Display::Console::Log("Collision Enter");
     // 나무판자가 앞쪽으로 넘어진다
 	Object* interactingObject = _destination->GetOwner();
 

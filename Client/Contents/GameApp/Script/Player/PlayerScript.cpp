@@ -4,6 +4,7 @@
 #include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
+#include "Manager/SavePointManager.h"
 
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
@@ -70,6 +71,14 @@ void PlayerScript::Update()
 {
     UpdatePlayerHP();
     UpdatePlayerAnim();
+
+    // y좌표 일정 이하면 주금
+    if (gameObject->transform->position.y < -100.0f)
+    {
+        SavePointManager::GetInstance().GoBackSavePoint(this);
+        return;
+    }
+
     // FSMUpdate
     switch (mPlayerState)
     {
@@ -138,7 +147,7 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     ////////////////////////////////////////////////
     // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if (isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+    if (dstBurnObject && isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
         return;
@@ -167,6 +176,9 @@ void PlayerScript::Reset()
     mBurnObjectScript->SetBurn(true);
     mPlayerCurHP = mPlayerMaxHP.val;
     mHpReduceCount = 0.0f;
+
+    mPlayerController->Reset();
+    SetState(ePlayerStateType::IDLE);
 }
 
 void PlayerScript::SetHP(INT _val)
@@ -507,6 +519,16 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
             mBurnProcessTarget = nullptr;
         }
     }
+}
+
+bool PlayerScript::IsBurning()
+{
+    return mBurnObjectScript->IsBurning();
+}
+
+bool PlayerScript::IsJump()
+{
+    return mPlayerController->IsGround() == false;
 }
 
 void PlayerScript::InitFireLight()

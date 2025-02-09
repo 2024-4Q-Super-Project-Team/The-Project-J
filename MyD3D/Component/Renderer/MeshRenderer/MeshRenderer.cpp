@@ -167,12 +167,12 @@ void MeshRenderer::DrawShadow(Light* _pLight)
 
 void MeshRenderer::DrawWire()
 {
-    if (mMesh)
-    {
-        mMesh->Bind();
-        DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
-        D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
-    }
+    //if (mMesh)
+    //{
+    //    mMesh->Bind();
+    //    DebugRenderer::UpdateWorld(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
+    //    D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
+    //}
 }
 
 void MeshRenderer::SetMesh(ResourceHandle _handle)

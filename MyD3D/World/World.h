@@ -74,13 +74,11 @@ public:
 	void AddPxActor(PxActor* actor) { mPxScene->addActor(*actor); }
 	void RemovePxActor(PxActor* actor) { mPxScene->removeActor(*actor); }
 public:
-	class PickingRay* mPickingRay;
 	PxScene* mPxScene;
 	class PhysicsEvent* mEventCallback;
 	PxControllerManager* mControllerManager;
 public:
 	PxScene* GetPxScene() { return mPxScene; }
-	class PickingRay* GetPickingRay() { return mPickingRay; }
 	PxControllerManager* GetControllerManager() { return mControllerManager; }
 //////////////////////////////////////////////////////////////////////////////
 // Editor

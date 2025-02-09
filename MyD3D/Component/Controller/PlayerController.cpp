@@ -48,9 +48,6 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 	mCapsuleController->getActor()->userData = mRigid;
 	mRigid->SetPxActor(mCapsuleController->getActor());
 
-	PxFilterData filterData;
-	filterData.word0 = 1;  // 캐릭터 컨트롤러 필터 그룹
-
 	//Inner Shapes
 	PxShape* shapes[10];
 	PxU32 shapeSize = mCapsuleController->getActor()->getShapes(shapes, 10);
@@ -58,8 +55,6 @@ PlayerController::PlayerController(Object* _owner) :Component(_owner)
 		Collider* col = new Collider(gameObject);
 		shapes[i]->userData = col;
 		mColliders.push_back(col);
-
-		shapes[i]->setSimulationFilterData(filterData);
 	}
 }
 
@@ -195,6 +190,13 @@ void PlayerController::SetSlopeMode(SlopeMode _mode)
 		mBehaviorCallback->SetFlags(PxControllerBehaviorFlag::eCCT_CAN_RIDE_ON_OBJECT);
 	else if (_mode == SlopeMode::Slide)
 		mBehaviorCallback->SetFlags(PxControllerBehaviorFlag::eCCT_SLIDE);
+}
+
+void PlayerController::Reset()
+{
+	mDisplacement = PxVec3(0.0f);
+	mIsOnGround = false;
+	SetSlopeMode(SlopeMode::Ride);
 }
 
 void PlayerController::GravityUpdate()

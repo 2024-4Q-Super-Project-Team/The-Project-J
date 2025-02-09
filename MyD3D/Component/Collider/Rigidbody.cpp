@@ -38,7 +38,7 @@ void Rigidbody::Start()
 		mRigidActor = rigidDynamic;
 	}
 
-	
+	gameObject->transform->UpdateMatrix();
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 	
 	gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
@@ -126,6 +126,22 @@ void Rigidbody::Draw(Camera* _camera)
 void Rigidbody::PostRender()
 {
 
+}
+
+void Rigidbody::OnEnable()
+{
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
+	}
+}
+
+void Rigidbody::OnDisable()
+{
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerWorld()->RemovePxActor(mRigidActor);
+	}
 }
 
 void Rigidbody::EditorUpdate()

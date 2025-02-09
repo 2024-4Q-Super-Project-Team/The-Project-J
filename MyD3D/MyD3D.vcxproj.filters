@@ -432,6 +432,9 @@
     <ClInclude Include="Component\ParticleSystem\Effect.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="Component\Renderer\SpriteRenderer\SpriteRenderer.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
     <ClInclude Include="Component\UI\UIWidget\UIButton.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -837,6 +840,9 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\ParticleSystem\Effect.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Renderer\SpriteRenderer\SpriteRenderer.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\UI\UIWidget\UIButton.cpp">

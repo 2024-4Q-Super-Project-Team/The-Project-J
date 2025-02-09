@@ -191,6 +191,7 @@ void EditorCamera::ExcuteDrawList()
 
             EditorGridDrawer::DrawGrid();
             DrawObject();
+            DrawParticle();
 
             GraphicsManager::GetRasterizerState(eRasterizerStateType::BACKFACE_CULLING)->Bind();
             if (mIsSkyBoxRendering)
@@ -300,6 +301,27 @@ void EditorCamera::DrawWire()
     DebugRenderer::EndDraw();
 }
 
+void EditorCamera::DrawParticle()
+{
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
+    GraphicsManager::GetSamplerState(eSamplerStateType::LINEAR_WRAP)->Bind();
+
+    GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::PARTICLE)->Bind();
+
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::PARTICLE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::PARTICLE_BLEND].clear();
+
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
 void EditorCamera::DrawOutlineList()
 {
     GraphicsManager::GetBlendState(eBlendStateType::DEFAULT)->Bind();
@@ -331,8 +353,8 @@ void EditorCamera::DrawOutlineList()
 void EditorCamera::DrawSwapChain()
 {
     // QuadFrame Pass
-    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
-    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::QUADFRAME)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::QUADFRAME)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
     D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
 

@@ -7,6 +7,7 @@
 #include "Component/MonoBehaviour/MonoBehaviour.h"
 #include "Component/Renderer/SkinnedMeshRenderer/SkinnedMeshRenderer.h"
 #include "Component/Renderer/MeshRenderer/MeshRenderer.h"
+#include "Component/Renderer/SpriteRenderer/SpriteRenderer.h"
 #include "Component/Animator/Animator.h"
 #include "Component/Audio/AudioSource.h"
 #include "Component/Audio/AudioListener.h"

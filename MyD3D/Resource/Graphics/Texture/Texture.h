@@ -13,6 +13,8 @@ public:
 public:
     D3DGraphicsImg* Texture;
 public:
+    Vector2 GetSize();
+public:
     virtual json Serialize();
     virtual void Deserialize(json& j);
 public:

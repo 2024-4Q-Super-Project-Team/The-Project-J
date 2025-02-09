@@ -39,7 +39,8 @@ public:
 	inline INT	GetPlayerHandle() { return mPlayerHandle.val; }
 	inline INT	GetCurrentHP() { return mPlayerCurHP; }
 	inline INT	GetMaxHpValue() { return mPlayerMaxHP.val; }
-	inline bool IsJump() { return mPlayerController->IsGround() == false; }
+	bool IsBurning();
+	bool IsJump();
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();

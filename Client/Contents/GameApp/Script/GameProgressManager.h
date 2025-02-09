@@ -42,13 +42,18 @@ public:
 	void Update();
 
 	void ResetGame();			// 게임 진행상황을 완전히 초기화한다. (세이브부터 X) (ex. 세이브 포인트, 몬스터 등등)
-	void UpdateMap();			// 현재 진행 중인 맵에 따라 비활성화 해주기 위한 
+	void UpdateMap();			// 현재 진행 중인 맵에 따라 비활성화 해주기 위한
+
+	static void UpdateGameOver();
 public:
 	static void SetPlayerInfo(PlayerScript* _player);
 	static PlayerScript* GetPlayerInfo(INT _handle);
+
+	static eGameProgressStatus GetGameStatus();
 private:
-	static PlayerScript*	mPlayer[2];
-	static Object*			mStagearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
-	static INT				mCurrentStageNum;			// 현재 스테이지
+	static eGameProgressStatus		mGameStatus;
+	static PlayerScript*			mPlayer[2];
+	static Object*					mStagearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
+	static INT						mCurrentStageNum;			// 현재 스테이지
 };
 

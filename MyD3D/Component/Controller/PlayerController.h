@@ -47,6 +47,7 @@ public:
     float GetGravity() { return mGravity; }
     SlopeMode GetSlopeMode() { return mSlopeMode; }
     Rigidbody* GetRigidbody() { return mRigid; }
+    void Reset();
 public:
     ///Jump///
 
@@ -62,6 +63,7 @@ public:
 
 public:
     void SetMaterial(std::string _name);
+
 private:
 	PxCapsuleController* mCapsuleController;
 	PxControllerFilters mCharacterControllerFilters;

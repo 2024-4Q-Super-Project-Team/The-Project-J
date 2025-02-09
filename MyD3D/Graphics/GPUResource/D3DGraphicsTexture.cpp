@@ -96,6 +96,14 @@ HRESULT D3DResourceView::Resize(UINT _width, UINT _height)
 {
     return mRefTex->Resize(_width, _height);
 }
+UINT D3DResourceView::GetWidth()
+{
+    return mWidth;
+}
+UINT D3DResourceView::GetHeight()
+{
+    return mHeight;
+}
 ////////////////////////////////////////////////
 /// D3DGraphicsRTV
 ////////////////////////////////////////////////
@@ -462,4 +470,3 @@ HRESULT D3DGraphicsImg::Reset()
     }
     return E_FAIL;
 }
-

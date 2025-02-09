@@ -32,8 +32,9 @@ void MonsterScript::Start()
 
 		m_pScope = CreateObject(L"Scope",L"Scope");
 		m_pScope->transform->SetParent(root);
-		m_pScope->AddComponent<ScopeScript>();
+
 		m_pScope->transform->position = gameObject->transform->position;
+		m_pScope->AddComponent<ScopeScript>();
 
 		// find Weakness
 		auto& children = gameObject->transform->GetChildren();

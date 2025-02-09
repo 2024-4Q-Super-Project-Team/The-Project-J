@@ -8,7 +8,7 @@ void SavePointScript::Start()
     gameObject->AddComponent<Rigidbody>();
 
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-    boxCol->SetExtents(Vector3(60, 10, 60));
+    boxCol->SetExtents(Vector3(80, 10, 80));
     boxCol->SetTrigger(true);
     
 }

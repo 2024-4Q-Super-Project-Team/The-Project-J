@@ -197,6 +197,13 @@ void PlayerController::SetSlopeMode(SlopeMode _mode)
 		mBehaviorCallback->SetFlags(PxControllerBehaviorFlag::eCCT_SLIDE);
 }
 
+void PlayerController::Reset()
+{
+	mDisplacement = PxVec3(0.0f);
+	mIsOnGround = false;
+	SetSlopeMode(SlopeMode::Ride);
+}
+
 void PlayerController::GravityUpdate()
 {
 	//ม฿ทย 

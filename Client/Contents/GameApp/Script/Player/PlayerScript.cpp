@@ -4,6 +4,7 @@
 #include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
+#include "Manager/SavePointManager.h"
 
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
@@ -70,6 +71,14 @@ void PlayerScript::Update()
 {
     UpdatePlayerHP();
     UpdatePlayerAnim();
+
+    // y좌표 일정 이하면 주금
+    if (gameObject->transform->position.y < -100.0f)
+    {
+        SavePointManager::GetInstance().GoBackSavePoint(this);
+        return;
+    }
+
     // FSMUpdate
     switch (mPlayerState)
     {
@@ -167,6 +176,9 @@ void PlayerScript::Reset()
     mBurnObjectScript->SetBurn(true);
     mPlayerCurHP = mPlayerMaxHP.val;
     mHpReduceCount = 0.0f;
+
+    mPlayerController->Reset();
+    SetState(ePlayerStateType::IDLE);
 }
 
 void PlayerScript::SetHP(INT _val)

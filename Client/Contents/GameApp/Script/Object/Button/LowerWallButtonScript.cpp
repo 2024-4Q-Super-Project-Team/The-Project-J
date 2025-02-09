@@ -15,7 +15,7 @@ void LowerWallButtonScript::Start()
     {
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 1, 0));
-        boxCol->SetExtents(Vector3(100, 1, 100));
+        boxCol->SetExtents(Vector3(100, 100, 100));
     }
 
     else if (currentTag.find(L"_2") != std::wstring::npos)
@@ -52,6 +52,7 @@ void LowerWallButtonScript::OnTriggerExit(Collider* _origin, Collider* _destinat
 
 void LowerWallButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
+    Display::Console::Log("Enter_LowerWall");
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {
@@ -62,6 +63,8 @@ void LowerWallButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _des
 
 void LowerWallButtonScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
+    Display::Console::Log("Stay_LowerWall");
+
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {
@@ -71,6 +74,7 @@ void LowerWallButtonScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _dest
 
 void LowerWallButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
+    Display::Console::Log("Exit_LowerWall");
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {

@@ -5,11 +5,39 @@ D3D11_TEXTURE2D_DESC D3DGraphicsDefault::DefaultTextureDesc = {
 	0,0,1,1,DXGI_FORMAT_UNKNOWN,DXGI_SAMPLE_DESC({1,0}),D3D11_USAGE_DEFAULT,0,0
 };
 D3D11_TEXTURE2D_DESC DefaultDSVTextureDesc = {
-
 };
 
 D3DGraphicsVertexBuffer* D3DGraphicsDefault::QuadFrameVertexBuffer = nullptr;
 D3DGraphicsIndexBuffer*  D3DGraphicsDefault::QuadFrameIndexBuffer  = nullptr;
+D3DGraphicsVertexBuffer* D3DGraphicsDefault::PointVertexBuffer = nullptr;
+
+D3DGraphicsVertexBuffer* D3DGraphicsDefault::GetPointVertexBuffer()
+{
+    if (PointVertexBuffer == nullptr)
+    {
+        unsigned int stride = sizeof(float) * 4;
+        unsigned int count = 1;
+        float position[4] = { 0,0,0,1 };
+
+        D3D11_BUFFER_DESC desc;
+        ZeroMemory(&desc, sizeof(desc));
+        desc.Usage = D3D11_USAGE_DEFAULT;
+        desc.BindFlags = D3D11_BIND_VERTEX_BUFFER; //vertex buffer ¿ëµµ
+        desc.CPUAccessFlags = 0;
+        desc.ByteWidth = stride * count;
+
+        D3D11_SUBRESOURCE_DATA data;
+        ZeroMemory(&data, sizeof(data));
+        data.pSysMem = &position;
+
+        PointVertexBuffer = new D3DGraphicsVertexBuffer(&desc, &data);
+        PointVertexBuffer->Create();
+
+        PointVertexBuffer->SetStride(sizeof(float) * 4);
+        PointVertexBuffer->SetOffset(0);
+    }
+    return PointVertexBuffer;
+}
 
 D3DGraphicsVertexBuffer* D3DGraphicsDefault::GetQuadFrameVertexBuffer()
 {

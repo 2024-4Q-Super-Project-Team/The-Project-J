@@ -128,6 +128,22 @@ void Rigidbody::PostRender()
 
 }
 
+void Rigidbody::OnEnable()
+{
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerWorld()->AddPxActor(mRigidActor);
+	}
+}
+
+void Rigidbody::OnDisable()
+{
+	if (mRigidActor)
+	{
+		gameObject->GetOwnerWorld()->RemovePxActor(mRigidActor);
+	}
+}
+
 void Rigidbody::EditorUpdate()
 {
 }

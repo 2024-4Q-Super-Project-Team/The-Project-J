@@ -11,12 +11,15 @@ public:
 	static D3D11_TEXTURE2D_DESC DefaultDSVTextureDesc;
 
 public:
+	static D3DGraphicsVertexBuffer* GetPointVertexBuffer();
 	static D3DGraphicsVertexBuffer* GetQuadFrameVertexBuffer();
 	static D3DGraphicsIndexBuffer*	GetQuadFrameIndexBuffer();
 private:
 	// 평면 버텍스버퍼와 인덱스버퍼
 	static  D3DGraphicsVertexBuffer* QuadFrameVertexBuffer;
 	static  D3DGraphicsIndexBuffer*	 QuadFrameIndexBuffer;
+
+	static  D3DGraphicsVertexBuffer* PointVertexBuffer;
 };
 
 class D3DGPUResourcePool

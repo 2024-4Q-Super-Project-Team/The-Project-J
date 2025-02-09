@@ -17,6 +17,9 @@ public:
     virtual void Render() override;
     virtual void Draw(Camera* _camera) override;
     virtual void PostRender() override;
+
+    virtual void OnEnable() override;
+    virtual void OnDisable() override;
     // Editor Only
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;

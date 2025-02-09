@@ -152,6 +152,15 @@ void GraphicsManager::InitConstantBuffer()
         mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);
         mCBufferArray[slot]->Bind();
     }
+    // Sprite
+    {
+        UINT slot = static_cast<UINT>(eCBufferType::Sprite);
+        bufDesc.ByteWidth = sizeof(SpriteCBuffer);
+        mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
+        mCBufferArray[slot]->SetBindSlot(slot);
+        mCBufferArray[slot]->SetBindStage(eShaderStage::PS);
+        mCBufferArray[slot]->Bind();
+    }
 }
 
 void GraphicsManager::InitShader()
@@ -164,6 +173,7 @@ void GraphicsManager::InitShader()
         mVertexShaderArray[(UINT)eVertexShaderType::PARTICLE] = new D3DGraphicsVertexShader(L"resource/shader/Particle_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::GRID] = new D3DGraphicsVertexShader(L"resource/shader/Grid_VS.cso");
         mVertexShaderArray[(UINT)eVertexShaderType::OUTLINE] = new D3DGraphicsVertexShader(L"resource/shader/Outline_VS.cso");
+        mVertexShaderArray[(UINT)eVertexShaderType::QUADFRAME] = new D3DGraphicsVertexShader(L"resource/shader/QuadFrame_VS.cso");
     
     }
     {
@@ -179,7 +189,7 @@ void GraphicsManager::InitShader()
         mPixelShaderArray[(UINT)ePixelShaderType::PARTICLE] = new D3DGraphicsPixelShader(L"resource/shader/Particle_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::GRID] = new D3DGraphicsPixelShader(L"resource/shader/Grid_PS.cso");
         mPixelShaderArray[(UINT)ePixelShaderType::OUTLINE] = new D3DGraphicsPixelShader(L"resource/shader/Outline_PS.cso");
-
+        mPixelShaderArray[(UINT)ePixelShaderType::QUADFRAME] = new D3DGraphicsPixelShader(L"resource/shader/QuadFrame_PS.cso");
     }
 }
 

@@ -260,6 +260,7 @@
     <ClInclude Include="Component\Collider\Rigidbody.h" />
     <ClInclude Include="Component\Collider\SphereCollider.h" />
     <ClInclude Include="Save\SaveManager.h" />
+    <ClInclude Include="Component\Renderer\SpriteRenderer\SpriteRenderer.h" />
     <ClInclude Include="ThirdParty\imguizmo\GraphEditor.h" />
     <ClInclude Include="ThirdParty\imguizmo\ImCurveEdit.h" />
     <ClInclude Include="ThirdParty\imguizmo\ImGradient.h" />
@@ -399,6 +400,7 @@
     <ClCompile Include="Component\Collider\Rigidbody.cpp" />
     <ClCompile Include="Component\Collider\SphereCollider.cpp" />
     <ClCompile Include="Save\SaveManager.cpp" />
+    <ClCompile Include="Component\Renderer\SpriteRenderer\SpriteRenderer.cpp" />
     <ClCompile Include="ThirdParty\imguizmo\GraphEditor.cpp" />
     <ClCompile Include="ThirdParty\imguizmo\ImCurveEdit.cpp" />
     <ClCompile Include="ThirdParty\imguizmo\ImGradient.cpp" />

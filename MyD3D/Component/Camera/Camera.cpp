@@ -256,7 +256,18 @@ void Camera::DrawForwardList()
     }
     mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
 
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND].clear();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
     GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void Camera::DrawDeferredList()
@@ -295,7 +306,7 @@ void Camera::DrawDeferredList()
     }
 
     // QuadFrame Pass
-    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::QUADFRAME)->Bind();
     GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
     D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
@@ -374,8 +385,8 @@ void Camera::DrawSwapChain()
 {
     // QuadFrame Pass
     GraphicsManager::GetRasterizerState(eRasterizerStateType::NONE_CULLING)->Bind();
-    GraphicsManager::GetVertexShader(eVertexShaderType::SPRITE)->Bind();
-    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::QUADFRAME)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::QUADFRAME)->Bind();
     D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
     D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
 

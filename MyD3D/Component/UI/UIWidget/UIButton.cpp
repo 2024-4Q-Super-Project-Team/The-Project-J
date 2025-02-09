@@ -19,15 +19,12 @@ void UIButton::Start()
 
 void UIButton::PreUpdate()
 {
-	UIButton::PreUpdate();
+	UIWidget::PreUpdate();
 }
 
 void UIButton::Update()
 {
-	if (Input::IsKeyDown('1'))
-		SetState(eButtonState::DEFAULT);
-	else if (Input::IsKeyDown('2'))
-		SetState(eButtonState::SELECTED);
+	
 }
 
 void UIButton::DrawWidget(Vector2 _scale)
@@ -83,16 +80,26 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 	{
 		ImGui::Separator();
 
-		std::string widgetID_d = "NULL Texture";
-		std::string name_d = "NULL Texture";
+		const char* stateNames[] = { "Default", "Selected" };
+		static int currentState = (int)mButtonState;
+
+		if (ImGui::Combo("State", &currentState, stateNames, IM_ARRAYSIZE(stateNames)))
+		{
+			SetState((eButtonState)currentState);
+		}
+		ImGui::ColorEdit4("color", &mColor.x);
+
+		ImGui::NewLine();
+
+		ImGui::Text("Default Texture");
+
+		std::string widgetID_d = "NULL Default Texture";
 
 		if (m_pDefaultTexture)
 		{
 			m_pDefaultTexture->EditorRendering(EditorViewerType::INSPECTOR);
-			name_d = Helper::ToString(m_pDefaultTexture->GetKey());
 			widgetID_d = m_pDefaultTexture->GetEID();
 
-			ImGui::ColorEdit4("color", &mColor.x);
 			ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
 		}
 		else
@@ -101,16 +108,20 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 			ImGui::Selectable(widgetID_d.c_str(), false, ImGuiSelectableFlags_Highlight);
 		}
 
-		std::string widgetID_s = "NULL Texture";
-		std::string name_s = "NULL Texture";
+		if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(widgetID_d.c_str(), &mDefaultTextureHandle))
+		{
+			SetTexture(mDefaultTextureHandle, m_pDefaultTexture);
+		}
+
+		ImGui::Text("Selected Texture");
+
+		std::string widgetID_s = "NULL Selected Texture";
 
 		if (m_pSelectedTexture)
 		{
 			m_pSelectedTexture->EditorRendering(EditorViewerType::INSPECTOR);
-			name_s = Helper::ToString(m_pSelectedTexture->GetKey());
 			widgetID_s = m_pSelectedTexture->GetEID();
 
-			ImGui::ColorEdit4("color", &mColor.x);
 			ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
 		}
 		else
@@ -119,27 +130,15 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 			ImGui::Selectable(widgetID_s.c_str(), false, ImGuiSelectableFlags_Highlight);
 		}
 
-		if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(uid.c_str(), &mDefaultTextureHandle))
-		{
-			SetTexture(mDefaultTextureHandle, m_pDefaultTexture);
-		}
-
-		if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(uid.c_str(), &mSelectedTextureHandle))
+		if (EditorDragNDrop::ReceiveDragAndDropResourceData<Texture2DResource>(widgetID_s.c_str(), &mSelectedTextureHandle))
 		{
 			SetTexture(mSelectedTextureHandle, m_pSelectedTexture);
 		}
 
+		ImGui::NewLine();
 		ImGui::Checkbox("use fade", &bUseFade);
 
-		const char* stateNames[] = { "Default", "Selected" };
-		static int currentState = (int)mButtonState;
-
-		if (ImGui::Combo("State", &currentState, stateNames, IM_ARRAYSIZE(stateNames)))
-		{
-			SetState((eButtonState)currentState);
-		}
-
-		EDITOR_COLOR_POP(1);
+		EDITOR_COLOR_POP(2);
 
 		break;
 	}

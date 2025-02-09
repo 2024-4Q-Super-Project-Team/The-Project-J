@@ -78,7 +78,7 @@ void UIWidget::PostRender()
 {
 }
 
-void UIWidget::SetTexture(ResourceHandle _handle, Texture2DResource* _texture)
+void UIWidget::SetTexture(ResourceHandle _handle, Texture2DResource*& _texture)
 {
 	if (_handle.mResourceType != eResourceType::Texture2DResource)
 		return;

@@ -1,4 +1,4 @@
-#define MAX_LIGHT 20
+#define MAX_LIGHT 10
 #define MAX_BONES 100
 #define MAX_BONE_WEIGHTS 4
 
@@ -161,11 +161,9 @@ cbuffer TransformBuffer : register(b0)
 
 // 매크로: 특정 플래그 확인
 #define USE_MAP(x) ((UseMapFlags & (1 << x)) != 0)
-#define HAS_MAP(x) ((HasMapFlags & (1 << x)) != 0)
 cbuffer MaterialBuffer : register(b1)
 {
     MaterialProperty MaterialProp;
-    uint HasMapFlags; // 비트 플래그
     uint UseMapFlags; // 비트 플래그
 }
 

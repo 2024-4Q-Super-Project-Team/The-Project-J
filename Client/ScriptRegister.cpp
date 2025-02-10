@@ -20,6 +20,7 @@
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
+#include "Contents/GameApp/Script/SpriteAnimScript.h"
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Boss/BossScript.h"
 
@@ -50,4 +51,5 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(GameProgressManager);
 	REGISTER_COMPONENT(BossScript);
 	REGISTER_COMPONENT(TitleScript);
+	REGISTER_COMPONENT(SpriteAnimScript);
 }

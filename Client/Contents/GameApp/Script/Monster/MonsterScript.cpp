@@ -105,6 +105,9 @@ void MonsterScript::Start()
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
 	}
+
+	mTargetPos = gameObject->transform->position;
+
 }
 
 void MonsterScript::Update()
@@ -115,6 +118,11 @@ void MonsterScript::Update()
 
 		if (scope)
 			scope->SetMonster(gameObject);
+
+		if ((m_pScope->transform->position - gameObject->transform->position).LengthSquared() > 40000)
+			bIsScope = false;
+		else
+			bIsScope = true;
 	}
 
 	if (mType.val == (int)eMonsterType::A)
@@ -139,12 +147,15 @@ void MonsterScript::UpdateA()
 		break;
 	case eMonsterStateType::WALK:
 		UpdateWalk();
+		UpdateMonsterAngle(); 
 		break;
 	case eMonsterStateType::FAST_WALK:
 		UpdateFastWalk();
+		UpdateMonsterAngle();
 		break;
 	case eMonsterStateType::RUN:
 		UpdateRun();
+		UpdateMonsterAngle(); 
 		break;
 	case eMonsterStateType::HIT:
 		UpdateHit();
@@ -162,6 +173,7 @@ void MonsterScript::UpdateA()
 
 void MonsterScript::UpdateB()
 {
+	
 	switch (mFSM)
 	{
 	case eMonsterStateType::IDLE:
@@ -169,9 +181,11 @@ void MonsterScript::UpdateB()
 		break;
 	case eMonsterStateType::WALK:
 		UpdateWalk();
+		UpdateMonsterAngle();
 		break;
 	case eMonsterStateType::ROTATE:
 		UpdateRotate();
+		UpdateMonsterAngle();
 		break;
 	case eMonsterStateType::HIT:
 		UpdateHit();
@@ -183,6 +197,7 @@ void MonsterScript::UpdateB()
 		UpdateDead();
 		break;
 	}
+	
 }
 
 void MonsterScript::UpdateIdle()
@@ -202,6 +217,8 @@ void MonsterScript::UpdateIdle()
 			mFSM = eMonsterStateType::ROTATE;
 		}
 	}
+	else
+		mFSM = eMonsterStateType::IDLE;
 }
 
 void MonsterScript::UpdateRotate()
@@ -223,7 +240,6 @@ void MonsterScript::UpdateWalk()
 		if (m_pTarget)
 		{
 			mFSM = eMonsterStateType::FAST_WALK;
-			UpdateMonsterAngle();
 		}
 	}
 	
@@ -252,11 +268,8 @@ void MonsterScript::UpdateWalk()
 		// 방향 연산
 		mTargetDir.Normalize();
 
-		// 거리가 반지름 이상이면 스코프 바깥으로 설정
-		if (mDistance > 100.f)
-			bIsScope = false;
-
 		mResetCount = 0.f;
+
 	}
 	else
 	{
@@ -266,13 +279,6 @@ void MonsterScript::UpdateWalk()
 		}
 		else
 		{
-			if (!bIsScope)
-			{
-				float distance = (m_pScope->transform->position - gameObject->transform->position).Length();
-				
-				if (distance < mRange)
-					bIsScope = true;
-			}
 
 			if (mType.val == (int)eMonsterType::A)
 			{
@@ -298,7 +304,6 @@ void MonsterScript::UpdateFastWalk()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
-		UpdateMonsterAngle();
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 						gameObject->transform->position.y, 
@@ -331,7 +336,6 @@ void MonsterScript::UpdateRun()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
-		UpdateMonsterAngle();
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 								gameObject->transform->position.y, 
@@ -584,14 +588,10 @@ void MonsterScript::UpdateMonsterAnim_B()
 
 void MonsterScript::UpdateMonsterAngle()
 {
-	Vector3 pos = gameObject->transform->position;
-	Vector2 viewDir = { mTargetPos.x - pos.x, mTargetPos.z - pos.z };
 
-	viewDir.Normalize();
-
-	if (viewDir != Vector2::Zero)
+	if (mTargetDir != Vector3::Zero)
 	{
-		float targetAngleY = atan2(-viewDir.x, -viewDir.y);
+		float targetAngleY = atan2(-mTargetDir.x, -mTargetDir.z);
 
 		if (targetAngleY < 0.0f)
 		{
@@ -604,6 +604,5 @@ void MonsterScript::UpdateMonsterAngle()
 		float newAngleY = currAngleY + delta * 0.7f;
 
 		gameObject->transform->SetEulerAngles(Vector3(0.f, newAngleY, 0.f));
-
 	}
 }

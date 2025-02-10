@@ -8,10 +8,6 @@ void PlayerCollisionScript::Start()
     mRigidBody = gameObject->GetComponent<Rigidbody>();
     if(mRigidBody == nullptr)
         mRigidBody = gameObject->AddComponent<Rigidbody>();
-    mRigidBody->SetFreezeRotation(true, true, true);
-    mRigidBody->SetFreezePosition(true, true, true);
-    mRigidBody->SetIsDynamic(true);
-    mRigidBody->SetDisableGravity(true);
 
     mBoxCollider = gameObject->GetComponent<BoxCollider>();
     if (mBoxCollider == nullptr)
@@ -26,6 +22,7 @@ void PlayerCollisionScript::Update()
    if (mOwnerPlayer)
    {
        gameObject->transform->position = mOwnerPlayer->gameObject->transform->position;
+
    }
 }
 

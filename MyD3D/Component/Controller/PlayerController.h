@@ -102,6 +102,12 @@ private:
     //Material
     std::vector<std::string> mMaterials;
     int mMaterialIdx = 0;
+
+    //ray
+    float mMaxDistance = 1.5f;
+    PxVec3 mPxRayOrigin;
+    PxVec3 mPxRayDirection;
+    PxRaycastBuffer mHitBuffer;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

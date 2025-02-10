@@ -68,19 +68,33 @@ void Rigidbody::Update()
 
 void Rigidbody::PostUpdate()
 {	
-	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
-
-	//PostUpdate가 모두 끝난 후, 여기서 simulate 함
+	
+	
 }
 
 void Rigidbody::PreRender()
 {
-	//오브젝트 -> 리지드액터 동기화 
+	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
+	//PreRender가 모두 끝난 후, 여기서 simulate 함
+}
+
+void Rigidbody::Render()
+{
+	//오브젝트의 값이 변경될 수 있음 
+}
+
+void Rigidbody::Draw(Camera* _camera)
+{
+}
+
+void Rigidbody::PostRender()
+{
+
 	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
-	
+
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
 	PxQuat updatedQuaternion = mRigidActor->getGlobalPose().q;
-	
+
 	//Position Freeze!
 	if (mFreezePosition[0])
 		updatedPosition[0] = gameObject->transform->GetWorldPosition().x;
@@ -88,8 +102,8 @@ void Rigidbody::PreRender()
 		updatedPosition[1] = gameObject->transform->GetWorldPosition().y;
 	if (mFreezePosition[2])
 		updatedPosition[2] = gameObject->transform->GetWorldPosition().z;
-	
-	
+
+
 	//Rotation Freeze!
 
 	if (mFreezeRotation[0] || mFreezeRotation[1] || mFreezeRotation[2])
@@ -112,20 +126,6 @@ void Rigidbody::PreRender()
 
 	PxTransform finalTransform(updatedPosition, updatedQuaternion);
 	gameObject->transform->UpdateFromPxTransform(finalTransform);
-}
-
-void Rigidbody::Render()
-{
-	//오브젝트의 값이 변경될 수 있음 
-}
-
-void Rigidbody::Draw(Camera* _camera)
-{
-}
-
-void Rigidbody::PostRender()
-{
-
 }
 
 void Rigidbody::OnEnable()

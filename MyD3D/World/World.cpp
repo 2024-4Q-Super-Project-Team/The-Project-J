@@ -136,12 +136,7 @@ void World::PostUpdate()
                 object->PostUpdate();
         }
     }
-    if (mPxScene)
-    {
-        mPxScene->simulate(Time::GetUnScaledDeltaTime());
-        mPxScene->fetchResults(true);
-        mPxScene->fetchResultsParticleSystem();
-    }
+    
 }
 
 void World::PreRender()
@@ -153,6 +148,12 @@ void World::PreRender()
             if (object->transform->GetParent() == nullptr)
                 object->PreRender();
         }
+    }
+    if (mPxScene)
+    {
+        mPxScene->simulate(Time::GetUnScaledDeltaTime());
+        mPxScene->fetchResults(true);
+        mPxScene->fetchResultsParticleSystem();
     }
 }
 

@@ -121,15 +121,12 @@ void Object::Update()
             child->gameObject->Update();
         }
     }
+
 }
 
 void Object::PostUpdate()
 {
 
-    if (!transform->GetParent())
-    {
-        transform->UpdateMatrix();
-    }
     for (int i = 0; i < (UINT)eComponentType::UPDATE_END; ++i)
     {
         for (auto& comp : mComponentArray[i])
@@ -145,6 +142,11 @@ void Object::PostUpdate()
         {
             child->gameObject->PostUpdate();
         }
+    }
+
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
     }
 
 }

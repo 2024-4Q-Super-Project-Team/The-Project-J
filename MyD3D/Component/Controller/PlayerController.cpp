@@ -205,7 +205,7 @@ void PlayerController::GravityUpdate()
 	if (mIsOnGround == false || mSlopeMode == SlopeMode::Slide)
 	{
 		mDisplacement.y -= mGravity * Time::GetUnScaledDeltaTime();
-		//mDisplacement.y = Clamp(mDisplacement.y, -mMaxGravity, 9999999999.9f);
+		mDisplacement.y = Clamp(mDisplacement.y, -mMaxGravity, 9999999999.9f);
 	}
 	else if(mIsOnGround)
 	{

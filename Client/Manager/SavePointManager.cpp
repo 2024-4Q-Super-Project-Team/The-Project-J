@@ -50,6 +50,7 @@ void SavePointManager::GoBackSavePoint(PlayerScript* deadPlayer)
     {
         // Reset을 먼저 호출하여 상태 초기화
         Player1->Reset();
+        Player1->Jump(0.5f);
         Player1->gameObject->transform->position = Vector3(spawnPoint.z, spawnPoint.y, spawnPoint.x);
         // 위치 설정 후 컨트롤러 위치도 업데이트
         //Player1->mPlayerContro

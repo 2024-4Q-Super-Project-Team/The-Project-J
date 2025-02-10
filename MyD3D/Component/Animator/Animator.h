@@ -54,6 +54,7 @@ public:
     inline void SetFrame(FLOAT _val) { mDuration = _val; }
     inline void SetFrameRateScale(FLOAT _val) { mFrameRateScale = _val; }
     inline void SetLoop(bool _isLoop) { isLoop = _isLoop; }
+    inline void SetReverse(bool reverse) {  isReverse = reverse; }
 public:
     bool IsPlaying();
     bool IsLoop();

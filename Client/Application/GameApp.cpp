@@ -32,8 +32,8 @@ BOOL GameApp::OnPostInitialize()
             mMainScene->GetIWindow()->SetPositionCenter();
         }
 #ifdef _DEBUG
-        EditorManager::ShowEditorWindow(mMainScene);
-        GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+      EditorManager::ShowEditorWindow(mMainScene);
+      GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
 #else
         GameManager::SetRunType(eEngineRunType::GAME_MODE);
 #endif // DEBUG

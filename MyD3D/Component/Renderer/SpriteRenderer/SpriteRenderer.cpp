@@ -174,11 +174,13 @@ void SpriteRenderer::SetSprite(ResourceHandle _handle)
 void SpriteRenderer::SetTileIndexWidth(UINT _width)
 {
 	mTileIndexWidth = _width;
+    mFrameCount = mTileIndexWidth * mTileIndexHeight;
 }
 
 void SpriteRenderer::SetTileIndexHeight(UINT _height)
 {
-	mTileIndexHeight = _height;
+    mTileIndexHeight = _height;
+    mFrameCount = mTileIndexWidth * mTileIndexHeight;
 }
 
 void SpriteRenderer::SetIndex(UINT _index)
@@ -202,6 +204,7 @@ json SpriteRenderer::Serialize()
     ret["tile index width"] = mTileIndexWidth;
     ret["tile index height"] = mTileIndexHeight;
     ret["tile index"] = mTileIndex;
+    ret["sprite size"] = mTileIndex;
 
 	return ret;
 }
@@ -218,14 +221,20 @@ void SpriteRenderer::Deserialize(json& j)
     if (j.contains("tile index width"))
     {
         mTileIndexWidth = j["tile index width"].get<UINT>();
+        mFrameCount = mTileIndexWidth * mTileIndexHeight;
     }
     if (j.contains("tile index height"))
     {
         mTileIndexHeight = j["tile index height"].get<UINT>();
+        mFrameCount = mTileIndexWidth * mTileIndexHeight;
     }
     if (j.contains("tile index"))
     {
         mTileIndex = j["tile index"].get<UINT>();
+    }
+    if (j.contains("sprite size"))
+    {
+        mTileIndex = j["sprite size"].get<INT>();
     }
 }
 
@@ -257,5 +266,6 @@ void SpriteRenderer::EditorRendering(EditorViewerType _viewerType)
         ImGui::InputInt(("Num Tile Height : " + uid).c_str(), &mTileIndexHeight);
         ImGui::InputInt(("Index : " + uid).c_str(), &mTileIndex);
         ImGui::InputInt(("Size : " + uid).c_str(), &mTileSize);
+        mFrameCount = mTileIndexWidth * mTileIndexHeight;
     }
 }

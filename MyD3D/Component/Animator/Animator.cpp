@@ -165,6 +165,7 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
     if (FIND_FAILED(itr, mAnimationTable))
     {
         mAnimationTable[_key] = _handle;
+        mDuration = 0.0f;
     }
 }
 
@@ -347,7 +348,11 @@ Vector3 Animator::CalculateAnimationPosition(AnimationNode* _pChannel, FLOAT _du
         int     CurrFrame = 0;
         while (_pChannel->mPositionKeys[NextFrame].Time < _duration)
         {
-            ++NextFrame;
+            if (NextFrame >= _pChannel->mPositionKeys.size() - 1)
+                break;
+            else
+                ++NextFrame;
+            
         }
         CurrFrame = NextFrame - 1;
         float FrameRatio = (_duration - _pChannel->mPositionKeys[CurrFrame].Time) /
@@ -372,7 +377,10 @@ Quaternion Animator::CalculateAnimationRotation(AnimationNode* _pChannel, FLOAT 
         int     CurrFrame = 0;
         while (_pChannel->mRotationKeys[NextFrame].Time < _duration)
         {
-            ++NextFrame;
+            if (NextFrame >= _pChannel->mRotationKeys.size() - 1)
+                break;
+            else
+                ++NextFrame;
         }
         CurrFrame = NextFrame - 1;
         float FrameRatio = (_duration - _pChannel->mRotationKeys[CurrFrame].Time) /
@@ -397,7 +405,10 @@ Vector3 Animator::CalculateAnimationScaling(AnimationNode* _pChannel, FLOAT _dur
         int     CurrFrame = 0;
         while (_pChannel->mScalingKeys[NextFrame].Time < _duration)
         {
-            ++NextFrame;
+            if (NextFrame >= _pChannel->mScalingKeys.size() - 1)
+                break;
+            else
+                ++NextFrame;
         }
         CurrFrame = NextFrame - 1;
         float FrameRatio = (_duration - _pChannel->mScalingKeys[CurrFrame].Time) /

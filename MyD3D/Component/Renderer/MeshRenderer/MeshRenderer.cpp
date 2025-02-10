@@ -137,6 +137,7 @@ void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
         }
         // 메쉬 바인딩
         mMesh->Bind();
+
         mTransformMatrices.World = XMMatrixTranspose(gameObject->transform->GetWorldMatrix() * mOffsetMatrix);
         mTransformMatrices.View = XMMatrixTranspose(_view);
         mTransformMatrices.Projection = XMMatrixTranspose(_projection);

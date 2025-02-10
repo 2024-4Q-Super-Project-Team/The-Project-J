@@ -53,6 +53,7 @@
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -87,6 +88,7 @@
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

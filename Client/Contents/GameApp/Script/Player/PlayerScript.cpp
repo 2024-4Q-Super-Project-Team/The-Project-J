@@ -4,6 +4,7 @@
 #include "PlayerCollisionScript.h"
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
+#include "Contents/GameApp/Script/SpriteAnimScript.h"
 #include "Manager/SavePointManager.h"
 #include "Contents/GameApp/Script/CameraController.h"
 
@@ -72,12 +73,17 @@ void PlayerScript::Start()
     {   // BurnObjectScriptÃß°¡
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
+        mBurnObjectScript->SetBurn(true);
     }
     {
         mCollisionScript = mCollisionObject->GetComponent<PlayerCollisionScript>();
         if (mCollisionScript == nullptr)
             mCollisionScript = mCollisionObject->AddComponent<PlayerCollisionScript>();
         mCollisionScript->SetOwnerPlayer(this);
+    }
+    {
+        mFireOffEffectObject = FindChildObject(gameObject->transform->GetParent()->gameObject, L"Player_Fireoff_Effect");
+        mFireOffEffectObject->GetComponent<SpriteRenderer>()->SetActive(false);
     }
 
     InitFireLight();
@@ -122,6 +128,7 @@ void PlayerScript::Update()
         break;
     }
     mFireObject->transform->position = mCandleTopBone->GetWorldPosition();
+    mFireOffEffectObject->transform->position = mCandleTopBone->GetWorldPosition() + Vector3(0, 30, 0);
 }
 
 void PlayerScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
@@ -576,6 +583,12 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             SetState(ePlayerStateType::OFF_FIRE);
             mBurnProcessTarget = _dst;
+
+            //ºÒ ²¨Áú ¶§ ÀÌÆåÆ® 
+            Object* dstFireObject = FindChildObject(_dst->gameObject->transform->GetParent()->gameObject, L"Player_Fireoff_Effect");
+            SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();
+            if (effectAnim != nullptr)
+                 effectAnim->Play();
         }
     }
     else
@@ -586,6 +599,10 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
             mBurnObjectScript->SetBurn(false);
             SetState(ePlayerStateType::OFF_FIRE);
             mBurnProcessTarget = nullptr;
+
+            SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();
+            if (effectAnim != nullptr)
+                effectAnim->Play();
         }
     }
 }

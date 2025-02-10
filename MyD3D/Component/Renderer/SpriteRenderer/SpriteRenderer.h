@@ -47,6 +47,8 @@ public:
     void SetTileIndexHeight(UINT _numHeight);
     void SetIndex(UINT _index);
     void SetIndex(UINT _width, UINT height);
+
+    int GetFrameCount() { return mFrameCount; }
 public:
     ResourceHandle      mSpriteHandle;
     Texture2DResource*  mSpriteTexture;
@@ -54,7 +56,8 @@ public:
     INT mTileIndexWidth = 1;
     INT mTileIndexHeight = 1;
     INT mTileIndex = 0;
-    INT mTileSize = 1;
+    INT mTileSize = 20;
+    INT mFrameCount = 1;
 public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j) override;

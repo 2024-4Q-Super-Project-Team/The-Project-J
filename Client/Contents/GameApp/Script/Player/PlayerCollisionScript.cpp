@@ -9,12 +9,11 @@ void PlayerCollisionScript::Start()
     if(mRigidBody == nullptr)
         mRigidBody = gameObject->AddComponent<Rigidbody>();
 
-    mBoxCollider = gameObject->GetComponent<BoxCollider>();
-    if (mBoxCollider == nullptr)
-        mBoxCollider = gameObject->AddComponent<BoxCollider>();
-    mBoxCollider->SetPosition(Vector3(0.0f, 70.0f, 0.0f));
-    mBoxCollider->SetExtents(Vector3(60.0f, 50.0f, 60.0f));
-    mBoxCollider->SetIsTrigger(true);
+    mCollider = gameObject->GetComponent<SphereCollider>();
+    if (mCollider == nullptr)
+        mCollider = gameObject->AddComponent<SphereCollider>();
+    mCollider->SetRadius(100);
+    mCollider->SetIsTrigger(true);
 }
 
 void PlayerCollisionScript::Update()

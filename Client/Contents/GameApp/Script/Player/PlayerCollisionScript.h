@@ -16,7 +16,7 @@ public:
 	inline void SetOwnerPlayer(PlayerScript* _owner) { mOwnerPlayer = _owner; }
 private:
 	Rigidbody* mRigidBody = nullptr;
-	BoxCollider* mBoxCollider = nullptr;
+	SphereCollider* mCollider = nullptr;
 	PlayerScript* mOwnerPlayer = nullptr;
 };
 

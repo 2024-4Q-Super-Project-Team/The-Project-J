@@ -72,6 +72,7 @@ private:
 	Object* mCandleObject = nullptr;
 	Object* mFireObject = nullptr;
 	Object* mCollisionObject = nullptr;
+	Object* mFireOffEffectObject = nullptr;
 	Transform* mCandleTopBone = nullptr;
 	// 1p, 2p 플레이어 구분용도
 	SerializeField(INT,		mPlayerHandle, 0);

@@ -24,7 +24,6 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(UISprite);
 	REGISTER_COMPONENT(UIText);
 	REGISTER_COMPONENT(UIButton);
-	REGISTER_COMPONENT(Effect);
 
 	return true;
 }

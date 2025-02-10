@@ -10,8 +10,8 @@
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-eEngineRunType		GameManager::mCurrRunType = eEngineRunType::NONE;
-eEngineRunType		GameManager::mNextRunType = eEngineRunType::NONE;
+volatile eEngineRunType		GameManager::mCurrRunType = eEngineRunType::NONE;
+volatile eEngineRunType		GameManager::mNextRunType = eEngineRunType::NONE;
 float				GameManager::mFixedUpdateTick = 0.02f;
 Application*		GameManager::mApplication = nullptr;
 PhysicsManager*		GameManager::mPhysicsManager = nullptr;

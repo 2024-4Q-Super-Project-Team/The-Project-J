@@ -211,9 +211,7 @@ void EditorCamera::ExcuteDrawList()
             DrawWire();
         }
     }
-    // 조명 리스트를 초기화한다.
-    mSceneLights.clear();
-    mLightCBuffer.NumLight = 0;
+    ClearDrawList();
 }
 
 void EditorCamera::ClearDrawList()
@@ -285,6 +283,19 @@ void EditorCamera::DrawObject()
     mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
 
     GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
+
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND].clear();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
 void EditorCamera::DrawWire()

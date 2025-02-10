@@ -23,6 +23,7 @@
 #include "Contents/GameApp/Script/SpriteAnimScript.h"
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Boss/newBossScript.h"
+#include "Contents/GameApp/Script/Boss/newBossAttackScript.h"
 
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
@@ -50,6 +51,7 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(BoxScript);
 	REGISTER_COMPONENT(GameProgressManager);
 	REGISTER_COMPONENT(newBossScript);
+	REGISTER_COMPONENT(newBossAttackScript);
 	REGISTER_COMPONENT(TitleScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
 }

@@ -57,6 +57,9 @@ public:
 		PxHitFlags& queryFlags) override
 	{
 
+		if(shape->getFlags() & PxShapeFlag::eTRIGGER_SHAPE)
+			if(!(shape->getFlags() & PxShapeFlag::eSIMULATION_SHAPE))
+			return PxQueryHitType::eNONE;
 		return PxQueryHitType::eBLOCK;
 	}
 

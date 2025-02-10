@@ -460,7 +460,6 @@ void PlayerScript::ProcessJump()
         {
             isJump = false;
             mJumpTrigger = false;
-            mPlayerController->SetMoveForceY(0.0f);
         }
     }
     if (mJumpTrigger == true)

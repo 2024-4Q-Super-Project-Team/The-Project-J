@@ -125,6 +125,10 @@ void Object::Update()
             child->gameObject->Update();
         }
     }
+    if (!transform->GetParent())
+    {
+        transform->UpdateMatrix();
+    }
 
 }
 
@@ -148,10 +152,6 @@ void Object::PostUpdate()
         }
     }
 
-    if (!transform->GetParent())
-    {
-        transform->UpdateMatrix();
-    }
 
 }
 

@@ -40,6 +40,12 @@ private:
 		PlayerController* controller = static_cast<PlayerController*>(hit.controller->getUserData());
 		controller->mActorsColliding[hit.actor] = true;
 
+		//바닥을 밟았을 때 
+		if (hit.worldPos.y <= hit.controller->getPosition().y)
+		{
+			controller->mIsOnGround = true;
+		}
+
 		// 처음으로 충돌했을 때 
 		if (mCollisions[hit.controller].find(hit.actor) == mCollisions[hit.controller].end())
 		{
@@ -57,6 +63,7 @@ private:
 			for (auto script : otherScripts)
 				script->OnCollisionStay(otherRigidbody, triggerRigidbody);
 		}
+
 	}
 
 	virtual void onControllerHit(const PxControllersHit& hit) 

@@ -105,7 +105,6 @@ private:
 
     //ray
     float mMaxDistance = 1.5f;
-    PxVec3 mPxRayOrigin;
     PxVec3 mPxRayDirection;
     PxRaycastBuffer mHitBuffer;
 public:

@@ -107,65 +107,13 @@ void PlayerController::PreUpdate()
 
 void PlayerController::Update()
 {
-	
+
 }
 
 void PlayerController::PostUpdate()
 {
+	mIsOnGround = false;
 	mCapsuleController->move(mDisplacement, 0.001f, Time::GetScaledDeltaTime(), mCharacterControllerFilters);
-
-	//중력을 주어야 하는지를 판단하기 위해 바닥으로 쏘는 ray 
-	Vector3 rayOriginPos = gameObject->transform->GetWorldPosition() + Vector3(0, -0.5f, 0);
-	mPxRayOrigin = PxVec3(rayOriginPos.x, rayOriginPos.y, rayOriginPos.z);
-
-	PxQueryFilterData filterData(PxQueryFlag::eSTATIC);
-	GameManager::GetCurrentWorld()->GetPxScene()
-		->raycast(mPxRayOrigin, mPxRayDirection, 1.0f, mHitBuffer);
-
-	if (mHitBuffer.hasBlock)
-	{
-		PxActor* otherActor = mHitBuffer.getAnyHit(0).actor;
-		Rigidbody* otherRigid = static_cast<Rigidbody*>(otherActor->userData);
-		Object* otherObject = otherRigid->gameObject;
-
-		auto thisScripts = gameObject->GetComponents<MonoBehaviour>();
-		auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
-
-		if (!mIsOnGround) //땅을 처음 밟음 
-		{
-			for (auto script : thisScripts)
-				script->OnCollisionEnter(mRigid, otherRigid);
-			for (auto script : otherScripts)
-				script->OnCollisionEnter(otherRigid, mRigid);
-		}
-		else
-		{
-			for (auto script : thisScripts)
-				script->OnCollisionStay(mRigid, otherRigid);
-			for (auto script : otherScripts)
-				script->OnCollisionStay(otherRigid, mRigid);
-		}
-		mIsOnGround = true;
-	}
-	else
-	{
-		if (mIsOnGround)
-		{
-			PxActor* otherActor = mHitBuffer.getAnyHit(0).actor;
-			Rigidbody* otherRigid = static_cast<Rigidbody*>(otherActor->userData);
-			Object* otherObject = otherRigid->gameObject;
-
-			auto thisScripts = gameObject->GetComponents<MonoBehaviour>();
-			auto otherScripts = otherObject->GetComponents<MonoBehaviour>();
-
-			for (auto script : thisScripts)
-				script->OnCollisionExit(mRigid, otherRigid);
-			for (auto script : otherScripts)
-				script->OnCollisionExit(otherRigid, mRigid);
-		}
-		mIsOnGround = false;
-	}
-
 	GravityUpdate();
 	gameObject->transform->UpdatePxTransform();
 }
@@ -262,7 +210,7 @@ void PlayerController::GravityUpdate()
 	}
 	else if(mIsOnGround)
 	{
-		mDisplacement.y = -0.0f;
+		mDisplacement.y = -0.01f;
 	}
 }
 

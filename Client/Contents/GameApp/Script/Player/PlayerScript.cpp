@@ -506,6 +506,12 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             SetState(ePlayerStateType::OFF_FIRE);
             mBurnProcessTarget = _dst;
+
+            //¿¬±â ÀÌÆåÆ® 
+            SpriteRenderer*offEffect = _dst->gameObject->GetComponent<SpriteRenderer>();
+            if (offEffect == nullptr) return;
+
+
         }
     }
     else

@@ -45,11 +45,12 @@ void Boss_Attack01_Script::Update()
 			FLOAT ratio = mRazerElapsedTime / mRazerTime.val;
 			FLOAT razerAngle = Lerp(-mRazerRotate.val, mRazerRotate.val, ratio);
 
-			// 기존 방향 벡터 + 추가 회전 적용
-			Matrix rotationMatrix = Matrix::CreateFromAxisAngle(Vector3(0, 1, 0), razerAngle);
-			Vector3 twistedDir = Vector3::TransformNormal(mRootViewDir, rotationMatrix);
+			// 기존 방향 벡터에 추가적인 회전 적용
+			Vector3 rightDir = mRootViewDir.Cross(Vector3(0, 1, 0));
+			Vector3 adjustedDir = mRootViewDir * cos(razerAngle) + rightDir * sin(razerAngle);
+			adjustedDir.Normalize(); // 정규화하여 크기 유지
 
-			gameObject->transform->position = (twistedDir * mRazerDist.val);
+			gameObject->transform->position = (adjustedDir * mRazerDist.val);
 		}
 	}
 	if (isAttack == FALSE)

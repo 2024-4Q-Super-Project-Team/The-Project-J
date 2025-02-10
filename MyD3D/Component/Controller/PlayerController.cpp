@@ -145,6 +145,7 @@ void PlayerController::PostUpdate()
 			for (auto script : otherScripts)
 				script->OnCollisionStay(otherRigid, mRigid);
 		}
+		mIsOnGround = true;
 	}
 	else
 	{
@@ -162,6 +163,7 @@ void PlayerController::PostUpdate()
 			for (auto script : otherScripts)
 				script->OnCollisionExit(otherRigid, mRigid);
 		}
+		mIsOnGround = false;
 	}
 
 	GravityUpdate();

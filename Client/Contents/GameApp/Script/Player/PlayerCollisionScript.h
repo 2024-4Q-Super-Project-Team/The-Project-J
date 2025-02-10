@@ -8,8 +8,8 @@ class PlayerCollisionScript : public MonoBehaviour
 public:
 	_MONOBEHAVIOUR_INIT(PlayerCollisionScript);
 public:
-	void Start();
-	void Update();
+	virtual void Start() override;
+	virtual void Update() override;
 	virtual void _CALLBACK OnTriggerStay(Collider* _origin, Collider* _destination) override;
 	virtual void _CALLBACK OnTriggerExit(Collider* _origin, Collider* _destination) override;
 public:

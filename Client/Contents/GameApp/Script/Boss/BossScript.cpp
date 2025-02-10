@@ -5,16 +5,24 @@
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Boss/Boss_Attack01_Script.h"
 
-#define BOSS_ANIM_IDLE L"001"
-#define BOSS_ANIM_ATTACK_01 L"003"
-#define BOSS_ANIM_ATTACK_02 L"004"	// 005나 004중 하나임
-#define BOSS_ANIM_HIT				// 피격 애니메이션 X
-#define BOSS_LAMP_BONE_NAME L"Bone.121" // 보스의 램프 본
+#define BOSS_ANIM_IDLE		L"001"		
+#define BOSS_ANIM_ATTACK_01 L"003"		
+#define BOSS_ANIM_ATTACK_02 L"004"				// 005나 004중 하나임
+#define BOSS_ANIM_HIT							// 피격 애니메이션 X
+
+/*	
+*   보스 만들 시 유의 사항
+*	등대 오브젝트 이름 유의하기
+*	Boss 오브젝트 이름 맞추기
+*	Boss_Attack01 = 레이저 오브젝트
+*	램프 본 이름 유의하기 ( Origin : Bone.005 -> Boss_Lamp_Bone )
+*/
 
 void BossScript::Start()
 {
 	// 축이 될 오브젝트를 찾는다.
 	Object* axisObject = FindObjectWithName(L"Stage_lighthouse.fbx");
+	
 	if (axisObject)
 	{
 		// 축이 될 트랜스폼을 초기화해준다.
@@ -93,6 +101,9 @@ void BossScript::UpdateAnimation()
 	case eBossStateType::ATTACK:
 	{
 		mBodyAnimator->SetLoop(false);
+		mCurrAttackType == ATTACK_01 ?
+			mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_ATTACK_01, 0.5f) :
+			mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_ATTACK_02, 0.5f);
 		break;
 	}
     default:
@@ -127,7 +138,8 @@ void BossScript::UpdateIdle()
 		mIdleTickCounter = 0.0f;
 		mCurIdleTime = Random::Range(mMinIdleTick.val, mMaxIdleTick.val);
 		// 다음 행동 패턴을 고른다.
-		mCurrAttackType = (eBossAttackType)Random::Range<INT>(ATTACK_01, ATTACK_02);
+		//mCurrAttackType = (eBossAttackType)Random::Range<INT>(ATTACK_01, ATTACK_02);
+		mCurrAttackType = ATTACK_01;
 		SetState(eBossStateType::ATTACK);
 	}
 }
@@ -152,25 +164,25 @@ void BossScript::UpdateAttack()
 #define BOSS_ATTACK_01_TRIGGER_FRAME 1	// 광선이 나가기 시작하는 프레임
 void BossScript::UpdateAttack01()
 {
-	// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
-	if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
+	if (mBodyAnimator->GetActiveAnimationKey() == BOSS_ANIM_ATTACK_01)
 	{
-		// 광선이 비활성화 중이면 활성화
-		if (mRazerObject->GetState() == EntityState::Passive)
+		// 램프에서 검은 광선이 나와 왼쪽 아래 바닥부터 오른쪽 아래 바닥까지 이어지는 광역 딜을 날린다.
+		if (mBodyAnimator->GetDuration() >= BOSS_ATTACK_01_TRIGGER_FRAME)
 		{
-			mRazerObject->SetActive(true);
-			isRazerSpawn = TRUE;
-			mRazerScript->SetAttackStart();
-			mRazerElapsedTime = 0.0f;
+			// 광선이 비활성화 중이면 활성화
+			if (mRazerObject->GetState() == EntityState::Passive)
+			{
+				mRazerObject->SetActive(true);
+				isRazerSpawn = TRUE;
+				mRazerScript->SetAttackStart();
+			}
 		}
-		mRazerElapsedTime += Time::GetScaledDeltaTime();
-
-		if (mRazerElapsedTime > mRazerTime.val)
+		if (mBodyAnimator->IsEnd())
 		{
-			mRazerScript->SetAttackEnd();
+			mCurrAttackType = NONE;
+			SetState(eBossStateType::IDLE);
 		}
 	}
-
 }
 
 #define BOSS_ATTACK_02_TRIGGER_FRAME 1	// 구체를 던지는 프레임

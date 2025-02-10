@@ -8,12 +8,20 @@ public:
 	void Start();
 	void Update();
 public:
-	void InitCollider();
-public:
 	void SetAttackStart();
 	void SetAttackEnd();
+	inline BOOL IsAttack() { return isAttack; }
 private:
-	BoxCollider* mHitColiider;
-	Animator* mAnimator;
+	Object* mAttachBone;
+
+	BoxCollider*	mHitColiider;
+	Animator*		mAnimator;
+	BoneAttacher*	mRazerBoneAttacher = nullptr;
+
+	BOOL isAttack = FALSE;
+	SerializeField(FLOAT, mRazerScale, 1.0f);	// 패턴의 광선 크기(이펙트, 콜라이더) 계수
+	SerializeField(FLOAT, mRazerTime, 3.0f);	// 패턴의 광선 총 시간
+	SerializeField(FLOAT, mRazerRotate, 3.0f);	// 패턴의 광선 회전 반경(라디안? 디그리?)
+	FLOAT mRazerElapsedTime = 0.0f;
 };
 

@@ -25,6 +25,9 @@ public:
     virtual void EditorRender() override;
 public:
     inline void SetDestBone(Transform* _dstBone) { mDestBone = _dstBone; }
+    inline void SetOffsetPosition(Vector3 _vec3) { mOffsetPosition = _vec3; }
+    inline void SetOffsetRotation(Quaternion _quat) { mOffsetRotation = _quat; }
+    inline void SetOffsetScaling(Vector3 _vec3) { mOffsetScale = _vec3; }
 private:
     // Owner본이 DestBone에 붙는다.
     Transform* mDestBone;

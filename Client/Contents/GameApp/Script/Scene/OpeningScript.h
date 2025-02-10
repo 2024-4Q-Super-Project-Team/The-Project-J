@@ -1,4 +1,5 @@
 #pragma once
+#include "Helper/InputSyncer.h"
 
 class OpeningScript
 	: public MonoBehaviour

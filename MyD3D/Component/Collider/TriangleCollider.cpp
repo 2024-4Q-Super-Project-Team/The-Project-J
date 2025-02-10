@@ -131,7 +131,10 @@ void TriangleCollider::EditorRender()
 
 void _CALLBACK TriangleCollider::OnEnable()
 {
-	mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+	if (mMeshHandle.GetResourceType() == eResourceType::MeshResource)
+	{
+		mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+	}
 	return void _CALLBACK();
 }
 
@@ -164,7 +167,10 @@ void TriangleCollider::Deserialize(json& j)
 	if (j.contains("mesh handle"))
 	{
 		mMeshHandle.Deserialize(j["mesh handle"]);
-		mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+		if (mMeshHandle.GetResourceType() == eResourceType::MeshResource)
+		{
+			mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
+		}
 	}
 }
 

@@ -93,6 +93,16 @@ void Animator::Render()
             }
         }
         CalculateAnimationTramsform(gameObject->transform);
+        if (mBlendAnimation)
+        {
+            mBlendElapsed += Time::GetScaledDeltaTime();
+
+            if (mBlendElapsed > mBlendTime)
+            {
+                mBlendAnimation = nullptr;
+                mBlendElapsed = 0.0f;
+            }
+        }
     }
 }
 
@@ -314,17 +324,10 @@ void Animator::CalculateAnimationTramsform(Transform* _pBone)
                 FLOAT BlendFactor = Clamp(mBlendElapsed / mBlendTime, 0.0f, 1.0f);
 
                 AnimPosition = Vector3::Lerp(BlendPosition, AnimPosition, BlendFactor);
-                AnimQuaternion = Quaternion::Lerp(BlendQuaternion, AnimQuaternion, BlendFactor);
+                AnimQuaternion = Quaternion::Slerp(BlendQuaternion, AnimQuaternion, BlendFactor);
                 AnimScaling = Vector3::Lerp(BlendScaling, AnimScaling, BlendFactor);
-
-                if (BlendFactor == 1.0f)
-                {
-                    mBlendAnimation = nullptr;
-                }
-                mBlendElapsed += Time::GetScaledDeltaTime();
             }
         }
-        
         _pBone->position = AnimPosition;
         _pBone->rotation = AnimQuaternion;
         _pBone->scale    = AnimScaling;
@@ -421,6 +424,21 @@ void Animator::EditorRendering(EditorViewerType _viewerType)
             {
                 mActiveAnimation->EditorRendering(EditorViewerType::DEFAULT);
                 widgetID = mActiveAnimation->GetEID();
+            }
+            else
+            {
+                ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+                ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+                EDITOR_COLOR_POP(1);
+            }
+        }
+        {
+            ImGui::Text("Blending Animation");
+            std::string widgetID = "NULL Animation";
+            if (mBlendAnimation)
+            {
+                mBlendAnimation->EditorRendering(EditorViewerType::DEFAULT);
+                widgetID = mBlendAnimation->GetEID();
             }
             else
             {

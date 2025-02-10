@@ -38,7 +38,11 @@ void Object::Start()
     {
         for (auto& comp : mComponentArray[i])
         {
-            comp->Start();
+            if (comp->isStart == false)
+            {
+                comp->isStart = true;
+                comp->Start();
+            }
         }
     }
 }

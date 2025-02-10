@@ -23,6 +23,7 @@
 
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
+#include "Contents/GameApp/Script/Scene/TitleScript.h"
 
 void ScriptRegister::Register()
 {
@@ -43,5 +44,5 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(BoxScript);
 	REGISTER_COMPONENT(GameProgressManager);
 	REGISTER_COMPONENT(BossScript);
-	REGISTER_COMPONENT(OpeningScript);
+	REGISTER_COMPONENT(TitleScript);
 }

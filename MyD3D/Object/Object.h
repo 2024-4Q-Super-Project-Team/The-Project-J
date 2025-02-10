@@ -108,8 +108,12 @@ T* Object::AddComponent(bool _isStart)
 
     if (GameManager::GetRunType() == eEngineRunType::GAME_MODE && _isStart)
     {
-        // JSON_TODO : 이거 컴포넌트 추가도 Addcomponent로 하지 말아주세요 ㅠㅠ
-        component->Start();
+        if (component->isStart == false)
+        {
+            component->Start();
+            component->isStart = true;
+        }
+            
     }
 
     return component;

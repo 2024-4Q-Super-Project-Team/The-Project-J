@@ -44,7 +44,7 @@ public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 public:
 	// 기본 정보 설정
-	void SetTexture(ResourceHandle _handle, Texture2DResource* _texture);
+	void SetTexture(ResourceHandle _handle, Texture2DResource*& _texture);
 	bool ProcessFadeIn(Color* _color);
 	bool ProcessFadeOut(Color* _color);
 

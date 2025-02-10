@@ -9,7 +9,8 @@ void JumpPadScript::Start()
 
 	BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
 	boxCol->SetPosition(Vector3(0, 18, 0));
-	boxCol->SetExtents(Vector3(130, 10, 130));
+	Vector3 scale = gameObject->transform->GetWorldScale();
+	boxCol->SetExtents(Vector3(300, 100, 300) * scale);
 }
 
 void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)

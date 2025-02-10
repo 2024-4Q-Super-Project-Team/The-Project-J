@@ -49,16 +49,13 @@ private:
 	FLOAT mIdleTickCounter = 0.0f;						// 다음 공격 패턴을 위한 시간 카운터
 
 	eBossStateType mBossState = eBossStateType::IDLE;	//
-	BOOL isAttack = FALSE;								//
 	eBossAttackType mCurrAttackType = NONE;				//
 
 	// Attack01 관련
-	Object* mRazerObject = nullptr;
-	Boss_Attack01_Script* mRazerScript = nullptr;
-	SerializeField(FLOAT, mRazerScale, 1.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
-	SerializeField(FLOAT, mRazerTime, 3.0f);			// Attack01패턴의 광선 크기(이펙트, 콜라이더) 계수
+	Object* mRazerObject = nullptr;						
+	Boss_Attack01_Script* mRazerScript = nullptr;		
+	
 	BOOL isRazerSpawn = FALSE;
-	FLOAT mRazerElapsedTime = 0.0f;
 	// Attack02 관련
 	SerializeField(INT, mMonstaerSpawnCount, 3);		// Attack02패턴의 몬스터 소환 수
 	ResourceHandle mSpawnEffectTextrueHandle;

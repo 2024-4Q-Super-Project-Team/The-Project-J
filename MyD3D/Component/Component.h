@@ -29,13 +29,11 @@ enum class eComponentType
 	SKINNED_MESH_RENDERER,
 	MESH_RENDERER,
 	SPRITE_RENDERER,
-	EDITOR_UI,
 	RIGIDBODY,
 	COLLDIER,
 	CONTROLLER,
 	AUDIO_SOURCE,
 	AUDIO_LISTENER,
-	OUTLINE,
 	CANVAS,
 	UI_SPRITE,
 	UI_TEXT,
@@ -89,6 +87,7 @@ protected:
 	eComponentType	mType;
 	bool			isActive; 
 public:
+	bool			isStart = false;
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
 };
 

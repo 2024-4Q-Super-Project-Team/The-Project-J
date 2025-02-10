@@ -37,6 +37,8 @@ protected: // MonoBehaviour메소드==================
 	// 오브젝트 검색===============================
 	// 현재 월드를 기준으로 오브젝트의 이름과 태그가 둘다 같은 오브젝트를 반환
 	Object* FindObject(std::wstring_view _name, std::wstring_view _tag);
+	// 현재 월드를 기준으로 오브젝트의 이름과 태그가 둘다 같은 오브젝트를 반환
+	Object* FindChildObject(Object* _parent, std::wstring_view _name);
 	// 현재 월드를 기준으로 오브젝트 이름으로 검색하여 가장 처음에 나오는 오브젝트를 반환
 	Object* FindObjectWithName(std::wstring_view _name);
 	// 현재 월드를 기준으로 오브젝트를 태그로 검색하여 나온 오브젝트들을 배열로 반환

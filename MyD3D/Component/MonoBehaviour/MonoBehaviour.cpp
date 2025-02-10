@@ -30,6 +30,22 @@ Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _ta
 	}
 	return nullptr;
 }
+Object* MonoBehaviour::FindChildObject(Object* _parent, std::wstring_view _name)
+{
+	if (!_parent) return nullptr;
+
+	auto& children = _parent->transform->GetChildren();
+	for (auto& child : children)
+	{
+		if (child->gameObject->GetName() == _name)
+		{
+			return child->gameObject;
+		}
+		Object* found = FindChildObject(child->gameObject, _name);
+		if (found) return found;
+	}
+	return nullptr;
+}
 Object* MonoBehaviour::FindObjectWithName(std::wstring_view _name)
 {
     World* curWorld = GameManager::GetCurrentWorld();

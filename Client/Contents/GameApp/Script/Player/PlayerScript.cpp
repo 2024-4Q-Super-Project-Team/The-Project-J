@@ -18,7 +18,6 @@ void PlayerScript::Start()
 {
     // 초기화 코드
     gameObject->SetTag(L"Player");
-
     {
         Object* RootObject = gameObject->transform->GetParent()->gameObject;
         auto& Children = RootObject->transform->GetChildren();

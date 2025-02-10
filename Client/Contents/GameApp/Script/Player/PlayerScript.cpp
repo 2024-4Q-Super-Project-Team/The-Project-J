@@ -5,6 +5,7 @@
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 #include "Manager/SavePointManager.h"
+#include "Contents/GameApp/Script/CameraController.h"
 
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
@@ -50,6 +51,24 @@ void PlayerScript::Start()
         if (mPlayerController == nullptr)
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
+
+    {
+        // CameraController 초기화
+        Object* cameraObject = FindObjectWithName(L"Main_Camera");             
+        if (cameraObject != nullptr)
+        {
+            mCameraController = cameraObject->GetComponent<CameraController>();
+            if (mCameraController == nullptr)
+            {
+                Helper::HRT(E_FAIL, "CameraController is nullptr");
+            }
+        }
+        else
+        {
+            Helper::HRT(E_FAIL, "Camera object is nullptr");
+        }
+    }
+
     {   // BurnObjectScript추가
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
@@ -136,6 +155,57 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
         mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
         mPlayerController->SetMoveForceY(0.0f);
     }
+}
+
+void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
+{
+    if (_destination->gameObject->GetTag() == L"CameraTrigger1")
+    {
+        isInTrigger = true;
+
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+        if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
+        {
+            Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+            cam->ZoomToFov(1.0f, 1.5f, 2.0f, Dotween::EasingEffect::OutSine);
+            mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
+
+        }
+    }
+
+    //if (_destination->gameObject->GetTag() == L"CameraTrigger2")
+    //{
+    //    PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+    //    PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+    //    if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
+    //    {
+    //        mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
+    //    }
+    //}
+
+
+    return void _CALLBACK();
+}
+
+void _CALLBACK PlayerScript::OnTriggerStay(Collider* _origin, Collider* _destination)
+{
+    return void _CALLBACK();
+}
+
+void _CALLBACK PlayerScript::OnTriggerExit(Collider* _origin, Collider* _destination)
+{
+    if (_destination->gameObject->GetTag() == L"CameraTrigger1")
+    {
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+        mCameraController->LookAt(Vector3(0.0f, 0.05f, -0.035f), 2.0f, Dotween::EasingEffect::OutSine);
+        Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+    }
+    return void _CALLBACK();
 }
 
 void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* _destination)

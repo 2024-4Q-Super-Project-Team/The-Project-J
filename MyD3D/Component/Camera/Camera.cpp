@@ -52,8 +52,30 @@ void Camera::PreUpdate()
 {
 }
 
+void Camera::ZoomToFov(float startFov, float endFov, float duration, Dotween::EasingEffect easingEffect)
+{
+    this->startFov = startFov;
+    this->endFov = endFov;
+    this->fovDuration = duration;
+    this->fovElapsedTime = 0.0f;
+    this->fovEasingEffect = easingEffect;
+    this->isZoomingFov = true;
+}
+
 void Camera::Update()
 {
+    if (isZoomingFov)
+    {
+        fovElapsedTime += Time::GetScaledDeltaTime();
+        float t = fovElapsedTime / fovDuration;
+        mFovAngle = Dotween::EasingFunction[static_cast<unsigned int>(fovEasingEffect)](t) * (endFov - startFov) + startFov;
+
+        if (fovElapsedTime >= fovDuration)
+        {
+            isZoomingFov = false;
+            mFovAngle = endFov;
+        }
+    }
 }
 
 void Camera::PostUpdate()

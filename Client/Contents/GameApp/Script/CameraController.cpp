@@ -16,10 +16,27 @@ void CameraController::Start()
 	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.035f);
     mZoomSpeed = 5.0f;
     mLerpSpeed = 3.0f;
+
+    // 원래 카메라 방향 저장
+    mOriginalCameraDirection = mCameraDirection.val;
 }
 
 void CameraController::Update()
 {
+    if (isLookingAt)
+    {
+        lookAtElapsedTime += Time::GetScaledDeltaTime();
+        float t = lookAtElapsedTime / lookAtDuration;
+        mCameraDirection.val = Vector3::Lerp(startDirection, endDirection, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+
+        if (lookAtElapsedTime >= lookAtDuration)
+        {
+            isLookingAt = false;
+            lookAtElapsedTime = 0.0f;
+            mCameraDirection.val = endDirection;
+        }
+    }
+
     PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
     PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
     Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
@@ -77,10 +94,38 @@ void CameraController::Update()
     gameObject->transform->LookAt(MidPoint, UpVector);
 }
 
+void CameraController::SetCameraDirection(const Vector3& direction)
+{
+    mCameraDirection.val = direction;
+}
+
+void CameraController::ResetCameraDirection()
+{
+    mCameraDirection.val = mOriginalCameraDirection;
+}
+
+void CameraController::LookAt(const Vector3& targetDirection, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isLookingAt) return;
+
+    isLookingAt = true;
+    lookAtDuration = duration;
+    lookAtElapsedTime = 0.0f;
+    this->easingEffect = easingEffect;
+
+    startDirection = mCameraDirection.val;
+    endDirection = targetDirection;
+}
+
 
 json CameraController::Serialize()
 {
 	json ret = MonoBehaviour::Serialize();
+
+    ret["id"] = GetId();
+    ret["name"] = "CameraController";
+    ret["mindistance"] = mMinCameraDistance.val;
+    ret["maxdistance"] = mMaxCameraDistance.val;
 
 	return ret;
 }
@@ -88,5 +133,15 @@ json CameraController::Serialize()
 void CameraController::Deserialize(json& j)
 {
 	MonoBehaviour::Deserialize(j);
+
+    if (j.contains("mindistance"))
+    {
+        mMinCameraDistance.val = j["mindistance"].get<float>();
+    }
+
+    if (j.contains("maxdistance"))
+    {
+        mMaxCameraDistance.val = j["mindistance"].get<float>();
+    }
 
 }

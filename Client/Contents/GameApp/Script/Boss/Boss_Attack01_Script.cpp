@@ -21,13 +21,6 @@ void Boss_Attack01_Script::Start()
 	if(mHitColiider == nullptr) mHitColiider = gameObject->AddComponent<BoxCollider>();
 	mHitColiider->SetExtents(Vector3(1.0f, BOSS_RAZER_SCALE_Y, 1.0f));
 	mHitColiider->SetIsTrigger(true);
-
-	//mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
-	//if (mRazerBoneAttacher == nullptr) mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
-	//mRazerBoneAttacher->SetDestBone(mAttachBone->transform);
-	//mRazerBoneAttacher->SetOffsetRotation(
-	//	Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z)
-	//);
 }
 
 void Boss_Attack01_Script::Update()

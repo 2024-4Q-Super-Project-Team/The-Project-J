@@ -167,6 +167,7 @@ cbuffer MaterialBuffer : register(b1)
     MaterialProperty MaterialProp;
     uint HasMapFlags; // 비트 플래그
     uint UseMapFlags; // 비트 플래그
+    int2 mat_padding;
 }
 
 cbuffer CameraBuffer : register(b2)

@@ -41,7 +41,7 @@ void BossScript::Start()
 
 	// 애니메이터 초기화
 	mBodyAnimator = mBodyObject->GetComponent<Animator>();
-	mHeadAnimator = mHeadObject->GetComponent<Animator>();
+	//mHeadAnimator = mHeadObject->GetComponent<Animator>();
 
 	// 이펙트 핸들
 	mSpawnEffectTextrueHandle.mResourceType = eResourceType::Texture2DResource;
@@ -80,8 +80,8 @@ void BossScript::UpdateTransform()
 
 	// 보스의 위치 계산 (= 중심 축 + 보는 방향 * 중심 축으로부터의 거리)
 	Vector3 NewPosition = AxisPos + (mDistanceFromAxis.val * ViewDirection);
-	gameObject->transform->position.x = NewPosition.x;
-	gameObject->transform->position.z = NewPosition.z;
+	mBodyObject->transform->position.x = NewPosition.x;
+	mBodyObject->transform->position.z = NewPosition.z;
 
 	float targetAngleY = atan2(-ViewDirection.x, -ViewDirection.z); // 라디안 단위
 	if (targetAngleY < 0.0f)

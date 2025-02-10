@@ -2,7 +2,7 @@
 #include "BoxDownButtonScript.h"
 
 #define DOOR_ANIM_LEFT L"01"
-#define DOOR_ANIM_RIGHT L"02"
+#define DOOR_ANIM_RIGHT L"04"
 
 
 BoxDownButtonScript::BoxDownButtonScript(Object* _owner)
@@ -16,10 +16,10 @@ void BoxDownButtonScript::Start()
 
     if (currentTag.find(L"_1") != std::wstring::npos)
     {
-        gameObject->AddComponent<Rigidbody>();
-        BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-        boxCol->SetPosition(Vector3(0, 10, 0));
-        boxCol->SetExtents(Vector3(100, 1, 100));
+        //gameObject->AddComponent<Rigidbody>();
+        //BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
+        //boxCol->SetPosition(Vector3(0, 10, 0));
+        //boxCol->SetExtents(Vector3(100, 1, 100));
     }
 
     auto objects = FindObjectsWithTag(L"Stage_wall");
@@ -83,6 +83,9 @@ void BoxDownButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _desti
 {
     Display::Console::Log("Collision Enter");
     
+    mLeftDoorAnimator->SetReverse(false);
+    mRightDoorAnimator->SetReverse(false);
+
     mLeftDoorAnimator->Play();
     mLeftDoorAnimator->SetLoop(false);
     mRightDoorAnimator->Play();
@@ -92,17 +95,23 @@ void BoxDownButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _desti
 
 void BoxDownButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-    //Display::Console::Log("Collision Exit");
-    //Object* interactingObject = _destination->GetOwner();
+    Display::Console::Log("Collision Exit");
 
-    //if (CanInteract(interactingObject))
-    //{
-    //    if (!isUp.val)
-    //    {
-    //        OnButtonReleased(); // 문 닫기
-    //        isUp.val = true;
-    //    }
-    //}
+    // 역재생
+
+    mLeftDoorAnimator->SetReverse(true);
+    mRightDoorAnimator->SetReverse(true);
+
+    // Duration을 마지막 프레임으로 설정
+    float leftTotalFrame = mLeftDoorAnimator->GetActiveAnimationResource()->GetTotalFrame();
+    float rightTotalFrame = mRightDoorAnimator->GetActiveAnimationResource()->GetTotalFrame();
+
+    mLeftDoorAnimator->SetFrame(leftTotalFrame);
+    mRightDoorAnimator->SetFrame(rightTotalFrame);
+    mLeftDoorAnimator->Resume();
+    mRightDoorAnimator->Resume();
+    mLeftDoorAnimator->SetLoop(false);
+    mRightDoorAnimator->SetLoop(false);
 }
 
 void BoxDownButtonScript::OnButtonPressed()

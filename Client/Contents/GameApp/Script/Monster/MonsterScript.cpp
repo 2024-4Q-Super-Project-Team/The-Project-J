@@ -223,6 +223,7 @@ void MonsterScript::UpdateWalk()
 		if (m_pTarget)
 		{
 			mFSM = eMonsterStateType::FAST_WALK;
+			UpdateMonsterAngle();
 		}
 	}
 	
@@ -297,6 +298,7 @@ void MonsterScript::UpdateFastWalk()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
+		UpdateMonsterAngle();
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 						gameObject->transform->position.y, 
@@ -329,6 +331,7 @@ void MonsterScript::UpdateRun()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
+		UpdateMonsterAngle();
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 								gameObject->transform->position.y, 
@@ -582,12 +585,13 @@ void MonsterScript::UpdateMonsterAnim_B()
 void MonsterScript::UpdateMonsterAngle()
 {
 	Vector3 pos = gameObject->transform->position;
-	Vector2 viewDir = { mTargetPos.x - pos.x, mTargetPos.z - pos.x };
-	Vector2 moveForce = Vector2::Zero;
+	Vector2 viewDir = { mTargetPos.x - pos.x, mTargetPos.z - pos.z };
+
+	viewDir.Normalize();
 
 	if (viewDir != Vector2::Zero)
 	{
-		float targetAngleY = atan2(viewDir.x, viewDir.y);
+		float targetAngleY = atan2(-viewDir.x, -viewDir.y);
 
 		if (targetAngleY < 0.0f)
 		{
@@ -596,10 +600,10 @@ void MonsterScript::UpdateMonsterAngle()
 
 		Vector3 currAngle = gameObject->transform->GetEulerAngles();
 		float currAngleY = currAngle.y;
-
 		float delta = fmod(targetAngleY - currAngleY + XM_PI, XM_2PI) - XM_PI;
 		float newAngleY = currAngleY + delta * 0.7f;
 
 		gameObject->transform->SetEulerAngles(Vector3(0.f, newAngleY, 0.f));
+
 	}
 }

@@ -80,6 +80,7 @@
     <ExternalIncludePath>$(ProjectDir);$(ReferencePath);$(SolutionDir)Physx/physx/include</ExternalIncludePath>
     <ReferencePath>$(ProjectDir);$(ReferencePath)</ReferencePath>
     <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);&amp;(SolutionDir)Physx/physx/lib</LibraryPath>
+    <PublicIncludeDirectories>$(ProjectDir);</PublicIncludeDirectories>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

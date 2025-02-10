@@ -7,10 +7,10 @@
 #define BOSS_LAMP_BONE_NAME L"Bone.005"			// 보스의 램프 본
 void Boss_Attack01_Script::Start()
 {
-	mAttachBone = FindChildObject(
-		gameObject->transform->GetParent()->gameObject,
-		BOSS_LAMP_BONE_NAME
-	);
+	//mAttachBone = FindChildObject(
+	//	gameObject->transform->GetParent()->gameObject,
+	//	BOSS_LAMP_BONE_NAME
+	//);
 
 	mAnimator = gameObject->GetComponent<Animator>();
 
@@ -22,9 +22,9 @@ void Boss_Attack01_Script::Start()
 	mHitColiider->SetExtents(Vector3(1.0f, BOSS_RAZER_SCALE_Y, 1.0f));
 	mHitColiider->SetIsTrigger(true);
 
-	mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
-	if (mRazerBoneAttacher == nullptr) mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
-	mRazerBoneAttacher->SetDestBone(mAttachBone->transform);
+	//mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
+	//if (mRazerBoneAttacher == nullptr) mRazerBoneAttacher = gameObject->AddComponent<BoneAttacher>();
+	//mRazerBoneAttacher->SetDestBone(mAttachBone->transform);
 	//mRazerBoneAttacher->SetOffsetRotation(
 	//	Quaternion::CreateFromYawPitchRoll(euler.y, euler.x, euler.z)
 	//);
@@ -34,8 +34,6 @@ void Boss_Attack01_Script::Update()
 {
 	if (isAttack == TRUE)
 	{
-		// TODO : 도트윈 사용법 알아보자
-		//gameObject->transform.Rota
 		mRazerElapsedTime += Time::GetScaledDeltaTime();
 
 		if (mRazerElapsedTime > mRazerTime.val)
@@ -46,13 +44,12 @@ void Boss_Attack01_Script::Update()
 		{
 			FLOAT ratio = mRazerElapsedTime / mRazerTime.val;
 			FLOAT razerAngle = Lerp(-mRazerRotate.val, mRazerRotate.val, ratio);
-			Quaternion quat = Quaternion::CreateFromYawPitchRoll(
-				XMConvertToRadians(0),
-				XMConvertToRadians(razerAngle),
-				XMConvertToRadians(0)
-			);
-			mRazerBoneAttacher->SetOffsetRotation(quat);
-			//gameObject->transform->SetEulerAngles(Vector3(0.0f, razerAngle,0.0f));
+
+			// 기존 방향 벡터 + 추가 회전 적용
+			Matrix rotationMatrix = Matrix::CreateFromAxisAngle(Vector3(0, 1, 0), razerAngle);
+			Vector3 twistedDir = Vector3::TransformNormal(mRootViewDir, rotationMatrix);
+
+			gameObject->transform->position = (twistedDir * mRazerDist.val);
 		}
 	}
 	if (isAttack == FALSE)
@@ -64,7 +61,6 @@ void Boss_Attack01_Script::Update()
 			if (mRazerElapsedTime <= 0.0f)
 			{
 				mRazerElapsedTime = 0.0f;
-				gameObject->SetActive(false);
 			}
 			float ratio = mRazerElapsedTime / mRazerTime.val;
 			//gameObject->transform->scale.y = ratio;
@@ -95,4 +91,19 @@ void Boss_Attack01_Script::SetAttackStart()
 void Boss_Attack01_Script::SetAttackEnd()
 {
 	isAttack = FALSE;
+}
+
+void Boss_Attack01_Script::SetRootObject(Object* _root)
+{
+	mRootObject = _root;
+}
+
+void Boss_Attack01_Script::SetRootView(Vector3 _viewDir)
+{
+	mRootViewDir = _viewDir;
+}
+
+void Boss_Attack01_Script::SetRootAngleY(FLOAT _yAngle)
+{
+	mRootAngleY = _yAngle;
 }

@@ -53,6 +53,7 @@ void PlayerScript::Start()
     {   // BurnObjectScriptÃß°¡
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
+        mBurnObjectScript->SetBurn(true);
     }
     {
         mCollisionScript = mCollisionObject->GetComponent<PlayerCollisionScript>();

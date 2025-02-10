@@ -49,6 +49,7 @@ void BossScript::Start()
 
 	mRazerObject->SetActive(false);
 	mRazerScript = mRazerObject->AddComponent<Boss_Attack01_Script>();
+	mRazerScript->SetRootObject(gameObject);
 }	
 
 void BossScript::Update()
@@ -86,6 +87,9 @@ void BossScript::UpdateTransform()
 	if (targetAngleY < 0.0f)
 		targetAngleY += XM_2PI;  // 360도 대신 2π 사용
 	mBodyObject->transform->SetEulerAngles(Vector3(0.0f, targetAngleY, 0.0f));
+
+	mRazerScript->SetRootView(ViewDirection);
+	mRazerScript->SetRootAngleY(targetAngleY);
 }
 
 void BossScript::UpdateAnimation()
@@ -181,6 +185,7 @@ void BossScript::UpdateAttack01()
 		{
 			mCurrAttackType = NONE;
 			SetState(eBossStateType::IDLE);
+			mRazerObject->SetActive(false);
 		}
 	}
 }

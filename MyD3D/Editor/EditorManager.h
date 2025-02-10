@@ -131,10 +131,4 @@ SERIALDATA_TEMPLATE(Vector2, Editor::DragVector2);
 SERIALDATA_TEMPLATE(Vector3, Editor::DragVector3);
 SERIALDATA_TEMPLATE(Vector4, Editor::DragVector4);
 
-#ifdef _DEBUG
-#define SerializeField(Type, Name, Init)\
-	SerialData<Type> Name## = SerialData<Type>(#Name, this, Init);
-#else
-#define SerializeField(Type, Name)\
-	Type Name
-#endif
+#define SerializeField(Type, Name, Init) SerialData<Type> Name## = SerialData<Type>(#Name, this, Init)

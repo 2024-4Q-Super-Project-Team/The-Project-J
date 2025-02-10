@@ -15,8 +15,6 @@
 #include "Contents/GameApp/Script/Object/Button/RaisePlatformButtonScript.h"
 #include "Contents/GameApp/Script/Object/Button/RaiseGroundButtonScript.h"
 
-
-
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Object/Box/BoxScript.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"

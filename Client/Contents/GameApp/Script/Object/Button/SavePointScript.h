@@ -9,7 +9,7 @@ public:
 
     virtual void OnTriggerEnter(Collider* _origin, Collider* _destination) override;
 
-    Vector3 GetSavePointPosition() const { return gameObject->transform->position; }
+    Vector3 GetSavePointPosition() const { return gameObject->transform->GetWorldPosition(); }
     int GetIndex() const { return mIndex; }
     void SetIndex(int index) { mIndex = index; }
 

@@ -1,4 +1,4 @@
-#define MAX_LIGHT 10
+#define MAX_LIGHT 20
 #define MAX_BONES 100
 #define MAX_BONE_WEIGHTS 4
 

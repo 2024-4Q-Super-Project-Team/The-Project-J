@@ -211,14 +211,7 @@ void EditorCamera::ExcuteDrawList()
             DrawWire();
         }
     }
-    // 조명 리스트를 초기화한다.
-    mSceneLights.clear();
-    mLightCBuffer.NumLight = 0;
-
-    for (auto& queue : mDrawQueue)
-    {
-        queue.clear();
-    }
+    ClearDrawList();
 }
 
 void EditorCamera::ClearDrawList()

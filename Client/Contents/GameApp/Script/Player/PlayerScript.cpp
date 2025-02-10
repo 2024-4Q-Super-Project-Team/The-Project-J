@@ -64,7 +64,9 @@ void PlayerScript::Start()
     }
     {
         mFireOffEffectObject = FindChildObject(gameObject->transform->GetParent()->gameObject, L"Player_Fireoff_Effect");
-        mFireOffEffectObject->GetComponent<SpriteRenderer>()->SetActive(false);
+        SpriteRenderer* fireOffRenderer = mFireOffEffectObject->GetComponent<SpriteRenderer>();
+        if(fireOffRenderer)
+            fireOffRenderer->SetActive(false);
     }
 
     InitFireLight();

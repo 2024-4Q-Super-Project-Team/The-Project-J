@@ -184,28 +184,20 @@ void BoxCollider::SetRotation()
 {
 	PxTransform currentTransform = mShape->getLocalPose();
 
-	Vector3 worldEuler = gameObject->transform->GetEulerAngles();
-
-	Quaternion localQuat = Quaternion::CreateFromYawPitchRoll(
+	mQuatRotation = Quaternion::CreateFromYawPitchRoll(
 		XMConvertToRadians(mRotation.y),
 		XMConvertToRadians(mRotation.x),
 		XMConvertToRadians(mRotation.z)
 	);
 
-	mQuatRotation = Quaternion::CreateFromYawPitchRoll(
-		XMConvertToRadians(mRotation.y + worldEuler.y),
-		XMConvertToRadians(mRotation.x + worldEuler.x),
-		XMConvertToRadians(mRotation.z + worldEuler.z)
-	);
-
-	PxQuat pxRot(localQuat.x, localQuat.y, localQuat.z, localQuat.w);
+	PxQuat pxRot(mQuatRotation.x, mQuatRotation.y, mQuatRotation.z, mQuatRotation.w);
 
 	mShape->setLocalPose(PxTransform(currentTransform.p, pxRot));
 }
 
 void BoxCollider::SetExtents()
 {
-	Vector3 size = gameObject->transform->scale;
+	Vector3 size = gameObject->transform->GetWorldScale();
 	mGeometry = PxBoxGeometry(PxVec3(size.x * mExtents.x, size.y * mExtents.y, size.z * mExtents.z));
 	mShape->setGeometry(mGeometry);
 }

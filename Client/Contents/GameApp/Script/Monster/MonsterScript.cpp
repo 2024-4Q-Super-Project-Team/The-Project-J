@@ -30,23 +30,24 @@ void MonsterScript::Start()
 	{
 		Transform* root = gameObject->transform->GetParent();
 
-		m_pScope = CreateObject(L"Scope",L"Scope");
-		m_pScope->transform->SetParent(root);
-
-		m_pScope->transform->position = gameObject->transform->position;
-		m_pScope->AddComponent<ScopeScript>();
-
 		// find Weakness
 		auto& children = gameObject->transform->GetChildren();
 		for (Transform* child : children)
 		{
+			if (child->gameObject->GetName() == L"Scope" || child->gameObject->GetName() == L"Scope")
+			{
+				m_pScope = child->gameObject;
+				m_pScope->SetTag(L"Scope");
+				m_pScope->transform->position = gameObject->transform->position;
+			}
+
 			if (child->gameObject->GetName() == L"Weakness_A" || child->gameObject->GetName() == L"Weakness_B")
 			{
 				m_pWeakness = child->gameObject;
 				m_pWeakness->SetTag(L"Weakness");
 				m_pWeakness->transform->scale = Vector3(30, 30, 22);
 				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
-				
+
 				if (mType.val == (int)eMonsterType::A)
 				{
 					m_pWeakness->transform->position.y = 38;
@@ -202,23 +203,16 @@ void MonsterScript::UpdateB()
 
 void MonsterScript::UpdateIdle()
 {
-	mIdleCount += Time::GetUnScaledDeltaTime();
 
-	if (mIdleCount > 3.0f)
+	if (mType.val == (int)eMonsterType::A)
 	{
-		mIdleCount = 0.0f;
-
-		if (mType.val == (int)eMonsterType::A)
-		{
-			mFSM = eMonsterStateType::WALK;
-		}
-		else
-		{
-			mFSM = eMonsterStateType::ROTATE;
-		}
+		mFSM = eMonsterStateType::WALK;
 	}
 	else
-		mFSM = eMonsterStateType::IDLE;
+	{
+		mFSM = eMonsterStateType::ROTATE;
+	}
+
 }
 
 void MonsterScript::UpdateRotate()

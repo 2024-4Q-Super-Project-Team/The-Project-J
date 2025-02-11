@@ -12,6 +12,8 @@ BoxDownButtonScript::BoxDownButtonScript(Object* _owner)
 
 void BoxDownButtonScript::Start()
 {
+    AudioInit();
+
     std::wstring currentTag = gameObject->GetTag();
 
     if (currentTag.find(L"_1") != std::wstring::npos)
@@ -82,7 +84,7 @@ void BoxDownButtonScript::OnTriggerExit(Collider* _origin, Collider* _destinatio
 void BoxDownButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
     Display::Console::Log("Collision Enter");
-    
+    PlayPressedSound();
     mLeftDoorAnimator->SetReverse(false);
     mRightDoorAnimator->SetReverse(false);
 

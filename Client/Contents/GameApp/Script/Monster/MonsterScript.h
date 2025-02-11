@@ -78,6 +78,8 @@ private:
 	BoxCollider* m_pHeadCollider = nullptr;
 	BoxCollider* m_pBodyCollider = nullptr;
 	BurnObjectScript* m_pBurnObjectScript = nullptr;
+
+	AudioSource* m_pAudioSource = nullptr;
 private:
 	// Target
 	Object* m_pTarget = nullptr;

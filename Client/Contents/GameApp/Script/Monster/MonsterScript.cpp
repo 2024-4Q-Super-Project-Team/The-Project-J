@@ -17,10 +17,17 @@
 #define MONSTER_ANIM_HIT_B L"mb003"
 #define MONSTER_ANIM_GROGGY_B L"mb004"
 
+#define MONSTER_SFX_STEP L"step"
+#define MONSTER_SFX_DEAD L"dead"
+
 void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
 	
+	m_pAudioSource = gameObject->GetComponent<AudioSource>();
+	if (m_pAudioSource == nullptr)
+		m_pAudioSource = gameObject->AddComponent<AudioSource>();
+
 	if (gameObject->GetName() == L"Monster_A")
 		mType.val = (int)eMonsterType::A;
 	else
@@ -231,6 +238,15 @@ void MonsterScript::UpdateRotate()
 
 void MonsterScript::UpdateWalk()
 {
+	static FLOAT walkSoundTick = 0.5f;
+	static FLOAT walkSoundCounter = 0.0f;
+	walkSoundCounter += Time::GetScaledDeltaTime();
+	if (walkSoundCounter >= walkSoundTick)
+	{
+		walkSoundCounter = 0.0f;
+		m_pAudioSource->Play(MONSTER_SFX_STEP);
+	}
+
 	if (mType.val == (int)eMonsterType::A)
 	{
 		// 타겟이 존재하는가?
@@ -301,6 +317,14 @@ void MonsterScript::UpdateFastWalk()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
+		static FLOAT walkSoundTick = 0.3f;
+		static FLOAT walkSoundCounter = 0.0f;
+		walkSoundCounter += Time::GetScaledDeltaTime();
+		if (walkSoundCounter >= walkSoundTick)
+		{
+			walkSoundCounter = 0.0f;
+			m_pAudioSource->Play(MONSTER_SFX_STEP);
+		}
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 						gameObject->transform->position.y, 
@@ -378,6 +402,8 @@ void MonsterScript::UpdateGroggy()
 		m_pBodyCollider->SetExtents(Vector3{ 35,6,40 });
 
 		mFSM = eMonsterStateType::DEAD;
+
+		m_pAudioSource->Play(MONSTER_SFX_DEAD);
 		return;
 	}
 

@@ -8,6 +8,8 @@ RaiseGroundButtonScript::RaiseGroundButtonScript(Object* _owner)
 
 void RaiseGroundButtonScript::Start()
 {
+    AudioInit();
+
     std::wstring currentTag = gameObject->GetTag();
 
     if (currentTag.find(L"_1") != std::wstring::npos)
@@ -56,6 +58,7 @@ void RaiseGroundButtonScript::OnTriggerExit(Collider* _origin, Collider* _destin
 void RaiseGroundButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
     Display::Console::Log("Enter_RaiseGround");
+    PlayPressedSound();
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {

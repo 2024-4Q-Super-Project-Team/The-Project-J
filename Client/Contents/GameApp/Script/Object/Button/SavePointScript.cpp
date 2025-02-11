@@ -7,14 +7,21 @@ void SavePointScript::Start()
 {
     gameObject->AddComponent<Rigidbody>();
 
-    mAudioSource = gameObject->GetComponent<AudioSource>();
-    if (mAudioSource == nullptr)
-        mAudioSource = gameObject->AddComponent<AudioSource>();
-
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
     boxCol->SetExtents(Vector3(80, 10, 80));
     boxCol->SetTrigger(true);
-    
+
+    // 사운드 관련
+    mAudioSource = gameObject->AddComponent<AudioSource>();
+    ResourceHandle ButtonSoundHandle;
+    ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+    ButtonSoundHandle.mMainKey = L"SFX_save";
+    ButtonSoundHandle.mPath = L"resource/sound/SFX_save.mp3";
+    if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+    }
+    mAudioSource->AddAudio(L"save_success", ButtonSoundHandle);
 }
 
 void SavePointScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -23,7 +30,7 @@ void SavePointScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
     // 체력 회복
     player->SetHP(player->GetMaxHpValue());
-    mAudioSource->Play(L"");
+    mAudioSource->Play(L"save_success");
     if (player && !mIsSaved)
     {
         // 세이브 좌표 저장

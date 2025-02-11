@@ -4,9 +4,6 @@
 
 void BoxScript::Start()
 {
-    mAudioSource = gameObject->GetComponent<AudioSource>();
-    if(mAudioSource == nullptr)
-        mAudioSource = gameObject->AddComponent<AudioSource>();
     mRigid = gameObject->AddComponent<Rigidbody>();
     mCollider = gameObject->AddComponent<BoxCollider>();
     mRigid->SetMass(15.f);
@@ -16,6 +13,17 @@ void BoxScript::Start()
 
     mPxRayDirection = PxVec3(0, -1, 0);
 
+    // 사운드 관련
+    mAudioSource = gameObject->AddComponent<AudioSource>();
+    ResourceHandle ButtonSoundHandle;
+    ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+    ButtonSoundHandle.mMainKey = L"SFX_box";
+    ButtonSoundHandle.mPath = L"resource/sound/SFX_box.mp3";
+    if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+    }
+    mAudioSource->AddAudio(L"box", ButtonSoundHandle);
 }
 
 void BoxScript::Update()
@@ -62,13 +70,8 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 
     displacement.val = direction * mMoveSpeed;
 
-    //SFXElapsed = SFXTick;
-    //if (mAudioSource->IsPlaying() == false)
-    //{
-    //    mAudioSource->Play();
-    //}
     if (mAudioSource->IsPlaying() == false)
-        mAudioSource->Play(L"");
+        mAudioSource->Play(L"box");
 }
 
 void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)

@@ -9,6 +9,17 @@ public:
 public:
 	void Start();
 	void Update();
+	void Page01Update();
+	void Page02Update();
+	void Page03Update();
 public:
-	void SetPosition(Object* _obj, Vector2 _pos);
+
+	Object* curObject = nullptr;
+	std::vector<UISprite*> mWidgetList;
+
+	Animator* bookAnim = nullptr;
+	Animator* paperAnim = nullptr;
+	Object* book = nullptr;
+	Object* paper = nullptr;
+	UINT mPageType = 1;	// 현재 페이지 타입
 };

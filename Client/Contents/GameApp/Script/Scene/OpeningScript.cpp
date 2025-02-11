@@ -1,59 +1,262 @@
 #include "pch.h"
 #include "OpeningScript.h"
 
+static int index = 0;
+
 void OpeningScript::Start()
 {
-	// 책 fbx 로드
-	// Object* book = CreateObject(L"book", L"Book");
-	// book->AddComponent<Animator>();
+	index = 0;
+	
+	// 책 fbx
+	book = FindObject(L"Book", L"book");
+
+	if (book)
+	{
+		book->transform->MoveTo(Vector3(130, 0, -950), 2.f);
+		book->transform->MoveTo(Vector3(130, 0, -950), 2.f);
+		bookAnim = book->GetComponent<Animator>();
+	}
+
+	if (bookAnim)
+	{
+		bookAnim->SetLoop(false);
+	}
 
 	// Component Load
 	// canvas
 	gameObject->AddComponent<Canvas>();
 
 	// object load
-	// text
-	Object* text_01 = CreateObject(L"text_01", L"Sprite");
-	text_01->AddComponent<UISprite>();
-	text_01->transform->SetParent(gameObject->transform);
-	SetPosition(text_01, { 474,320 });
-	text_01->SetActive(false);
+	// Page01
+	{
+		Object* text_01 = FindObject(L"text_01", L"Sprite");
+		auto* t1 = text_01->GetComponent<UISprite>();
+		text_01->transform->SetParent(gameObject->transform);
+		text_01->SetActive(false);
+		mWidgetList.emplace_back(t1);
 
-	Object* text_02 = CreateObject(L"text_02", L"Sprite");
-	text_02->AddComponent<UISprite>();
-	text_02->transform->SetParent(gameObject->transform);
-	SetPosition(text_02, { 276,387 });
-	text_02->SetActive(false);
+		Object* text_02 = FindObject(L"text_02", L"Sprite");
+		auto* t2 = text_02->GetComponent<UISprite>();
+		text_02->transform->SetParent(gameObject->transform);
+		text_02->SetActive(false);
+		mWidgetList.emplace_back(t2);
 
-	Object* text_03 = CreateObject(L"text_03", L"Sprite");
-	text_03->AddComponent<UISprite>();
-	text_03->transform->SetParent(gameObject->transform);
-	SetPosition(text_03, { 392,643 });
-	text_03->SetActive(false);
+		Object* image_01 = FindObject(L"image_01", L"Sprite");
+		auto* i1 = image_01->GetComponent<UISprite>();
+		image_01->transform->SetParent(gameObject->transform);
+		image_01->SetActive(false);
+		mWidgetList.emplace_back(i1);
+	}
 
-	Object* text_04 = CreateObject(L"text_04", L"Sprite");
-	text_04->AddComponent<UISprite>();
-	text_04->transform->SetParent(gameObject->transform);
-	SetPosition(text_04, { 333,710 });
-	text_04->SetActive(false);
-	
-	// image
-	Object* image_01 = CreateObject(L"image_01", L"Sprite");
-	image_01->AddComponent<UISprite>();
-	image_01->transform->SetParent(gameObject->transform);
-	SetPosition(image_01, { 989,147 });
-	image_01->SetActive(false);
+	// Page02
+	{
+		Object* text_03 = FindObject(L"text_03", L"Sprite");
+		auto* t3 = text_03->GetComponent<UISprite>();
+		text_03->transform->SetParent(gameObject->transform);
+		text_03->SetActive(false);
+		mWidgetList.emplace_back(t3);
+
+		Object* text_04 = FindObject(L"text_04", L"Sprite");
+		auto* t4 = text_04->GetComponent<UISprite>();
+		text_04->transform->SetParent(gameObject->transform);
+		text_04->SetActive(false);
+		mWidgetList.emplace_back(t4);
+
+		Object* text_05 = FindObject(L"text_05", L"Sprite");
+		auto* t5 = text_05->GetComponent<UISprite>();
+		text_05->transform->SetParent(gameObject->transform);
+		text_05->SetActive(false);
+		mWidgetList.emplace_back(t5);
+
+		Object* image_02 = FindObject(L"image_02", L"Sprite");
+		auto* i2 = image_02->GetComponent<UISprite>();
+		image_02->transform->SetParent(gameObject->transform);
+		image_02->SetActive(false);
+		mWidgetList.emplace_back(i2);
+	}
+
+	// Page03
+	{
+		Object* text_06 = FindObject(L"text_06", L"Sprite");
+		auto* t6 = text_06->GetComponent<UISprite>();
+		text_06->transform->SetParent(gameObject->transform);
+		text_06->SetActive(false);
+		mWidgetList.emplace_back(t6);
+
+		Object* text_07 = FindObject(L"text_07", L"Sprite");
+		auto* t7 = text_07->GetComponent<UISprite>();
+		text_07->transform->SetParent(gameObject->transform);
+		text_07->SetActive(false);
+		mWidgetList.emplace_back(t7);
+
+		Object* text_08 = FindObject(L"text_08", L"Sprite");
+		auto* t8 = text_08->GetComponent<UISprite>();
+		text_08->transform->SetParent(gameObject->transform);
+		text_08->SetActive(false);
+		mWidgetList.emplace_back(t8);
+
+		Object* image_03 = FindObject(L"image_03", L"Sprite");
+		auto* i3 = image_03->GetComponent<UISprite>();
+		image_03->transform->SetParent(gameObject->transform);
+		image_03->SetActive(false);
+		mWidgetList.emplace_back(i3);
+	}
 }
 
 void OpeningScript::Update()
 {
-	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
+	if (bookAnim)
 	{
-		// 누를 시 하나씩 Set Active true
+		if (bookAnim->GetDuration() >= 25.0f)
+		{
+			bookAnim->Pause();
+			bookAnim->SetFrame(25.0f);
+		}
+	}
+
+	switch (mPageType)
+	{
+	case 0:
+		break;
+	case 1:
+		Page01Update();
+		break;
+	case 2:
+
+		Page02Update();
+		break;
+	case 3:
+		Page03Update();
+		break;
 	}
 }
 
-void OpeningScript::SetPosition(Object* _obj, Vector2 _pos)
+void OpeningScript::Page01Update()
 {
-	_obj->transform->position = Vector3(_pos.x, _pos.y, 0);
+	if (index == 3)
+	{
+		mWidgetList[0]->ProcessFadeOut(&mWidgetList[0]->mColor);
+		mWidgetList[1]->ProcessFadeOut(&mWidgetList[1]->mColor);
+		mWidgetList[2]->ProcessFadeOut(&mWidgetList[2]->mColor);
+
+		if (mWidgetList[0]->GetFade() == eFadeState::IDLE)
+		{
+			mWidgetList[0]->gameObject->SetActive(false);
+			mWidgetList[1]->gameObject->SetActive(false);
+			mWidgetList[2]->gameObject->SetActive(false);
+
+			mPageType = 2;
+		}
+	}
+
+	if (InputSyncer::IsKeyDown(0,InputSyncer::eInputType::JUMP) && index < 3)
+	{
+		mWidgetList[index]->gameObject->SetActive(true);
+	}
+
+	if (mWidgetList[index]->gameObject->GetState() == EntityState::Active)
+	{
+		mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+
+		if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
+		{
+			if(index < 3)
+				index += 1;
+		}
+	}
+}
+
+void OpeningScript::Page02Update()
+{
+	if (index == 7)
+	{
+		mWidgetList[3]->ProcessFadeOut(&mWidgetList[3]->mColor);
+		mWidgetList[4]->ProcessFadeOut(&mWidgetList[4]->mColor);
+		mWidgetList[5]->ProcessFadeOut(&mWidgetList[5]->mColor);
+		mWidgetList[6]->ProcessFadeOut(&mWidgetList[6]->mColor);
+
+		if (mWidgetList[6]->GetFade() == eFadeState::IDLE)
+		{
+			mWidgetList[3]->gameObject->SetActive(false);
+			mWidgetList[4]->gameObject->SetActive(false);
+			mWidgetList[5]->gameObject->SetActive(false);
+			mWidgetList[6]->gameObject->SetActive(false);
+
+			mPageType = 3;
+		}
+	}
+
+	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP) && index < 7)
+	{
+		mWidgetList[index]->gameObject->SetActive(true);
+	}
+
+	if (mWidgetList[index]->gameObject->GetState() == EntityState::Active)
+	{
+		mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+
+		if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
+		{
+			if (index < 7)
+				index += 1;
+		}
+	}
+}
+
+void OpeningScript::Page03Update()
+{
+	if (index == 11)
+	{
+		mWidgetList[7]->ProcessFadeOut(&mWidgetList[7]->mColor);
+		mWidgetList[8]->ProcessFadeOut(&mWidgetList[8]->mColor);
+		mWidgetList[9]->ProcessFadeOut(&mWidgetList[9]->mColor);
+		mWidgetList[10]->ProcessFadeOut(&mWidgetList[10]->mColor);
+
+		if (mWidgetList[10]->GetFade() == eFadeState::IDLE)
+		{
+			mWidgetList[7]->gameObject->SetActive(false);
+			mWidgetList[8]->gameObject->SetActive(false);
+			mWidgetList[9]->gameObject->SetActive(false);
+			mWidgetList[6]->gameObject->SetActive(false);
+
+			mPageType = 3;
+		}
+
+		//// 목표 scale 값
+		//Vector2 targetScale = { 2000.f, 1150.f };
+		//
+		//if (mWidgetList[10]->gameObject->transform->scale.x >= targetScale.x &&
+		//	mWidgetList[10]->gameObject->transform->scale.y >= targetScale.y)
+		//{
+		//	mPageType = 0;
+		//	return;
+		//}
+		//
+		//float t = Time::GetUnScaledDeltaTime() / 3;
+		//t = std::clamp(t, 0.f, 1.f);
+		//
+		//mWidgetList[10]->gameObject->transform->MoveTo(Vector3{ -40, -40 , 0}, 3.f, Dotween::EasingEffect::InSine);
+		//
+		//// 현재 scale과 목표 scale을 보간 (lerp)
+		//mWidgetList[10]->gameObject->transform->scale.x = Lerp(mWidgetList[10]->gameObject->transform->scale.x, targetScale.x, t);
+		//mWidgetList[10]->gameObject->transform->scale.y = Lerp(mWidgetList[10]->gameObject->transform->scale.y, targetScale.y, t);
+	}
+	else 
+	{
+		if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP) && index < 11)
+		{
+			mWidgetList[index]->gameObject->SetActive(true);
+		}
+
+		if (mWidgetList[index]->gameObject->GetState() == EntityState::Active && index < 11)
+		{
+			mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+
+			if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
+			{
+				if (index < 11)
+					index += 1;
+			}
+		}
+	}
 }

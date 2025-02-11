@@ -192,9 +192,6 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 			ImGui::DragFloat("outline Offset", &mOutlineOffset, 0.5f, 0.f, 2.0f);
 			ImGui::ColorEdit4("outline Color", &mOutlineColor.x);
 		}
-
-		ImGui::Checkbox("use fade", &bUseFade);
-
 		EDITOR_COLOR_POP(1);
 
 		break;
@@ -235,8 +232,6 @@ json UIText::Serialize()
 	ret["use outline"] = bUseOutline;
 	ret["outline offset"] = mOutlineOffset;
 	ret["outline color"] = { mOutlineColor.x, mOutlineColor.y, mOutlineColor.z , mOutlineColor.w};
-	
-	ret["use fade"] = bUseFade;
 
 	return ret;
 }
@@ -300,10 +295,5 @@ void UIText::Deserialize(json& j)
 
 			SetTextOutlineColor(col);
 		}
-	}
-
-	if (j.contains("use fade"))
-	{
-		bUseFade = j["use fade"].get<bool>();
 	}
 }

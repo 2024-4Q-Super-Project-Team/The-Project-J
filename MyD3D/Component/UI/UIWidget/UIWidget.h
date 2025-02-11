@@ -12,6 +12,13 @@ enum class eUIType
 	TEXT,	// 텍스트
 };
 
+enum class eFadeState
+{
+	IDLE,
+	FADE_IN,
+	FADE_OUT,
+};
+
 class IWidgetContext
 {
 public:
@@ -45,18 +52,22 @@ public:
 public:
 	// 기본 정보 설정
 	void SetTexture(ResourceHandle _handle, Texture2DResource*& _texture);
-	bool ProcessFadeIn(Color* _color);
-	bool ProcessFadeOut(Color* _color);
+	void ProcessFadeIn(Color* _color);
+	void ProcessFadeOut(Color* _color);
+	void SetFade(eFadeState _fade) { mFadeState = _fade; }
+	eFadeState GetFade() { return mFadeState; }
 
 	// 그래픽 정보 설정
 	void	SetColor(Color _color)	{ mColor = _color; }
 	Color	GetColor()				{ return mColor; }
+	RECT rect{};
+	Color	mColor{ 1,1,1,0 };
+	float a = 127.f;
+
 protected:
 	std::wstring mID = L"";
 
 	eUIType	mUIType = eUIType::NON;
-	Color	mColor{ 1,1,1,0 };
-	float a = 127.f;
 	float mFadeTime = 5.f;
-	bool bUseFade = false;
+	eFadeState mFadeState = eFadeState::IDLE;
 };

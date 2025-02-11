@@ -23,6 +23,7 @@ public:
 public:
 	void Start();
 	void Update();
+	void PostRender();
 	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
@@ -40,11 +41,15 @@ public:
 	void Hit(INT _damage);										// 플레이어에게 피격을 시키는 함수
 	void Jump(FLOAT _scale = 1.0f, bool _canHold = true);		// 플레이어에게 점프를 시키는 함수
 	
-	inline INT	GetPlayerHandle() { return mPlayerHandle.val; }
-	inline INT	GetCurrentHP() { return mPlayerCurHP; }
-	inline INT	GetMaxHpValue() { return mPlayerMaxHP.val; }
+	inline INT	  GetPlayerHandle() { return mPlayerHandle.val; }
+	inline INT	  GetCurrentHP()    { return mPlayerCurHP; }
+	inline INT	  GetMaxHpValue()   { return mPlayerMaxHP.val; }
 	bool IsBurning();
 	bool IsJump();
+
+	float GetRatio();
+	ePlayerStateType GetState() { return mPlayerState; }
+	bool CanMoveFire() { return mBurnObjectTriggerTable.empty() == false; };
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
@@ -104,6 +109,7 @@ private:
 	bool					isAction = false;
 	bool					isJump = true;
 	ePlayerStateType		mPlayerState = ePlayerStateType::IDLE;
+	std::unordered_set<BurnObjectScript*> mBurnObjectTriggerTable;
 	////////////////////////////////////////////////
 	// 플레이어 액션 관련 변수
 	////////////////////////////////////////////////

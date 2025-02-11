@@ -12,7 +12,7 @@ void OpeningScript::Start()
 
 	if (book)
 	{
-		book->transform->MoveTo(Vector3(99, 0, -1020), 2.f);
+		book->transform->MoveTo(Vector3(140, 0, -1020), 2.f);
 		bookAnim = book->GetComponent<Animator>();
 	}
 

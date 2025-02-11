@@ -71,7 +71,7 @@ struct BoneMatrixCBuffer
     Matrix  finalBoneMatrix[MAX_BONE_COUNT];
 };
 
-#define MAX_LIGHT_COUNT 20
+#define MAX_LIGHT_COUNT 30
 struct LightCBuffer
 {
     LightProperty LightProp[MAX_LIGHT_COUNT];

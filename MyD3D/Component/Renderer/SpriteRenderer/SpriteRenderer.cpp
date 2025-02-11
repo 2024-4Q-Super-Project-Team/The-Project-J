@@ -204,7 +204,7 @@ json SpriteRenderer::Serialize()
     ret["tile index width"] = mTileIndexWidth;
     ret["tile index height"] = mTileIndexHeight;
     ret["tile index"] = mTileIndex;
-    ret["sprite size"] = mTileIndex;
+    ret["sprite size"] = mTileSize;
 
 	return ret;
 }
@@ -234,7 +234,7 @@ void SpriteRenderer::Deserialize(json& j)
     }
     if (j.contains("sprite size"))
     {
-        mTileIndex = j["sprite size"].get<INT>();
+        mTileSize = j["sprite size"].get<INT>();
     }
 }
 

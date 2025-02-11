@@ -14,13 +14,16 @@ private:
 	Object* mWoodObject = nullptr;
 	Object* mPlateObject = nullptr;
 	Object* mWickObject = nullptr;
-	Animator* mWickAnimator = nullptr;
+	Object* mFireObject = nullptr;
 	class BurnObjectScript* mBurnScript = nullptr;
 
 	Vector3 mInitialPlatePos;
 
 	bool mIsBurned = false;
 	bool mRotated = false;
+
+	float mAnimTime = 3.f;
+	float mAnimElapsedTime = 0.f;
 
 	float mElapsedTime = 0.f;
 	float mRotateTime = 2.f;

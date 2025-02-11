@@ -25,6 +25,7 @@
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Boss/newBossScript.h"
 #include "Contents/GameApp/Script/Boss/newBossAttackScript.h"
+#include "Contents/GameApp/Script/Player/BurnGageScript.h"
 
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
@@ -58,5 +59,6 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(EndingScript);
 	REGISTER_COMPONENT(OpeningScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
+	REGISTER_COMPONENT(BurnGageScript);
 	REGISTER_COMPONENT(WoodWithWickScript);
 }

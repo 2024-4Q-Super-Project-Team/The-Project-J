@@ -109,8 +109,9 @@ void ResourceManager::LoadResources()
     {
         if (j.contains("key"))
         {
-            std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
+            std::wstring mainKey = Helper::ToWString(j["key"].get<std::string>());
             ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
+            LoadFileFromHandle(handle);
             auto audio = GetResource<AudioResource>(handle);
             audio->Deserialize(j);
         }

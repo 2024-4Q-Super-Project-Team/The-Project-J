@@ -1,4 +1,4 @@
-#define MAX_LIGHT 20
+#define MAX_LIGHT 30
 #define MAX_BONES 100
 #define MAX_BONE_WEIGHTS 4
 
@@ -120,7 +120,7 @@ struct MaterialProperty
 // =================================================
 // Texture==========================================
 // =================================================
- // 머티리얼 텍스쳐 맵 0~10까지 사용할 것
+// 머티리얼 텍스쳐 맵 0~10까지 사용할 것
 Texture2D   MaterialMap[MATERIAL_MAP_COUNT] : register(t0);
 // 카메라 렌더타겟
 Texture2D   SpriteTexture                   : register(t11);

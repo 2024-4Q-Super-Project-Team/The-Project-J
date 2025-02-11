@@ -31,6 +31,7 @@ enum eStageType
 };
 
 class PlayerScript;
+class newBossScript;
 
 // 전반적인 게임 진행을 관리한다.
 class GameProgressManager : public MonoBehaviour
@@ -48,11 +49,14 @@ public:
 public:
 	static void SetPlayerInfo(PlayerScript* _player);
 	static PlayerScript* GetPlayerInfo(INT _handle);
+	static void SetBossInfo(newBossScript* _boss);
+	static newBossScript* GetBossInfo();
 
 	static eGameProgressStatus GetGameStatus();
 private:
 	static eGameProgressStatus		mGameStatus;
 	static PlayerScript*			mPlayer[2];
+	static newBossScript*			mBossScript;
 	static Object*					mStagearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
 	static INT						mCurrentStageNum;			// 현재 스테이지
 };

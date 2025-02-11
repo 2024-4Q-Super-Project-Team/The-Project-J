@@ -156,8 +156,18 @@ void AudioSource::Play()
 {
 	if (mActiveAudio)
 	{
+		Reset();
 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Play(pAudioClip);
+	}
+}
+
+void AudioSource::Reset()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Reset();
 	}
 }
 
@@ -165,8 +175,17 @@ void AudioSource::Pause()
 {
 	if (mActiveAudio)
 	{
-		auto pAudioClip = mActiveAudio->GetAudioClip();
+ 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Pause();
+	}
+}
+
+void AudioSource::Resume()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Resume();
 	}
 }
 
@@ -306,18 +325,18 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 	}
 	ImGui::Separator();
 	{
-		if (ImGui::Button("Play", ImVec2(80, 50)))
+		if (ImGui::Button("Play", ImVec2(50, 30)))
 		{
 			Play();
 		}
-		if (ImGui::Button("Pause", ImVec2(80, 50)))
+		if (ImGui::Button("Pause", ImVec2(50, 30)))
 		{
 			Pause();
 		}
-		//if (ImGui::Button("Play", ImVec2(80, 50)))
-		//{
-		//	Play();
-		//}
+		if (ImGui::Button("Resume", ImVec2(50, 30)))
+		{
+			Resume();
+		}
 		//if (ImGui::Button("Play", ImVec2(80, 50)))
 		//{
 		//	Play();

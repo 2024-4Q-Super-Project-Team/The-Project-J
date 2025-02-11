@@ -80,15 +80,12 @@ HRESULT AudioChannel::Pause()
 {
 	if (mChannel)
 	{
-		if (!isPaused)
-		{
-			UINT position = 0;
-			mChannel->getPosition(&position, FMOD_TIMEUNIT_MS);
-			mChannel->setPaused(true);
-			mFrame = position;
-			isPaused = true;
-			return S_OK;
-		}
+		UINT position = 0;
+		mChannel->getPosition(&position, FMOD_TIMEUNIT_MS);
+		mChannel->setPaused(true);
+		mFrame = position;
+		isPaused = true;
+		return S_OK;
 	}
 	return E_FAIL;
 }

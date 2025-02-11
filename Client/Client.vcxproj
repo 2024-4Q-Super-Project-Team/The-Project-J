@@ -207,7 +207,6 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
   </ItemGroup>
   <ItemGroup>

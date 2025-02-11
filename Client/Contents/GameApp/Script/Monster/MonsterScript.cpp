@@ -30,18 +30,17 @@ void MonsterScript::Start()
 	{
 		Transform* root = gameObject->transform->GetParent();
 
+		m_pScope = CreateObject(L"Scope", L"Scope");
+		m_pScope->transform->SetParent(root);
+
+		m_pScope->transform->position = gameObject->transform->position;
+		m_pScope->AddComponent<ScopeScript>();
+
 		// find Weakness
 		auto& children = gameObject->transform->GetChildren();
 		for (Transform* child : children)
 		{
-			if (child->gameObject->GetName() == L"Scope")
-			{
-				m_pScope = child->gameObject;
-				m_pScope->SetTag(L"Scope");
-				m_pScope->transform->position = gameObject->transform->position;
-			}
-
-			if (child->gameObject->GetName() == L"Weakness")
+			if (child->gameObject->GetName() == L"Weakness_A" || child->gameObject->GetName() == L"Weakness_B")
 			{
 				m_pWeakness = child->gameObject;
 				m_pWeakness->SetTag(L"Weakness");

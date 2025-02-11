@@ -2,6 +2,7 @@
 #include "WoodWithWickScript.h"
 #include "../Burn/BurnObjectScript.h"
 #include "../../Player/PlayerScript.h"
+#include "../../SpriteAnimScript.h"
 
 void WoodWithWickScript::Start()
 {
@@ -32,7 +33,9 @@ void WoodWithWickScript::Start()
 	sc->SetRadius(100.f);
 	sc->SetIsTrigger(true);
 
-	mWickAnimator = mWickObject->GetComponent<Animator>();
+	mSpriteAnim = mWickObject->GetComponent<SpriteAnimScript>();
+	mWickObject->GetComponent<SpriteRenderer>()->SetActive(true);
+
 	mInitialPlatePos = mPlateObject->transform->position;
 }
 
@@ -40,17 +43,21 @@ void WoodWithWickScript::Update()
 {
 	if (mBurnScript->IsBurning() && !mIsBurned)
 	{
-		mWickAnimator->SetCurrentAnimation(L"Weakness05");
-		mWickAnimator->Play();
+		mSpriteAnim->Play();
 		mIsBurned = true;
 	}	
 
-	if (mWickAnimator->IsEnd())
+	if (mIsBurned && !mRotated)
 	{
-		Transform* tr = mPlateObject->transform;
-		tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0,0,80));
-
-		mWickAnimator->Stop();
+		mAnimElapsedTime += Time::GetScaledDeltaTime();
+		if (mAnimElapsedTime > mAnimTime)
+		{
+			Transform* tr = mPlateObject->transform;
+			tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0, 0, 80));
+			mWickObject->GetComponent<SpriteRenderer>()->SetIndex(44);
+			mWickObject->GetComponent<SpriteRenderer>()->SetActive(true);
+			mRotated = true;
+		}
 	}
 }
 

@@ -188,6 +188,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="main.cpp" />
@@ -230,6 +231,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
     <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />

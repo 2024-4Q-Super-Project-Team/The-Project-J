@@ -16,6 +16,19 @@
 #define PLAYER_ANIM_HIT L"009"
 #define PLAYER_ANIM_DEAD L"010"
 
+#define PLAYER_SFX_WALKING_NORMAL_01    L"walking_normal_01"
+#define PLAYER_SFX_WALKING_NORMAL_02    L"walking_normal_02"
+#define PLAYER_SFX_WALKING_NORMAL_03    L"walking_normal_03"
+#define PLAYER_SFX_WALKING_ICE_01       L"walking_ice_01"
+#define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
+#define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
+#define PLAYER_SFX_MOVE_FIRE            L"move_fire"
+#define PLAYER_SFX_OFF_FIRE             L"off_fire"
+#define PLAYER_SFX_JUMP                 L"jumping"
+#define PLAYER_SFX_DEAD                 L"dead"
+#define PLAYER_SFX_HIT                  L"hit"
+
+
 void PlayerScript::Start()
 {
     // 초기화 코드

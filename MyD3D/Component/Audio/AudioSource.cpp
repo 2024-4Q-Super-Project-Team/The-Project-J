@@ -219,19 +219,17 @@ void _CALLBACK AudioSource::OnDestroy()
 json AudioSource::Serialize()
 {
 	json ret;
-
 	ret["id"] = GetId();
 	ret["name"] = "AudioSource";
-
-	ret["active audio"] = Helper::ToString(mActiveKey);
+	ret["current audio key"] = Helper::ToString(mActiveKey);
 
 	json tableJson = json::array(); // JSON 배열로 초기화
 
-	for (auto& anim : mAudioTable)
+	for (auto& audio : mAudioTable)
 	{
 		json entry;
-		entry["key"] = Helper::ToString(anim.first);
-		entry["handle"] = anim.second.Serialize();
+		entry["key"] = Helper::ToString(audio.first);
+		entry["handle"] = audio.second.Serialize();
 
 		tableJson.push_back(entry); // 배열에 추가
 	}
@@ -245,8 +243,8 @@ void AudioSource::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	if(j.contains("active audio"))
-		mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
+	if(j.contains("current audio key"))
+		mActiveKey = Helper::ToWString(j["current audio key"].get<std::string>());
 
 	if (j.contains("table"))
 	{

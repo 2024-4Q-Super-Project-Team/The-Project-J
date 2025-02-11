@@ -287,7 +287,6 @@ void newBossScript::UpdateAttack()
 			isAttack = false;
 		}
 	}
-
 }
 
 void newBossScript::UpdateGroggy()
@@ -319,9 +318,28 @@ void newBossScript::SetExit()
 
 json newBossScript::Serialize()
 {
-	return json();
+	json ret = MonoBehaviour::Serialize();
+
+	ret["boss distance"] = mDistanceFromPlayer.val;
+	ret["boss min idle tick"] = mMinIdleTick.val;
+	ret["boss max idle tick"] = mMaxIdleTick.val;
+
+	return ret;
 }
 
 void newBossScript::Deserialize(json& j)
 {
+	MonoBehaviour::Deserialize(j);
+	if (j.contains("boss distance"))
+	{
+		mDistanceFromPlayer.val = j["boss distance"].get<FLOAT>();
+	}
+	if (j.contains("boss min idle tick"))
+	{
+		mMinIdleTick.val = j["boss min idle tick"].get<FLOAT>();
+	}
+	if (j.contains("boss max idle tick"))
+	{
+		mMaxIdleTick.val = j["boss max idle tick"].get<FLOAT>();
+	}
 }

@@ -28,8 +28,6 @@ void MonsterScript::Start()
 
 	// Init Setting
 	{
-		Transform* root = gameObject->transform->GetParent();
-
 		// find Weakness
 		auto& children = gameObject->transform->GetChildren();
 		for (Transform* child : children)

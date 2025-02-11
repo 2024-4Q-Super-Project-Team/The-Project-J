@@ -95,7 +95,8 @@ void GameManager::UpdateGame()
 	if (mCurrRunType != mNextRunType)
 	{
 		// 게임모드 -> 에디터모드 = 세이브를 다시 불러온다.
-		if (mCurrRunType == eEngineRunType::GAME_MODE && mNextRunType == eEngineRunType::EDITOR_MODE)
+		if ((mCurrRunType == eEngineRunType::GAME_MODE && mNextRunType == eEngineRunType::EDITOR_MODE) ||
+			(mCurrRunType == eEngineRunType::NONE && mNextRunType == eEngineRunType::GAME_MODE))
 		{
 			SaveManager::Load();
 		}

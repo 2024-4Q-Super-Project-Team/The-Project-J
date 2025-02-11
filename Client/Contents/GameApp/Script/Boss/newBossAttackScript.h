@@ -23,7 +23,7 @@ private:
 	Animator* mAnimator;
 
 	SerializeField(INT,   mRazerDamage, 30);		// 패턴의 광선 데미지
-	SerializeField(FLOAT, mRazerDist, 500.0f);		// 패턴의 광선 거리
+	SerializeField(FLOAT, mRazerDist, 800.0f);		// 패턴의 광선 거리
 	SerializeField(FLOAT, mRazerRange, 700.0f);		// 패턴의 광선 반경
 	SerializeField(FLOAT, mRazerScale, 1.0f);		// 패턴의 광선 크기(이펙트, 콜라이더) 계수
 	SerializeField(FLOAT, mRazerTime, 3.0f);		// 패턴의 광선 총 시간

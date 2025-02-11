@@ -15,6 +15,7 @@ void newBossAttackScript::Start()
 	mHitColiider->SetIsTrigger(true);
 
 	gameObject->transform->scale = mOriginScale;
+	gameObject->SetActive(false);
 }
 
 void newBossAttackScript::Update()

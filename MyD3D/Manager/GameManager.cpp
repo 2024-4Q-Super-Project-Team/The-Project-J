@@ -10,8 +10,8 @@
 #include "Physics/PhysicsManager.h"
 #include "ViewportScene/ViewportScene.h"
 
-eEngineRunType		GameManager::mCurrRunType = eEngineRunType::NONE;
-eEngineRunType		GameManager::mNextRunType = eEngineRunType::NONE;
+volatile eEngineRunType		GameManager::mCurrRunType = eEngineRunType::NONE;
+volatile eEngineRunType		GameManager::mNextRunType = eEngineRunType::NONE;
 float				GameManager::mFixedUpdateTick = 0.02f;
 Application*		GameManager::mApplication = nullptr;
 PhysicsManager*		GameManager::mPhysicsManager = nullptr;
@@ -95,7 +95,8 @@ void GameManager::UpdateGame()
 	if (mCurrRunType != mNextRunType)
 	{
 		// 게임모드 -> 에디터모드 = 세이브를 다시 불러온다.
-		if (mCurrRunType == eEngineRunType::GAME_MODE && mNextRunType == eEngineRunType::EDITOR_MODE)
+		if ((mCurrRunType == eEngineRunType::GAME_MODE && mNextRunType == eEngineRunType::EDITOR_MODE) ||
+			(mCurrRunType == eEngineRunType::NONE && mNextRunType == eEngineRunType::GAME_MODE))
 		{
 			SaveManager::Load();
 		}

@@ -104,11 +104,10 @@ struct OutlineCBuffer
     float paddingg[3];
 };
 
-struct FogCBuffer
+struct OnlyDiffuseCBuffer
 {
-    float fogStart = 0.1f;
-    float fogEnd = 0.1f;
-    float paddingg[2];
+    bool onlyDiffuse = false;
+    float paddingg[3];
 };
 
 struct SpriteCBuffer

@@ -5,12 +5,6 @@
 
 void JumpPadScript::Start()
 {
-	gameObject->AddComponent<Rigidbody>();
-
-	BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-	boxCol->SetPosition(Vector3(0, 18, 0));
-	Vector3 scale = gameObject->transform->GetWorldScale();
-	boxCol->SetExtents(Vector3(300, 100, 300) * scale);
 }
 
 void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)

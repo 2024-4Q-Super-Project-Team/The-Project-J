@@ -145,8 +145,8 @@ void GraphicsManager::InitConstantBuffer()
     }
     // Fog
     {
-        UINT slot = static_cast<UINT>(eCBufferType::Fog);
-        bufDesc.ByteWidth = sizeof(FogCBuffer);
+        UINT slot = static_cast<UINT>(eCBufferType::OnlyDiffuse);
+        bufDesc.ByteWidth = sizeof(OnlyDiffuseCBuffer);
         mCBufferArray[slot] = new D3DGraphicsConstantBuffer(&bufDesc, nullptr);
         mCBufferArray[slot]->SetBindSlot(slot);
         mCBufferArray[slot]->SetBindStage(eShaderStage::ALL);

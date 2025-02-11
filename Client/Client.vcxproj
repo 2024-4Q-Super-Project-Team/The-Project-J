@@ -172,9 +172,9 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Old\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
@@ -185,6 +185,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
@@ -192,6 +193,9 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -203,12 +207,14 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
@@ -221,18 +227,23 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
     <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
   </ItemGroup>

@@ -17,16 +17,19 @@
 
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Object/Box/BoxScript.h"
+#include "Contents/GameApp/Script/Object/WoodWick/WoodWithWickScript.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 #include "Contents/GameApp/Script/SpriteAnimScript.h"
 #include "Contents/GameApp/Script/GameProgressManager.h"
-#include "Contents/GameApp/Script/Boss/BossScript.h"
+#include "Contents/GameApp/Script/Boss/newBossScript.h"
+#include "Contents/GameApp/Script/Boss/newBossAttackScript.h"
 
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
 #include "Contents/GameApp/Script/Scene/TitleScript.h"
+#include "Contents/GameApp/Script/Scene/EndingScript.h"
 
 void ScriptRegister::Register()
 {
@@ -49,7 +52,11 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(CheckIceSlope);
 	REGISTER_COMPONENT(BoxScript);
 	REGISTER_COMPONENT(GameProgressManager);
-	REGISTER_COMPONENT(BossScript);
+	REGISTER_COMPONENT(newBossScript);
+	REGISTER_COMPONENT(newBossAttackScript);
 	REGISTER_COMPONENT(TitleScript);
+	REGISTER_COMPONENT(EndingScript);
+	REGISTER_COMPONENT(OpeningScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
+	REGISTER_COMPONENT(WoodWithWickScript);
 }

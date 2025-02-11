@@ -89,6 +89,7 @@ private:
 	float mRange = 0;			// 이동범위
 	float mDistance = 0.00f;	// 거리
 	bool bIsScope = true;		// 범위 밖으로 나갔는지 체크
+	bool bTargetIsScope = true;		// 범위 밖으로 나갔는지 체크
 
 	Vector3 mTargetPos{};	// 기본 랜덤 포지션 값
 	Vector3 mTargetDir{};	// 랜덤 벡터

@@ -47,8 +47,8 @@ public:
 	static auto	GetApplication()     { return mApplication; }
 	static auto	GetPhysicsManager()  { return mPhysicsManager; }
 private:
-	static eEngineRunType    mCurrRunType;
-	static eEngineRunType    mNextRunType;
+	volatile static eEngineRunType    mCurrRunType;
+	volatile static eEngineRunType    mNextRunType;
 	static Application*		 mApplication;
 	static PhysicsManager*	 mPhysicsManager;
 	static ComponentManager* mComponentManager;

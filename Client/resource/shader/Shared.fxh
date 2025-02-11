@@ -1,4 +1,4 @@
-#define MAX_LIGHT 10
+#define MAX_LIGHT 20
 #define MAX_BONES 100
 #define MAX_BONE_WEIGHTS 4
 
@@ -161,9 +161,11 @@ cbuffer TransformBuffer : register(b0)
 
 // 매크로: 특정 플래그 확인
 #define USE_MAP(x) ((UseMapFlags & (1 << x)) != 0)
+#define HAS_MAP(x) ((HasMapFlags & (1 << x)) != 0)
 cbuffer MaterialBuffer : register(b1)
 {
     MaterialProperty MaterialProp;
+    uint HasMapFlags; // 비트 플래그
     uint UseMapFlags; // 비트 플래그
     int2 mat_padding;
 }
@@ -204,11 +206,10 @@ cbuffer OutlineBuffer : register(b6)
     float paddingg[3];
 };
 
-cbuffer FogBuffer : register(b7)
+cbuffer OnlyDiffuseBuffer : register(b7)
 {
-    float fogStart = 100.f;
-    float fogEnd = 1000.f;
-    float padddinggg[2];
+    int onlyDiffuse = false;
+    float padddinggg[3];
 };
 
 cbuffer SpriteBuffer : register(b8)

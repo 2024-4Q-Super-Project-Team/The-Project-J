@@ -10,7 +10,7 @@ enum class eCBufferType
     Light,
     ParticleSize,
     Outline,
-    Fog,
+    OnlyDiffuse,
     Sprite,
     SIZE
 };

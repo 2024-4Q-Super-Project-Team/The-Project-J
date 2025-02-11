@@ -165,7 +165,6 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
     if (FIND_FAILED(itr, mAnimationTable))
     {
         mAnimationTable[_key] = _handle;
-        mDuration = 0.0f;
     }
 }
 
@@ -207,8 +206,8 @@ bool Animator::IsLoop()
 bool Animator::IsEnd()
 {
     if (mActiveAnimation)
-    {
-        return mDuration == mActiveAnimation->GetTotalFrame();
+   {
+        return mDuration >= mActiveAnimation->GetTotalFrame();
     }
     return false;
 }

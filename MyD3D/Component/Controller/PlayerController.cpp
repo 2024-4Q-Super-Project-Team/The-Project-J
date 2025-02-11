@@ -144,7 +144,7 @@ void _CALLBACK PlayerController::OnEnable()
 	{
 		PxControllerManager* controllerManager = gameObject->GetOwnerWorld()->GetControllerManager();
 		mCapsuleController = static_cast<PxCapsuleController*>(controllerManager->createController(mCapsuleDesc));
-		Vector3 pos = gameObject->transform->position;
+		Vector3 pos = gameObject->transform->GetWorldPosition();
 		mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 	}
 	return void _CALLBACK();
@@ -156,6 +156,10 @@ void PlayerController::EditorUpdate()
 
 void PlayerController::EditorRender()
 {
+}
+void PlayerController::ProcessMove()
+{
+
 }
 
 void PlayerController::Move(Vector3 _displacement)
@@ -171,6 +175,7 @@ void PlayerController::SetMoveForceX(FLOAT _x)
 void PlayerController::SetMoveForceY(FLOAT _y)
 {
 	mDisplacement.y = _y;
+	mIsOnGround = false;
 }
 
 void PlayerController::SetMoveForceZ(FLOAT _z)
@@ -181,6 +186,7 @@ void PlayerController::SetMoveForceZ(FLOAT _z)
 void PlayerController::AddMoveForceY(FLOAT _y)
 {
 	mDisplacement.y += _y;
+	mIsOnGround = false;
 }
 
 void PlayerController::SetSlopeMode(SlopeMode _mode)
@@ -198,6 +204,9 @@ void PlayerController::Reset()
 	mDisplacement = PxVec3(0.0f);
 	mIsOnGround = false;
 	SetSlopeMode(SlopeMode::Ride);
+
+	Vector3 pos = gameObject->transform->position;
+	mCapsuleController->setPosition(PxExtendedVec3(pos.x, pos.y, pos.z));
 }
 
 void PlayerController::GravityUpdate()

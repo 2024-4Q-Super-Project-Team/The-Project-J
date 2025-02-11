@@ -57,6 +57,7 @@ public:
 private:
     // 본이나 메쉬 등이 수정되었는가
     bool isDirty = true;
+    bool bOnlyUseDiffuse = false;
 
     ResourceHandle    mMeshHandle;
     ResourceHandle    mMaterialHandle;
@@ -68,6 +69,7 @@ private:
     BoneMatrixCBuffer   mFinalBoneMatrices;     // 최종 본 매트릭스 (셰이더로 전달)
 	TransformCBuffer    mTransformMatrices;     // 트랜스폼 매트릭스 (셰이더로 전달)
     MaterialCBuffer     mMatCBuffer;            // 머티리얼 상수 버퍼 (셰이더로 전달)
+    OnlyDiffuseCBuffer  mOnlyDiffuseCBuffer;    // 디퓨즈만 쓰도록 설정하는 상수 버퍼 (셰이더로 전달)
     OutlineCBuffer      mOutlineCBuffer;        // 아웃라인 상수 버퍼 (셰이더로 전달)
 
 	bool isCastShadow = true;

@@ -19,7 +19,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     [unroll]
     for (int MapType = 0; MapType < MATERIAL_MAP_COUNT; MapType++)
     {
-        if (USE_MAP(MapType) >= TRUE)
+        if (USE_MAP(MapType) >= TRUE && HAS_MAP(MapType) >= TRUE)
         {
             MapColor[MapType] = MaterialMap[MapType].Sample(LinearWrapSampler, input.uv);
         }
@@ -28,11 +28,11 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
         discard;
     
     // 감마 디코딩
-    if (USE_MAP(DIFFUSE_MAP) >= TRUE)
+    if (USE_MAP(DIFFUSE_MAP) >= TRUE && HAS_MAP(DIFFUSE_MAP) >= TRUE)
     {
         MapColor[DIFFUSE_MAP].rgb = pow(MapColor[DIFFUSE_MAP].rgb, GAMMA);
     }
-    if (USE_MAP(EMISSIVE_MAP) >= TRUE)
+    if (USE_MAP(EMISSIVE_MAP) >= TRUE && HAS_MAP(EMISSIVE_MAP) >= TRUE)
     {
         MapColor[EMISSIVE_MAP].rgb = pow(MapColor[EMISSIVE_MAP].rgb, GAMMA);
     }
@@ -43,7 +43,7 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     
     // NormalMap
     float3 N = input.normal;
-    if (USE_MAP(NORMAL_MAP) >= TRUE)
+    if (USE_MAP(NORMAL_MAP) >= TRUE && HAS_MAP(NORMAL_MAP) >= TRUE)
     {
         float3 tangentSpace = normalize(MapColor[NORMAL_MAP].rgb * 2.0f - 1.0f);
         float3x3 tangentWorld = float3x3(input.tangent, input.bitangent, input.normal);
@@ -127,6 +127,16 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     // 감마 인코드 작업을 해준다.
     FinalColor.rgb  = pow(FinalColor.rgb, 1.0 / GAMMA);
     FinalColor.a    = MapColor[OPACITY_MAP].r;
+    
+    if ((int) onlyDiffuse == 1)
+    {
+        float4 fc;
+        fc.rgb = MapColor[DIFFUSE_MAP].rgb;
+        fc.a = MapColor[OPACITY_MAP].r;
+        
+        return fc;
+    }
+    
     return saturate(FinalColor);
 }
 

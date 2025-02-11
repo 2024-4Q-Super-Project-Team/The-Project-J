@@ -18,11 +18,7 @@ AudioSource::~AudioSource()
 
 void AudioSource::Start()
 {
-	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
-	if (itr)
-	{
-		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
-	}
+	SetCurrentAudio(mActiveKey);
 }
 
 void AudioSource::Tick()
@@ -93,11 +89,22 @@ void AudioSource::EditorRender()
 
 void AudioSource::SetCurrentAudio(const std::wstring& _key)
 {
-	auto itr = Helper::FindMap(_key, mAudioTable);
-	if (itr)
+	if (mActiveKey == _key)
+		return;
+	auto itr = mAudioTable.find(_key);
+	if (FIND_SUCCESS(itr, mAudioTable))
 	{
 		mActiveKey = _key;
-		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
+		SetCurrentAudio(itr->second);
+	}
+}
+
+void AudioSource::SetCurrentAudio(const ResourceHandle& _handle)
+{
+	if (_handle.GetResourceType() == eResourceType::AudioResource)
+	{
+		auto pResource = ResourceManager::GetResource<AudioResource>(_handle);
+		mActiveAudio = pResource;
 	}
 }
 
@@ -113,6 +120,7 @@ BOOL AudioSource::AddAudio(const std::wstring& _key, ResourceHandle _srcAudio)
 			mActiveKey = _key;
 			mActiveAudio = ResourceManager::GetResource<AudioResource>(_srcAudio);
 		}
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -148,8 +156,18 @@ void AudioSource::Play()
 {
 	if (mActiveAudio)
 	{
+		Reset();
 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Play(pAudioClip);
+	}
+}
+
+void AudioSource::Reset()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Reset();
 	}
 }
 
@@ -157,8 +175,17 @@ void AudioSource::Pause()
 {
 	if (mActiveAudio)
 	{
-		auto pAudioClip = mActiveAudio->GetAudioClip();
+ 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Pause();
+	}
+}
+
+void AudioSource::Resume()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Resume();
 	}
 }
 
@@ -243,23 +270,113 @@ void AudioSource::Deserialize(json& j)
 void AudioSource::EditorRendering(EditorViewerType _viewerType)
 {
 	std::string uid = "##" + std::to_string(reinterpret_cast<uintptr_t>(this));
-	if (ImGui::TreeNodeEx(("AudioSource" + uid).c_str(), EDITOR_FLAG_MAIN))
 	{
+		ImGui::Text("Current Audio");
+		std::string widgetID = "NULL Audio";
 		if (mActiveAudio)
 		{
-			ImGui::Text("Active Audio : %s", Helper::ToString(mActiveAudio->GetKey()).c_str());
+			mActiveAudio->EditorRendering(EditorViewerType::DEFAULT);
+			widgetID = mActiveAudio->GetEID();
 		}
 		else
 		{
-			ImGui::Text("Active Audio : NULL");
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_NULL);
+			ImGui::Selectable(widgetID.c_str(), false, ImGuiSelectableFlags_Highlight);
+			EDITOR_COLOR_POP(1);
 		}
-		ImGui::Separator();
-		// 콤보박스로 바꾸기
-		ImGui::Text("Audio Table");
-		for (auto& audio : mAudioTable)
+	}
+	ImGui::Separator();
+	{
+		ImGui::Text("Audio List");
+		for (auto itr = mAudioTable.begin(); itr != mAudioTable.end();)
 		{
-			ImGui::Text("%s", Helper::ToString(audio.first).c_str());
+			bool isDelete = false;
+			const std::wstring& key = itr->first;
+			const ResourceHandle& handle = itr->second;
+			std::string str = Helper::ToString(key) + " : " + Helper::ToString(handle.GetKey());
+			ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_RESOURCE);
+			ImGui::Selectable((str).c_str(), false, ImGuiSelectableFlags_Highlight);
+			EDITOR_COLOR_POP(1);
+			if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
+			{
+				ImGui::OpenPopup(("AudioPopup" + Helper::ToString(key)).c_str());
+			}
+			if (ImGui::BeginPopup(("AudioPopup" + Helper::ToString(key)).c_str()))
+			{
+				if (ImGui::MenuItem("Set Active Audio")) {
+					SetCurrentAudio(key);
+				}
+				if (ImGui::MenuItem("Delete Audio")) {
+					isDelete = true;
+					itr = mAudioTable.erase(itr);
+				}
+				ImGui::EndPopup();
+			}
+			if (!isDelete)
+				++itr;
 		}
-		ImGui::TreePop();
+		ImGui::PushStyleColor(ImGuiCol_HeaderHovered, EDITOR_COLOR_ADDABLE);
+		ImGui::Selectable("Add Audio", false, ImGuiSelectableFlags_Highlight);
+		EDITOR_COLOR_POP(1);
+		if (EditorDragNDrop::ReceiveDragAndDropResourceData<AudioResource>("Add Audio", &receiveHandle))
+		{
+			isAddAudioPopup = true;
+		}
+	}
+	ImGui::Separator();
+	{
+		if (ImGui::Button("Play", ImVec2(50, 30)))
+		{
+			Play();
+		}
+		if (ImGui::Button("Pause", ImVec2(50, 30)))
+		{
+			Pause();
+		}
+		if (ImGui::Button("Resume", ImVec2(50, 30)))
+		{
+			Resume();
+		}
+		//if (ImGui::Button("Play", ImVec2(80, 50)))
+		//{
+		//	Play();
+		//}
+	}
+	ShowAddAudioPopup();
+}
+
+void AudioSource::ShowAddAudioPopup()
+{
+	std::string id = "Add Audio";
+	if (isAddAudioPopup)
+	{
+		ImGui::OpenPopup(id.c_str());
+		isAddAudioPopup = false;
+	}
+	if (ImGui::BeginPopupModal(id.c_str(), nullptr, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Key : ");
+		static char Name[128] = "";
+		ImGui::InputText("##AddAudioKey", Name, IM_ARRAYSIZE(Name));
+		ImGui::Separator();
+
+		ImGui::Text(std::string("Audio : " + Helper::ToString(receiveHandle.GetKey())).c_str());
+		ImGui::Separator();
+
+		const char* defaultName = "";
+		if (ImGui::Button(("OK##" + id).c_str()) || Input::IsKeyDown(Key::ENTER))
+		{
+			std::wstring newName = Helper::ToWString(std::string(Name));
+			AddAudio(newName, receiveHandle);
+			ImGui::CloseCurrentPopup();
+			strcpy_s(Name, defaultName);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button(("NO##" + id).c_str()) || Input::IsKeyDown(Key::ESCAPE))
+		{
+			ImGui::CloseCurrentPopup();
+			strcpy_s(Name, defaultName);
+		}
+		ImGui::EndPopup();
 	}
 }

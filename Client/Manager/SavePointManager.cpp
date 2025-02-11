@@ -48,17 +48,13 @@ void SavePointManager::GoBackSavePoint(PlayerScript* deadPlayer)
     // 죽은 플레이어만 위치를 바꿔주고, 상태 Reset
     if (Player1 && Player1 == deadPlayer)
     {
-        // Reset을 먼저 호출하여 상태 초기화
-        Player1->Reset();
-        Player1->Jump(0.5f);
+     
         Player1->gameObject->transform->position = spawnPoint;
-        // 위치 설정 후 컨트롤러 위치도 업데이트
-        //Player1->mPlayerContro
-
+        Player1->Reset();
     }
     if (Player2 && Player2 == deadPlayer)
     {
-        Player2->Reset();
         Player2->gameObject->transform->position = spawnPoint;
+        Player2->Reset();
     }
 }

@@ -28,13 +28,16 @@ public:
     virtual void EditorRender() override;
 public:
     void SetCurrentAudio(const std::wstring& _key);
+    void SetCurrentAudio(const ResourceHandle& _handle);
     BOOL AddAudio(const std::wstring& _key, ResourceHandle _srcAudio);
 public:
     bool IsPlaying();
     bool IsPaused();
     void Play(std::wstring_view _key); // ActiveAudio를 바꾸고 Play
     void Play();
+    void Reset();
     void Pause();
+    void Resume();
 public:
     // 루프 설정을 합니다.(왠만해선 Resource에서 설정할 것)
     void SetLoop(bool _isLoop);
@@ -48,7 +51,7 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
-    // 현재 재생 예정, 혹은 재생 중인 오디오
+    // 현재 재생 예정, 혹은 재생 중인 오디오a
     std::wstring    mActiveKey;
     AudioResource*  mActiveAudio; 
     // 해당 오디오 리소스를 재생해주는 공간
@@ -57,4 +60,10 @@ private:
     std::unordered_map<std::wstring, ResourceHandle> mAudioTable;
 public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
+    /////////////////////////////////////////////
+    // Audio Popup
+    /////////////////////////////////////////////
+    ResourceHandle receiveHandle;
+    bool isAddAudioPopup = false;
+    void ShowAddAudioPopup();
 };

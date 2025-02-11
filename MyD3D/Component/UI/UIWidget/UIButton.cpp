@@ -29,6 +29,21 @@ void UIButton::Update()
 
 void UIButton::DrawWidget(Vector2 _scale)
 {
+	if (mButtonState == eButtonState::DEFAULT)
+	{
+		gameObject->transform->position.x = defaultPos.x;
+		gameObject->transform->position.y = defaultPos.y;
+		gameObject->transform->scale.x = m_pDefaultTexture->Texture->mWidth;
+		gameObject->transform->scale.y = m_pDefaultTexture->Texture->mHeight;
+	}
+	else if (mButtonState == eButtonState::SELECTED)
+	{
+		gameObject->transform->position.x = selectedPos.x;
+		gameObject->transform->position.y = selectedPos.y;
+		gameObject->transform->scale.x = m_pSelectedTexture->Texture->mWidth;
+		gameObject->transform->scale.y = m_pSelectedTexture->Texture->mHeight;
+	}
+
 	RECT rect{};
 	rect.left = gameObject->transform->position.x * _scale.x;
 	rect.top = gameObject->transform->position.y * _scale.y;
@@ -88,6 +103,8 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 			SetState((eButtonState)currentState);
 		}
 		ImGui::ColorEdit4("color", &mColor.x);
+		ImGui::DragFloat2("default position", &defaultPos.x, 0.5f,  -5000.f, 5000.f);
+		ImGui::DragFloat2("selected position", &selectedPos.x, 0.5f, -5000.f, 5000.f);
 
 		ImGui::NewLine();
 
@@ -135,9 +152,6 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 			SetTexture(mSelectedTextureHandle, m_pSelectedTexture);
 		}
 
-		ImGui::NewLine();
-		ImGui::Checkbox("use fade", &bUseFade);
-
 		EDITOR_COLOR_POP(2);
 
 		break;
@@ -174,8 +188,10 @@ json UIButton::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w };
-	ret["use fade"] = bUseFade;
 	ret["button state"] = mButtonState;
+
+	ret["default position"] = { defaultPos.x, defaultPos.y };
+	ret["selected position"] = { selectedPos.x, selectedPos.y };
 
 	return ret;
 }
@@ -220,13 +236,22 @@ void UIButton::Deserialize(json& j)
 		}
 	}
 
-	if (j.contains("use fade"))
-	{
-		bUseFade = j["use fade"].get<bool>();
-	}
-
 	if (j.contains("button state"))
 	{
 		mButtonState = (eButtonState)j["button state"].get<int>();
+	}
+
+	if (j.contains("default position") && j["default position"].size() == 2)
+	{
+		auto dp = j["default position"];
+		defaultPos.x = dp[0].get<float>();
+		defaultPos.y = dp[1].get<float>();
+	}
+
+	if (j.contains("selected position") && j["selected position"].size() == 2)
+	{
+		auto sp = j["selected position"];
+		selectedPos.x = sp[0].get<float>();
+		selectedPos.y = sp[1].get<float>();
 	}
 }

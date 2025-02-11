@@ -23,7 +23,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Old\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.cpp" />
@@ -45,8 +45,7 @@
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
@@ -54,10 +53,17 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
@@ -80,8 +86,7 @@
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="ScriptRegister.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\Boss_Attack01_Script.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
@@ -89,6 +94,9 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

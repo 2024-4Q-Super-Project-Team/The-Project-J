@@ -57,6 +57,8 @@
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -97,6 +99,8 @@
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

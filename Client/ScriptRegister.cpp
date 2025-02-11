@@ -18,6 +18,9 @@
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Object/Box/BoxScript.h"
 #include "Contents/GameApp/Script/Object/WoodWick/WoodWithWickScript.h"
+#include "Contents/GameApp/Script/Object/Burn/MiniCandleScript.h"
+#include "Contents/GameApp/Script/Object/Burn/BurningWickScript.h"
+#include "Contents/GameApp/Script/Object/HeavyRockSystem/HeavyRockSystem.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
@@ -59,4 +62,7 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(OpeningScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
 	REGISTER_COMPONENT(WoodWithWickScript);
+	REGISTER_COMPONENT(MiniCandleScript);
+	REGISTER_COMPONENT(BurningWickScript);
+	REGISTER_COMPONENT(HeavyRockSystem);
 }

@@ -84,6 +84,7 @@ private:
 	// 내부에서 사용할 Player가 가진 컴포넌트 포인터
 	Animator*				mBodyAnimator = nullptr;
 	Animator*				mCandleAnimator = nullptr;
+	AudioSource*			mAudioSource = nullptr;
 	PlayerController*		mPlayerController = nullptr;
 	CameraController*		mCameraController = nullptr;
 	BurnObjectScript*		mBurnObjectScript = nullptr;

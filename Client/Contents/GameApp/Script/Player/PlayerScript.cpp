@@ -22,12 +22,12 @@
 #define PLAYER_SFX_WALKING_ICE_01       L"walking_ice_01"
 #define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
 #define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
-#define PLAYER_SFX_MOVE_FIRE            L"move_fire"
+#define PLAYER_SFX_MOVE_FIRE_START      L"move_fire_start"
+#define PLAYER_SFX_MOVE_FIRE_OFF        L"move_fire_off"
 #define PLAYER_SFX_OFF_FIRE             L"off_fire"
 #define PLAYER_SFX_JUMP                 L"jumping"
 #define PLAYER_SFX_DEAD                 L"dead"
 #define PLAYER_SFX_HIT                  L"hit"
-
 
 void PlayerScript::Start()
 {
@@ -99,6 +99,11 @@ void PlayerScript::Start()
         SpriteRenderer* fireOffRenderer = mFireOffEffectObject->GetComponent<SpriteRenderer>();
         if(fireOffRenderer)
             fireOffRenderer->SetActive(false);
+    }
+    {
+        mAudioSource = mBodyObject->GetComponent<AudioSource>();
+        if (mAudioSource == nullptr)
+            mAudioSource = mBodyObject->AddComponent<AudioSource>();
     }
 
     InitFireLight();

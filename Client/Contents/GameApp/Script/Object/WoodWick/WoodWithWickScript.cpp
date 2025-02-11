@@ -23,6 +23,9 @@ void WoodWithWickScript::Start()
 			if (child->gameObject->GetTag() == L"WoodWick")
 				mWickObject = child->gameObject;
 		}
+
+		mFireObject = FindChildObject(mWickObject, L"FireObject");
+		mFireObject->SetActive(false);
 	}
 	
 	mBurnScript = gameObject->AddComponent<BurnObjectScript>();
@@ -33,8 +36,6 @@ void WoodWithWickScript::Start()
 	sc->SetRadius(100.f);
 	sc->SetIsTrigger(true);
 
-	mSpriteAnim = mWickObject->GetComponent<SpriteAnimScript>();
-	mWickObject->GetComponent<SpriteRenderer>()->SetActive(true);
 
 	mInitialPlatePos = mPlateObject->transform->position;
 }
@@ -43,19 +44,20 @@ void WoodWithWickScript::Update()
 {
 	if (mBurnScript->IsBurning() && !mIsBurned)
 	{
-		mSpriteAnim->Play();
+		mFireObject->SetActive(true);
+		mFireObject->GetComponent<Animator>()->Play();
 		mIsBurned = true;
 	}	
 
 	if (mIsBurned && !mRotated)
 	{
 		mAnimElapsedTime += Time::GetScaledDeltaTime();
+		mWickObject->transform->position.y -= 15.f * Time::GetScaledDeltaTime();
 		if (mAnimElapsedTime > mAnimTime)
 		{
 			Transform* tr = mPlateObject->transform;
 			tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0, 0, 80));
-			mWickObject->GetComponent<SpriteRenderer>()->SetIndex(44);
-			mWickObject->GetComponent<SpriteRenderer>()->SetActive(true);
+
 			mRotated = true;
 		}
 	}

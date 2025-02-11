@@ -216,6 +216,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />

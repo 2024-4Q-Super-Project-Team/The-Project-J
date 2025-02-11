@@ -14,6 +14,7 @@ private:
 	Object* mWoodObject = nullptr;
 	Object* mPlateObject = nullptr;
 	Object* mWickObject = nullptr;
+	Object* mFireObject = nullptr;
 	class BurnObjectScript* mBurnScript = nullptr;
 
 	Vector3 mInitialPlatePos;
@@ -21,8 +22,7 @@ private:
 	bool mIsBurned = false;
 	bool mRotated = false;
 
-	class SpriteAnimScript* mSpriteAnim;
-	float mAnimTime = 1.5f;
+	float mAnimTime = 3.f;
 	float mAnimElapsedTime = 0.f;
 
 	float mElapsedTime = 0.f;

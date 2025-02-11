@@ -185,6 +185,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
@@ -204,9 +205,9 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -226,6 +227,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
     <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
@@ -244,7 +246,6 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MyD3D\MyD3D.vcxproj">

@@ -29,6 +29,7 @@
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
 #include "Contents/GameApp/Script/Scene/TitleScript.h"
+#include "Contents/GameApp/Script/Scene/EndingScript.h"
 
 void ScriptRegister::Register()
 {
@@ -54,6 +55,8 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(newBossScript);
 	REGISTER_COMPONENT(newBossAttackScript);
 	REGISTER_COMPONENT(TitleScript);
+	REGISTER_COMPONENT(EndingScript);
+	REGISTER_COMPONENT(OpeningScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
 	REGISTER_COMPONENT(WoodWithWickScript);
 }

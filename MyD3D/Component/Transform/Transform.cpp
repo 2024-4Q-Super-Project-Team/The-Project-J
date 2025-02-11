@@ -76,6 +76,19 @@ void Transform::Update()
         }
     }
 
+    if (isScaling)
+    {
+        scalingElapsedTime += Time::GetScaledDeltaTime();
+        float t = scalingElapsedTime / scalingDuration;               // 버튼 누르고 지난 시간 / duration
+        UpdateScaling(t, easingEffect);                            // t가 1이 될 때까지 회전
+        if (scalingElapsedTime >= scalingDuration)
+        {
+            isScaling = false;
+            scalingElapsedTime = 0.0f;
+            UpdateScaling(1.0f, easingEffect);
+        }
+    }
+
     if (isRotating)
     {
         rotationElapsedTime += Time::GetScaledDeltaTime();
@@ -607,6 +620,17 @@ void Transform::MoveTo(const Vector3& targetPosition, float _duration, Dotween::
 	endPosition = targetPosition;
 }
 
+void Transform::ScaleTo(const Vector3& targetScale, float _duration, Dotween::EasingEffect _easingEffect)
+{
+    if (isScaling) return;
+    isScaling = true;
+    scalingDuration = _duration;
+    moveElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
+    startPosition = position;
+    endPosition = targetScale;
+}
+
 void Transform::ZoomTo(float* targetDistance, float startValue, float endValue, float duration, Dotween::EasingEffect _easingEffect)
 {
     if (isZooming) return;
@@ -636,6 +660,11 @@ void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)
 void Transform::UpdateMove(float t, Dotween::EasingEffect easingEffect)
 {
 	position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+}
+
+void Transform::UpdateScaling(float t, Dotween::EasingEffect easingEffect)
+{
+    scale = Vector3::Lerp(startScale, endScale, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 }
 
 void Transform::UpdateZoom(float t, Dotween::EasingEffect easingEffect)

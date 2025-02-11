@@ -18,8 +18,7 @@ public:
 	std::vector<UISprite*> mWidgetList;
 
 	Animator* bookAnim = nullptr;
-	Animator* paperAnim = nullptr;
 	Object* book = nullptr;
-	Object* paper = nullptr;
+	Object* fadeBox = nullptr;
 	UINT mPageType = 1;	// 현재 페이지 타입
 };

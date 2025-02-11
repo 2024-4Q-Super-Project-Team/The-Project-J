@@ -127,6 +127,16 @@ float4 main(STD_VS_OUTPUT input) : SV_TARGET
     // 감마 인코드 작업을 해준다.
     FinalColor.rgb  = pow(FinalColor.rgb, 1.0 / GAMMA);
     FinalColor.a    = MapColor[OPACITY_MAP].r;
+    
+    if ((int) onlyDiffuse == 1)
+    {
+        float4 fc;
+        fc.rgb = MapColor[DIFFUSE_MAP].rgb;
+        fc.a = MapColor[OPACITY_MAP].r;
+        
+        return fc;
+    }
+    
     return saturate(FinalColor);
 }
 

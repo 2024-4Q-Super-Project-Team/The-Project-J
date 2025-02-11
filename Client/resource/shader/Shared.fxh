@@ -206,11 +206,10 @@ cbuffer OutlineBuffer : register(b6)
     float paddingg[3];
 };
 
-cbuffer FogBuffer : register(b7)
+cbuffer OnlyDiffuseBuffer : register(b7)
 {
-    float fogStart = 100.f;
-    float fogEnd = 1000.f;
-    float padddinggg[2];
+    int onlyDiffuse = false;
+    float padddinggg[3];
 };
 
 cbuffer SpriteBuffer : register(b8)

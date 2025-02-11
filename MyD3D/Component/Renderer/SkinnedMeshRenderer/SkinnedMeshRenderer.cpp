@@ -44,6 +44,7 @@ void SkinnedMeshRenderer::PreUpdate()
 
 void SkinnedMeshRenderer::Update()
 {
+    mOnlyDiffuseCBuffer.onlyDiffuse = bOnlyUseDiffuse;
 }
 
 void SkinnedMeshRenderer::PostUpdate()
@@ -72,6 +73,7 @@ void SkinnedMeshRenderer::PostRender()
 
 void SkinnedMeshRenderer::EditorUpdate()
 {
+    mOnlyDiffuseCBuffer.onlyDiffuse = bOnlyUseDiffuse;
     SetMesh(mMeshHandle);
     SetMaterial(mMaterialHandle);
 }
@@ -125,6 +127,7 @@ void SkinnedMeshRenderer::Draw(Camera* _camera)
         }
         // 본 트랜스폼 계산
         CalculateBoneTransform();
+        //GraphicsManager::GetConstantBuffer(eCBufferType::OnlyDiffuse)->UpdateGPUResoure(&mOnlyDiffuseCBuffer);
 
         _camera->PushDrawList(this);
         //_camera->PushWireList(this);
@@ -162,6 +165,7 @@ void SkinnedMeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
         mTransformMatrices.Projection = XMMatrixTranspose(_projection);
         GraphicsManager::GetConstantBuffer(eCBufferType::BoneMatrix)->UpdateGPUResoure(&mFinalBoneMatrices);
         GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
+        GraphicsManager::GetConstantBuffer(eCBufferType::OnlyDiffuse)->UpdateGPUResoure(&mOnlyDiffuseCBuffer);
         D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }
 }
@@ -368,6 +372,8 @@ json SkinnedMeshRenderer::Serialize()
     ret["rotation"] = { mOffsetRotation.x, mOffsetRotation.y, mOffsetRotation.z, mOffsetRotation.w };
     ret["scale"] = { mOffsetScale.x, mOffsetScale.y, mOffsetScale.z };
 
+    ret["use only diffuse"] = bOnlyUseDiffuse;
+
     return ret;
 }
 
@@ -439,6 +445,11 @@ void SkinnedMeshRenderer::Deserialize(json& j)
     {
         Object* rootObj = static_cast<Object*>(Engine::SaveBase::mMap[j["root"].get<unsigned int>()]);
         mRootBone = rootObj->transform;
+    }
+
+    if (j.contains("use only diffuse"))
+    {
+        bOnlyUseDiffuse = j["use only diffuse"].get<bool>();
     }
 }
 
@@ -611,6 +622,9 @@ void SkinnedMeshRenderer::EditorRendering(EditorViewerType _viewerType)
         ImGui::Checkbox(("Rendering Shadows" + uid).c_str(), &isCastShadow);
         ImGui::TreePop();
     }
+
+    ImGui::Checkbox("use only diffuse", &bOnlyUseDiffuse);
+
     EDITOR_COLOR_POP(1);
 }
 

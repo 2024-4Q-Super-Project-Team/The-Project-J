@@ -43,13 +43,20 @@ public:
     Vector3 GetEulerAngles() const { return rotation.ToEuler(); }
 
 // Dotween 관련
+    Dotween::EasingEffect easingEffect;
+// 스케일
+private:
+    bool isScaling = false;
+    float scalingDuration = 2.0f;
+    float scalingElapsedTime = 0.0f;
+    Vector3 startScale;
+    Vector3 endScale;
 // 회전
 private:
     bool isRotating = false;
 	bool isLookingAt = false;
     float rotationDuration = 2.0f;
     float rotationElapsedTime = 0.0f;
-    Dotween::EasingEffect easingEffect;
     Quaternion startRotation;
     Quaternion endRotation;
 // 움직임
@@ -136,6 +143,7 @@ public:
     void RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutBounce);
 	void LookAt(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
 	void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+	void ScaleTo(const Vector3& targetScale, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
     void ZoomTo(float* targetDistance, float startValue, float endValue, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
     void UpdateZoom(float t, Dotween::EasingEffect easingEffect);
 
@@ -143,4 +151,5 @@ private:
     void UpdateLookAt(float t, Dotween::EasingEffect easingEffect);
     void UpdateRotation(float t, Dotween::EasingEffect easingEffect);
 	void UpdateMove(float t, Dotween::EasingEffect easingEffect);
+	void UpdateScaling(float t, Dotween::EasingEffect easingEffect);
 };

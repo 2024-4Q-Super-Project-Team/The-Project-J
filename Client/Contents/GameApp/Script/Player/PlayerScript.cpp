@@ -551,10 +551,7 @@ bool PlayerScript::IsJump()
 
 void PlayerScript::ResetController()
 {
-    mPlayerController->SetMoveForceX(0.0f);
-    mPlayerController->SetMoveForceY(0.0f);
-    mPlayerController->SetMoveForceZ(0.0f);
-    // 기본 슬로프 모드로 설정
+    gameObject->GetComponent<PlayerController>()->Reset();
     mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
 }
 

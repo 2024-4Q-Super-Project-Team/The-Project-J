@@ -165,7 +165,6 @@ void Animator::AddAnimation(std::wstring _key, ResourceHandle _handle)
     if (FIND_FAILED(itr, mAnimationTable))
     {
         mAnimationTable[_key] = _handle;
-        mDuration = 0.0f;
     }
 }
 

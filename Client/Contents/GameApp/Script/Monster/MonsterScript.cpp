@@ -397,7 +397,7 @@ void MonsterScript::UpdateGroggy()
 	{
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
 			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}

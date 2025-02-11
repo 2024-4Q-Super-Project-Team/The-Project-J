@@ -93,7 +93,7 @@ void EndingScript::Update()
 			if (bookAnim)
 			{
 				bookAnim->Resume();
-				book->transform->MoveTo(Vector3(-200, 0, -1500), 2.f);
+				book->transform->MoveTo(Vector3(-260, 0, -1500), 2.f);
 
 				if (bookAnim->IsEnd())
 				{

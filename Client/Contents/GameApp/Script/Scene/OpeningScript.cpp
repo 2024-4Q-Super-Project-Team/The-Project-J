@@ -139,17 +139,33 @@ void OpeningScript::Page01Update()
 {
 	if (index == 3)
 	{
-		mWidgetList[0]->ProcessFadeOut(&mWidgetList[0]->mColor);
-		mWidgetList[1]->ProcessFadeOut(&mWidgetList[1]->mColor);
-		mWidgetList[2]->ProcessFadeOut(&mWidgetList[2]->mColor);
+		if (!startMoving)
+		{
+			// 시간 증가
+			timer += Time::GetUnScaledDeltaTime();
 
-		if (mWidgetList[0]->GetFade() == eFadeState::IDLE)
+			// 3초 기다린 후 이동 시작
+			if (timer >= 3.f)
+			{
+				startMoving = true;
+			}
+		}
+		else
+		{
+			mWidgetList[0]->ProcessFadeOut(&mWidgetList[0]->mColor);
+			mWidgetList[1]->ProcessFadeOut(&mWidgetList[1]->mColor);
+			mWidgetList[2]->ProcessFadeOut(&mWidgetList[2]->mColor);
+		}
+
+		if (startMoving && mWidgetList[0]->GetFade() == eFadeState::IDLE)
 		{
 			mWidgetList[0]->gameObject->SetActive(false);
 			mWidgetList[1]->gameObject->SetActive(false);
 			mWidgetList[2]->gameObject->SetActive(false);
 
 			mPageType = 2;
+			startMoving = false;
+			timer = 0.f;
 		}
 	}
 
@@ -174,12 +190,26 @@ void OpeningScript::Page02Update()
 {
 	if (index == 7)
 	{
-		mWidgetList[3]->ProcessFadeOut(&mWidgetList[3]->mColor);
-		mWidgetList[4]->ProcessFadeOut(&mWidgetList[4]->mColor);
-		mWidgetList[5]->ProcessFadeOut(&mWidgetList[5]->mColor);
-		mWidgetList[6]->ProcessFadeOut(&mWidgetList[6]->mColor);
+		if (!startMoving)
+		{
+			// 시간 증가
+			timer += Time::GetUnScaledDeltaTime();
 
-		if (mWidgetList[6]->GetFade() == eFadeState::IDLE)
+			// 3초 기다린 후 이동 시작
+			if (timer >= 3.f)
+			{
+				startMoving = true;
+			}
+		}
+		else
+		{
+			mWidgetList[3]->ProcessFadeOut(&mWidgetList[3]->mColor);
+			mWidgetList[4]->ProcessFadeOut(&mWidgetList[4]->mColor);
+			mWidgetList[5]->ProcessFadeOut(&mWidgetList[5]->mColor);
+			mWidgetList[6]->ProcessFadeOut(&mWidgetList[6]->mColor);
+		}
+
+		if (startMoving && mWidgetList[6]->GetFade() == eFadeState::IDLE)
 		{
 			mWidgetList[3]->gameObject->SetActive(false);
 			mWidgetList[4]->gameObject->SetActive(false);
@@ -187,6 +217,8 @@ void OpeningScript::Page02Update()
 			mWidgetList[6]->gameObject->SetActive(false);
 
 			mPageType = 3;
+			startMoving = false;
+			timer = 0.f;
 		}
 	}
 
@@ -211,18 +243,19 @@ void OpeningScript::Page03Update()
 {
 	if (index == 11)
 	{
-		mWidgetList[7]->ProcessFadeOut(&mWidgetList[7]->mColor);
-		mWidgetList[8]->ProcessFadeOut(&mWidgetList[8]->mColor);
-		mWidgetList[9]->ProcessFadeOut(&mWidgetList[9]->mColor);
-		mWidgetList[10]->ProcessFadeOut(&mWidgetList[10]->mColor);
-
-		if (mWidgetList[10]->GetFade() == eFadeState::IDLE)
+		if (!startMoving)
 		{
-			mWidgetList[7]->gameObject->SetActive(false);
-			mWidgetList[8]->gameObject->SetActive(false);
-			mWidgetList[9]->gameObject->SetActive(false);
-			mWidgetList[6]->gameObject->SetActive(false);
+			// 시간 증가
+			timer += Time::GetUnScaledDeltaTime();
 
+			// 3초 기다린 후 이동 시작
+			if (timer >= 3.f)
+			{
+				startMoving = true;
+			}
+		}
+		else
+		{
 			fadeBox->SetActive(true);
 
 			auto* fade = fadeBox->GetComponent<UISprite>();
@@ -240,8 +273,6 @@ void OpeningScript::Page03Update()
 				}
 			}
 		}
-
-
 	}
 	else 
 	{

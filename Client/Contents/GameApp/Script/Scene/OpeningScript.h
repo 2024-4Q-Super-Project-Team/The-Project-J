@@ -17,6 +17,9 @@ public:
 	Object* curObject = nullptr;
 	std::vector<UISprite*> mWidgetList;
 
+	float timer = 0.f;
+	bool startMoving = false;
+
 	Animator* bookAnim = nullptr;
 	Object* book = nullptr;
 	Object* fadeBox = nullptr;

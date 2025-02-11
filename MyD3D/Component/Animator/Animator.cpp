@@ -207,8 +207,8 @@ bool Animator::IsLoop()
 bool Animator::IsEnd()
 {
     if (mActiveAnimation)
-    {
-        return mDuration == mActiveAnimation->GetTotalFrame();
+   {
+        return mDuration >= mActiveAnimation->GetTotalFrame();
     }
     return false;
 }

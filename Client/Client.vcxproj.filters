@@ -46,7 +46,6 @@
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
@@ -57,6 +56,8 @@
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -84,7 +85,6 @@
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
-    <ClInclude Include="Contents\GameApp\Script\Boss\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
@@ -95,6 +95,8 @@
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

@@ -547,6 +547,19 @@ void Transform::Rotate90(float _duration, const Vector3& axis, float angle, Dotw
     endRotation = startRotation * rotationQuat;
 }
 
+void Transform::RotateTo(float _duration, Quaternion destRotation, Dotween::EasingEffect _easingEffect)
+{
+    if (isRotating) return; // 이미 회전 중이면 중복 실행 X
+
+    isRotating = true;
+    rotationDuration = _duration;
+    rotationElapsedTime = 0.0f;
+    easingEffect = _easingEffect;
+
+    startRotation = rotation;
+    endRotation = destRotation;
+}
+
 void Transform::RotateByPivot(const Vector3& pivot, const Vector3& axis, float angle, float duration, Dotween::EasingEffect easingEffect)
 {
     if (isRotating) return;
@@ -611,7 +624,7 @@ void Transform::UpdateRotation(float t, Dotween::EasingEffect easingEffect)
 {
     // 현재 회전과 목표 회전 사이 보간
     rotation = Quaternion::Slerp(startRotation, endRotation, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
-    position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+    //position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
 }
 
 void Transform::UpdateLookAt(float t, Dotween::EasingEffect easingEffect)

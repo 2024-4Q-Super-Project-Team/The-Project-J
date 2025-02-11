@@ -17,6 +17,7 @@
 
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Object/Box/BoxScript.h"
+#include "Contents/GameApp/Script/Object/WoodWick/WoodWithWickScript.h"
 #include "Contents/GameApp/Script/Monster/MonsterScript.h"
 #include "Contents/GameApp/Script/Monster/ScopeScript.h"
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
@@ -54,4 +55,5 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(newBossAttackScript);
 	REGISTER_COMPONENT(TitleScript);
 	REGISTER_COMPONENT(SpriteAnimScript);
+	REGISTER_COMPONENT(WoodWithWickScript);
 }

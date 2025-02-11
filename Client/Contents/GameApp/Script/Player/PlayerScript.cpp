@@ -155,7 +155,7 @@ void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* 
     ////////////////////////////////////////////////
     // BurnObjectScript를 GetComponent성공했냐로 대상이 불을 옮길 수 있는 오브젝트 인가를 구분
     BurnObjectScript* dstBurnObject = _destination->gameObject->GetComponent<BurnObjectScript>();
-    if (dstBurnObject && isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
+   if (dstBurnObject && isJump == false && InputSyncer::IsKeyHold(mPlayerHandle.val, InputSyncer::MOVE_FIRE))
     {
         ProcessMoveFire(dstBurnObject);
         return;

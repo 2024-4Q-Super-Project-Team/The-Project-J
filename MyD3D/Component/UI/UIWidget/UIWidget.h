@@ -68,6 +68,6 @@ protected:
 	std::wstring mID = L"";
 
 	eUIType	mUIType = eUIType::NON;
-	float mFadeTime = 5.f;
+	float mFadeTime = 3.f;
 	eFadeState mFadeState = eFadeState::IDLE;
 };

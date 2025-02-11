@@ -12,8 +12,7 @@ void OpeningScript::Start()
 
 	if (book)
 	{
-		book->transform->MoveTo(Vector3(130, 0, -950), 2.f);
-		book->transform->MoveTo(Vector3(130, 0, -950), 2.f);
+		book->transform->MoveTo(Vector3(99, 0, -1020), 2.f);
 		bookAnim = book->GetComponent<Animator>();
 	}
 
@@ -29,6 +28,11 @@ void OpeningScript::Start()
 	// object load
 	// Page01
 	{
+		fadeBox = FindObjectWithName(L"fade_box_01");
+		auto* fade = fadeBox->GetComponent<UISprite>();
+		fadeBox->transform->SetParent(gameObject->transform);
+		fadeBox->SetActive(false);
+
 		Object* text_01 = FindObject(L"text_01", L"Sprite");
 		auto* t1 = text_01->GetComponent<UISprite>();
 		text_01->transform->SetParent(gameObject->transform);
@@ -219,27 +223,25 @@ void OpeningScript::Page03Update()
 			mWidgetList[9]->gameObject->SetActive(false);
 			mWidgetList[6]->gameObject->SetActive(false);
 
-			mPageType = 3;
+			fadeBox->SetActive(true);
+
+			auto* fade = fadeBox->GetComponent<UISprite>();
+
+			if (fadeBox->GetState() == EntityState::Active)
+			{
+				if (fade)
+				{
+					fade->ProcessFadeIn(&fade->mColor);
+				}
+
+				if (fade->GetFade() == eFadeState::IDLE)
+				{
+					mPageType = 0;
+				}
+			}
 		}
 
-		//// 목표 scale 값
-		//Vector2 targetScale = { 2000.f, 1150.f };
-		//
-		//if (mWidgetList[10]->gameObject->transform->scale.x >= targetScale.x &&
-		//	mWidgetList[10]->gameObject->transform->scale.y >= targetScale.y)
-		//{
-		//	mPageType = 0;
-		//	return;
-		//}
-		//
-		//float t = Time::GetUnScaledDeltaTime() / 3;
-		//t = std::clamp(t, 0.f, 1.f);
-		//
-		//mWidgetList[10]->gameObject->transform->MoveTo(Vector3{ -40, -40 , 0}, 3.f, Dotween::EasingEffect::InSine);
-		//
-		//// 현재 scale과 목표 scale을 보간 (lerp)
-		//mWidgetList[10]->gameObject->transform->scale.x = Lerp(mWidgetList[10]->gameObject->transform->scale.x, targetScale.x, t);
-		//mWidgetList[10]->gameObject->transform->scale.y = Lerp(mWidgetList[10]->gameObject->transform->scale.y, targetScale.y, t);
+
 	}
 	else 
 	{

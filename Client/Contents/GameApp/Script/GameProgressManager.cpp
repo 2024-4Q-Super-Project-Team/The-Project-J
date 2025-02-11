@@ -5,7 +5,7 @@
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
 newBossScript* GameProgressManager::mBossScript = nullptr;
-Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr ,nullptr };
+Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
 INT	GameProgressManager::mCurrentStageNum = 0;
 
 void GameProgressManager::Start()
@@ -15,7 +15,6 @@ void GameProgressManager::Start()
 		mStagearray[STAGE_01] = FindObjectWithName(L"MAP1");
 		mStagearray[STAGE_02] = FindObjectWithName(L"MAP2");
 		mStagearray[STAGE_03] = FindObjectWithName(L"MAP3");
-		mStagearray[STAGE_04] = FindObjectWithName(L"MAP4");
 	}
 }
 

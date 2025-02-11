@@ -23,9 +23,8 @@
 #define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
 #define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
 #define PLAYER_SFX_MOVE_FIRE_START      L"move_fire_start"
-#define PLAYER_SFX_MOVE_FIRE_OFF        L"move_fire_off"
+#define PLAYER_SFX_MOVE_FIRE_END        L"move_fire_end"
 #define PLAYER_SFX_OFF_FIRE             L"off_fire"
-#define PLAYER_SFX_JUMP                 L"jumping"
 #define PLAYER_SFX_DEAD                 L"dead"
 #define PLAYER_SFX_HIT                  L"hit"
 
@@ -326,6 +325,7 @@ void PlayerScript::Hit(INT _damage)
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
             SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
+            mAudioSource->Play(PLAYER_SFX_HIT);
 
             if (mPlayerState == ePlayerStateType::MOVE_FIRE)
             {
@@ -374,6 +374,7 @@ void PlayerScript::UpdatePlayerHP()
         if (mPlayerCurHP <= 0)
         {
             SetState(ePlayerStateType::DEAD);
+            mAudioSource->Play(PLAYER_SFX_DEAD);
         }
     }
 }
@@ -454,7 +455,18 @@ void PlayerScript::UpdateIdle()
 
 void PlayerScript::UpdateMove()
 {
+    static FLOAT walkSoundTick = 0.4f;
+    static FLOAT walkSoundCounter = 0.0f;
+
+    walkSoundCounter += Time::GetScaledDeltaTime();
+    if (walkSoundCounter >= walkSoundTick)
+    {
+        walkSoundCounter = 0.0f;
+        mAudioSource->Play(PLAYER_SFX_WALKING_NORMAL_01);
+    }
+
     ProcessJump();
+
     if (ProcessMove() == false)
     {
         SetState(ePlayerStateType::IDLE);
@@ -520,6 +532,7 @@ void PlayerScript::UpdateMoveFire()
                     mBurnObjectScript->IsBurning() == true)
                 {
                     mBurnProcessTarget->SetBurn(true);
+                    mAudioSource->Play(PLAYER_SFX_MOVE_FIRE_END);
                 }
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
@@ -621,6 +634,7 @@ void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
             SetState(ePlayerStateType::MOVE_FIRE);
             mBurnProcessTarget = _dst;
             mMoveFireCount = 0.0f;
+            mAudioSource->Play(PLAYER_SFX_MOVE_FIRE_START);
         }
     }
 }
@@ -636,7 +650,7 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             SetState(ePlayerStateType::OFF_FIRE);
             mBurnProcessTarget = _dst;
-
+            mAudioSource->Play(PLAYER_SFX_OFF_FIRE);
             //ºÒ ²¨Áú ¶§ ÀÌÆåÆ® 
             Object* dstFireObject = FindChildObject(_dst->gameObject->transform->GetParent()->gameObject, L"Player_Fireoff_Effect");
             SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();
@@ -651,6 +665,7 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             mBurnObjectScript->SetBurn(false);
             SetState(ePlayerStateType::OFF_FIRE);
+            mAudioSource->Play(PLAYER_SFX_OFF_FIRE);
             mBurnProcessTarget = nullptr;
 
             SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();

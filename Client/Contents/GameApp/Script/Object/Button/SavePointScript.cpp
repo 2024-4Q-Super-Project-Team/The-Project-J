@@ -7,6 +7,10 @@ void SavePointScript::Start()
 {
     gameObject->AddComponent<Rigidbody>();
 
+    mAudioSource = gameObject->GetComponent<AudioSource>();
+    if (mAudioSource == nullptr)
+        mAudioSource = gameObject->AddComponent<AudioSource>();
+
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
     boxCol->SetExtents(Vector3(80, 10, 80));
     boxCol->SetTrigger(true);
@@ -19,7 +23,7 @@ void SavePointScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
     // 체력 회복
     player->SetHP(player->GetMaxHpValue());
-
+    mAudioSource->Play(L"");
     if (player && !mIsSaved)
     {
         // 세이브 좌표 저장

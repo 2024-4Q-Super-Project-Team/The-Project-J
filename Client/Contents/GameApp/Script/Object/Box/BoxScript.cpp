@@ -4,6 +4,9 @@
 
 void BoxScript::Start()
 {
+    mAudioSource = gameObject->GetComponent<AudioSource>();
+    if(mAudioSource == nullptr)
+        mAudioSource = gameObject->AddComponent<AudioSource>();
     mRigid = gameObject->AddComponent<Rigidbody>();
     mCollider = gameObject->AddComponent<BoxCollider>();
     mRigid->SetMass(15.f);
@@ -30,7 +33,6 @@ void BoxScript::Update()
 
    if (mGravityOn.val)
        displacement.val.y = -mGravitySpeed;
-
 
    MoveBox(displacement.val * Time::GetScaledDeltaTime());
 }
@@ -60,6 +62,13 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 
     displacement.val = direction * mMoveSpeed;
 
+    //SFXElapsed = SFXTick;
+    //if (mAudioSource->IsPlaying() == false)
+    //{
+    //    mAudioSource->Play();
+    //}
+    if (mAudioSource->IsPlaying() == false)
+        mAudioSource->Play(L"");
 }
 
 void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)
@@ -68,6 +77,9 @@ void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)
 
     displacement.val.x = 0.f;
     displacement.val.z = 0.f;
+
+    if (mAudioSource->IsPlaying() == true)
+        mAudioSource->Reset();
 }
 
 void BoxScript::MoveBox(Vector3 displacement)

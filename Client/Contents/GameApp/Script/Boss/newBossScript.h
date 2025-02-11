@@ -44,6 +44,7 @@ private:
 	Object* mRazerObject;
 	Object* mRangeObject;
 	Animator* mBodyAnimator;
+	AudioSource* mAudioSoruce;
 	newBossAttackScript* mAttackScript;
 	newBossRangeScript* mRangeScript;
 

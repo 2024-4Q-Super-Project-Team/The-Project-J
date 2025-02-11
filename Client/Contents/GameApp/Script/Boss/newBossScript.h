@@ -22,8 +22,9 @@ public:
 
 	void Reset();
 
-	void UpdatePositionZ();
-	void UpdatePositionX();
+	void UpdatePositionZ();		// 두 플레이어 중 가까운 객체에 따라 z값 조정
+	void UpdatePositionX();		// 두 포인트를 보간하여 x값 조정
+	void UpdatePositionEnter();	// Enter시의 보스 등장 연출용 포지션 업데이트
 	void UpdateAnimation();
 
 	void UpdateNone();
@@ -41,7 +42,8 @@ private:
 
 	Object* mPoint[2];					// 보스가 이동할 방향을 정해주기 위한 두 점
 	Vector3 mBossDirection;
-	eBossStateType mBossState = eBossStateType::IDLE;
+	Vector3 mBossOriginPosition;
+	eBossStateType mBossState = eBossStateType::NONE;
 
 	SerializeField(FLOAT, mDistanceFromPlayer, 500.0f);
 

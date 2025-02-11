@@ -216,6 +216,46 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
 
     }
 
+    if (_destination->gameObject->GetTag() == L"CameraTrigger6")
+    {
+        //isInTrigger = true;
+
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+        if (player1->isDone6 == false && player2->isDone6 == false)
+        {
+            Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+            cam->ZoomToFov(1.0f, 1.4f, 2.0f, Dotween::EasingEffect::OutSine);
+            mCameraController->LookAt(Vector3(0.0f, 0.04f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
+            isDone6 = true;
+        }
+
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger7")
+    {
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+        
+        if (player1->isDone7 == false && player2->isDone7 == false)
+        {
+            mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
+            isDone7 = true;
+        }
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger8")
+    {
+        //Vector3 targetPosition = Vector3(-1406.0f, 3554.0f, 18502.0f); // 카메라 위치
+        //Vector3 lookAtPosition = Vector3(-1479.0f, 5000.0f, 20402.0f); // 바라볼 위치
+        //mCameraController->MoveAndLookAt(targetPosition, lookAtPosition, 8.0f, Dotween::EasingEffect::OutSine);
+
+        mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
+
+
+    }
+
     return void _CALLBACK();
 }
 

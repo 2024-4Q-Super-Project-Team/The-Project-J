@@ -23,6 +23,29 @@ void CameraController::Start()
 
 void CameraController::Update()
 {
+    if (isMoving)
+    {
+        moveElapsedTime += Time::GetScaledDeltaTime();
+        float t = moveElapsedTime / moveDuration;
+        gameObject->transform->position = Vector3::Lerp(startPosition, endPosition, Dotween::EasingFunction[static_cast<unsigned int>(moveEasingEffect)](t));
+
+        if (moveElapsedTime >= moveDuration)
+        {
+            isMoving = false;
+            moveElapsedTime = 0.0f;
+            gameObject->transform->position = endPosition;
+            isMoveComplete = true;
+
+            // 모두 완료되었는지 체크
+            if (isMoveComplete && isLookAtComplete)
+            {
+                isUpdateEnabled = true;
+                isMoveComplete = false;
+                isLookAtComplete = false;
+            }
+        }
+    }
+
     if (isLookingAt)
     {
         lookAtElapsedTime += Time::GetScaledDeltaTime();
@@ -34,6 +57,14 @@ void CameraController::Update()
             isLookingAt = false;
             lookAtElapsedTime = 0.0f;
             mCameraDirection.val = endDirection;
+            isLookAtComplete = true;
+
+            if (isMoveComplete && isLookAtComplete)
+            {
+                isUpdateEnabled = true;
+                isMoveComplete = false;
+                isLookAtComplete = false;
+            }
         }
     }
 
@@ -65,64 +96,67 @@ void CameraController::Update()
         }
     }
 
-    PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
-    PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
-    Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
-    Vector3 Player2WorldPos = Player2->gameObject->transform->GetWorldPosition();
-
-    // 플레이어 간의 거리 벡터 계산
-    Vector3 Between = Player1WorldPos - Player2WorldPos;
-    float playerDistance = Between.Length();
-
-    // 플레이어 거리를 카메라 거리로 매핑
-    const float playerMinDist = 200.0f;
-    const float playerMaxDist = 1000.0f;
-    float distanceRatio = (playerDistance - playerMinDist) / (playerMaxDist - playerMinDist);
-    distanceRatio = std::clamp(distanceRatio, 0.0f, 1.0f);
-
-    float targetCameraDistance = mMinCameraDistance.val + (mMaxCameraDistance.val - mMinCameraDistance.val) * distanceRatio;
-
-    // 현재 거리와 목표 거리가 일정 이상 차이나면 부드러운 전환 시작
-    float threshold = 20.0f;
-    if (abs(mCameraDistance.val - targetCameraDistance) > threshold)
+    if (isUpdateEnabled)
     {
-        gameObject->transform->ZoomTo(&mCameraDistance.val, mCameraDistance.val, targetCameraDistance, 1.0f);
+        PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
+        Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
+        Vector3 Player2WorldPos = Player2->gameObject->transform->GetWorldPosition();
+
+        // 플레이어 간의 거리 벡터 계산
+        Vector3 Between = Player1WorldPos - Player2WorldPos;
+        float playerDistance = Between.Length();
+
+        // 플레이어 거리를 카메라 거리로 매핑
+        const float playerMinDist = 200.0f;
+        const float playerMaxDist = 1000.0f;
+        float distanceRatio = (playerDistance - playerMinDist) / (playerMaxDist - playerMinDist);
+        distanceRatio = std::clamp(distanceRatio, 0.0f, 1.0f);
+
+        float targetCameraDistance = mMinCameraDistance.val + (mMaxCameraDistance.val - mMinCameraDistance.val) * distanceRatio;
+
+        // 현재 거리와 목표 거리가 일정 이상 차이나면 부드러운 전환 시작
+        float threshold = 20.0f;
+        if (abs(mCameraDistance.val - targetCameraDistance) > threshold)
+        {
+            gameObject->transform->ZoomTo(&mCameraDistance.val, mCameraDistance.val, targetCameraDistance, 1.0f);
+        }
+
+        // 중간 지점 계산
+        Vector3 MidPoint = (Player1WorldPos + Player2WorldPos) * 0.5f;
+        MidPoint += midpointOffset;
+
+        // mCameraDirection을 정규화 (원본 변형 방지)
+        Vector3 CameraDirection = mCameraDirection.val;
+        CameraDirection.Normalize();
+
+        // 카메라 위치 설정 (중간 지점에서 방향 벡터 * 거리 만큼 이동)
+        Vector3 CameraPosition = MidPoint + (CameraDirection * mCameraDistance.val);
+        CameraPosition += offSet;
+
+        gameObject->transform->position = CameraPosition;
+
+        // 카메라의 Forward 및 Right 벡터 계산
+        Vector3 ForwardVector = MidPoint - CameraPosition;
+        ForwardVector.Normalize();
+
+        Vector3 RightVector = Vector3(0.0f, 1.0f, 0.0f).Cross(ForwardVector); // 카메라의 오른쪽 벡터
+        RightVector.Normalize();
+
+        Vector3 UpVector = ForwardVector.Cross(RightVector); // 카메라의 Up 벡터
+
+        // 플레이어 간 거리 벡터를 카메라의 로컬 좌표계로 변환
+        float distanceHorizontal = fabs(Between.Dot(RightVector));  // 가로 거리
+        float distanceDepth = fabs(Between.Dot(ForwardVector));     // 세로 거리
+
+        // 카메라 거리 조정 (화면 크기 대비)
+        Vector2 ScreenSize = { mCamera->GetViewport()->mViewport.Width, mCamera->GetViewport()->mViewport.Height };
+        float ScreenThresholdX = ScreenSize.x * 0.5f; // 가로 크기 한계
+        float ScreenThresholdZ = ScreenSize.y * 0.5f; // 세로 크기 한계
+
+        // LookAt 호출 (업 벡터 적용)
+        gameObject->transform->LookAt(MidPoint, UpVector);
     }
-
-    // 중간 지점 계산
-    Vector3 MidPoint = (Player1WorldPos + Player2WorldPos) * 0.5f;
-    MidPoint += midpointOffset;
-
-    // mCameraDirection을 정규화 (원본 변형 방지)
-    Vector3 CameraDirection = mCameraDirection.val;
-    CameraDirection.Normalize();
-
-    // 카메라 위치 설정 (중간 지점에서 방향 벡터 * 거리 만큼 이동)
-    Vector3 CameraPosition = MidPoint + (CameraDirection * mCameraDistance.val);
-    CameraPosition += offSet;
-
-    gameObject->transform->position = CameraPosition;
-
-    // 카메라의 Forward 및 Right 벡터 계산
-    Vector3 ForwardVector = MidPoint - CameraPosition;
-    ForwardVector.Normalize();
-
-    Vector3 RightVector = Vector3(0.0f, 1.0f, 0.0f).Cross(ForwardVector); // 카메라의 오른쪽 벡터
-    RightVector.Normalize();
-
-    Vector3 UpVector = ForwardVector.Cross(RightVector); // 카메라의 Up 벡터
-
-    // 플레이어 간 거리 벡터를 카메라의 로컬 좌표계로 변환
-    float distanceHorizontal = fabs(Between.Dot(RightVector));  // 가로 거리
-    float distanceDepth = fabs(Between.Dot(ForwardVector));     // 세로 거리
-
-    // 카메라 거리 조정 (화면 크기 대비)
-    Vector2 ScreenSize = { mCamera->GetViewport()->mViewport.Width, mCamera->GetViewport()->mViewport.Height };
-    float ScreenThresholdX = ScreenSize.x * 0.5f; // 가로 크기 한계
-    float ScreenThresholdZ = ScreenSize.y * 0.5f; // 세로 크기 한계
-
-    // LookAt 호출 (업 벡터 적용)
-    gameObject->transform->LookAt(MidPoint, UpVector);
 }
 
 void CameraController::SetCameraDirection(const Vector3& direction)
@@ -157,6 +191,42 @@ void CameraController::LookAt(const Vector3& targetDirection, float duration, Do
 
     startDirection = mCameraDirection.val;
     endDirection = targetDirection;
+}
+
+void CameraController::LookAtTarget(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isLookingAt) return;
+
+    isLookingAt = true;
+    lookAtDuration = duration;
+    lookAtElapsedTime = 0.0f;
+    this->easingEffect = easingEffect;
+    isLookAtComplete = false;  // 리셋
+
+    startDirection = mCameraDirection.val;
+    endDirection = (targetPosition - gameObject->transform->position);
+    endDirection.Normalize();
+}
+
+void CameraController::MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isMoving) return;
+
+    isMoving = true;
+    moveDuration = duration;
+    moveElapsedTime = 0.0f;
+    this->moveEasingEffect = easingEffect;
+    isMoveComplete = false;  // 리셋
+
+    startPosition = gameObject->transform->position;
+    endPosition = targetPosition;
+}
+
+void CameraController::MoveAndLookAt(const Vector3& targetPosition, const Vector3& lookAtPosition, float duration, Dotween::EasingEffect easingEffect)
+{
+    LookAt(lookAtPosition, duration, easingEffect);
+    MoveTo(targetPosition, duration, easingEffect);
+    isUpdateEnabled = false; // 업데이트 비활성화
 }
 
 

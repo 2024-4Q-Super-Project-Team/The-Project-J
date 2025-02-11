@@ -110,8 +110,11 @@ private:
 	SerializeField(FLOAT, mMoveFireTick, 2.0f);
 	FLOAT mMoveFireCount = 0.0f;
 
-	// 둘다 트리거 들어왔는지
+	// 카메라연출 체크용 bool변수
 	bool isInTrigger = false;
+	bool isDone6 = false;
+	bool isDone7 = false;
+
 
 public:
 	virtual json Serialize() override;

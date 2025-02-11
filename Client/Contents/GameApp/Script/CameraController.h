@@ -22,6 +22,10 @@ public:
 
 public:
     void LookAt(const Vector3& targetDirection, float duration, Dotween::EasingEffect easingEffect);
+    void LookAtTarget(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void MoveTo(const Vector3& targetPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void MoveAndLookAt(const Vector3& targetPosition, const Vector3& lookAtPosition, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+
 public:
     Vector3 mOriginalCameraDirection;
     SerializeField(FLOAT, mCameraDistance, 200.0f);
@@ -44,12 +48,21 @@ private:
     Vector3 midpointOffset = Vector3::Zero;
 
     // dotween
+    // LookAt
     bool isLookingAt = false;
     float lookAtDuration = 0.0f;
     float lookAtElapsedTime = 0.0f;
     Vector3 startDirection;
     Vector3 endDirection;
     Dotween::EasingEffect easingEffect;
+
+    // Moveto
+    bool isMoving = false;
+    float moveDuration = 0.0f;
+    float moveElapsedTime = 0.0f;
+    Vector3 startPosition;
+    Vector3 endPosition;
+    Dotween::EasingEffect moveEasingEffect;
 
     // Offset 관련
     bool isTweeningOffset = false;
@@ -66,6 +79,12 @@ private:
     Vector3 startMidpointOffset;
     Vector3 targetMidpointOffset;
     Dotween::EasingEffect midpointOffsetEasingEffect;
+
+    // 업데이트 중지 플래그
+    bool isUpdateEnabled = true;
+    bool isMoveComplete = false;
+    bool isLookAtComplete = false;
+
 
 
 

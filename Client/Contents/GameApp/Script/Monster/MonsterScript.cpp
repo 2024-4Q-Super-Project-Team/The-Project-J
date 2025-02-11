@@ -29,8 +29,9 @@ void MonsterScript::Start()
 	// Init Setting
 	{
 		// find Weakness
-		auto& children = gameObject->transform->GetChildren();
-		for (Transform* child : children)
+		Transform* root = gameObject->transform->GetParent();
+		auto& root_children = root->GetChildren();
+		for (Transform* child : root_children)
 		{
 			if (child->gameObject->GetName() == L"Scope")
 			{
@@ -39,20 +40,24 @@ void MonsterScript::Start()
 				m_pScope->transform->position = gameObject->transform->position;
 			}
 
-			if (child->gameObject->GetName() == L"Weakness")
+			auto& children = gameObject->transform->GetChildren();
+			for (Transform* child : children)
 			{
-				m_pWeakness = child->gameObject;
-				m_pWeakness->SetTag(L"Weakness");
-				m_pWeakness->transform->scale = Vector3(30, 30, 22);
-				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
+				if (child->gameObject->GetName() == L"Weakness")
+				{
+					m_pWeakness = child->gameObject;
+					m_pWeakness->SetTag(L"Weakness");
+					m_pWeakness->transform->scale = Vector3(30, 30, 22);
+					m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
 
-				if (mType.val == (int)eMonsterType::A)
-				{
-					m_pWeakness->transform->position.y = 38;
-				}
-				else
-				{
-					m_pWeakness->transform->position.y = 5;
+					if (mType.val == (int)eMonsterType::A)
+					{
+						m_pWeakness->transform->position.y = 38;
+					}
+					else
+					{
+						m_pWeakness->transform->position.y = 5;
+					}
 				}
 			}
 		}
@@ -76,7 +81,7 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,40,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 30,2,30 });
 		}
 		else
@@ -92,7 +97,7 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,30,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,20,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 		else
@@ -362,8 +367,8 @@ void MonsterScript::UpdateGroggy()
 {
 	if (mType.val == (int)eMonsterType::A)
 	{
-		m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
-		m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
+		m_pHeadCollider->SetPosition(Vector3{ 0,30,0 });
+		m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
 		m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
 	}
 	else
@@ -384,7 +389,7 @@ void MonsterScript::UpdateGroggy()
 		// N초 안에 불이 붙었다면
 		if (m_pBurnObjectScript)
 		{
-			if (m_pBurnObjectScript->IsBurning())
+  			if (m_pBurnObjectScript->IsBurning())
 			{
 				mFSM = eMonsterStateType::DEAD;
 				mGroggyCount = 0.f;
@@ -395,8 +400,8 @@ void MonsterScript::UpdateGroggy()
 	{
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
-			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,20,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 

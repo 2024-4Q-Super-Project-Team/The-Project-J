@@ -57,6 +57,7 @@
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Player\BurnGageScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.cpp" />
   </ItemGroup>
@@ -97,7 +98,20 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="ScriptRegister.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
+    <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Player\BurnGageScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.h" />

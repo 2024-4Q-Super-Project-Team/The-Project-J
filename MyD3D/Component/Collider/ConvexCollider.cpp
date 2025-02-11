@@ -17,9 +17,7 @@ void ConvexCollider::Start()
 {
 	Collider::Start();
 
-
 	mMesh = ResourceManager::GetResource<MeshResource>(mMeshHandle);
-
 
 	if (mMesh == nullptr) return;
 

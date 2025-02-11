@@ -4,6 +4,7 @@
 
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
+newBossScript* GameProgressManager::mBossScript = nullptr;
 Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr ,nullptr };
 INT	GameProgressManager::mCurrentStageNum = 0;
 
@@ -76,6 +77,16 @@ void GameProgressManager::SetPlayerInfo(PlayerScript* _player)
 PlayerScript* GameProgressManager::GetPlayerInfo(INT _handle)
 {
 	return mPlayer[_handle];
+}
+
+void GameProgressManager::SetBossInfo(newBossScript* _boss)
+{
+	mBossScript = _boss;
+}
+
+newBossScript* GameProgressManager::GetBossInfo()
+{
+	return mBossScript;
 }
 
 eGameProgressStatus GameProgressManager::GetGameStatus()

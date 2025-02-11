@@ -5,6 +5,7 @@ void SpriteAnimScript::Start()
 {
 	mRenderer = gameObject->GetComponent<SpriteRenderer>();
 	mFrameCount = mRenderer->GetFrameCount();
+	mRenderer->SetIndex(0);
 }
 
 void SpriteAnimScript::Update()
@@ -15,7 +16,7 @@ void SpriteAnimScript::Update()
 	{
 		mElapsedTime += Time::GetUnScaledDeltaTime();
 
-		if (mElapsedTime >= (mEffectTime/mFrameCount) )
+		if (mElapsedTime >= (mEffectTime.val/mFrameCount) )
 		{
 			mElapsedTime = 0.f;
 			mNowFrameIndex++;

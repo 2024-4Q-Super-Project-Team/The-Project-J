@@ -80,3 +80,41 @@ void newBossAttackScript::SetAttackEnd()
 	isAttack = FALSE;
 	gameObject->SetActive(false);
 }
+
+json newBossAttackScript::Serialize()
+{
+	json ret = MonoBehaviour::Serialize();
+
+	ret["razer damage"] = mRazerDamage.val;
+	ret["razer distance"] = mRazerDist.val;
+	ret["razer range"] = mRazerRange.val;
+	ret["razer scale"] = mRazerScale.val;
+	ret["razer time"] = mRazerTime.val;
+
+	return ret;
+}
+
+void newBossAttackScript::Deserialize(json& j)
+{
+	MonoBehaviour::Deserialize(j);
+	if (j.contains("razer damage"))
+	{
+		mRazerDamage.val = j["razer damage"].get<INT>();
+	}
+	if (j.contains("razer distance"))
+	{
+		mRazerDist.val = j["razer distance"].get<FLOAT>();
+	}
+	if (j.contains("razer range"))
+	{
+		mRazerRange.val = j["razer range"].get<FLOAT>();
+	}
+	if (j.contains("razer scale"))
+	{
+		mRazerRange.val = j["razer scale"].get<FLOAT>();
+	}
+	if (j.contains("razer time"))
+	{
+		mRazerRange.val = j["razer time"].get<FLOAT>();
+	}
+}

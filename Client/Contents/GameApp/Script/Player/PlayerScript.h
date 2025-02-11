@@ -14,6 +14,7 @@ enum class ePlayerStateType
 
 class BurnObjectScript;
 class PlayerCollisionScript;
+class CameraController;
 
 class PlayerScript : public MonoBehaviour
 {
@@ -26,6 +27,9 @@ public:
 	virtual void _CALLBACK OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void _CALLBACK OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination) override;
 	virtual void _CALLBACK OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+	virtual void _CALLBACK OnTriggerEnter(Collider* _origin, Collider* _destination) override;
+	virtual void _CALLBACK OnTriggerStay(Collider* _origin, Collider* _destination) override;
+	virtual void _CALLBACK OnTriggerExit(Collider* _origin, Collider* _destination) override;
 	void _CALLBACK OnTriggerStayCallback(Collider* _origin, Collider* _destination);
 	void _CALLBACK OnTriggerExitCallback(Collider* _origin, Collider* _destination);
 public:
@@ -81,6 +85,7 @@ private:
 	Animator*				mBodyAnimator = nullptr;
 	Animator*				mCandleAnimator = nullptr;
 	PlayerController*		mPlayerController = nullptr;
+	CameraController*		mCameraController = nullptr;
 	BurnObjectScript*		mBurnObjectScript = nullptr;
 
 	BurnObjectScript*		mBurnProcessTarget = nullptr; // 불 끄기, 혹은 불 옮기기의 작업 대상
@@ -110,6 +115,9 @@ private:
 	////////////////////////////////////////////////
 	SerializeField(FLOAT, mMoveFireTick, 2.0f);
 	FLOAT mMoveFireCount = 0.0f;
+
+	// 둘다 트리거 들어왔는지
+	bool isInTrigger = false;
 
 public:
 	virtual json Serialize() override;

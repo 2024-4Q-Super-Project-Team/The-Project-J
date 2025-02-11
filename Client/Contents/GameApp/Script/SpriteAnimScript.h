@@ -14,7 +14,7 @@ private:
 	SpriteRenderer* mRenderer;
 
 	int mFrameCount = 1;
-	float mEffectTime = 0.5f;
+	SerializeField(float,mEffectTime, 0.5f);
 
 	bool mIsPlaying = false;
 	float mElapsedTime = 0.f;

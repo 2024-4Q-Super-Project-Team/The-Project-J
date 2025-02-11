@@ -1,6 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <FxCompile Include="resource\shader\QuadFrame_PS.hlsl" />
+    <FxCompile Include="resource\shader\QuadFrame_VS.hlsl" />
     <FxCompile Include="resource\shader\Grid_PS.hlsl" />
     <FxCompile Include="resource\shader\Grid_VS.hlsl" />
     <FxCompile Include="resource\shader\DeferredPBR_PS.hlsl" />
@@ -18,11 +20,11 @@
     <FxCompile Include="resource\shader\Sprite_PS.hlsl" />
     <FxCompile Include="resource\shader\Sprite_VS.hlsl" />
     <FxCompile Include="resource\shader\Standard_VS.hlsl" />
-    <FxCompile Include="resource\shader\QuadFrame_VS.hlsl" />
-    <FxCompile Include="resource\shader\QuadFrame_PS.hlsl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\Old\BossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Box\BoxScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\CheckIceSlope.cpp" />
@@ -34,35 +36,33 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Button\SavePointScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
     <ClCompile Include="pch.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\ScopeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\PlayerCollisionScript.cpp" />
-    <ClCompile Include="ScriptRegister.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\GameProgressManager.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
+    <ClCompile Include="ScriptRegister.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\BurnGageScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
@@ -76,15 +76,25 @@
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerState.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\JumpPad\JumpPadScript.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\SoundManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\ScopeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
@@ -100,6 +110,7 @@
     <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\BurnGageScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

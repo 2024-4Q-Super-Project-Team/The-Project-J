@@ -189,6 +189,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\OpeningScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\SpriteAnimScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
     <ClCompile Include="main.cpp" />
@@ -208,7 +209,6 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -218,6 +218,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Object\Button\BoxDownButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\BossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Box\BoxScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\CheckIceSlope.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurnObjectScript.h" />
     <ClInclude Include="Config.h" />
@@ -231,7 +232,9 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\GameProgressManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\OpeningScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\SoundManager.h" />
     <ClInclude Include="Contents\GameApp\Script\SpriteAnimScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.h" />
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />

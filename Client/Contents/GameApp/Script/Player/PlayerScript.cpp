@@ -6,6 +6,7 @@
 #include "Contents/GameApp/Script/Player/CheckIceSlope.h"
 #include "Contents/GameApp/Script/SpriteAnimScript.h"
 #include "Manager/SavePointManager.h"
+#include "Contents/GameApp/Script/CameraController.h"
 
 #define PLAYER_ANIM_IDLE L"003"
 #define PLAYER_ANIM_WALK L"004"
@@ -14,6 +15,19 @@
 #define PLAYER_ANIM_OFF_FIRE L"008"
 #define PLAYER_ANIM_HIT L"009"
 #define PLAYER_ANIM_DEAD L"010"
+
+#define PLAYER_SFX_WALKING_NORMAL_01    L"walking_normal_01"
+#define PLAYER_SFX_WALKING_NORMAL_02    L"walking_normal_02"
+#define PLAYER_SFX_WALKING_NORMAL_03    L"walking_normal_03"
+#define PLAYER_SFX_WALKING_ICE_01       L"walking_ice_01"
+#define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
+#define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
+#define PLAYER_SFX_MOVE_FIRE            L"move_fire"
+#define PLAYER_SFX_OFF_FIRE             L"off_fire"
+#define PLAYER_SFX_JUMP                 L"jumping"
+#define PLAYER_SFX_DEAD                 L"dead"
+#define PLAYER_SFX_HIT                  L"hit"
+
 
 void PlayerScript::Start()
 {
@@ -51,6 +65,24 @@ void PlayerScript::Start()
         if (mPlayerController == nullptr)
             mPlayerController = gameObject->AddComponent<PlayerController>();
     }
+
+    {
+        // CameraController 초기화
+        Object* cameraObject = FindObjectWithName(L"Main_Camera");             
+        if (cameraObject != nullptr)
+        {
+            mCameraController = cameraObject->GetComponent<CameraController>();
+            if (mCameraController == nullptr)
+            {
+                Helper::HRT(E_FAIL, "CameraController is nullptr");
+            }
+        }
+        else
+        {
+            Helper::HRT(E_FAIL, "Camera object is nullptr");
+        }
+    }
+
     {   // BurnObjectScript추가
         mBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
         mBurnObjectScript->SetBurnObject(mFireObject);
@@ -150,6 +182,73 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
         mPlayerController->SetSlopeMode(PlayerController::SlopeMode::Ride);
         mPlayerController->SetMoveForceY(0.0f);
     }
+}
+
+void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
+{
+
+    //isInTrigger = true;
+
+    //PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+    //PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+    //if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
+    //{
+    //    Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+    //    cam->ZoomToFov(1.0f, 1.5f, 2.0f, Dotween::EasingEffect::OutSine);
+    //    mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
+
+    //}
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger1")
+    {
+        mCameraController->mMinCameraDistance.val = 1000.0f;
+        mCameraController->mMaxCameraDistance.val = 1500.0f;
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger2")
+    {
+        isInTrigger = true;
+
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+        Display::Console::Log("Trigger2 in\n");
+        mCameraController->TweenMidpointOffset(Vector3(300.0f, 100.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenOffset(Vector3(-800.0f, -250.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger3")
+    {
+        mCameraController->mMinCameraDistance.val = 900.0f;
+        mCameraController->mMaxCameraDistance.val = 1200.0f;
+        mCameraController->TweenMidpointOffset(Vector3(-400.0f, -100.0f, 100.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenOffset(Vector3(350.0f, 30.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger4")
+    {
+        Display::Console::Log("Trigger4 in\n");
+        mCameraController->TweenOffset(Vector3(100.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenMidpointOffset(Vector3(-50.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+
+    }
+
+    return void _CALLBACK();
+}
+
+void _CALLBACK PlayerScript::OnTriggerStay(Collider* _origin, Collider* _destination)
+{
+    return void _CALLBACK();
+}
+
+void _CALLBACK PlayerScript::OnTriggerExit(Collider* _origin, Collider* _destination)
+{
+    if (_destination->gameObject->GetTag() == L"CameraTrigger1" || L"CameraTrigger2")
+    {
+        isInTrigger = false;
+    }
+    return void _CALLBACK();
 }
 
 void _CALLBACK PlayerScript::OnTriggerStayCallback(Collider* _origin, Collider* _destination)

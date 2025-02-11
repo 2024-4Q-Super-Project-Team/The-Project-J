@@ -16,10 +16,55 @@ void CameraController::Start()
 	mCameraDirection.val = Vector3(0.0f, 0.05f, -0.035f);
     mZoomSpeed = 5.0f;
     mLerpSpeed = 3.0f;
+
+    // 원래 카메라 방향 저장
+    mOriginalCameraDirection = mCameraDirection.val;
 }
 
 void CameraController::Update()
 {
+    if (isLookingAt)
+    {
+        lookAtElapsedTime += Time::GetScaledDeltaTime();
+        float t = lookAtElapsedTime / lookAtDuration;
+        mCameraDirection.val = Vector3::Lerp(startDirection, endDirection, Dotween::EasingFunction[static_cast<unsigned int>(easingEffect)](t));
+
+        if (lookAtElapsedTime >= lookAtDuration)
+        {
+            isLookingAt = false;
+            lookAtElapsedTime = 0.0f;
+            mCameraDirection.val = endDirection;
+        }
+    }
+
+    if (isTweeningOffset)
+    {
+        offsetTweenElapsedTime += Time::GetScaledDeltaTime();
+        float t = offsetTweenElapsedTime / offsetTweenDuration;
+        offSet = Vector3::Lerp(startOffset, targetOffset, Dotween::EasingFunction[static_cast<unsigned int>(offsetEasingEffect)](t));
+
+        if (offsetTweenElapsedTime >= offsetTweenDuration)
+        {
+            isTweeningOffset = false;
+            offsetTweenElapsedTime = 0.0f;
+            offSet = targetOffset;
+        }
+    }
+
+    if (isTweeningMidpointOffset)
+    {
+        midpointOffsetTweenElapsedTime += Time::GetScaledDeltaTime();
+        float t = midpointOffsetTweenElapsedTime / midpointOffsetTweenDuration;
+        midpointOffset = Vector3::Lerp(startMidpointOffset, targetMidpointOffset, Dotween::EasingFunction[static_cast<unsigned int>(midpointOffsetEasingEffect)](t));
+
+        if (midpointOffsetTweenElapsedTime >= midpointOffsetTweenDuration)
+        {
+            isTweeningMidpointOffset = false;
+            midpointOffsetTweenElapsedTime = 0.0f;
+            midpointOffset = targetMidpointOffset;
+        }
+    }
+
     PlayerScript* Player1 = GameProgressManager::GetPlayerInfo(0);
     PlayerScript* Player2 = GameProgressManager::GetPlayerInfo(1);
     Vector3 Player1WorldPos = Player1->gameObject->transform->GetWorldPosition();
@@ -46,6 +91,7 @@ void CameraController::Update()
 
     // 중간 지점 계산
     Vector3 MidPoint = (Player1WorldPos + Player2WorldPos) * 0.5f;
+    MidPoint += midpointOffset;
 
     // mCameraDirection을 정규화 (원본 변형 방지)
     Vector3 CameraDirection = mCameraDirection.val;
@@ -53,6 +99,8 @@ void CameraController::Update()
 
     // 카메라 위치 설정 (중간 지점에서 방향 벡터 * 거리 만큼 이동)
     Vector3 CameraPosition = MidPoint + (CameraDirection * mCameraDistance.val);
+    CameraPosition += offSet;
+
     gameObject->transform->position = CameraPosition;
 
     // 카메라의 Forward 및 Right 벡터 계산
@@ -77,16 +125,91 @@ void CameraController::Update()
     gameObject->transform->LookAt(MidPoint, UpVector);
 }
 
+void CameraController::SetCameraDirection(const Vector3& direction)
+{
+    mCameraDirection.val = direction;
+}
+
+void CameraController::ResetCameraDirection()
+{
+    mCameraDirection.val = mOriginalCameraDirection;
+}
+
+void CameraController::SetOffset(const Vector3& offset)
+{
+    this->offSet = offset;
+}
+
+void CameraController::SetMidpointOffset(const Vector3& offset)
+{
+    this->midpointOffset = offset;
+
+}
+
+void CameraController::LookAt(const Vector3& targetDirection, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isLookingAt) return;
+
+    isLookingAt = true;
+    lookAtDuration = duration;
+    lookAtElapsedTime = 0.0f;
+    this->easingEffect = easingEffect;
+
+    startDirection = mCameraDirection.val;
+    endDirection = targetDirection;
+}
+
 
 json CameraController::Serialize()
 {
 	json ret = MonoBehaviour::Serialize();
 
+    ret["id"] = GetId();
+    ret["name"] = "CameraController";
+    ret["mindistance"] = mMinCameraDistance.val;
+    ret["maxdistance"] = mMaxCameraDistance.val;
+
 	return ret;
+}
+
+void CameraController::TweenOffset(const Vector3& targetOffset, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isTweeningOffset) return;
+
+    isTweeningOffset = true;
+    offsetTweenDuration = duration;
+    offsetTweenElapsedTime = 0.0f;
+    this->offsetEasingEffect = easingEffect;
+
+    startOffset = offSet;
+    this->targetOffset = targetOffset;
+}
+
+void CameraController::TweenMidpointOffset(const Vector3& targetOffset, float duration, Dotween::EasingEffect easingEffect)
+{
+    if (isTweeningMidpointOffset) return;
+
+    isTweeningMidpointOffset = true;
+    midpointOffsetTweenDuration = duration;
+    midpointOffsetTweenElapsedTime = 0.0f;
+    this->midpointOffsetEasingEffect = easingEffect;
+
+    startMidpointOffset = midpointOffset;
+    this->targetMidpointOffset = targetOffset;
 }
 
 void CameraController::Deserialize(json& j)
 {
 	MonoBehaviour::Deserialize(j);
+
+    if (j.contains("mindistance"))
+    {
+        mMinCameraDistance.val = j["mindistance"].get<float>();
+    }
+
+    if (j.contains("maxdistance"))
+    {
+        mMaxCameraDistance.val = j["maxdistance"].get<float>();
+    }
 
 }

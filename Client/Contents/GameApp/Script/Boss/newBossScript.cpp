@@ -33,6 +33,8 @@ void newBossScript::Start()
 	{
 		mAttackScript = mRazerObject->GetComponent<newBossAttackScript>();
 	}
+
+	GameProgressManager::SetBossInfo(this);
 }
 
 void newBossScript::Update()

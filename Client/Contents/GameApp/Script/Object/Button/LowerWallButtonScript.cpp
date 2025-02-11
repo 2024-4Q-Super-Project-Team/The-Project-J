@@ -14,8 +14,8 @@ void LowerWallButtonScript::Start()
     if (currentTag.find(L"_1") != std::wstring::npos)
     {
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-        boxCol->SetPosition(Vector3(0, 1, 0));
-        boxCol->SetExtents(Vector3(100, 100, 100));
+        boxCol->SetPosition(Vector3(0, 5, 0));
+        boxCol->SetExtents(Vector3(100, 7, 100));
     }
 
     else if (currentTag.find(L"_2") != std::wstring::npos)
@@ -23,7 +23,7 @@ void LowerWallButtonScript::Start()
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 0, -20));
         boxCol->SetRotation(Vector3(0, 0, 0));
-        boxCol->SetExtents(Vector3(190, 10, 130));
+        boxCol->SetExtents(Vector3(30, 300, 1000));
     }
 
     // º® Ã£±â
@@ -44,6 +44,8 @@ void LowerWallButtonScript::Start()
 
 void LowerWallButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
+    Display::Console::Log("EnterTrigger_LowerWall");
+
 }
 
 void LowerWallButtonScript::OnTriggerExit(Collider* _origin, Collider* _destination)
@@ -90,7 +92,7 @@ void LowerWallButtonScript::OnButtonPressed()
         Transform* platformTransform = wall->transform;
         Vector3 startPosition = platformTransform->position;
         Vector3 endPosition = startPosition;
-        endPosition.y += -300.0f;
+        endPosition.y += -500.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
     }
 }
@@ -102,7 +104,7 @@ void LowerWallButtonScript::OnButtonReleased()
         Transform* platformTransform = wall->transform;
         Vector3 startPosition = platformTransform->position;
         Vector3 endPosition = startPosition;
-        endPosition.y += 300.0f;
+        endPosition.y += 500.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
     }
 }

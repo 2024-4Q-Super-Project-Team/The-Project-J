@@ -8,6 +8,11 @@ public:
     void Update();
     void SetCameraDirection(const Vector3& direction);
     void ResetCameraDirection();
+    void SetOffset(const Vector3& offset);
+    void SetMidpointOffset(const Vector3& offset);
+    void TweenOffset(const Vector3& targetOffset, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+    void TweenMidpointOffset(const Vector3& targetOffset, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+
 private:
     void UpdateDistance();
     void UpdateRotation();
@@ -35,6 +40,8 @@ public:
 private:
     float mZoomSpeed;
     float mLerpSpeed;
+    Vector3 offSet = Vector3::Zero;
+    Vector3 midpointOffset = Vector3::Zero;
 
     // dotween
     bool isLookingAt = false;
@@ -43,5 +50,23 @@ private:
     Vector3 startDirection;
     Vector3 endDirection;
     Dotween::EasingEffect easingEffect;
+
+    // Offset 관련
+    bool isTweeningOffset = false;
+    float offsetTweenDuration = 0.0f;
+    float offsetTweenElapsedTime = 0.0f;
+    Vector3 startOffset;
+    Vector3 targetOffset;
+    Dotween::EasingEffect offsetEasingEffect;
+
+    // MidpointOffset 관련
+    bool isTweeningMidpointOffset = false;
+    float midpointOffsetTweenDuration = 0.0f;
+    float midpointOffsetTweenElapsedTime = 0.0f;
+    Vector3 startMidpointOffset;
+    Vector3 targetMidpointOffset;
+    Dotween::EasingEffect midpointOffsetEasingEffect;
+
+
 
 };

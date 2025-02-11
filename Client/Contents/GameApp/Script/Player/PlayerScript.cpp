@@ -166,33 +166,53 @@ void PlayerScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 
 void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
+
+    //isInTrigger = true;
+
+    //PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+    //PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+    //if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
+    //{
+    //    Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+    //    cam->ZoomToFov(1.0f, 1.5f, 2.0f, Dotween::EasingEffect::OutSine);
+    //    mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
+
+    //}
+
     if (_destination->gameObject->GetTag() == L"CameraTrigger1")
+    {
+        mCameraController->mMinCameraDistance.val = 1000.0f;
+        mCameraController->mMaxCameraDistance.val = 1500.0f;
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger2")
     {
         isInTrigger = true;
 
         PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
         PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
 
-        if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
-        {
-            Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
-            cam->ZoomToFov(1.0f, 1.5f, 2.0f, Dotween::EasingEffect::OutSine);
-            mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
-
-        }
+        Display::Console::Log("Trigger2 in\n");
+        mCameraController->TweenMidpointOffset(Vector3(300.0f, 100.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenOffset(Vector3(-800.0f, -250.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
     }
 
-    //if (_destination->gameObject->GetTag() == L"CameraTrigger2")
-    //{
-    //    PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
-    //    PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+    if (_destination->gameObject->GetTag() == L"CameraTrigger3")
+    {
+        mCameraController->mMinCameraDistance.val = 900.0f;
+        mCameraController->mMaxCameraDistance.val = 1200.0f;
+        mCameraController->TweenMidpointOffset(Vector3(-400.0f, -100.0f, 100.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenOffset(Vector3(350.0f, 30.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+    }
 
-    //    if (player1 && player2 && player1->isInTrigger && player2->isInTrigger)
-    //    {
-    //        mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 5.0f, Dotween::EasingEffect::OutSine);
-    //    }
-    //}
+    if (_destination->gameObject->GetTag() == L"CameraTrigger4")
+    {
+        Display::Console::Log("Trigger4 in\n");
+        mCameraController->TweenOffset(Vector3(100.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+        mCameraController->TweenMidpointOffset(Vector3(-50.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
 
+    }
 
     return void _CALLBACK();
 }
@@ -204,13 +224,9 @@ void _CALLBACK PlayerScript::OnTriggerStay(Collider* _origin, Collider* _destina
 
 void _CALLBACK PlayerScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 {
-    if (_destination->gameObject->GetTag() == L"CameraTrigger1")
+    if (_destination->gameObject->GetTag() == L"CameraTrigger1" || L"CameraTrigger2")
     {
-        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
-        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
-
-        mCameraController->LookAt(Vector3(0.0f, 0.05f, -0.035f), 2.0f, Dotween::EasingEffect::OutSine);
-        Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+        isInTrigger = false;
     }
     return void _CALLBACK();
 }

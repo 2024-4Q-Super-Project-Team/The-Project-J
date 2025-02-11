@@ -9,6 +9,7 @@ enum class eBossStateType
 	ENTER,
 	IDLE,
 	ATTACK,
+	GROGGY,
 	EXIT,
 };
 
@@ -22,16 +23,22 @@ public:
 
 	void Reset();
 
-	void UpdatePositionZ();		// 두 플레이어 중 가까운 객체에 따라 z값 조정
-	void UpdatePositionX();		// 두 포인트를 보간하여 x값 조정
-	void UpdatePositionEnter();	// Enter시의 보스 등장 연출용 포지션 업데이트
+	void UpdatePositionZ();			// 두 플레이어 중 가까운 객체에 따라 z값 조정
+	void UpdatePositionX();			// 두 포인트를 보간하여 x값 조정
 	void UpdateAnimation();
+
+	void SetPositionEnter();		// Enter시의 보스 등장 연출용 포지션 Set
+	void SetPositionGroggy();		// Groggy시의 보스 등장 연출용 포지션 Set
+	void SetPositionExit();			// Exit시의 보스 등장 연출용 포지션 Set
 
 	void UpdateNone();
 	void UpdateEnter();
 	void UpdateIdle();
 	void UpdateAttack();
+	void UpdateGroggy();
 	void UpdateExit();
+public:
+	void SetExit();
 private:
 	Object* mBossObject;
 	Object* mRazerObject;
@@ -40,7 +47,7 @@ private:
 	newBossAttackScript* mAttackScript;
 	newBossRangeScript* mRangeScript;
 
-	Object* mPoint[2];					// 보스가 이동할 방향을 정해주기 위한 두 점
+	Object* mPoint[3];
 	Vector3 mBossDirection;
 	Vector3 mBossOriginPosition;
 	eBossStateType mBossState = eBossStateType::NONE;
@@ -53,5 +60,9 @@ private:
 	FLOAT mIdleTickCounter = 0.0f;
 
 	bool isAttack = false;
+
+public:
+	virtual json Serialize() override;
+	virtual void Deserialize(json& j) override;
 };
 

@@ -28,6 +28,7 @@ public:
     virtual void EditorRender() override;
 public:
     void SetCurrentAudio(const std::wstring& _key);
+    void SetCurrentAudio(const ResourceHandle& _handle);
     BOOL AddAudio(const std::wstring& _key, ResourceHandle _srcAudio);
 public:
     bool IsPlaying();
@@ -48,7 +49,7 @@ public:
     virtual json Serialize() override;
     virtual void Deserialize(json& j);
 private:
-    // 현재 재생 예정, 혹은 재생 중인 오디오
+    // 현재 재생 예정, 혹은 재생 중인 오디오a
     std::wstring    mActiveKey;
     AudioResource*  mActiveAudio; 
     // 해당 오디오 리소스를 재생해주는 공간
@@ -57,4 +58,10 @@ private:
     std::unordered_map<std::wstring, ResourceHandle> mAudioTable;
 public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
+    /////////////////////////////////////////////
+    // Audio Popup
+    /////////////////////////////////////////////
+    ResourceHandle receiveHandle;
+    bool isAddAudioPopup = false;
+    void ShowAddAudioPopup();
 };

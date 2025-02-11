@@ -207,6 +207,8 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.cpp" />
     <ClCompile Include="ScriptRegister.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\TitleScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -241,6 +243,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Contents\GameApp\Script\Player\PlayerCollisionScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaisePlatformButtonScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\RaiseGroundButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="ScriptRegister.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\TitleScript.h" />
   </ItemGroup>

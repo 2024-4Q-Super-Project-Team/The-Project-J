@@ -11,6 +11,7 @@ void newBossScript::Start()
 {
 	mPoint[0] = FindChildObject(gameObject, L"Point1");
 	mPoint[1] = FindChildObject(gameObject, L"Point2");
+	mPoint[2] = FindChildObject(gameObject, L"Point3");
 	mRangeObject = FindChildObject(gameObject, L"Boss_Range");
 	mBossObject = FindChildObject(gameObject, L"Mon_Boss_01.fbx_Prefab");
 	mRazerObject = FindChildObject(gameObject, L"Effect_boss_beam_fix01.fbx_Prefab");
@@ -40,13 +41,11 @@ void newBossScript::Update()
 
 	if (mRangeScript->IsTriggerOn())
 	{
-		if (mBossState == eBossStateType::NONE)
-		{
-			mBossState = eBossStateType::ENTER;
-		}
-
 		switch (mBossState)
 		{
+		case eBossStateType::NONE:
+			UpdateNone();
+			break;
 		case eBossStateType::ENTER:
 			UpdateEnter();
 			break;
@@ -56,26 +55,37 @@ void newBossScript::Update()
 		case eBossStateType::ATTACK:
 			UpdateAttack();
 			break;
+		case eBossStateType::GROGGY:
+			UpdateGroggy();
+			break;
 		case eBossStateType::EXIT:
 			UpdateExit();
 			break;
 		default:
 			break;
 		}
+		if (mBossState == eBossStateType::NONE)
+		{
+			mBossState = eBossStateType::ENTER;
+		}
+
 	}
 	else
 	{
-		
-		mBossObject->transform->position = mPoint[0]->transform->position;
-		mBossObject->transform->position.y += 1000;
-		mBossObject->SetActive(false);
-		mAttackScript->SetAttackEnd();
-		mBossState = eBossStateType::NONE;
+		if (mBossState != eBossStateType::GROGGY && mBossState != eBossStateType::EXIT)
+		{
+			mBossObject->transform->position = mPoint[0]->transform->position;
+			mBossObject->transform->position.y += 1000;
+			mBossObject->SetActive(false);
+			mAttackScript->SetAttackEnd();
+			mBossState = eBossStateType::NONE;
+		}
 	}
 }
 
 void newBossScript::Reset()
 {
+	mBossState = eBossStateType::NONE;
 }
 
 void newBossScript::UpdatePositionZ()
@@ -95,7 +105,7 @@ void newBossScript::UpdatePositionZ()
 	float finalZ = Clamp(
 		targetPosition.z,
 		mPoint[0]->transform->GetWorldPosition().z,
-		mPoint[1]->transform->GetWorldPosition().z
+		mPoint[2]->transform->GetWorldPosition().z
 	);
 
 	mBossObject->transform->position.z = Lerp(mBossObject->transform->position.z, finalZ, Time::GetScaledDeltaTime());
@@ -122,23 +132,33 @@ void newBossScript::UpdatePositionX()
 
 
 #define BOSS_ENTER_TIME  2.0f // 보스 등장 시간
-void newBossScript::UpdatePositionEnter()
+void newBossScript::SetPositionEnter()
 {
-	static FLOAT elapsedTime = 0.0f;
-	elapsedTime += Time::GetScaledDeltaTime();
-	FLOAT ratio = elapsedTime / BOSS_ENTER_TIME;
-
 	Vector3 FinalPosition;
 	FinalPosition.x = mPoint[0]->transform->position.x;
 	FinalPosition.y = mBossOriginPosition.y;
 	FinalPosition.z = mPoint[0]->transform->position.z + 500;
 
 	mBossObject->transform->MoveTo(FinalPosition, BOSS_ENTER_TIME, Dotween::EasingEffect::OutQuint);
+}
 
-	if (elapsedTime >= BOSS_ENTER_TIME)
+void newBossScript::SetPositionGroggy()
+{
+	Vector3 FinalPosition;
+	FinalPosition.x = mPoint[2]->transform->position.x;
+	FinalPosition.y = mBossOriginPosition.y;
+	FinalPosition.z = mPoint[2]->transform->position.z;
+
+	mBossObject->transform->MoveTo(FinalPosition, BOSS_ENTER_TIME, Dotween::EasingEffect::OutQuint);
+}
+
+#define BOSS_EXIT_TIME 5.0f
+void newBossScript::SetPositionExit()
+{
+	if (mBossObject->transform->scale != Vector3::Zero)
 	{
-		elapsedTime = 0.0f;
-		mBossState = eBossStateType::IDLE;
+		mBossObject->transform->ScaleTo(Vector3::Zero, BOSS_EXIT_TIME, Dotween::EasingEffect::InOutBounce);
+		mBossObject->transform->position.y += 30.0f * Time::GetScaledDeltaTime();
 	}
 }
 
@@ -164,6 +184,18 @@ void newBossScript::UpdateAnimation()
 		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_ATTACK_01, 0.5f);
 		break;
 	}
+	case eBossStateType::GROGGY:
+	{
+		mBodyAnimator->SetLoop(true);
+		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+		break;
+	}
+	case eBossStateType::EXIT:
+	{
+		mBodyAnimator->SetLoop(true);
+		mBodyAnimator->SetCurrentAnimation(BOSS_ANIM_IDLE, 0.5f);
+		break;
+	}
 	default:
 		break;
 	}
@@ -171,29 +203,64 @@ void newBossScript::UpdateAnimation()
 
 void newBossScript::UpdateNone()
 {
+	SetPositionEnter();
 }
 
 void newBossScript::UpdateEnter()
 {
 	mBossObject->SetActive(true);
-	// point1의 위치에서 위에서 아래로 등장
-	UpdatePositionEnter();
-	UpdatePositionX();
+
+	static FLOAT elapsedTime = 0.0f;
+	elapsedTime += Time::GetScaledDeltaTime();
+	FLOAT ratio = elapsedTime / BOSS_ENTER_TIME;
+
+	if (elapsedTime >= BOSS_ENTER_TIME)
+	{
+		elapsedTime = 0.0f;
+		mBossState = eBossStateType::IDLE;
+	}
 }
 
 void newBossScript::UpdateIdle()
 {
-	UpdatePositionX();
-	UpdatePositionZ();
+	Transform* Player1 = GameProgressManager::GetPlayerInfo(0)->gameObject->transform;
+	Transform* Player2 = GameProgressManager::GetPlayerInfo(1)->gameObject->transform;
 
-	mIdleTickCounter += Time::GetScaledDeltaTime();
-	// 현재 대기 카운트가 현재 대기 시간보다 커지면
-	if (mIdleTickCounter >= mCurIdleTime)
+	Vector3 BossPosition = mBossObject->transform->GetWorldPosition();
+
+	Transform* nearPlayer =
+		(Vector3::Distance(BossPosition, Player1->GetWorldPosition()) < Vector3::Distance(BossPosition, Player2->GetWorldPosition()))
+		? Player1 : Player2;
+
+	Vector3 playerPosition = nearPlayer->GetWorldPosition();
+
+	if (playerPosition.z < mPoint[0]->transform->GetWorldPosition().z)
 	{
-		mIdleTickCounter = 0.0f;
-		mCurIdleTime = Random::Range(mMinIdleTick.val, mMaxIdleTick.val);
-		// 다음 행동 패턴을 고른다.
-		mBossState = eBossStateType::ATTACK;
+		UpdatePositionX();
+		UpdatePositionZ();
+	}
+	// 플레이어 둘 중 한명이라도 point1 ~ point2 안에 있으면 패턴 실행 가능
+	else if (playerPosition.z > mPoint[0]->transform->GetWorldPosition().z && 
+		playerPosition.z < mPoint[1]->transform->GetWorldPosition().z)
+	{
+		mIdleTickCounter += Time::GetScaledDeltaTime();
+		// 현재 대기 카운트가 현재 대기 시간보다 커지면
+		if (mIdleTickCounter >= mCurIdleTime)
+		{
+			mIdleTickCounter = 0.0f;
+			mCurIdleTime = Random::Range(mMinIdleTick.val, mMaxIdleTick.val);
+			// 다음 행동 패턴을 고른다.
+			mBossState = eBossStateType::ATTACK;
+		}
+
+		UpdatePositionX();
+		UpdatePositionZ();
+	}
+	// 플레이어가 point2를 넘어서면 그로기 상태로 돌입한다.
+	else if (playerPosition.z > mPoint[1]->transform->GetWorldPosition().z)
+	{
+		mBossState = eBossStateType::GROGGY;
+		SetPositionGroggy();
 	}
 }
 
@@ -223,7 +290,38 @@ void newBossScript::UpdateAttack()
 
 }
 
+void newBossScript::UpdateGroggy()
+{
+}
+
 void newBossScript::UpdateExit()
 {
-	
+	//static FLOAT elapsedTime = 0.0f;
+	//elapsedTime += Time::GetScaledDeltaTime();
+	//FLOAT ratio = elapsedTime / BOSS_EXIT_TIME;
+	//
+	//
+	//if (elapsedTime >= BOSS_EXIT_TIME)
+	//{
+	//	elapsedTime = 0.0f;
+	//	mBossState = eBossStateType::IDLE;
+	//}
+}
+
+void newBossScript::SetExit()
+{
+	if (mBossState == eBossStateType::GROGGY)
+	{
+		SetPositionExit();
+		mBossState = eBossStateType::EXIT;
+	}
+}
+
+json newBossScript::Serialize()
+{
+	return json();
+}
+
+void newBossScript::Deserialize(json& j)
+{
 }

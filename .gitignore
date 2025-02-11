@@ -377,3 +377,5 @@ MyD3D/ThirdParty/fmod/fmodstudioL.dll
 /Client
 /Client/resource/Character/Character_001/Character_001.fbx
 /Client/resource/Character/Character_003/Character_003.fbx
+/Client/Contents/GameApp/Script/Object/WoodWick/WoodWickScript.cpp
+/Client/Contents/GameApp/Script/Object/WoodWick/WoodWickScript.h

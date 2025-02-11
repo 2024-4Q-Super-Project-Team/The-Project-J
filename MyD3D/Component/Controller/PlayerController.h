@@ -32,6 +32,8 @@ public:
     virtual void EditorUpdate() override;
     virtual void EditorRender() override;
 
+    void ProcessMove();
+
 public:
     inline bool IsGround() { return mIsOnGround; }
     ///move///

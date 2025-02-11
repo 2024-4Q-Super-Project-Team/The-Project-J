@@ -56,7 +56,10 @@
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -94,7 +97,6 @@
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
-    <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

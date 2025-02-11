@@ -157,6 +157,10 @@ void PlayerController::EditorUpdate()
 void PlayerController::EditorRender()
 {
 }
+void PlayerController::ProcessMove()
+{
+
+}
 
 void PlayerController::Move(Vector3 _displacement)
 {
@@ -171,6 +175,7 @@ void PlayerController::SetMoveForceX(FLOAT _x)
 void PlayerController::SetMoveForceY(FLOAT _y)
 {
 	mDisplacement.y = _y;
+	mIsOnGround = false;
 }
 
 void PlayerController::SetMoveForceZ(FLOAT _z)
@@ -181,6 +186,7 @@ void PlayerController::SetMoveForceZ(FLOAT _z)
 void PlayerController::AddMoveForceY(FLOAT _y)
 {
 	mDisplacement.y += _y;
+	mIsOnGround = false;
 }
 
 void PlayerController::SetSlopeMode(SlopeMode _mode)

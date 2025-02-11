@@ -94,12 +94,15 @@ void UIWidget::SetTexture(ResourceHandle _handle, Texture2DResource*& _texture)
 	}
 }
 
-bool UIWidget::ProcessFadeIn(Color* _color)
+void UIWidget::ProcessFadeIn(Color* _color)
 {
+    mFadeState = eFadeState::FADE_IN;
+
     if (a >= 255)
     {
         _color->w = 1.f;
-        return true;
+        mFadeState = eFadeState::IDLE;
+        return;
     }
 
     // 선형 증가
@@ -112,21 +115,22 @@ bool UIWidget::ProcessFadeIn(Color* _color)
 
     // 알파 값이 너무 작으면 0으로 처리하지 않도록 하한값 설정
     if (_color->w < 0.01f) _color->w = 0.01f;  // 너무 작은 값 방지
-
-    return false;
 }
 
-bool UIWidget::ProcessFadeOut(Color* _color)
+void UIWidget::ProcessFadeOut(Color* _color)
 {
-    if (a <= 0)
+    mFadeState = eFadeState::FADE_OUT;
+
+    if (a <= 127.0f)
     {
         _color->w = 0.f;
-        return true;
+        mFadeState = eFadeState::IDLE;
+        return;
     }
 
     // 선형 감소
     a -= (Time::GetUnScaledDeltaTime() / mFadeTime) * 255;
-    if (a <= 127) a = 127; // 범위 초과 방지
+    if (a < 127) a = 127; // 범위 초과 방지
 
     // 감마 보정 적용 (선형 → 감마)
     float linearAlpha = a / 255.0f;
@@ -134,8 +138,6 @@ bool UIWidget::ProcessFadeOut(Color* _color)
 
     // 알파 값이 너무 작으면 0으로 처리하지 않도록 하한값 설정
     if (_color->w < 0.01f) _color->w = 0.01f;  // 너무 작은 값 방지
-
-    return false;
 }
 
 void UIWidget::EditorUpdate()

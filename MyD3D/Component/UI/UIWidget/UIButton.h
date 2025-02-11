@@ -40,5 +40,8 @@ private:
 	Texture2DResource* m_pSelectedTexture = nullptr;
 
 	eButtonState mButtonState = eButtonState::DEFAULT;
+
+	Vector2 defaultPos = {};
+	Vector2 selectedPos = {};
 };
 

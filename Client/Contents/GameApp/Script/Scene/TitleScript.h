@@ -14,8 +14,16 @@ public:
 	void KeyButtonUpdate();
 	void CreditButtonUpdate();
 	void ExitButtonUpdate();
-	void SetPosition(Object* _obj, Vector2 _pos);
 private:
 	UINT mSelectPos = 0;
+	bool bIsMove = false;
+	bool bIsControl = false;
+
+	Object* title = nullptr;
+	Object* startButton = nullptr;
+	Object* keyButton = nullptr;
+	Object* creditButton = nullptr;
+	Object* exitButton = nullptr;
+	Object* control = nullptr;
 };
 

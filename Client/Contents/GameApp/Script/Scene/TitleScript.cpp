@@ -9,56 +9,63 @@ void TitleScript::Start()
 
 	// object load
 	// text
-	Object* title = CreateObject(L"title", L"Sprite");
-	title->AddComponent<UISprite>();
-	title->transform->SetParent(gameObject->transform);
-	SetPosition(title, { 474,320 });
+	title = FindObject(L"title", L"Sprite");
 
-	Object* startButton = CreateObject(L"startButton", L"Button");
-	auto* sb = startButton->AddComponent<UIButton>();
-	sb->SetState(eButtonState::SELECTED);
-	startButton->transform->SetParent(gameObject->transform);
-	SetPosition(startButton, { 1695,602 });
+	startButton = FindObject(L"startButton", L"Button");
+	auto* sb = startButton->GetComponent<UIButton>();
+	if (sb)
+		sb->SetState(eButtonState::SELECTED);
 
-	Object* keyButton = CreateObject(L"keyButton", L"Button");
-	auto* kb = keyButton->AddComponent<UIButton>();
-	kb->SetState(eButtonState::DEFAULT);
-	keyButton->transform->SetParent(gameObject->transform);
-	SetPosition(keyButton, { 1679,714 });
+	keyButton = FindObject(L"keyButton", L"Button");
+	auto* kb = keyButton->GetComponent<UIButton>();
+	if (kb)
+		kb->SetState(eButtonState::DEFAULT);
 
-	Object* creditButton = CreateObject(L"creditButton", L"Button");
-	auto* cb = creditButton->AddComponent<UIButton>();
-	cb->SetState(eButtonState::DEFAULT);
-	creditButton->transform->SetParent(gameObject->transform);
-	SetPosition(creditButton, { 1680,826 });
+	creditButton = FindObject(L"creditButton", L"Button");
+	auto* cb = creditButton->GetComponent<UIButton>();
+	if (cb)
+		cb->SetState(eButtonState::DEFAULT);
 
-	Object* exitButton = CreateObject(L"exitButton", L"Button");
-	auto* eb = exitButton->AddComponent<UIButton>();
-	eb->SetState(eButtonState::DEFAULT);
-	exitButton->transform->SetParent(gameObject->transform);
-	SetPosition(exitButton, { 1694,938 });
+	exitButton = FindObject(L"exitButton", L"Button");
+	auto* eb = exitButton->GetComponent<UIButton>();
+	if(eb)
+		eb->SetState(eButtonState::DEFAULT);
 
-	Object* control = CreateObject(L"control", L"Sprite");
-	control->AddComponent<UISprite>();
-	control->transform->SetParent(gameObject->transform);
-	SetPosition(control, { 0,0 });
+	control = FindObject(L"control", L"Sprite");
 	control->SetActive(false);
 }
 
 void TitleScript::Update()
 {
-	if (InputSyncer::GetInputDirection(0).y > 0)
+	if (InputSyncer::GetInputDirection(0).y > 0 || InputSyncer::IsKeyDown(0, InputSyncer::eInputType::UP))
 	{
-		if (mSelectPos > 0)
+		if (!bIsMove)
 		{
-			mSelectPos--;
+			if (mSelectPos > 0)
+			{
+				mSelectPos--;
+			}
+
+			bIsMove = true;
 		}
 	}
-	else if (InputSyncer::GetInputDirection(0).y < 0)
+	else if (InputSyncer::GetInputDirection(0).y < 0 || InputSyncer::IsKeyDown(0, InputSyncer::eInputType::DOWN))
 	{
-		if (mSelectPos < 3)
+		if (!bIsMove)
 		{
-			mSelectPos++;
+			if (mSelectPos < 3)
+			{
+				mSelectPos++;
+			}
+
+			bIsMove = true;
+		}
+	}
+	else if (InputSyncer::GetInputDirection(0).y == 0)
+	{
+		if (!bIsControl)
+		{
+			bIsMove = false;
 		}
 	}
 
@@ -67,21 +74,41 @@ void TitleScript::Update()
 	case 0:
 		// 스타트버튼 select 모드
 		// 나머진 디폴트
+		startButton->GetComponent<UIButton>()->SetState(eButtonState::SELECTED);
+		keyButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		creditButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		exitButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+
 		StartButtonUpdate();
 		break;
 	case 1:
 		// 조작키 버튼 select 모드
 		// 나머진 디폴트
+		startButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		keyButton->GetComponent<UIButton>()->SetState(eButtonState::SELECTED);
+		creditButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		exitButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+
 		KeyButtonUpdate();
 		break;
 	case 2:
 		// 크레딧 버튼 select 모드
 		// 나머진 디폴트
+		startButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		keyButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		creditButton->GetComponent<UIButton>()->SetState(eButtonState::SELECTED);
+		exitButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+
 		CreditButtonUpdate();
 		break;
 	case 3:
 		// 종료 버튼 select 모드
 		// 나머진 디폴트
+		startButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		keyButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		creditButton->GetComponent<UIButton>()->SetState(eButtonState::DEFAULT);
+		exitButton->GetComponent<UIButton>()->SetState(eButtonState::SELECTED);
+
 		ExitButtonUpdate();
 		break;
 	}
@@ -99,7 +126,23 @@ void TitleScript::KeyButtonUpdate()
 {
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
 	{
-		// 누를 시 조작키 창 띄우기
+		bIsControl = true;
+		bIsMove = true;
+	}
+
+	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::OFF_FIRE))
+	{
+		bIsControl = false;
+		bIsMove = false;
+	}
+
+	if (bIsControl)
+	{
+		control->SetActive(true);
+	}
+	else
+	{
+		control->SetActive(false);
 	}
 }
 
@@ -117,9 +160,4 @@ void TitleScript::ExitButtonUpdate()
 	{
 		// 누를 시 게임 종료
 	}
-}
-
-void TitleScript::SetPosition(Object* _obj, Vector2 _pos)
-{
-	_obj->transform->position = Vector3(_pos.x, _pos.y, 0);
 }

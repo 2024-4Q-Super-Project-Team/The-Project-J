@@ -110,8 +110,6 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 		   SetTexture(mTextureHandle, m_pTexture);
 	   }
 
-	   ImGui::Checkbox("use fade", &bUseFade);
-
 	   EDITOR_COLOR_POP(1);
 
 	   break;
@@ -130,7 +128,6 @@ json UISprite::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w};
-	ret["use fade"] = bUseFade;
 
 	return ret;
 }
@@ -164,10 +161,5 @@ void UISprite::Deserialize(json& j)
 
 			SetColor(col);
 		}
-	}
-
-	if (j.contains("use fade"))
-	{
-		bUseFade = j["use fade"].get<bool>();
 	}
 }

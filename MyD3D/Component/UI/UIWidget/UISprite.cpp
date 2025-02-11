@@ -25,7 +25,7 @@ void UISprite::DrawWidget(Vector2 _scale)
 	if (m_pTexture)
 	{
 		UIManager::GetSpriteBatch()->
-			Draw(m_pTexture->Texture->mSRV, rect, nullptr, mColor);
+			Draw(m_pTexture->Texture->mSRV, rect, nullptr, mColor * alpha);
 	}
 }
 
@@ -96,7 +96,7 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 		   name = Helper::ToString(m_pTexture->GetKey());
 		   widgetID = m_pTexture->GetEID();
 
-		   ImGui::ColorEdit4("color", &mColor.x);
+		   ImGui::ColorEdit3("color", &mColor.x);
 		   ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
        }
        else
@@ -127,7 +127,7 @@ json UISprite::Serialize()
 	ret["texture handle"] = mTextureHandle.Serialize();
 
 	ret["ui type"] = mUIType;
-	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w};
+	ret["color"] = { mColor.x, mColor.y, mColor.z};
 
 	return ret;
 }
@@ -152,12 +152,12 @@ void UISprite::Deserialize(json& j)
 
 	if (j.contains("color")) {
 		auto color = j["color"];
-		if (color.is_array() && color.size() == 4) 
+		if (color.is_array() && color.size() == 3) 
 		{
 			Color col = {	color[0].get<float>(), 
 							color[1].get<float>(), 
 							color[2].get<float>(),
-							color[3].get<float>() };
+							1.f };
 
 			SetColor(col);
 		}

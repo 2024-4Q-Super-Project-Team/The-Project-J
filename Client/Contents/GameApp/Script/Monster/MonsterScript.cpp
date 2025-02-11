@@ -30,8 +30,8 @@ void MonsterScript::Start()
 	{
 		// find Weakness
 		Transform* root = gameObject->transform->GetParent();
-		auto& children = root->GetChildren();
-		for (Transform* child : children)
+		auto& root_children = root->GetChildren();
+		for (Transform* child : root_children)
 		{
 			if (child->gameObject->GetName() == L"Scope")
 			{
@@ -40,20 +40,24 @@ void MonsterScript::Start()
 				m_pScope->transform->position = gameObject->transform->position;
 			}
 
-			if (child->gameObject->GetName() == L"Weakness")
+			auto& children = gameObject->transform->GetChildren();
+			for (Transform* child : children)
 			{
-				m_pWeakness = child->gameObject;
-				m_pWeakness->SetTag(L"Weakness");
-				m_pWeakness->transform->scale = Vector3(30, 30, 22);
-				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
+				if (child->gameObject->GetName() == L"Weakness")
+				{
+					m_pWeakness = child->gameObject;
+					m_pWeakness->SetTag(L"Weakness");
+					m_pWeakness->transform->scale = Vector3(30, 30, 22);
+					m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
 
-				if (mType.val == (int)eMonsterType::A)
-				{
-					m_pWeakness->transform->position.y = 38;
-				}
-				else
-				{
-					m_pWeakness->transform->position.y = 5;
+					if (mType.val == (int)eMonsterType::A)
+					{
+						m_pWeakness->transform->position.y = 38;
+					}
+					else
+					{
+						m_pWeakness->transform->position.y = 5;
+					}
 				}
 			}
 		}

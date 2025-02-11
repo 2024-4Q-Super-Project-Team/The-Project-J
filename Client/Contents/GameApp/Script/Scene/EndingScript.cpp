@@ -33,8 +33,7 @@ void EndingScript::Start()
 		auto* fade = fadeBox->GetComponent<UISprite>();
 		if (fade)
 		{
-			fade->mColor.w = 1.0f;
-			fade->a = 255.f;
+			fade->SetAlpha(1.0f);
 		}
 		fadeBox->transform->SetParent(gameObject->transform);
 		fadeBox->SetActive(true);
@@ -76,7 +75,7 @@ void EndingScript::Update()
 
 		if (fade)
 		{
-			fade->ProcessFadeOut(&fade->mColor);
+			fade->ProcessFadeOut();
 	
 			if (fade->GetFade() == eFadeState::IDLE)
 			{
@@ -124,9 +123,9 @@ void EndingScript::PageUpdate()
 {
 	if (index == 3)
 	{
-		mWidgetList[0]->ProcessFadeOut(&mWidgetList[0]->mColor);
-		mWidgetList[1]->ProcessFadeOut(&mWidgetList[1]->mColor);
-		mWidgetList[2]->ProcessFadeOut(&mWidgetList[2]->mColor);
+		mWidgetList[0]->ProcessFadeOut();
+		mWidgetList[1]->ProcessFadeOut();
+		mWidgetList[2]->ProcessFadeOut();
 
 		if (mWidgetList[0]->GetFade() == eFadeState::IDLE)
 		{
@@ -146,7 +145,7 @@ void EndingScript::PageUpdate()
 
 		if (mWidgetList[index]->gameObject->GetState() == EntityState::Active)
 		{
-			mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+			mWidgetList[index]->ProcessFadeIn();
 
 			if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
 			{
@@ -167,7 +166,7 @@ void EndingScript::CreditUpdate()
 		
 		if (c)
 		{
-			c->ProcessFadeIn(&c->mColor);
+			c->ProcessFadeIn();
 
 			if (c->GetFade() == eFadeState::IDLE)
 			{
@@ -193,7 +192,7 @@ void EndingScript::CreditPosUpdate()
 		// 특정 위치까지 올라가면 종료
 		if (credit->transform->position.y <= -2400.0f)
 		{
-			credit->GetComponent<UISprite>()->ProcessFadeOut(&credit->GetComponent<UISprite>()->mColor);
+			credit->GetComponent<UISprite>()->ProcessFadeOut();
 
 			if (credit->GetComponent<UISprite>()->GetFade() == eFadeState::IDLE)
 			{

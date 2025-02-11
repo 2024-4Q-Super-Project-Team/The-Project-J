@@ -34,14 +34,14 @@ void MonsterScript::Start()
 		auto& children = gameObject->transform->GetChildren();
 		for (Transform* child : children)
 		{
-			if (child->gameObject->GetName() == L"Scope" || child->gameObject->GetName() == L"Scope")
+			if (child->gameObject->GetName() == L"Scope")
 			{
 				m_pScope = child->gameObject;
 				m_pScope->SetTag(L"Scope");
 				m_pScope->transform->position = gameObject->transform->position;
 			}
 
-			if (child->gameObject->GetName() == L"Weakness_A" || child->gameObject->GetName() == L"Weakness_B")
+			if (child->gameObject->GetName() == L"Weakness")
 			{
 				m_pWeakness = child->gameObject;
 				m_pWeakness->SetTag(L"Weakness");
@@ -78,8 +78,8 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,85,0 });
-			m_pHeadCollider->SetExtents(Vector3{ 25,2,25 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 30,2,30 });
 		}
 		else
 		{
@@ -94,7 +94,7 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,30,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 		else

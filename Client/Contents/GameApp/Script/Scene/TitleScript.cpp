@@ -9,29 +9,29 @@ void TitleScript::Start()
 
 	// object load
 	// text
-	title = FindObject(L"title", L"Sprite");
+	title = FindObjectWithName(L"title");
 
-	startButton = FindObject(L"startButton", L"Button");
+	startButton = FindObjectWithName(L"startButton");
 	auto* sb = startButton->GetComponent<UIButton>();
 	if (sb)
 		sb->SetState(eButtonState::SELECTED);
 
-	keyButton = FindObject(L"keyButton", L"Button");
+	keyButton = FindObjectWithName(L"keyButton");
 	auto* kb = keyButton->GetComponent<UIButton>();
 	if (kb)
 		kb->SetState(eButtonState::DEFAULT);
 
-	creditButton = FindObject(L"creditButton", L"Button");
+	creditButton = FindObjectWithName(L"creditButton");
 	auto* cb = creditButton->GetComponent<UIButton>();
 	if (cb)
 		cb->SetState(eButtonState::DEFAULT);
 
-	exitButton = FindObject(L"exitButton", L"Button");
+	exitButton = FindObjectWithName(L"exitButton");
 	auto* eb = exitButton->GetComponent<UIButton>();
 	if(eb)
 		eb->SetState(eButtonState::DEFAULT);
 
-	control = FindObject(L"control", L"Sprite");
+	control = FindObjectWithName(L"control");
 	control->SetActive(false);
 }
 

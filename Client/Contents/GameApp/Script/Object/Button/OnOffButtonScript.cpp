@@ -12,7 +12,7 @@ void OnOffButtonScript::Start()
     gameObject->AddComponent<Rigidbody>();
 
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
-    boxCol->SetPosition(Vector3(0, 120.0f, 0));
+    boxCol->SetPosition(Vector3(0, 80.0f, 0));
     Vector3 scale = gameObject->transform->GetWorldScale();
     boxCol->SetExtents(Vector3(70, 8, 70) * scale);
 

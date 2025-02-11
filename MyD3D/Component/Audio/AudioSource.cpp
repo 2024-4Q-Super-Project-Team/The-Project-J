@@ -156,8 +156,18 @@ void AudioSource::Play()
 {
 	if (mActiveAudio)
 	{
+		Reset();
 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Play(pAudioClip);
+	}
+}
+
+void AudioSource::Reset()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Reset();
 	}
 }
 
@@ -165,8 +175,17 @@ void AudioSource::Pause()
 {
 	if (mActiveAudio)
 	{
-		auto pAudioClip = mActiveAudio->GetAudioClip();
+ 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Pause();
+	}
+}
+
+void AudioSource::Resume()
+{
+	if (mActiveAudio)
+	{
+		auto pAudioClip = mActiveAudio->GetAudioClip();
+		mAudioChannel->Resume();
 	}
 }
 
@@ -200,19 +219,17 @@ void _CALLBACK AudioSource::OnDestroy()
 json AudioSource::Serialize()
 {
 	json ret;
-
 	ret["id"] = GetId();
 	ret["name"] = "AudioSource";
-
-	ret["active audio"] = Helper::ToString(mActiveKey);
+	ret["current audio key"] = Helper::ToString(mActiveKey);
 
 	json tableJson = json::array(); // JSON 배열로 초기화
 
-	for (auto& anim : mAudioTable)
+	for (auto& audio : mAudioTable)
 	{
 		json entry;
-		entry["key"] = Helper::ToString(anim.first);
-		entry["handle"] = anim.second.Serialize();
+		entry["key"] = Helper::ToString(audio.first);
+		entry["handle"] = audio.second.Serialize();
 
 		tableJson.push_back(entry); // 배열에 추가
 	}
@@ -226,8 +243,8 @@ void AudioSource::Deserialize(json& j)
 {
 	SetId(j["id"].get<unsigned int>());
 
-	if(j.contains("active audio"))
-		mActiveKey = Helper::ToWString(j["active audio"].get<std::string>());
+	if(j.contains("current audio key"))
+		mActiveKey = Helper::ToWString(j["current audio key"].get<std::string>());
 
 	if (j.contains("table"))
 	{
@@ -306,18 +323,18 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 	}
 	ImGui::Separator();
 	{
-		if (ImGui::Button("Play", ImVec2(80, 50)))
+		if (ImGui::Button("Play", ImVec2(50, 30)))
 		{
 			Play();
 		}
-		if (ImGui::Button("Pause", ImVec2(80, 50)))
+		if (ImGui::Button("Pause", ImVec2(50, 30)))
 		{
 			Pause();
 		}
-		//if (ImGui::Button("Play", ImVec2(80, 50)))
-		//{
-		//	Play();
-		//}
+		if (ImGui::Button("Resume", ImVec2(50, 30)))
+		{
+			Resume();
+		}
 		//if (ImGui::Button("Play", ImVec2(80, 50)))
 		//{
 		//	Play();

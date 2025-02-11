@@ -56,7 +56,6 @@
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossRangeScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\newBossAttackScript.cpp" />
-    <ClCompile Include="Contents\GameApp\Script\SoundManager.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Scene\EndingScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.cpp" />
@@ -98,6 +97,7 @@
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossAttackScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Scene\EndingScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\SoundManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\RotatingPlateScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.h" />
   </ItemGroup>

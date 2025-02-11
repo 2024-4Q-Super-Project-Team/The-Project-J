@@ -38,7 +38,8 @@ void AudioResource::SetSoundMode(eAudioListenMode _soundMode)
 json AudioResource::Serialize()
 {
     json ret;
-    ret["id"] = GetId();
+    ret["id"] = GiveId();
+    ret["key"] = Helper::ToString(mHandle.GetKey());
     ret["loop"] = mUseLoop;
     ret["mode"] = mListenMode;
 
@@ -50,7 +51,7 @@ void AudioResource::Deserialize(json& j)
     SetId(j["id"].get<unsigned int>());
 
     if (j.contains("loop"))
-        mUseLoop = j["loop"].get<bool>();
+        mUseLoop = j["loop"].get<BOOL>();
     if (j.contains("mode"))
         mListenMode = (eAudioListenMode)j["mode"].get<int>();
 }
@@ -88,6 +89,12 @@ void AudioResource::EditorRendering(EditorViewerType _viewerType)
     {
         Resource::EditorRendering(_viewerType);
         // EDITOR_TODO : 사운드 관련 정보 출력
+        {
+            if (ImGui::Checkbox(("isLoop" + uid).c_str(), (bool*)&mUseLoop))
+            {
+                SetLoop(mUseLoop);
+            }
+        }
         break;
     }
     default:

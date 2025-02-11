@@ -33,4 +33,8 @@ private:
 	Vector3 mSpawnPosition = Vector3::Zero;
 	Vector3 mColliderExternt = Vector3::One;
 	FLOAT	mRazerElapsedTime = 0.0f;
+
+public:
+	virtual json Serialize() override;
+	virtual void Deserialize(json& j) override;
 };

@@ -87,6 +87,8 @@ public:
     inline void SetProjectionFar(float _far) { mProjectionFar = _far; }
     inline void SetSkyBox(SkyBox* _pSkybox) { mSkyBox = _pSkybox; }
 
+    void ZoomToFov(float startFov, float endFov, float duration, Dotween::EasingEffect easingEffect = Dotween::EasingEffect::OutSine);
+
     inline const Matrix& GetView() { return mViewMatrix; }
     inline const Matrix& GetProjection() { return mProjectionMatrix; }
     inline const float GetProjectionNear() { return mProjectionNear; }
@@ -134,6 +136,15 @@ private:
 
     // 카메라 스카이박스
     SkyBox*                 mSkyBox;
+
+private:
+    float fovElapsedTime = 0.0f;
+    float fovDuration = 0.0f;
+    float startFov = 0.0f;
+    float endFov = 0.0f;
+    bool isZoomingFov = false;
+    Dotween::EasingEffect fovEasingEffect;
+      
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
 };

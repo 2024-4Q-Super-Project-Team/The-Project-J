@@ -107,10 +107,14 @@ void ResourceManager::LoadResources()
 
     for (json& j : audioJson)
     {
-        std::wstring mainKey = Helper::ToWString(audioJson["key"].get<std::string>());
-        ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
-        auto audio = GetResource<AudioResource>(handle);
-        audio->Deserialize(j);
+        if (j.contains("key"))
+        {
+            std::wstring mainKey = Helper::ToWString(j["key"].get<std::string>());
+            ResourceHandle handle = mHandleFromMainKeyMappingTable[mainKey];
+            LoadFileFromHandle(handle);
+            auto audio = GetResource<AudioResource>(handle);
+            audio->Deserialize(j);
+        }
     }
 
     Alloc_All_Resource();

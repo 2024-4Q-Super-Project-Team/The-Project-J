@@ -35,7 +35,9 @@ public:
     bool IsPaused();
     void Play(std::wstring_view _key); // ActiveAudio를 바꾸고 Play
     void Play();
+    void Reset();
     void Pause();
+    void Resume();
 public:
     // 루프 설정을 합니다.(왠만해선 Resource에서 설정할 것)
     void SetLoop(bool _isLoop);

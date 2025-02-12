@@ -8,6 +8,8 @@ public:
 	void Start();
 	void Update();
 private:
-	AudioSource* mAudioSource;
+	AudioSource* mStage01BGM;
+	AudioSource* mStage02BGM;
+	AudioSource* mStage03BGM;
 };
 

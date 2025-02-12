@@ -67,6 +67,7 @@ private:
 	FLOAT mIdleTickCounter = 0.0f;
 
 	bool isAttack = false;
+	FLOAT endTimer = false;
 
 public:
 	virtual json Serialize() override;

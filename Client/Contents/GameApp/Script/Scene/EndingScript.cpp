@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "EndingScript.h"
 
+#include "Contents/GameApp/Script/BGMSelecter.h"
+
 #define ENDING_SFX_BOOK_CLOSE L"book_close"
 
 static int index = 0;
@@ -77,18 +79,16 @@ void EndingScript::Update()
 {
 	auto* fade = fadeBox->GetComponent<UISprite>();
 
-	if (fadeBox->GetState() == EntityState::Active)
+	if (isFadeTime)
 	{
-		bookAnim->SetFrame(25.0f);
-
 		if (fade)
 		{
 			fade->ProcessFadeOut();
 	
 			if (fade->GetFade() == eFadeState::IDLE)
 			{
-	
 				fadeBox->SetActive(false);
+				isFadeTime = false;
 			}
 		}
 	}
@@ -104,8 +104,14 @@ void EndingScript::Update()
 
 				if (bookAnim->IsEnd())
 				{
+					BGMSelecter::SetBGM(eBGMType::NONE);
 					timer += Time::GetUnScaledDeltaTime();
 
+					if (isSFXPlay)
+					{
+						m_pAudio->Play(ENDING_SFX_BOOK_CLOSE);
+						isSFXPlay = false;
+					}
 					// 3초 기다린 후 이동 시작
 					if (timer >= 3.f)
 					{
@@ -142,7 +148,6 @@ void EndingScript::PageUpdate()
 			mWidgetList[2]->gameObject->SetActive(false);
 
 			mPageType = 0;
-			m_pAudio->Play(ENDING_SFX_BOOK_CLOSE);
 		}
 	}
 	else
@@ -168,17 +173,17 @@ void EndingScript::PageUpdate()
 void EndingScript::CreditUpdate()
 {
 	//fadeBox->SetActive(false);
-
 	if (credit->GetState() == EntityState::Active)
 	{
-		auto* c = credit->GetComponent<UISprite>();
+		auto* credit_ = credit->GetComponent<UISprite>();
 		
-		if (c)
+		if (credit_)
 		{
-			c->ProcessFadeIn();
+			credit_->ProcessFadeIn();
 
-			if (c->GetFade() == eFadeState::IDLE)
+			if (credit_->GetFade() == eFadeState::IDLE)
 			{
+				BGMSelecter::ChangeBGM(eBGMType::ENDING);
 				CreditPosUpdate();
 			}
 		}

@@ -9,6 +9,7 @@ enum class eBGMType
 	STAGE_BOSS,
 	ENDING,
 	NONE,
+	SIZE,
 };
 
 class BGMSelecter : public MonoBehaviour

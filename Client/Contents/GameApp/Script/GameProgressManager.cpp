@@ -52,8 +52,8 @@ void GameProgressManager::Update()
 
 	if (Input::IsKeyDown(VK_F1) && mCurrentSceneNum == (UINT)OPENING)
 	{
-		ChangeScene(eSceneType::GAME);
-		BGMSelecter::ChangeBGM(eBGMType::STAGE_2);
+		ChangeScene(eSceneType::TITLE);
+		BGMSelecter::ChangeBGM(eBGMType::TITLE);
 	}
 }
 

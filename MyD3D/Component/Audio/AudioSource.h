@@ -30,6 +30,8 @@ public:
     void SetCurrentAudio(const std::wstring& _key);
     void SetCurrentAudio(const ResourceHandle& _handle);
     BOOL AddAudio(const std::wstring& _key, ResourceHandle _srcAudio);
+
+    const auto& GetActiveAudioKey() { return mActiveKey; }
 public:
     bool IsPlaying();
     bool IsPaused();

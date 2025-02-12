@@ -348,19 +348,25 @@ void newBossScript::UpdateExit()
 		mHeadObject->SetActive(false);
 		mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
 
-		mFadeBoxObject->SetActive(true);
+		endTimer += Time::GetUnScaledDeltaTime();
 
-		if (mFadeBoxObject)
+		if (endTimer > 5.0f)
 		{
-			auto* fade = mFadeBoxObject->GetComponent<UISprite>();
+			mFadeBoxObject->SetActive(true);
 
-			if (mFadeBoxObject->GetState() == EntityState::Active)
+			if (mFadeBoxObject)
 			{
-				fade->ProcessFadeIn();
+				auto* fade = mFadeBoxObject->GetComponent<UISprite>();
 
-				if (fade->GetFade() == eFadeState::IDLE)
+				if (mFadeBoxObject->GetState() == EntityState::Active)
 				{
-					GameProgressManager::ChangeScene(eSceneType::ENDING);
+					fade->ProcessFadeIn();
+
+					if (fade->GetFade() == eFadeState::IDLE)
+					{
+						GameProgressManager::ChangeScene(eSceneType::ENDING);
+						BGMSelecter::ChangeBGM(eBGMType::OPENING);
+					}
 				}
 			}
 		}

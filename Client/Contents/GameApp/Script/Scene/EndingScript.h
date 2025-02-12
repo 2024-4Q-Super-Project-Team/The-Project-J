@@ -24,7 +24,9 @@ public:
 	AudioSource* m_pAudio = nullptr;
 
 	bool startMoving = false;  // 이동 시작 여부
+	bool isSFXPlay = true;
 	float timer = 0;
+	bool isFadeTime = true;
 
 	SerializeField(FLOAT, waitTime, 3.f);
 	SerializeField(FLOAT, moveSpeed, 100.f);

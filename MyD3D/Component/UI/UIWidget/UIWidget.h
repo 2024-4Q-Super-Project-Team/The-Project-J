@@ -70,6 +70,6 @@ protected:
 	float alpha = 0.f;
 	Color	mColor{ 1,1,1,1 };
 	eUIType	mUIType = eUIType::NON;
-	float mFadeTime = 3.f;
+	float mFadeTime = 1.0f;
 	eFadeState mFadeState = eFadeState::IDLE;
 };

@@ -112,6 +112,7 @@ void MonsterScript::Start()
 	}
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
+		m_pBurnObjectScript->SetBurn(false);
 	}
 
 	mTargetPos = gameObject->transform->position;

@@ -17,7 +17,7 @@ void ScopeScript::Start()
 		if (!m_pCollider)
 			m_pCollider = gameObject->AddComponent<SphereCollider>();
 
-		m_pCollider->SetRadius(200.f);
+		m_pCollider->SetRadius(165.f);
 		m_pCollider->SetIsTrigger(true);
 	}
 }

@@ -18,7 +18,7 @@ BOOL GameApp::OnPreInitialize()
 
 BOOL GameApp::OnPostInitialize()
 {
-    Display::Console::OpenConsole(L"Debug", { 0,0 }, { 300,200 });
+    //Display::Console::OpenConsole(L"Debug", { 0,0 }, { 300,200 });
     {
         /////////////////////////////////////////////////////
         // ∞‘¿”

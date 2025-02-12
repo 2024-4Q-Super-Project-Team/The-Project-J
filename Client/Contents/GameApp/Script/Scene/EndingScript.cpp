@@ -2,6 +2,7 @@
 #include "EndingScript.h"
 
 #include "Contents/GameApp/Script/BGMSelecter.h"
+#include "../GameProgressManager.h"
 
 #define ENDING_SFX_BOOK_CLOSE L"book_close"
 
@@ -210,6 +211,7 @@ void EndingScript::CreditPosUpdate()
 
 			if (credit->GetComponent<UISprite>()->GetFade() == eFadeState::IDLE)
 			{
+				GameProgressManager::ChangeScene(eSceneType::TITLE);
 				credit->SetActive(false); // Å©·¹µ÷ ¼û±â±â
 			}
 		}

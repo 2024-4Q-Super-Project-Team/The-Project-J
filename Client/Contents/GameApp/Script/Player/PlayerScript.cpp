@@ -674,7 +674,9 @@ void PlayerScript::ProcessJump()
         }
         else
         {
-            float jumpTimeRatio = (mMaxJumpTimeTick.val - mJumpTimeCount) * (mMaxJumpHoldScale.val * 0.01f);
+            float jumpTimeRatio =
+                (mMaxJumpTimeTick.val - mJumpTimeCount) 
+                * (mMaxJumpHoldScale.val * Time::GetScaledDeltaTime());
             mPlayerController->AddMoveForceY(mJumpPower.val * jumpTimeRatio);
         }
     }

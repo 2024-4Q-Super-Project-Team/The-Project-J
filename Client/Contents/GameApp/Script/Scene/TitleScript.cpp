@@ -2,6 +2,7 @@
 #include "TitleScript.h"
 
 #include "Contents/GameApp/Script/BGMSelecter.h"
+#include "../GameProgressManager.h"
 
 #define UI_SFX_BUTTON L"default"
 #define UI_SFX_SELECT L"select"
@@ -134,6 +135,7 @@ void TitleScript::StartButtonUpdate()
 	{
 		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 월드 이동
+		GameProgressManager::ChangeScene(eSceneType::GAME);
 	}
 }
 
@@ -169,6 +171,7 @@ void TitleScript::CreditButtonUpdate()
 	{
 		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 크레딧 월드로 이동
+		//GameProgressManager::ChangeScene(eSceneType::CREDIT);
 	}
 }
 

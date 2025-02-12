@@ -5,18 +5,20 @@
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
 newBossScript* GameProgressManager::mBossScript = nullptr;
-Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
-INT	GameProgressManager::mCurrentStageNum = 0;
+Object* GameProgressManager::mScenearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
+INT	GameProgressManager::mCurrentSceneNum = 0;
 
 void GameProgressManager::Start()
 {
 	{
 		// 스테이지 등을 초기화
-		mStagearray[STAGE_01] = FindObjectWithName(L"MAP1");
-		mStagearray[STAGE_02] = FindObjectWithName(L"MAP2");
-		mStagearray[STAGE_03] = FindObjectWithName(L"MAP3");
+		mScenearray[OPENING] = FindObjectWithName(L"OpeningWorld");
+		mScenearray[TITLE] = FindObjectWithName(L"TitleWorld");
+		mScenearray[GAME] = FindObjectWithName(L"MainWorld");
+		mScenearray[ENDING] = FindObjectWithName(L"EndingWorld");
 
 		mGameStatus = eGameProgressStatus::PLAYING;
+		ChangeScene(eSceneType::OPENING);
 	}
 }
 
@@ -38,15 +40,15 @@ void GameProgressManager::UpdateMap()
 {
 	for (int i = 0; i < STAGE_COUNT; ++i)
 	{
-		if (mStagearray[i])
+		if (mScenearray[i])
 		{
-			if (i == mCurrentStageNum)
+			if (i == mCurrentSceneNum)
 			{
-				mStagearray[i]->SetActive(true);
+				mScenearray[i]->SetActive(true);
 			}
 			else
 			{
-				mStagearray[i]->SetActive(false);
+				mScenearray[i]->SetActive(false);
 			}
 		}
 	} 

@@ -174,6 +174,7 @@ void TitleScript::CreditButtonUpdate()
 		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 크레딧 월드로 이동
 		//GameProgressManager::ChangeScene(eSceneType::CREDIT);
+		GameProgressManager::ChangeScene(eSceneType::ENDING);
 	}
 }
 
@@ -183,5 +184,6 @@ void TitleScript::ExitButtonUpdate()
 	{
 		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 게임 종료
+		GameManager::GetApplication()->ShutDown();
 	}
 }

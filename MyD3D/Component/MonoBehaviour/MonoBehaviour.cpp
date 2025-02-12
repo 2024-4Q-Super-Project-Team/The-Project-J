@@ -18,7 +18,7 @@ MonoBehaviour::MonoBehaviour(Object* _owner, const std::string& _eid)
 
 Object* MonoBehaviour::FindObject(std::wstring_view _name, std::wstring_view _tag)
 {
-    World* curWorld = GameManager::GetCurrentWorld();
+    World* curWorld = gameObject->GetOwnerWorld();
 	auto& objects = curWorld->GetObjectArray();
 	auto itr = FIND_CONTAINER(objects,
 		[&](Object* _obj) {
@@ -48,7 +48,7 @@ Object* MonoBehaviour::FindChildObject(Object* _parent, std::wstring_view _name)
 }
 Object* MonoBehaviour::FindObjectWithName(std::wstring_view _name)
 {
-    World* curWorld = GameManager::GetCurrentWorld();
+    World* curWorld = gameObject->GetOwnerWorld();
 	auto& objects = curWorld->GetObjectArray();
 	auto itr = FIND_CONTAINER(objects,
 		[&](Object* _obj) {
@@ -63,7 +63,7 @@ Object* MonoBehaviour::FindObjectWithName(std::wstring_view _name)
 std::vector<Object*> MonoBehaviour::FindObjectsWithTag(std::wstring_view _tag)
 {
 	std::vector<Object*> tempArr;
-    World* curWorld = GameManager::GetCurrentWorld();
+    World* curWorld = gameObject->GetOwnerWorld();
 	if (curWorld == nullptr)
 	{
 		return tempArr; // curWorld가 nullptr인 경우
@@ -80,7 +80,7 @@ std::vector<Object*> MonoBehaviour::FindObjectsWithTag(std::wstring_view _tag)
 std::vector<Object*> MonoBehaviour::FindObjectsWithName(std::wstring_view _name)
 {
 	std::vector<Object*> tempArr;
-    World* curWorld = GameManager::GetCurrentWorld();
+    World* curWorld = gameObject->GetOwnerWorld();
 	auto& objects = curWorld->GetObjectArray();
 	for (auto& object : objects)
 	{
@@ -94,7 +94,7 @@ Object* MonoBehaviour::Instantiate(PrefabResource* _pInstant)
 {
     if (_pInstant)
     {
-		World* curWorld = GameManager::GetCurrentWorld();
+		World* curWorld = gameObject->GetOwnerWorld();
         std::list<Object*>	cloneArray;
         std::unordered_map<std::wstring, Object*>	cloneTable;
 

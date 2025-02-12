@@ -17,6 +17,7 @@ void OnOffButtonScript::Start()
     boxCol->SetPosition(Vector3(0, 80.0f, 0));
     Vector3 scale = gameObject->transform->GetWorldScale();
     boxCol->SetExtents(Vector3(70, 8, 70) * scale);
+    boxCol->SetTrigger(true);
 
     // 상대 버튼 찾기
     std::wstring otherButtonTag = GetOtherButtonTag();
@@ -33,7 +34,7 @@ void OnOffButtonScript::Start()
         }
     }
 }
-void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
+void OnOffButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
     Display::Console::Log("OnOffCollision Enter\n");
     PlayPressedSound();
@@ -48,7 +49,7 @@ void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destina
     }
 }
 
-void OnOffButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
+void OnOffButtonScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 {
 }
 

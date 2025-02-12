@@ -103,6 +103,7 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 			SetState((eButtonState)currentState);
 		}
 		ImGui::ColorEdit3("color", &mColor.x);
+		ImGui::DragFloat("alpha", &alpha);
 		ImGui::DragFloat2("default position", &defaultPos.x, 0.5f,  -5000.f, 5000.f);
 		ImGui::DragFloat2("selected position", &selectedPos.x, 0.5f, -5000.f, 5000.f);
 
@@ -188,6 +189,7 @@ json UIButton::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z };
+	ret["alpha"] = alpha;
 	ret["button state"] = mButtonState;
 
 	ret["default position"] = { defaultPos.x, defaultPos.y };
@@ -234,6 +236,11 @@ void UIButton::Deserialize(json& j)
 
 			SetColor(col);
 		}
+	}
+
+	if (j.contains("alpha"))
+	{
+		SetAlpha(j["alpha"].get<float>());
 	}
 
 	if (j.contains("button state"))

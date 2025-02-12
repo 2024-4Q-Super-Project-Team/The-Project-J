@@ -97,6 +97,7 @@ void UISprite::EditorRendering(EditorViewerType _viewerType)
 		   widgetID = m_pTexture->GetEID();
 
 		   ImGui::ColorEdit3("color", &mColor.x);
+		   ImGui::DragFloat("alpha", &alpha);
 		   ImGui::PushStyleColor(ImGuiCol_Header, EDITOR_COLOR_EXTRA);
        }
        else
@@ -128,6 +129,7 @@ json UISprite::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z};
+	ret["alpha"] = alpha;
 
 	return ret;
 }
@@ -161,5 +163,10 @@ void UISprite::Deserialize(json& j)
 
 			SetColor(col);
 		}
+	}
+
+	if (j.contains("alpha"))
+	{
+		SetAlpha(j["alpha"].get<float>());
 	}
 }

@@ -180,6 +180,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 		ImGui::Text("Text INFO : ");
 		ImGui::DragFloat("line", &mLine, 0.5f, 1.0f, 100.f);
 		ImGui::ColorEdit3("color", &mColor.x);
+		ImGui::DragFloat("alpha", &alpha);
 
 		ImGui::NewLine();
 		ImGui::Checkbox("Use Outline", &bUseOutline);
@@ -226,6 +227,7 @@ json UIText::Serialize()
 
 	ret["ui type"] = mUIType;
 	ret["color"] = { mColor.x, mColor.y, mColor.z};
+	ret["alpha"] = alpha;
 	ret["line"] = mLine;
 	ret["format"] = mFormat;
 
@@ -262,6 +264,11 @@ void UIText::Deserialize(json& j)
 
 			SetColor(col);
 		}
+	}
+
+	if (j.contains("alpha"))
+	{
+		SetAlpha(j["alpha"].get<float>());
 	}
 
 	if (j.contains("line"))

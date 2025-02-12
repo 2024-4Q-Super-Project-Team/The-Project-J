@@ -44,7 +44,7 @@ private:
 
 	///////////////////////////////////
 	Object* mRock;
-	float mFallingSpeed = 10.f;
+	float mFallingSpeed = 150.f;
 
 	bool mIsAllDone = false;
 };

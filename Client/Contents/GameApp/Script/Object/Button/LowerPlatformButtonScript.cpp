@@ -30,9 +30,9 @@ void LowerPlatformButtonScript::Update()
 {
     if (!mRotated && isCollided)
     {
-            Transform* tr = mLowerPlatformObject->transform;
-            tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(-1.6f, 0, 0));
-            mRotated = true;
+        Transform* tr = mLowerPlatformObject->transform;
+        tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0, 0, -1.6f));
+        mRotated = true;
     }  
 }
 

@@ -18,6 +18,7 @@ void RaisePlatformButtonScript::Start()
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 3, 0));
         boxCol->SetExtents(Vector3(100, 1, 100));
+        buttonPosition = gameObject->transform->GetWorldPosition();
     }
 
     else if (currentTag.find(L"_2") != std::wstring::npos)
@@ -42,6 +43,42 @@ void RaisePlatformButtonScript::Start()
             }
         }
     }
+
+    auto boxes = FindObjectsWithTag(L"Box_02");
+    if (!boxes.empty())
+    {
+        for (auto obj : boxes)
+        {
+            box = obj;
+        }
+    }
+}
+
+void RaisePlatformButtonScript::Update()
+{
+    if (box)
+    {
+        Vector3 box2Position = box->transform->GetWorldPosition();
+        float distance = (box2Position - buttonPosition).Length();
+
+        if (distance < activationDistance)
+        {
+            if (!isWithinDistance)
+            {
+                isWithinDistance = true;
+                OnButtonPressed();
+            }
+        }
+
+        else
+        {
+            if (isWithinDistance)
+            {
+                isWithinDistance = false;
+                OnButtonReleased();
+            }
+        }
+    }
 }
 
 void RaisePlatformButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -54,34 +91,14 @@ void RaisePlatformButtonScript::OnTriggerExit(Collider* _origin, Collider* _dest
 
 void RaisePlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Display::Console::Log("Enter_RaiseWall");
-    PlayPressedSound();
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = false;
-        OnButtonPressed();
-    }
 }
 
 void RaisePlatformButtonScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = false;
-    }
 }
 
 void RaisePlatformButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Display::Console::Log("Exit_LowerWall");
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = true;
-        OnButtonReleased();
-    }
 }
 
 void RaisePlatformButtonScript::OnButtonPressed()

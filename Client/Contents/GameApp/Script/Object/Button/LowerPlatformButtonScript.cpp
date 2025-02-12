@@ -38,6 +38,7 @@ void LowerPlatformButtonScript::Start()
             platform = obj;
         }
     }
+
 }
 
 void LowerPlatformButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)

@@ -7,9 +7,10 @@ public:
 public:
 	void Start();
 	void Update();
+	static void ChangeBGM(INT _num);
 private:
-	AudioSource* mStage01BGM;
-	AudioSource* mStage02BGM;
-	AudioSource* mStage03BGM;
+	int curIndex;
+	static AudioSource* mCurrAudio;
+	static std::vector<AudioSource*> AudioSourceArray;
 };
 

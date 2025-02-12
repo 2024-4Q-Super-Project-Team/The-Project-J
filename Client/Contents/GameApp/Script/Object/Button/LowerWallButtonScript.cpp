@@ -18,6 +18,7 @@ void LowerWallButtonScript::Start()
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 5, 0));
         boxCol->SetExtents(Vector3(100, 7, 100));
+        buttonPosition = gameObject->transform->GetWorldPosition();
     }
 
     else if (currentTag.find(L"_2") != std::wstring::npos)
@@ -42,6 +43,42 @@ void LowerWallButtonScript::Start()
             }
         }
     }
+
+    auto boxes = FindObjectsWithTag(L"Box_01");
+    if (!boxes.empty())
+    {
+        for (auto obj : boxes)
+        {
+            box = obj;
+        }
+    }
+}
+
+void LowerWallButtonScript::Update()
+{
+    if (box)
+    {
+        Vector3 box1Position = box->transform->GetWorldPosition();
+        float distance = (box1Position - buttonPosition).Length();
+
+        if (distance < activationDistance)
+        {
+            if (!isWithinDistance)
+            {
+                isWithinDistance = true;
+                OnButtonPressed();
+            }
+        }
+
+        else
+        {
+            if (isWithinDistance)
+            {
+                isWithinDistance = false;
+                OnButtonReleased();
+            }
+        }
+    }
 }
 
 void LowerWallButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -57,35 +94,14 @@ void LowerWallButtonScript::OnTriggerExit(Collider* _origin, Collider* _destinat
 
 void LowerWallButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Display::Console::Log("Enter_LowerWall");
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = false;
-        OnButtonPressed();
-    }
 }
 
 void LowerWallButtonScript::OnCollisionStay(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Display::Console::Log("Stay_LowerWall");
-
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = false;
-    }
 }
 
 void LowerWallButtonScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-    Display::Console::Log("Exit_LowerWall");
-    Object* interactingObject = _destination->GetOwner();
-    if (CanInteract(interactingObject))
-    {
-        isUp.val = true;
-        OnButtonReleased();
-    }
 }
 
 void LowerWallButtonScript::OnButtonPressed()

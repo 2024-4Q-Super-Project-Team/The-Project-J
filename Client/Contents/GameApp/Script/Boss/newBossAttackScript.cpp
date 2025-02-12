@@ -9,6 +9,7 @@ void newBossAttackScript::Start()
 
 	mRigidBody = gameObject->GetComponent<Rigidbody>();
 	if (mRigidBody == nullptr) mRigidBody = gameObject->AddComponent<Rigidbody>();
+	mRigidBody->SetIsRealStatic(false);
 
 	mHitColiider = gameObject->GetComponent<BoxCollider>();
 	if (mHitColiider == nullptr) mHitColiider = gameObject->AddComponent<BoxCollider>();

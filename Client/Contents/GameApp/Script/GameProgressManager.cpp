@@ -31,6 +31,11 @@ void GameProgressManager::Update()
 
 	UpdateMap();	// 맵을 활성화, 비활성화한다
 	UpdateGameOver();
+
+	if (Input::IsKeyDown(VK_F1))
+	{
+		ChangeScene(eSceneType::GAME);
+	}
 }
 
 void GameProgressManager::ResetGame()

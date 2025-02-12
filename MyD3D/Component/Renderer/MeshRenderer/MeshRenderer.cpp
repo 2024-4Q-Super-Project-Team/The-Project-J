@@ -41,6 +41,7 @@ void MeshRenderer::PreUpdate()
 
 void MeshRenderer::Update()
 {
+    mOnlyDiffuseCBuffer.onlyDiffuse = bOnlyUseDiffuse;
 }
 
 void MeshRenderer::PostUpdate()
@@ -69,6 +70,7 @@ void MeshRenderer::PostRender()
 
 void MeshRenderer::EditorUpdate()
 {
+    mOnlyDiffuseCBuffer.onlyDiffuse = bOnlyUseDiffuse;
     SetMesh(mMeshHandle);
     SetMaterial(mMaterialHandle);
 }
@@ -142,6 +144,7 @@ void MeshRenderer::DrawObject(Matrix& _view, Matrix& _projection)
         mTransformMatrices.View = XMMatrixTranspose(_view);
         mTransformMatrices.Projection = XMMatrixTranspose(_projection);
         // 트랜스폼 상수 버퍼 바인딩
+        GraphicsManager::GetConstantBuffer(eCBufferType::OnlyDiffuse)->UpdateGPUResoure(&mOnlyDiffuseCBuffer);
         GraphicsManager::GetConstantBuffer(eCBufferType::Transform)->UpdateGPUResoure(&mTransformMatrices);
         D3DGraphicsRenderer::DrawCall(static_cast<UINT>(mMesh->mIndices.size()), 0, 0);
     }

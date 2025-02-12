@@ -63,10 +63,12 @@ private:
 
 	TransformCBuffer    mTransformMatrices;    // 트랜스폼 매트릭스 (셰이더로 전달)
     MaterialCBuffer     mMatCBuffer;           // 머티리얼 상수 버퍼 (셰이더로 전달)
+    OnlyDiffuseCBuffer  mOnlyDiffuseCBuffer;   // 디퓨즈만 쓰도록 설정하는 상수 버퍼 (셰이더로 전달)
     OutlineCBuffer      mOutlineCBuffer;       // 아웃라인 상수 버퍼 (셰이더로 전달)
 
     bool isCastShadow = true;               // 그림자 렌더링 여부
     bool isCastOutline = false;               // 외곽선 렌더링 여부
+    bool bOnlyUseDiffuse = false;           // 디퓨즈만 사용하는지 판단 여부
 public:
     virtual void EditorRendering(EditorViewerType _viewerType) override;
     void ShowMaerialProperties(eMaterialMapType _type, const char* _label);

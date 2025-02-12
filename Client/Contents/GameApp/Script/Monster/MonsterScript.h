@@ -102,7 +102,7 @@ public:
 	SerializeField(FLOAT, mGroggyTick, 10.f);				// 기절 tick
 	SerializeField(FLOAT, mMoveSpeed, 40.f);				// 이동 속도
 	SerializeField(FLOAT, mAttackDistance, 100.f);			// 공격 범위
-	SerializeField(FLOAT, mDamage, 1);						// 공격 데미지
+	SerializeField(FLOAT, mDamage, 10);						// 공격 데미지
 	SerializeField(INT, mType, 0);	// 몬스터 타입
 };
 

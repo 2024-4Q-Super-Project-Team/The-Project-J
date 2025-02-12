@@ -90,7 +90,7 @@ void MonsterScript::Start()
 		}
 		else
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,6,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,60,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 42,2,27 });
 		}
 		
@@ -102,7 +102,7 @@ void MonsterScript::Start()
 		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,15,28 });
 		}
 		else
 		{
@@ -112,6 +112,7 @@ void MonsterScript::Start()
 	}
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
+		m_pBurnObjectScript->SetBurn(false);
 	}
 
 	mTargetPos = gameObject->transform->position;

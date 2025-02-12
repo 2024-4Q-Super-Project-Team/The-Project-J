@@ -4,6 +4,7 @@
 #include "newBossAttackScript.h"
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+#include "Contents/GameApp/Script/CameraController.h"
 
 #define BOSS_ANIM_IDLE		L"001"		
 #define BOSS_ANIM_ATTACK_01 L"003"		
@@ -36,6 +37,23 @@ void newBossScript::Start()
 	if (mRazerObject)
 	{
 		mAttackScript = mRazerObject->GetComponent<newBossAttackScript>();
+	}
+
+	// CameraController 가져오기
+	{
+		Object* cameraObject = FindObjectWithName(L"Main_Camera");
+		if (cameraObject != nullptr)
+		{
+			mCameraController = cameraObject->GetComponent<CameraController>();
+			if (mCameraController == nullptr)
+			{
+				Helper::HRT(E_FAIL, "CameraController is nullptr");
+			}
+		}
+		else
+		{
+			Helper::HRT(E_FAIL, "Camera object is nullptr");
+		}
 	}
 
 	GameProgressManager::SetBossInfo(this);
@@ -311,6 +329,8 @@ void newBossScript::UpdateExit()
 	//	elapsedTime = 0.0f;
 	//	mBossState = eBossStateType::IDLE;
 	//}
+
+	mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
 }
 
 void newBossScript::SetExit()

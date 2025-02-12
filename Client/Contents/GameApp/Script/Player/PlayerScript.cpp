@@ -269,12 +269,13 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
 
     if (_destination->gameObject->GetTag() == L"CameraTrigger8")
     {
-        mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
+        //mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
     }
 
     if (_destination->gameObject->GetTag() == L"CameraTrigger_Zoomlimit")
     {
-
+        mCameraController->mMinCameraDistance.val = 600.0f;
+        mCameraController->mMaxCameraDistance.val = 750.0f;
     }
 
 

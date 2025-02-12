@@ -127,6 +127,13 @@ void GameProgressManager::ChangeScene(eSceneType _sceneType)
 	{
 		mMainCamera->GetComponent<CameraController>()->SetActive(false);
 	}
+
+	if (_sceneType == eSceneType::ENDING)
+	{
+		mMainCamera->transform->position = { 0, 0, 0 };
+		mMainCamera->transform->rotation = { 0,0,0 };
+		mMainCamera->GetComponent<CameraController>()->mCamera->SetFovAngle(1.0f);
+	}
 }
 
 eGameProgressStatus GameProgressManager::GetGameStatus()

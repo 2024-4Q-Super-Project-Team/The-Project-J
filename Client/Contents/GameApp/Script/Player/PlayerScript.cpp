@@ -16,17 +16,14 @@
 #define PLAYER_ANIM_HIT L"009"
 #define PLAYER_ANIM_DEAD L"010"
 
-#define PLAYER_SFX_WALKING_NORMAL_01    L"walking_normal_01"
-#define PLAYER_SFX_WALKING_NORMAL_02    L"walking_normal_02"
-#define PLAYER_SFX_WALKING_NORMAL_03    L"walking_normal_03"
-#define PLAYER_SFX_WALKING_ICE_01       L"walking_ice_01"
-#define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
-#define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
-#define PLAYER_SFX_MOVE_FIRE_START      L"move_fire_start"
-#define PLAYER_SFX_MOVE_FIRE_END        L"move_fire_end"
-#define PLAYER_SFX_OFF_FIRE             L"off_fire"
-#define PLAYER_SFX_DEAD                 L"dead"
-#define PLAYER_SFX_HIT                  L"hit"
+#define PLAYER_SFX_WALKING_NORMAL_01    L"SFX_walking_normal_01.wav"
+#define PLAYER_SFX_WALKING_NORMAL_02    L"SFX_walking_normal_02.wav"
+#define PLAYER_SFX_WALKING_NORMAL_03    L"SFX_walking_normal_03.wav"
+#define PLAYER_SFX_MOVE_FIRE_START      L"SFX_lighting_01.mp3"
+#define PLAYER_SFX_MOVE_FIRE_END        L"SFX_lighting_02.mp3"
+#define PLAYER_SFX_OFF_FIRE             L"SFX_lightingoff.mp3"
+#define PLAYER_SFX_DEAD                 L"SFX_char_death.mp3"
+#define PLAYER_SFX_HIT                  L"SFX_damage.mp3"
 
 void PlayerScript::Start()
 {
@@ -106,7 +103,7 @@ void PlayerScript::Start()
     }
 
     InitFireLight();
-
+    InitSFX();
     GameProgressManager::SetPlayerInfo(this);
 }
 
@@ -468,9 +465,12 @@ void PlayerScript::UpdatePlayerAnim()
         break;
     }
 
-    FLOAT totalFrame = mCandleAnimator->GetActiveAnimationResource()->GetTotalFrame();
-    FLOAT hpRatio = (FLOAT)mPlayerCurHP / (FLOAT)mPlayerMaxHP.val;
-    mCandleAnimator->SetFrame(totalFrame - (hpRatio * totalFrame));
+    if (mCandleAnimator->GetActiveAnimationResource())
+    {
+        FLOAT totalFrame = mCandleAnimator->GetActiveAnimationResource()->GetTotalFrame();
+        FLOAT hpRatio = (FLOAT)mPlayerCurHP / (FLOAT)mPlayerMaxHP.val;
+        mCandleAnimator->SetFrame(totalFrame - (hpRatio * totalFrame));
+    }
 }
 
 void PlayerScript::UpdateIdle()
@@ -492,14 +492,17 @@ void PlayerScript::UpdateIdle()
 
 void PlayerScript::UpdateMove()
 {
-    static FLOAT walkSoundTick = 0.4f;
-    static FLOAT walkSoundCounter = 0.0f;
-
-    walkSoundCounter += Time::GetScaledDeltaTime();
-    if (walkSoundCounter >= walkSoundTick)
+    if (isJump == false)
     {
-        walkSoundCounter = 0.0f;
-        mAudioSource->Play(PLAYER_SFX_WALKING_NORMAL_01);
+        walkSoundCounter += Time::GetScaledDeltaTime();
+        if (walkSoundCounter >= walkSoundTick)
+        {
+            walkSoundCounter = 0.0f;
+            std::wstring key_front = L"SFX_walking_normal_0";
+            std::wstring key_num = std::to_wstring(Random::Range(1, 3));
+            std::wstring key_back = L".wav";
+            mAudioSource->Play(key_front + key_num + key_back);
+        }
     }
 
     ProcessJump();
@@ -767,6 +770,31 @@ void PlayerScript::InitFireLight()
     FireLight->SetLightFar(5000.0f);
     FireLight->SetShadowDistance(3000.0f);
     FireLight->SetLightColor(ColorF(0.3f, 0.15f, 0.0f));
+}
+
+void PlayerScript::SetSFX(const std::wstring& _filename)
+{
+    ResourceHandle ButtonSoundHandle;
+    ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+    ButtonSoundHandle.mMainKey = _filename;
+    ButtonSoundHandle.mPath = L"resource/sound/" + _filename;
+    if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+    }
+    mAudioSource->AddAudio(_filename, ButtonSoundHandle);
+}
+void PlayerScript::InitSFX()
+{
+    mAudioSource = gameObject->AddComponent<AudioSource>();
+    SetSFX(PLAYER_SFX_WALKING_NORMAL_01);
+    SetSFX(PLAYER_SFX_WALKING_NORMAL_02);
+    SetSFX(PLAYER_SFX_WALKING_NORMAL_03);
+    SetSFX(PLAYER_SFX_MOVE_FIRE_START);
+    SetSFX(PLAYER_SFX_MOVE_FIRE_END);
+    SetSFX(PLAYER_SFX_OFF_FIRE);
+    SetSFX(PLAYER_SFX_DEAD);
+    SetSFX(PLAYER_SFX_HIT);
 }
 
 json PlayerScript::Serialize()

@@ -40,7 +40,6 @@ void GameProgressManager::Update()
 		INT keyCode = 49 + i;
 		if (Input::IsKeyDown(keyCode)) SaveManager.JumpingSavePoint(i);
 	}
-}
 
 	if (Input::IsKeyDown(VK_F1))
 	{

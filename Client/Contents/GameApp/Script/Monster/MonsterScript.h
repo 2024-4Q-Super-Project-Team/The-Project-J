@@ -87,6 +87,7 @@ private:
 	// Target
 	Object* m_pTarget = nullptr;
 	Object* m_pWeakness = nullptr;
+	Object* m_pFireObject = nullptr;
 
 	float mIdleCount = 0.0f;	// 아이들 대기 타이머
 	float mResetCount = 0.0f;	// 랜덤 리셋 타이머

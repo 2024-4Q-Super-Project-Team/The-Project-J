@@ -31,12 +31,14 @@ BOOL GameApp::OnPostInitialize()
             mMainScene = ViewportManager::CreateViewportScene(&winDecs);
             mMainScene->GetIWindow()->SetPositionCenter();
         }
-#ifdef _DEBUG
-      EditorManager::ShowEditorWindow(mMainScene);
-      GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
-#else
-        GameManager::SetRunType(eEngineRunType::GAME_MODE);
-#endif // DEBUG
+        SaveManager::Load();
+        GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+//#ifdef _DEBUG
+//      EditorManager::ShowEditorWindow(mMainScene);
+//      GameManager::SetRunType(eEngineRunType::EDITOR_MODE);
+//#else
+//        GameManager::SetRunType(eEngineRunType::GAME_MODE);
+//#endif // DEBUG
     }
 
     return TRUE;

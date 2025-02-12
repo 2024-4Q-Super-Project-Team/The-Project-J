@@ -103,7 +103,9 @@ void GameManager::UpdateGame()
 		// 에디터모드 -> 게임모드 = 지금까지의 정보를 저장한다.
 		if (mCurrRunType == eEngineRunType::EDITOR_MODE && mNextRunType == eEngineRunType::GAME_MODE)
 		{
+#ifdef _DEBUG
 			SaveManager::Save();
+#endif 
 		}
 		mCurrRunType = mNextRunType;
 		switch (mNextRunType)
@@ -121,6 +123,18 @@ void GameManager::UpdateGame()
 		}
 		mCurrRunType = mNextRunType;
 	}
+#ifdef _DEBUG
+
+#else
+	if (mCurrRunType == eEngineRunType::EDITOR_MODE)
+	{
+		SetRunType(eEngineRunType::GAME_MODE);
+	}
+#endif
+	//if (mCurrRunType == eEngineRunType::EDITOR_MODE)
+	//{
+	//	SetRunType(eEngineRunType::GAME_MODE);
+	//}
 }
 
 void GameManager::SetRunType(eEngineRunType _runType)

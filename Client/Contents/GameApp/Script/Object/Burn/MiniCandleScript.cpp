@@ -11,6 +11,7 @@ void MiniCandleScript::Start()
 
 	mBurnScript = mCandleObject->AddComponent<BurnObjectScript>();
 	mBurnScript->SetBurn(false);
+	mBurnScript->SetActive(false);
 }
 
 void MiniCandleScript::Update()

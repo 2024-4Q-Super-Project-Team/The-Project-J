@@ -202,6 +202,7 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
     {
         mCameraController->mMinCameraDistance.val = 1000.0f;
         mCameraController->mMaxCameraDistance.val = 1500.0f;
+        mCameraController->LookAt(Vector3(0.0f, 0.05f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
     }
 
     if (_destination->gameObject->GetTag() == L"CameraTrigger2")

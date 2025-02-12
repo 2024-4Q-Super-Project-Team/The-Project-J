@@ -283,6 +283,7 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
 
 void _CALLBACK PlayerScript::OnTriggerStay(Collider* _origin, Collider* _destination)
 {
+    OnTriggerStayCallback(_origin, _destination);
     return void _CALLBACK();
 }
 
@@ -572,6 +573,7 @@ void PlayerScript::UpdateMoveFire()
                     mBurnObjectScript->IsBurning() == true)
                 {
                     mBurnProcessTarget->SetBurn(true);
+                    mBurnProcessTarget->SetDestObject(mBurnObjectScript);
                     mAudioSource->Play(PLAYER_SFX_MOVE_FIRE_END);
                 }
                 mBurnProcessTarget = nullptr;

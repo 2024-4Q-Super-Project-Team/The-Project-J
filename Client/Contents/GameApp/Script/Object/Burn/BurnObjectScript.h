@@ -11,6 +11,7 @@ public:
 public:
 	inline void SetBurn(bool _isBurn) { isBurning.val = _isBurn; }
 	inline void SetBurnObject(Object* _burnObject) { mBurnObject = _burnObject; }
+	inline void SetDestObject(BurnObjectScript* _destObject) { mDstObject = _destObject; }
 	inline void SetBurnCount(FLOAT _val) { mFireMoveCount = _val; }
 	inline void ProcessBurn(BurnObjectScript* _dst) { isProcessing = true; mDstObject = _dst; }
 	inline void CancleProcess() { isProcessing = false; }

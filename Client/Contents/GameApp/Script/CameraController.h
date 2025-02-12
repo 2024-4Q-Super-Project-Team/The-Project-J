@@ -30,8 +30,8 @@ public:
     Vector3 mOriginalCameraDirection;
     SerializeField(FLOAT, mCameraDistance, 200.0f);
     SerializeField(Vector3, mCameraDirection, Vector3::One);
-    SerializeField(FLOAT, mMinCameraDistance, 600.0f);
-    SerializeField(FLOAT, mMaxCameraDistance, 1000.0f);
+    SerializeField(FLOAT, mMinCameraDistance, 500.0f);
+    SerializeField(FLOAT, mMaxCameraDistance, 800.0f);
     FLOAT CurrentAngles[3];
     Camera* mCamera;
 public:
@@ -45,7 +45,7 @@ private:
     float mZoomSpeed;
     float mLerpSpeed;
     Vector3 offSet = Vector3::Zero;
-    Vector3 midpointOffset = Vector3::Zero;
+    Vector3 midpointOffset = Vector3(0,0,-200);
 
     // dotween
     // LookAt

@@ -114,13 +114,7 @@ void PlayerScript::Update()
 {
     UpdatePlayerHP();
     UpdatePlayerAnim();
-
-    // y좌표 일정 이하면 주금
-    if (gameObject->transform->position.y < -100.0f)
-    {
-        SavePointManager::GetInstance().GoBackSavePoint(this);
-        return;
-    }
+    CheckDead();
 
     // FSMUpdate
     switch (mPlayerState)
@@ -208,6 +202,7 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
     {
         mCameraController->mMinCameraDistance.val = 1000.0f;
         mCameraController->mMaxCameraDistance.val = 1500.0f;
+        mCameraController->LookAt(Vector3(0.0f, 0.05f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
     }
 
     if (_destination->gameObject->GetTag() == L"CameraTrigger2")
@@ -249,7 +244,7 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
         {
             Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
             cam->ZoomToFov(1.0f, 1.4f, 2.0f, Dotween::EasingEffect::OutSine);
-            mCameraController->LookAt(Vector3(0.0f, 0.04f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
+            mCameraController->LookAt(Vector3(0.0f, 0.035f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
             isDone6 = true;
         }
 
@@ -606,6 +601,8 @@ void PlayerScript::UpdateDead()
     {
         mBurnObjectScript->SetBurn(false);
     }
+    if(mBodyAnimator->IsEnd())
+        SavePointManager::GetInstance().GoBackSavePoint(this);
 }
 
 bool PlayerScript::ProcessMove()
@@ -716,6 +713,20 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
                 effectAnim->Play();
         }
     }
+}
+
+void PlayerScript::CheckDead()
+{
+
+    // y좌표 일정 이하면 주금
+    if (gameObject->transform->position.y < -100.0f)
+    {
+        mPlayerState = ePlayerStateType::DEAD;
+    }
+
+    if (GameProgressManager::GetGameStatus() == eGameProgressStatus::GAME_OVER)
+        mPlayerState = ePlayerStateType::DEAD;
+
 }
 
 bool PlayerScript::IsBurning()

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "BoxScript.h"
+#include "../../Player/PlayerScript.h"
 
 
 void BoxScript::Start()
@@ -9,7 +10,11 @@ void BoxScript::Start()
     mRigid->SetMass(15.f);
 
     mCollider->SetExtents(Vector3(70, 75, 70));
-    mCollider->SetPosition(Vector3(0, 35, 0));
+    if(gameObject->transform->scale.x >= 0.41)
+        mCollider->SetPosition(Vector3(0, 35, 0));
+    else
+        mCollider->SetPosition(Vector3(0, 20, 0));
+
 
     mPxRayDirection = PxVec3(0, -1, 0);
 
@@ -48,6 +53,7 @@ void BoxScript::Update()
 void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 {
     if (player->gameObject->GetTag() != L"Player") return;
+    if (player->gameObject->GetComponent<PlayerScript>()->IsJump()) return;
 
     Vector3 playerPos = player->gameObject->transform->GetWorldPosition();
     Vector3 boxPos = box->gameObject->transform->GetWorldPosition();

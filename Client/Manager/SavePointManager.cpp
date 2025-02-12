@@ -46,15 +46,14 @@ void SavePointManager::GoBackSavePoint(PlayerScript* deadPlayer)
     spawnPoint.y += 30.0f;
 
     // 죽은 플레이어만 위치를 바꿔주고, 상태 Reset
-    if (Player1 && Player1 == deadPlayer)
+    if (Player1 && Player2 && (Player1 == deadPlayer || Player2 == deadPlayer))
     {
      
         Player1->gameObject->transform->position = spawnPoint;
         Player1->Reset();
-    }
-    if (Player2 && Player2 == deadPlayer)
-    {
-        Player2->gameObject->transform->position = spawnPoint;
+        Player2->gameObject->transform->position = spawnPoint + Vector3(0, 0, 15);
         Player2->Reset();
+
+        GameProgressManager::SetPlaying();
     }
 }

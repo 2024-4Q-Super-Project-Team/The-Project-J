@@ -88,8 +88,8 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,40,0 });
-			m_pHeadCollider->SetExtents(Vector3{ 30,2,30 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,30,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 40,2,40 });
 		}
 		else
 		{
@@ -104,8 +104,8 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,20,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
 		}
 		else
 		{

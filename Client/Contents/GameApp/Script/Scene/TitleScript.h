@@ -25,5 +25,7 @@ private:
 	Object* creditButton = nullptr;
 	Object* exitButton = nullptr;
 	Object* control = nullptr;
+
+	AudioSource* m_pAudio = nullptr;
 };
 

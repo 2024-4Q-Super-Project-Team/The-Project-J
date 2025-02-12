@@ -52,8 +52,6 @@ void MonsterScript::Start()
 					m_pWeakness->SetTag(L"Weakness");
 					m_pWeakness->transform->scale = Vector3(30, 30, 22);
 					m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
-					m_pWeakness->AddComponent<SphereCollider>()->SetIsTrigger(true);
-					m_pWeakness->AddComponent<BurnObjectScript>();
 
 					if (mType.val == (int)eMonsterType::A)
 					{
@@ -104,13 +102,16 @@ void MonsterScript::Start()
 		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 28,15,28 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,30,28 });
 		}
 		else
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,25,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 35,35,20 });
 		}
+
+		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
+		m_pBurnObjectScript->SetBurn(false);
 	}
 
 	mTargetPos = gameObject->transform->position;
@@ -393,9 +394,9 @@ void MonsterScript::UpdateGroggy()
 		mGroggyCount += Time::GetUnScaledDeltaTime();
 
 		// N초 안에 불이 붙었다면
-		if (m_pWeakness)
+		if (m_pBurnObjectScript)
 		{
-  			if (m_pWeakness->GetComponent<BurnObjectScript>()->IsBurning())
+  			if (m_pBurnObjectScript->IsBurning())
 			{
 				mFSM = eMonsterStateType::DEAD;
 				m_pAudioSource->Play(MONSTER_SFX_DEAD);

@@ -19,9 +19,11 @@ public:
 	void Start();
 	void Update();
 	void ChangeBGM(eBGMType _type);
+	void InitSFX();
+	void SetSFX(AudioSource* _dstSource, const std::wstring& _filename);
 private:
 	eBGMType curBGM;
 	AudioSource* mCurrAudio;
-	std::vector<AudioSource*> AudioSourceArray;
+	AudioSource* AudioSourceArray[(UINT)eBGMType::SIZE];
 };
 

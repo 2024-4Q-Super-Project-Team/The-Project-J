@@ -16,8 +16,6 @@ public:
 
 	PxPhysics* GetPhysics() const { return mPhysics; }
 	PxSimulationEventCallback* GetCallback() { return mEventCallback; }
-	PxCudaContextManager* GetCudaManager() { return mCudaContextManager; }
-	PxCudaContext* GetCudaContext() { return mCudaContext; }
 
 	/*Material
 	staticFriction(정지마찰계수): 값이 더 클수록 정지상태로부터 미끄러지기 위해 많은 힘이 필요함. 0~1
@@ -37,9 +35,6 @@ private:
 	PxPvd* mPvd;
 	PxPhysics* mPhysics;
 	PxSimulationEventCallback* mEventCallback;
-
-	PxCudaContextManager* mCudaContextManager;
-	PxCudaContext* mCudaContext;
 
 	//Materials
 	std::unordered_map<std::string, PxMaterial*> mMaterials;

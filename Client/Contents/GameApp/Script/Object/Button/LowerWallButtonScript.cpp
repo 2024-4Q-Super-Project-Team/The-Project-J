@@ -55,6 +55,16 @@ void LowerWallButtonScript::Start()
             box = obj;
         }
     }
+
+    ResourceHandle SoundHandle;
+    SoundHandle.mResourceType = eResourceType::AudioResource;
+    SoundHandle.mMainKey = PLAYER_SFX_WALL;
+    SoundHandle.mPath = L"resource/sound/" + std::wstring(PLAYER_SFX_WALL);
+    if (ResourceManager::GetResource<AudioResource>(SoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(SoundHandle);
+    }
+    mAudioSource->AddAudio(PLAYER_SFX_WALL, SoundHandle);
 }
 
 void LowerWallButtonScript::Update()
@@ -116,6 +126,7 @@ void LowerWallButtonScript::OnButtonPressed()
         Vector3 endPosition = startPosition;
         endPosition.y += -500.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
+        mAudioSource->Play(PLAYER_SFX_WALL);
     }
 }
 
@@ -128,6 +139,7 @@ void LowerWallButtonScript::OnButtonReleased()
         Vector3 endPosition = startPosition;
         endPosition.y += 500.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
+        mAudioSource->Play(PLAYER_SFX_WALL);
     }
 }
 

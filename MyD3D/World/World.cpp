@@ -31,12 +31,7 @@ World::World(ViewportScene* _pViewport, std::wstring_view _name, std::wstring_vi
     sceneDesc.cpuDispatcher = PxDefaultCpuDispatcherCreate(2);
     sceneDesc.filterShader = CustomFilterShader;
     sceneDesc.simulationEventCallback = GameManager::GetPhysicsManager()->GetCallback();
-        // GPU 가속 설정
-    sceneDesc.flags |= PxSceneFlag::eENABLE_GPU_DYNAMICS | PxSceneFlag::eENABLE_PCM;
-    sceneDesc.broadPhaseType = PxBroadPhaseType::eGPU;
-    
-    sceneDesc.cudaContextManager = GameManager::GetPhysicsManager()->GetCudaManager();
-
+   
     mPxScene = GameManager::GetPhysicsManager()->GetPhysics()->createScene(sceneDesc);
 
     mControllerManager = PxCreateControllerManager(*mPxScene);

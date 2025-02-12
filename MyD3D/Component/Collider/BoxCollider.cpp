@@ -69,12 +69,7 @@ void BoxCollider::Render()
 
 void BoxCollider::Draw(Camera* _camera)
 {
-#ifdef _DEBUG
-	if (EditorManager::mEditorCamera.mIsColliderRendering)
-	{
-		_camera->PushWireList(this);
-	}
-#endif 
+
 }
 
 void BoxCollider::PostRender()

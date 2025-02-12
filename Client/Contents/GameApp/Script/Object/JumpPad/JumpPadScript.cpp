@@ -8,8 +8,6 @@ void JumpPadScript::Start()
 	mAudioSource = gameObject->GetComponent<AudioSource>();
 	if (mAudioSource == nullptr)
 		mAudioSource = gameObject->AddComponent<AudioSource>();
-
-	gameObject->GetComponent<Rigidbody>()->SetIsRealStatic(false);
 }
 
 void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)

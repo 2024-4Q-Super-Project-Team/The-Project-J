@@ -209,11 +209,9 @@ void EndingScript::CreditPosUpdate()
 		{
 			credit->GetComponent<UISprite>()->ProcessFadeOut();
 
-			if (credit->GetComponent<UISprite>()->GetFade() == eFadeState::IDLE)
-			{
-				GameProgressManager::ChangeScene(eSceneType::TITLE);
-				credit->SetActive(false); // 农饭调 见扁扁
-			}
+			GameProgressManager::ChangeScene(eSceneType::TITLE);
+			credit->SetActive(false); // 农饭调 见扁扁
+			BGMSelecter::ChangeBGM(eBGMType::TITLE);
 		}
 		else
 		{

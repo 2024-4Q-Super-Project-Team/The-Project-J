@@ -1,5 +1,16 @@
 #pragma once
 
+enum class eBGMType
+{
+	OPENING,
+	TITLE,
+	STAGE_1,
+	STAGE_2,
+	STAGE_BOSS,
+	ENDING,
+	SIZE,
+};
+
 class BGMSelecter : public MonoBehaviour
 {
 public:
@@ -7,10 +18,10 @@ public:
 public:
 	void Start();
 	void Update();
-	static void ChangeBGM(INT _num);
+	void ChangeBGM(eBGMType _type);
 private:
-	int curIndex;
-	static AudioSource* mCurrAudio;
-	static std::vector<AudioSource*> AudioSourceArray;
+	eBGMType curBGM;
+	AudioSource* mCurrAudio;
+	std::vector<AudioSource*> AudioSourceArray;
 };
 

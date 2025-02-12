@@ -3,6 +3,7 @@
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Manager/SavePointManager.h"
 #include "CameraController.h"
+#include "Contents/GameApp/Script/BGMSelecter.h"
 
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
@@ -10,9 +11,14 @@ newBossScript* GameProgressManager::mBossScript = nullptr;
 Object* GameProgressManager::mScenearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
 Object* GameProgressManager::mMainCamera = nullptr;
 INT	GameProgressManager::mCurrentSceneNum = 0;
+BGMSelecter* GameProgressManager::BGMSelector = nullptr;
 
 void GameProgressManager::Start()
 {
+	Object* clone = CreateObject(L"BGMSelector", L"");
+	clone->AddComponent<BGMSelecter>();
+	clone->transform->SetParent(gameObject->transform);
+
 	{
 		// 스테이지 등을 초기화
 		mScenearray[OPENING] = FindObjectWithName(L"OpeningWorld");
@@ -23,6 +29,9 @@ void GameProgressManager::Start()
 
 		mGameStatus = eGameProgressStatus::PLAYING;
 		ChangeScene(eSceneType::OPENING);
+		BGMSelecter::ChangeBGM(eBGMType::OPENING);
+
+	
 	}
 }
 
@@ -41,9 +50,10 @@ void GameProgressManager::Update()
 		if (Input::IsKeyDown(keyCode)) SaveManager.JumpingSavePoint(i);
 	}
 
-	if (Input::IsKeyDown(VK_F1))
+	if (Input::IsKeyDown(VK_F1) && mCurrentSceneNum == (UINT)OPENING)
 	{
 		ChangeScene(eSceneType::GAME);
+		BGMSelecter::ChangeBGM(eBGMType::STAGE_2);
 	}
 }
 

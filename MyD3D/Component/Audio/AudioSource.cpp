@@ -256,7 +256,7 @@ void AudioSource::SetSurround(bool _isSuround)
 
 void AudioSource::SetVolume(FLOAT _val)
 {
-	mAudioChannel->SetVolume(_val);
+	mVolume = Clamp(_val, 0.0f, 1.0f);
 }
 
 void _CALLBACK AudioSource::OnEnable()

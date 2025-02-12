@@ -8,7 +8,7 @@ enum class eBGMType
 	STAGE_2,
 	STAGE_BOSS,
 	ENDING,
-	SIZE,
+	NONE,
 };
 
 class BGMSelecter : public MonoBehaviour
@@ -17,13 +17,12 @@ public:
 	_MONOBEHAVIOUR_INIT(BGMSelecter);
 public:
 	void Start();
-	void Update();
-	void ChangeBGM(eBGMType _type);
 	void InitSFX();
-	void SetSFX(AudioSource* _dstSource, const std::wstring& _filename);
+	static void SetBGM(eBGMType _type);
+	static void ChangeBGM(eBGMType _type);
+	static void LoadBGM(AudioSource* _dstSource, const std::wstring& _filename);
 private:
-	eBGMType curBGM;
-	AudioSource* mCurrAudio;
-	AudioSource* AudioSourceArray[(UINT)eBGMType::SIZE];
+	static AudioSource* mCurrAudio;
+	static AudioSource* AudioSourceArray[(UINT)eBGMType::NONE];
 };
 

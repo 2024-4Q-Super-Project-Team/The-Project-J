@@ -47,19 +47,8 @@ void LowerPlatformButtonScript::Update()
         Transform* tr = mLowerPlatformObject->transform;
         tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0, 0, -1.6f));
         mRotated = true;
+        mAudioSource->Play(PLAYER_SFX_WOOD);
     }  
-    if (mRotated && !isPlayed)
-    {
-        if (elapsed >= time)
-        {
-            mAudioSource->Play(PLAYER_SFX_WOOD);
-            isPlayed = true;
-        }
-        else
-        {
-            elapsed += Time::GetScaledDeltaTime();
-        }
-    }
 }
 
 void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)

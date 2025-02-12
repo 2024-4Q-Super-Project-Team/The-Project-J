@@ -5,6 +5,7 @@
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Contents/GameApp/Script/CameraController.h"
+#include "Contents/GameApp/Script/BGMSelecter.h"
 
 #define BOSS_ANIM_IDLE		L"001"		
 #define BOSS_ANIM_ATTACK_01 L"003"		
@@ -245,6 +246,8 @@ void newBossScript::UpdateNone()
 
 void newBossScript::UpdateEnter()
 {
+	BGMSelecter::ChangeBGM(eBGMType::STAGE_BOSS);
+
 	mBossObject->SetActive(true);
 
 	static FLOAT elapsedTime = 0.0f;

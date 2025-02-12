@@ -68,10 +68,10 @@ void SphereCollider::Render()
 void SphereCollider::Draw(Camera* _camera)
 {
 #ifdef _DEBUG
-	if (EditorManager::mEditorCamera.mIsColliderRendering)
-	{
-		_camera->PushWireList(this);
-	}
+	//if (EditorManager::mEditorCamera.mIsColliderRendering)
+	//{
+	//	_camera->PushWireList(this);
+	//}
 #endif
 }
 

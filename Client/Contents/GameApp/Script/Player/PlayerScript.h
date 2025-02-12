@@ -69,6 +69,7 @@ private:
 	void ProcessMoveFire(BurnObjectScript* _dst);
 	void ProcessOffFire(BurnObjectScript* _dst);
 	//void ProcessWalkSFX();
+	void CheckDead();
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 	void ResetController();

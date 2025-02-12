@@ -33,6 +33,7 @@ enum eSceneType
 
 class PlayerScript;
 class newBossScript;
+class BGMSelecter;
 
 // 전반적인 게임 진행을 관리한다.
 class GameProgressManager : public MonoBehaviour
@@ -64,5 +65,7 @@ private:
 	static Object*					mScenearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
 	static Object*					mMainCamera;
 	static INT						mCurrentSceneNum;			// 현재 스테이지
+public:
+	static BGMSelecter* BGMSelector;
 };
 

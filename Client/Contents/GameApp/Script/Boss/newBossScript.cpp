@@ -5,6 +5,7 @@
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Contents/GameApp/Script/CameraController.h"
+#include "Contents/GameApp/Script/BGMSelecter.h"
 
 #define BOSS_ANIM_IDLE		L"001"		
 #define BOSS_ANIM_ATTACK_01 L"003"		
@@ -20,6 +21,14 @@ void newBossScript::Start()
 	mBossObject = FindChildObject(gameObject, L"Mon_Boss_01.fbx_Prefab");
 	mHeadObject = FindChildObject(gameObject, L"Mon_Boss_02_fix.fbx_Prefab");
 	mRazerObject = FindChildObject(gameObject, L"Effect_boss_beam_fix01.fbx_Prefab");
+	Object* boss_ui = FindChildObject(gameObject, L"Boss_UI");
+	if (boss_ui)
+	{
+		boss_ui->AddComponent<Canvas>();
+		mFadeBoxObject = FindChildObject(boss_ui, L"Fade_Box");
+		mFadeBoxObject->SetActive(false);
+	}
+	
 
 	// Point2 -> Point1으로 가는 벡터
 	mBossDirection = mPoint[1]->transform->position - mPoint[0]->transform->position;
@@ -237,6 +246,8 @@ void newBossScript::UpdateNone()
 
 void newBossScript::UpdateEnter()
 {
+	BGMSelecter::ChangeBGM(eBGMType::STAGE_BOSS);
+
 	mBossObject->SetActive(true);
 
 	static FLOAT elapsedTime = 0.0f;
@@ -336,7 +347,23 @@ void newBossScript::UpdateExit()
 		mBossObject->SetActive(false);
 		mHeadObject->SetActive(false);
 		mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
-		GameProgressManager::ChangeScene(eSceneType::ENDING);
+
+		mFadeBoxObject->SetActive(true);
+
+		if (mFadeBoxObject)
+		{
+			auto* fade = mFadeBoxObject->GetComponent<UISprite>();
+
+			if (mFadeBoxObject->GetState() == EntityState::Active)
+			{
+				fade->ProcessFadeIn();
+
+				if (fade->GetFade() == eFadeState::IDLE)
+				{
+					GameProgressManager::ChangeScene(eSceneType::ENDING);
+				}
+			}
+		}
 	}
 }
 

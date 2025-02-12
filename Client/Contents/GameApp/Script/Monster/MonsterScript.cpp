@@ -42,25 +42,40 @@ void MonsterScript::Start()
 				m_pScope->SetTag(L"Scope");
 				m_pScope->transform->position = gameObject->transform->position;
 			}
+		}
 
-			auto& children = gameObject->transform->GetChildren();
-			for (Transform* child : children)
+		auto& children = gameObject->transform->GetChildren();
+		for (Transform* child : children)
+		{
+			if (child->gameObject->GetName() == L"Weakness")
 			{
-				if (child->gameObject->GetName() == L"Weakness")
-				{
-					m_pWeakness = child->gameObject;
-					m_pWeakness->SetTag(L"Weakness");
-					m_pWeakness->transform->scale = Vector3(30, 30, 22);
-					m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
+				m_pWeakness = child->gameObject;
+				m_pWeakness->SetTag(L"Weakness");
+				m_pWeakness->transform->scale = Vector3(30, 30, 22);
+				m_pWeakness->transform->position = Vector3(0, 40, 0);
+				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
 
-					if (mType.val == (int)eMonsterType::A)
-					{
-						m_pWeakness->transform->position.y = 38;
-					}
-					else
-					{
-						m_pWeakness->transform->position.y = 5;
-					}
+				m_pWeakness->AddComponent<Rigidbody>()->SetIsRealStatic(false);
+				SphereCollider* sc = m_pWeakness->AddComponent<SphereCollider>();
+				sc->SetIsTrigger(true);
+				sc->SetRadius(5.f);
+				m_pBurnObjectScript = m_pWeakness->AddComponent<BurnObjectScript>();
+				m_pBurnObjectScript->SetBurn(false);
+				m_pWeakness->SetActive(false);
+
+				m_pFireObject = FindChildObject(m_pWeakness, L"FireObject");
+				m_pFireObject->SetActive(false);
+				m_pFireObject->transform->position = Vector3(0, 0, -1.95f);
+				m_pFireObject->transform->scale = Vector3(1.5, 1.5, 1.5);
+				m_pFireObject->transform->SetEulerAngles(Vector3(Degree::ToRadian(-90.0f), 0.0f, 0.0f));
+
+				if (mType.val == (int)eMonsterType::A)
+				{
+					m_pWeakness->transform->position.y = 38;
+				}
+				else
+				{
+					m_pWeakness->transform->position.y = 5;
 				}
 			}
 		}
@@ -109,9 +124,6 @@ void MonsterScript::Start()
 			m_pBodyCollider->SetPosition(Vector3{ 0,25,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 35,35,20 });
 		}
-
-		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
-		m_pBurnObjectScript->SetBurn(false);
 	}
 
 	mTargetPos = gameObject->transform->position;
@@ -375,6 +387,8 @@ void MonsterScript::UpdateGroggy()
 		m_pHeadCollider->SetPosition(Vector3{ 0,30,0 });
 		m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
 		m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+		m_pWeakness->SetActive(true);
+		m_pWeakness->transform->position = Vector3(0, 60, 0);
 	}
 	else
 	{
@@ -398,6 +412,8 @@ void MonsterScript::UpdateGroggy()
 		{
   			if (m_pBurnObjectScript->IsBurning())
 			{
+				m_pFireObject->SetActive(true);
+				m_pFireObject->GetComponent<Animator>()->Play();
 				mFSM = eMonsterStateType::DEAD;
 				m_pAudioSource->Play(MONSTER_SFX_DEAD);
 				mGroggyCount = 0.f;

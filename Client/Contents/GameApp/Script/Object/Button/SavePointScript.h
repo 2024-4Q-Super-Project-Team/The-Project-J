@@ -10,12 +10,21 @@ public:
     virtual void OnTriggerEnter(Collider* _origin, Collider* _destination) override;
 
     Vector3 GetSavePointPosition() const { return gameObject->transform->GetWorldPosition(); }
-    int GetIndex() const { return mIndex; }
-    void SetIndex(int index) { mIndex = index; }
+    int GetIndex() const { return mIndex.val; }
 
 private:
-    int mIndex;
-    bool mIsSaved = false; // 세이브가 된적 있는지?
-
+    SerializeField(INT, mIndex, 0);
     AudioSource* mAudioSource;
+public:
+    static std::unordered_map<INT, SavePointScript*> TotalSavePointTable;
+    static SavePointScript* GetSavePoint(INT _index) {
+        auto itr = TotalSavePointTable.find(_index);
+        if (FIND_SUCCESS(itr, TotalSavePointTable)) {
+            return itr->second;
+        }
+        else return nullptr;
+    }
+public:
+    virtual json Serialize() override;
+    virtual void Deserialize(json& j) override;
 };

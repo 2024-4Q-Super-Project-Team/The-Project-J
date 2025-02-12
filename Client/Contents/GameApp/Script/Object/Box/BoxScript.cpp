@@ -8,6 +8,7 @@ void BoxScript::Start()
     mRigid = gameObject->AddComponent<Rigidbody>();
     mCollider = gameObject->AddComponent<BoxCollider>();
     mRigid->SetMass(15.f);
+    mRigid->SetIsRealStatic(false);
 
     mCollider->SetExtents(Vector3(70, 75, 70));
     if(gameObject->transform->scale.x >= 0.41)

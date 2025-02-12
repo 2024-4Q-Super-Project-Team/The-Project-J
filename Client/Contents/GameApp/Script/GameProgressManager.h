@@ -21,12 +21,14 @@ enum class eGameProgressStatus
 	PAUSE,		// 일시 정지
 };
 
-enum eStageType
+enum eSceneType
 {
-	STAGE_01,
-	STAGE_02,
-	STAGE_03,
-	STAGE_COUNT,
+	OPENING,
+	TITLE,
+	GAME,
+	ENDING,
+	CREDIT,
+	STAGE_COUNT
 };
 
 class PlayerScript;
@@ -46,18 +48,21 @@ public:
 
 	static void SetPlaying();
 	static void UpdateGameOver();
+
 public:
 	static void SetPlayerInfo(PlayerScript* _player);
 	static PlayerScript* GetPlayerInfo(INT _handle);
 	static void SetBossInfo(newBossScript* _boss);
 	static newBossScript* GetBossInfo();
+	static void ChangeScene(eSceneType _sceneType);
 
 	static eGameProgressStatus GetGameStatus();
 private:
 	static eGameProgressStatus		mGameStatus;
 	static PlayerScript*			mPlayer[2];
 	static newBossScript*			mBossScript;
-	static Object*					mStagearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
-	static INT						mCurrentStageNum;			// 현재 스테이지
+	static Object*					mScenearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
+	static Object*					mMainCamera;
+	static INT						mCurrentSceneNum;			// 현재 스테이지
 };
 

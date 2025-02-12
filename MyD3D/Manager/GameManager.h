@@ -42,7 +42,7 @@ public:
 public:
     static World* GetCurrentWorld();
 public:
-	static auto	GetRunType() { return mNextRunType; }
+	static auto	GetRunType() { return mCurrRunType; }
 	static auto	GetFixedUpdateTick() { return mFixedUpdateTick; }
 	static auto	GetApplication()     { return mApplication; }
 	static auto	GetPhysicsManager()  { return mPhysicsManager; }

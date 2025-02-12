@@ -53,6 +53,8 @@ public:
 	//////////////////////////////////////////////////////////////////////
 private:
 	void InitFireLight();
+	void SetSFX(const std::wstring& _filename);
+	void InitSFX();
 
 	void UpdatePlayerHP();			// 플레이어의 체력에 대한 업데이트
 	void UpdatePlayerAnim();		// 플레이어의 애니메이션에 대한 업데이트
@@ -124,7 +126,12 @@ private:
 	bool isDone6 = false;
 	bool isDone7 = false;
 
-
+	FLOAT walkSoundTick = 0.4f;
+	FLOAT walkSoundCounter = 0.0f;
+public:
+	Vector3 mOriginPos = Vector3::Zero;
+	Quaternion mOriginRot = Quaternion::Identity;
+	Vector3 mOriginSca = Vector3::One;
 public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;

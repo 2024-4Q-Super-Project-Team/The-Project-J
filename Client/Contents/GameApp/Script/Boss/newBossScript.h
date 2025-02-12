@@ -42,6 +42,8 @@ public:
 	void SetExit();
 private:
 	Object* mBossObject;
+	Transform* mNeckBone;
+	Object* mHeadObject;
 	Object* mRazerObject;
 	Object* mRangeObject;
 	Animator* mBodyAnimator;

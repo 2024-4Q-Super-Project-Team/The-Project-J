@@ -18,6 +18,7 @@ void newBossScript::Start()
 	mPoint[2] = FindChildObject(gameObject, L"Point3");
 	mRangeObject = FindChildObject(gameObject, L"Boss_Range");
 	mBossObject = FindChildObject(gameObject, L"Mon_Boss_01.fbx_Prefab");
+	mHeadObject = FindChildObject(gameObject, L"Mon_Boss_02_fix.fbx_Prefab");
 	mRazerObject = FindChildObject(gameObject, L"Effect_boss_beam_fix01.fbx_Prefab");
 
 	// Point2 -> Point1으로 가는 벡터
@@ -33,6 +34,7 @@ void newBossScript::Start()
 	{
 		mBodyAnimator = mBossObject->GetComponent<Animator>();
 		mAudioSoruce = mBossObject->GetComponent<AudioSource>();
+		mNeckBone = FindChildObject(mBossObject, L"Bone.001")->transform;
 	}
 	if (mRazerObject)
 	{
@@ -105,6 +107,9 @@ void newBossScript::Update()
 			mBossState = eBossStateType::NONE;
 		}
 	}
+
+	mHeadObject->transform->position = mNeckBone->GetWorldPosition();
+	mHeadObject->transform->position.y += 100.0f;
 }
 
 void newBossScript::Reset()
@@ -166,6 +171,7 @@ void newBossScript::SetPositionEnter()
 	mBossObject->transform->MoveTo(FinalPosition, BOSS_ENTER_TIME, Dotween::EasingEffect::OutQuint);
 }
 
+#define BOSS_GROGGY_TIME  5.0f
 void newBossScript::SetPositionGroggy()
 {
 	Vector3 FinalPosition;
@@ -173,16 +179,15 @@ void newBossScript::SetPositionGroggy()
 	FinalPosition.y = mBossOriginPosition.y;
 	FinalPosition.z = mPoint[2]->transform->position.z;
 
-	mBossObject->transform->MoveTo(FinalPosition, BOSS_ENTER_TIME, Dotween::EasingEffect::OutQuint);
+	mBossObject->transform->MoveTo(FinalPosition, BOSS_GROGGY_TIME, Dotween::EasingEffect::OutQuint);
 }
 
-#define BOSS_EXIT_TIME 5.0f
+#define BOSS_EXIT_TIME 4.0f
 void newBossScript::SetPositionExit()
 {
 	if (mBossObject->transform->scale != Vector3::Zero)
 	{
-		mBossObject->transform->ScaleTo(Vector3::Zero, BOSS_EXIT_TIME, Dotween::EasingEffect::InOutBounce);
-		mBossObject->transform->position.y += 30.0f * Time::GetScaledDeltaTime();
+		mBossObject->transform->MoveTo(mBossObject->transform->position + Vector3(0.0f,2000.0f,0.0f), BOSS_EXIT_TIME, Dotween::EasingEffect::InOutBack);
 	}
 }
 
@@ -237,6 +242,9 @@ void newBossScript::UpdateEnter()
 	static FLOAT elapsedTime = 0.0f;
 	elapsedTime += Time::GetScaledDeltaTime();
 	FLOAT ratio = elapsedTime / BOSS_ENTER_TIME;
+
+	mBossObject->transform->scale = Lerp(Vector3(50.0f, 50.0f, 50.0f), Vector3::Zero, Time::GetScaledDeltaTime());
+	mHeadObject->transform->scale = Lerp(Vector3(50.0f, 50.0f, 50.0f), Vector3::Zero, Time::GetScaledDeltaTime());
 
 	if (elapsedTime >= BOSS_ENTER_TIME)
 	{
@@ -319,18 +327,17 @@ void newBossScript::UpdateGroggy()
 
 void newBossScript::UpdateExit()
 {
-	//static FLOAT elapsedTime = 0.0f;
-	//elapsedTime += Time::GetScaledDeltaTime();
-	//FLOAT ratio = elapsedTime / BOSS_EXIT_TIME;
-	//
-	//
-	//if (elapsedTime >= BOSS_EXIT_TIME)
-	//{
-	//	elapsedTime = 0.0f;
-	//	mBossState = eBossStateType::IDLE;
-	//}
-
-	mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
+	static FLOAT elapsedTime = 0.0f;
+	elapsedTime += Time::GetScaledDeltaTime();
+	FLOAT ratio = elapsedTime / BOSS_EXIT_TIME;
+	
+	if (elapsedTime >= BOSS_EXIT_TIME)
+	{
+		mBossObject->SetActive(false);
+		mHeadObject->SetActive(false);
+		mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
+		GameProgressManager::ChangeScene(eSceneType::ENDING);
+	}
 }
 
 void newBossScript::SetExit()

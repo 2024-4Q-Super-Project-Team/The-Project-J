@@ -3,6 +3,8 @@
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
 #include "Manager/SavePointManager.h"
 
+std::unordered_map<INT, SavePointScript*> SavePointScript::TotalSavePointTable;
+
 void SavePointScript::Start()
 {
     gameObject->AddComponent<Rigidbody>();
@@ -22,21 +24,35 @@ void SavePointScript::Start()
         ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
     }
     mAudioSource->AddAudio(L"save_success", ButtonSoundHandle);
+
+    TotalSavePointTable[mIndex.val] = this;
 }
 
 void SavePointScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
     PlayerScript* player = _destination->gameObject->GetComponent<PlayerScript>();
-
-    // 체력 회복
-    player->SetHP(player->GetMaxHpValue());
-    mAudioSource->Play(L"save_success");
-    if (player && !mIsSaved)
+    if (player)
     {
+        mAudioSource->Play(L"save_success");
+        player->SetHP(player->GetMaxHpValue());
         // 세이브 좌표 저장
         SavePointManager::GetInstance().AddSavePoint(this);
-        mIsSaved = true; 
-        Vector3 coord = this->GetSavePointPosition();
-        Display::Console::Log("saved! coord : ",coord.x, " ", coord.y, " ", coord.z, "\n");
+    }
+}
+
+json SavePointScript::Serialize()
+{
+    json ret = MonoBehaviour::Serialize();
+    ret["save index"] = mIndex.val;
+    return ret;
+}
+
+void SavePointScript::Deserialize(json& j)
+{
+    MonoBehaviour::Deserialize(j);
+
+    if (j.contains("save index"))
+    {
+        mIndex.val = j["save index"].get<INT>();
     }
 }

@@ -301,6 +301,7 @@ void Camera::DrawDeferredList()
         mDeferredRenderTarget->Clear();
 
         // BlendState를 설정해줘야 OM이 rgb값을 a로 훼손시키지 않고 제대로 넣어준다.
+        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
         GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
         GraphicsManager::GetPixelShader(ePixelShaderType::G_BUFFER)->Bind();
 
@@ -313,44 +314,47 @@ void Camera::DrawDeferredList()
             drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
         }
         mDrawQueue[(UINT)eBlendModeType::OPAQUE_BLEND].clear();
-        ////////////////////////////////////////////////////////////////
-        // Transparent Blend
-        ////////////////////////////////////////////////////////////////
-        GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
-        for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND])
-        {
-            drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
-        }
-        mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
-
         mDeferredRenderTarget->EndDraw();
-        GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
 
-        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
-        GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
-        GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
-        GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
-        for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND])
-        {
-            drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
-        }
-        mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND].clear();
-        GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
-        GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
-        D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        // QuadFrame Pass
+        GraphicsManager::GetVertexShader(eVertexShaderType::QUADFRAME)->Bind();
+        GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR)->Bind();
+        D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
+        D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
+
+        mDeferredRenderTarget->BindAllSRV();
+
+        D3DGraphicsRenderer::DrawCall(6, 0, 0);
+
+        mDeferredRenderTarget->ResetAllSRV();
     }
 
-    // QuadFrame Pass
-    GraphicsManager::GetVertexShader(eVertexShaderType::QUADFRAME)->Bind();
-    GraphicsManager::GetPixelShader(ePixelShaderType::DEFERRED_PBR)->Bind();
-    D3DGraphicsDefault::GetQuadFrameVertexBuffer()->Bind();
-    D3DGraphicsDefault::GetQuadFrameIndexBuffer()->Bind();
+    GraphicsManager::GetVertexShader(eVertexShaderType::STANDARD)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::FOWARD_PBR)->Bind();
 
-    mDeferredRenderTarget->BindAllSRV();
+    ////////////////////////////////////////////////////////////////
+    // Transparent Blend
+    ////////////////////////////////////////////////////////////////
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::TRANSPARENT_BLEND].clear();
 
-    D3DGraphicsRenderer::DrawCall(6, 0, 0);
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_POINTLIST);
+    GraphicsManager::GetVertexShader(eVertexShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Bind();
+    GraphicsManager::GetPixelShader(ePixelShaderType::SPRITE)->Bind();
+    for (auto& drawInfo : mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND])
+    {
+        drawInfo->DrawObject(mViewMatrix, mProjectionMatrix);
+    }
+    mDrawQueue[(UINT)eBlendModeType::SPRITE_BLEND].clear();
+    GraphicsManager::GetGeometryShader(eGeometryShaderType::PARTICLE)->Reset();
+    GraphicsManager::GetBlendState(eBlendStateType::ALPHA)->Reset();
+    D3DGraphicsRenderer::SetTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    mDeferredRenderTarget->ResetAllSRV();
 }
 
 void Camera::DrawWireList()

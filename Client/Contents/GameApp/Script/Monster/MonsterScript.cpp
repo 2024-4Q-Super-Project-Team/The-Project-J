@@ -17,16 +17,12 @@
 #define MONSTER_ANIM_HIT_B L"mb003"
 #define MONSTER_ANIM_GROGGY_B L"mb004"
 
-#define MONSTER_SFX_STEP L"step"
-#define MONSTER_SFX_DEAD L"dead"
+#define MONSTER_SFX_STEP L"SFX_mon_step.mp3"
+#define MONSTER_SFX_DEAD L"SFX_mon_death.mp3"
 
 void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
-	
-	m_pAudioSource = gameObject->GetComponent<AudioSource>();
-	if (m_pAudioSource == nullptr)
-		m_pAudioSource = gameObject->AddComponent<AudioSource>();
 
 	if (gameObject->GetName() == L"Monster_A")
 		mType.val = (int)eMonsterType::A;
@@ -82,6 +78,7 @@ void MonsterScript::Start()
 	}
 	{	// RigidBody Component
 		m_pRigidBody = gameObject->AddComponent<Rigidbody>();
+		m_pRigidBody->SetIsRealStatic(false);
 	}
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();
@@ -93,7 +90,7 @@ void MonsterScript::Start()
 		}
 		else
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,6,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,60,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 42,2,27 });
 		}
 		
@@ -105,7 +102,7 @@ void MonsterScript::Start()
 		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,15,28 });
 		}
 		else
 		{
@@ -115,10 +112,12 @@ void MonsterScript::Start()
 	}
 	{	// BurnObjectScript Component
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
+		m_pBurnObjectScript->SetBurn(false);
 	}
 
 	mTargetPos = gameObject->transform->position;
 
+	InitSFX();
 }
 
 void MonsterScript::Update()
@@ -238,15 +237,6 @@ void MonsterScript::UpdateRotate()
 
 void MonsterScript::UpdateWalk()
 {
-	static FLOAT walkSoundTick = 0.5f;
-	static FLOAT walkSoundCounter = 0.0f;
-	walkSoundCounter += Time::GetScaledDeltaTime();
-	if (walkSoundCounter >= walkSoundTick)
-	{
-		walkSoundCounter = 0.0f;
-		m_pAudioSource->Play(MONSTER_SFX_STEP);
-	}
-
 	if (mType.val == (int)eMonsterType::A)
 	{
 		// 타겟이 존재하는가?
@@ -317,14 +307,6 @@ void MonsterScript::UpdateFastWalk()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
-		static FLOAT walkSoundTick = 0.3f;
-		static FLOAT walkSoundCounter = 0.0f;
-		walkSoundCounter += Time::GetScaledDeltaTime();
-		if (walkSoundCounter >= walkSoundTick)
-		{
-			walkSoundCounter = 0.0f;
-			m_pAudioSource->Play(MONSTER_SFX_STEP);
-		}
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 						gameObject->transform->position.y, 
@@ -418,6 +400,7 @@ void MonsterScript::UpdateGroggy()
   			if (m_pBurnObjectScript->IsBurning())
 			{
 				mFSM = eMonsterStateType::DEAD;
+				m_pAudioSource->Play(MONSTER_SFX_DEAD);
 				mGroggyCount = 0.f;
 			}
 		}
@@ -528,17 +511,36 @@ void MonsterScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 
 		// GROGGY로 바꿔주기
 		mFSM = eMonsterStateType::GROGGY;
+		m_pAudioSource->Play(MONSTER_SFX_STEP);
 	}
 }
 
 void MonsterScript::OnTriggerStay(Collider* _origin, Collider* _destination)
 {
-	
 }
 
 void MonsterScript::OnTriggerExit(Collider* _origin, Collider* _destination)
 {
+}
 
+void MonsterScript::SetSFX(const std::wstring& _filename)
+{
+	ResourceHandle ButtonSoundHandle;
+	ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+	ButtonSoundHandle.mMainKey = _filename;
+	ButtonSoundHandle.mPath = L"resource/sound/" + _filename;
+	if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+	{
+		ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+	}
+	m_pAudioSource->AddAudio(_filename, ButtonSoundHandle);
+}
+
+void MonsterScript::InitSFX()
+{
+	m_pAudioSource = gameObject->AddComponent<AudioSource>();
+	SetSFX(MONSTER_SFX_STEP);
+	SetSFX(MONSTER_SFX_DEAD);
 }
 
 void MonsterScript::UpdateMonsterAnim_A()

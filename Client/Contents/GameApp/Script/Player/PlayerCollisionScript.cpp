@@ -8,6 +8,7 @@ void PlayerCollisionScript::Start()
     mRigidBody = gameObject->GetComponent<Rigidbody>();
     if(mRigidBody == nullptr)
         mRigidBody = gameObject->AddComponent<Rigidbody>();
+    mRigidBody->SetIsRealStatic(false);
 
     mCollider = gameObject->GetComponent<SphereCollider>();
     if (mCollider == nullptr)

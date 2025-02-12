@@ -15,6 +15,7 @@
 #include <list>
 #include <unordered_map>
 #include <unordered_set>
+#include <set>
 // FMOD
 #include "ThirdParty/fmod/include/fmod.hpp"
 #include "ThirdParty/fmod/include/fmod_studio.hpp"

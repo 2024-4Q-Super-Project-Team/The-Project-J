@@ -22,8 +22,9 @@ void WorldManager::Start()
 	mNextActiveWorld = mStartWorld;
 	mCurrActiveWorld = nullptr;
 	UpdateWorld();
-	if (mCurrActiveWorld) {
-		mCurrActiveWorld->Start();
+	for (auto& world : mWorldArray)
+	{
+		world->Start();
 	}
 }
 
@@ -204,8 +205,8 @@ void WorldManager::UpdateWorld()
 
 			mCurrActiveWorld = mNextActiveWorld;
 
-			if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
-				UpdateResources();
+			//if (GameManager::GetRunType() == eEngineRunType::GAME_MODE)
+			//	UpdateResources();
 
 			mCurrActiveWorld->OnEnable();
 

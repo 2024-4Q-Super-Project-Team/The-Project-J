@@ -16,7 +16,6 @@ void newBossAttackScript::Start()
 	mHitColiider->SetIsTrigger(true);
 
 	gameObject->transform->scale = mOriginScale;
-	gameObject->SetActive(false);
 }
 
 void newBossAttackScript::Update()
@@ -68,12 +67,11 @@ void _CALLBACK newBossAttackScript::OnTriggerStay(Collider* _origin, Collider* _
 
 void newBossAttackScript::SetAttackStart(Vector3 _pos)
 {
+	gameObject->transform->GetChild()->gameObject->SetActive(true);
 	isAttack = TRUE;
-	mAudioSource->Reset();
 	mAnimator->Play();
-	mAudioSource->Play();
+	mAudioSource->FadeIn(1.0f);
 	mRazerElapsedTime = 0.0f;
-	gameObject->SetActive(true);
 	mSpawnPosition = _pos;
 	mSpawnPosition.y -= mOriginScale.y * 0.5f;
 }
@@ -81,8 +79,8 @@ void newBossAttackScript::SetAttackStart(Vector3 _pos)
 void newBossAttackScript::SetAttackEnd()
 {
 	isAttack = FALSE;
-	mAudioSource->Reset();
-	gameObject->SetActive(false);
+	mAudioSource->FadeOut(1.0f);
+	gameObject->transform->GetChild()->gameObject->SetActive(false);
 }
 
 json newBossAttackScript::Serialize()

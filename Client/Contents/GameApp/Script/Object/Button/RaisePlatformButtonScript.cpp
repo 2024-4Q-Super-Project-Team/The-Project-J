@@ -10,7 +10,8 @@ void RaisePlatformButtonScript::Start()
 {
     AudioInit();
 
-    gameObject->AddComponent<Rigidbody>();
+    Rigidbody* rb = gameObject->AddComponent<Rigidbody>();
+    rb->SetIsRealStatic(false);
     std::wstring currentTag = gameObject->GetTag();
 
     if (currentTag.find(L"_1") != std::wstring::npos)

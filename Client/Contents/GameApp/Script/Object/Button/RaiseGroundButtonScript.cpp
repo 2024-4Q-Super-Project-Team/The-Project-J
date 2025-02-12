@@ -14,7 +14,8 @@ void RaiseGroundButtonScript::Start()
 
     if (currentTag.find(L"_1") != std::wstring::npos)
     {
-        gameObject->AddComponent<Rigidbody>();
+        Rigidbody* rb = gameObject->AddComponent<Rigidbody>();
+        rb->SetIsRealStatic(false);
         BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
         boxCol->SetPosition(Vector3(0, 10, 0));
         boxCol->SetExtents(Vector3(100, 1, 100));

@@ -1,11 +1,21 @@
 #include "pch.h"
 #include "TitleScript.h"
 
+#define UI_SFX_BUTTON L"default"
+#define UI_SFX_SELECT L"select"
+#define UI_SFX_POPUP L"popup"
+
 void TitleScript::Start()
 {
 	// Component Load
 	// canvas
 	gameObject->AddComponent<Canvas>();
+
+	m_pAudio = gameObject->GetComponent<AudioSource>();
+	if (m_pAudio)
+	{
+		m_pAudio = gameObject->AddComponent<AudioSource>();
+	}
 
 	// object load
 	// text

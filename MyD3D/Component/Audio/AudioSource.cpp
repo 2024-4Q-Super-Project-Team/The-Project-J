@@ -38,6 +38,45 @@ void AudioSource::Update()
 	if (mAudioChannel)
 	{
 		mAudioChannel->SetPosition(gameObject->transform->GetWorldPosition());
+
+		FLOAT fadeFactor = 1.0f;
+
+		if (isFadeIn || isFadeOut)
+		{
+			if (fadeElapsed < fadeTime)
+			{
+				fadeElapsed += Time::GetScaledDeltaTime();
+			}
+			else
+			{
+				fadeElapsed = fadeTime;
+			}
+
+			
+			if (isFadeIn)
+			{
+				// 점점 커지게
+				fadeFactor = Clamp(fadeElapsed / fadeTime, 0.0f, 1.0f);
+				if (fadeFactor == 1.0f)
+				{
+					isFadeIn = false;
+					isFadeOut = false;
+				}
+			}
+			if (isFadeOut)
+			{
+				// 점점 작아지게
+				fadeFactor = 1.0f - Clamp(fadeElapsed / fadeTime, 0.0f, 1.0f);
+				if (fadeFactor == 0.0f)
+				{
+					isFadeIn = false;
+					isFadeOut = false;
+					mAudioChannel->Reset();
+				}
+			}
+		}
+
+		mAudioChannel->SetVolume(mVolume * fadeFactor);
 	}
 }
 
@@ -109,8 +148,8 @@ BOOL AudioSource::AddAudio(const std::wstring& _key, ResourceHandle _srcAudio)
 		// ActiveAudio가 없으면 편의상 넣어준다.
 		if (mActiveAudio == nullptr)
 		{
-			mActiveKey = _key;
-			mActiveAudio = ResourceManager::GetResource<AudioResource>(_srcAudio);
+			mActiveKey = L"";
+			SetCurrentAudio(_key);
 		}
 		return TRUE;
 	}
@@ -141,6 +180,7 @@ void AudioSource::Play(std::wstring_view _key)
 	{
 		auto pAudioClip = mActiveAudio->GetAudioClip();
 		mAudioChannel->Play(pAudioClip);
+		fadeElapsed = fadeTime;
 	}
 }
 
@@ -181,6 +221,29 @@ void AudioSource::Resume()
 	}
 }
 
+void AudioSource::FadeIn(FLOAT _time)
+{
+	if (mActiveAudio)
+	{
+		isFadeIn = true;
+		isFadeOut = false;
+		fadeTime = _time;
+		fadeElapsed = 0.0f;
+		Play();
+	}
+}
+
+void AudioSource::FadeOut(FLOAT _time)
+{
+	if (mActiveAudio && IsPlaying())
+	{
+		isFadeIn = false;
+		isFadeOut = true;
+		fadeTime = _time;
+		fadeElapsed = 0.0f;
+	}
+}
+
 void AudioSource::SetLoop(bool _isLoop)
 {
 	mAudioChannel->SetLoop(_isLoop);
@@ -205,6 +268,7 @@ void _CALLBACK AudioSource::OnEnable()
 void _CALLBACK AudioSource::OnDisable()
 {
 	mActiveAudio = nullptr;
+	Pause();
 	return void _CALLBACK();
 }
 
@@ -220,6 +284,7 @@ json AudioSource::Serialize()
 	ret["name"] = "AudioSource";
 	ret["current audio key"] = Helper::ToString(mActiveKey);
 	ret["current audio handle"] = mActiveHandle.Serialize();
+	ret["volume"] = mVolume;
 
 	json tableJson = json::array(); // JSON 배열로 초기화
 
@@ -246,6 +311,9 @@ void AudioSource::Deserialize(json& j)
 	
 	if(j.contains("current audio handle"))
 		mActiveHandle.Deserialize(j["current audio handle"]);
+
+	if (j.contains("volume"))
+		mVolume = j["volume"].get<FLOAT>();
 
 	if (j.contains("table"))
 	{
@@ -324,6 +392,9 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 	}
 	ImGui::Separator();
 	{
+		if (ImGui::SliderFloat("Volume", &mVolume, 0.0f, 1.0f))
+		{
+		}
 		if (ImGui::Button("Play", ImVec2(50, 30)))
 		{
 			Play();
@@ -335,6 +406,14 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 		if (ImGui::Button("Resume", ImVec2(50, 30)))
 		{
 			Resume();
+		}
+		if (ImGui::Button("FadeIn", ImVec2(50, 30)))
+		{
+			FadeIn(1.0f);
+		}
+		if (ImGui::Button("FadeOut", ImVec2(50, 30)))
+		{
+			FadeOut(1.0f);
 		}
 		//if (ImGui::Button("Play", ImVec2(80, 50)))
 		//{

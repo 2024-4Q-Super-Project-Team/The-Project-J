@@ -5,6 +5,7 @@ class RaisePlatformButtonScript : public ButtonScript
 {
 public:
     void Start() override;
+    void Update() override;
 public:
     explicit RaisePlatformButtonScript(Object* _owner);
     virtual ~RaisePlatformButtonScript() = default;
@@ -20,6 +21,10 @@ public:
 private:
     Object* wall;
     std::wstring GetWallTag();
+    Object* box;
+    Vector3 buttonPosition;
+    float activationDistance = 50.0f;
+    bool isWithinDistance = false;
 protected:
     virtual bool CanInteract(Object* _object) override; // 상호작용 할 수 있는지 판단 (1P, 2P, 물체 등)
 };

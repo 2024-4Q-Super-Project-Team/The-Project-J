@@ -56,7 +56,7 @@ HRESULT AudioChannel::Play(AudioClip* _pAudio)
 		false,
 		&mChannel)
 	);
-
+	mChannel->setVolume(mVolume);
 	return S_OK;
 }
 
@@ -126,6 +126,19 @@ void AudioChannel::SetPosition(Vector3 _position, Vector3 _velocity)
 
 void AudioChannel::SetVolume(FLOAT _val)
 {
-	mChannel->setVolume(_val);
-	mVolume = _val;
+	if (mChannel)
+	{
+		mVolume = _val;
+		if (IsPlaying())
+		{
+			mChannel->setVolume(mVolume);
+		}
+	}
+
+	// FMOD 시스템 업데이트
+	FMOD::System* pSystem = AudioHub::GetCoreSystem();
+	if (pSystem)
+	{
+		pSystem->update();
+	}
 }

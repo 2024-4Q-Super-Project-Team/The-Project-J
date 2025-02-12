@@ -43,6 +43,8 @@ public:
     void SetLoop(bool _isLoop);
     // 3D 입체 음향을 사용합니다
     void SetSurround(bool _isSuround);
+    // 볼륨 설정
+    void SetVolume(FLOAT _val);
 public:
     virtual void _CALLBACK OnEnable() override;
     virtual void _CALLBACK OnDisable() override;

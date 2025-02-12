@@ -55,7 +55,6 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 
     if (playerPos.y > boxPos.y + 35.f) return;
 
-
     // 부모의 회전 행렬 가져오기 (부모의 월드 변환 행렬에서 회전 부분만 추출)
     Matrix parentWorldMatrix = box->gameObject->transform->GetParent()->GetWorldMatrix();
     Matrix parentRotationMatrix = Matrix::CreateFromQuaternion(Quaternion::CreateFromRotationMatrix(parentWorldMatrix));

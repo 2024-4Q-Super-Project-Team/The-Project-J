@@ -8,6 +8,7 @@ AudioChannel::AudioChannel()
 	: mChannel(nullptr)
 	, mFrame(0)
 	, isPaused(false)
+	, mVolume(1.0f)
 {
 }
 
@@ -121,4 +122,10 @@ void AudioChannel::SetPosition(Vector3 _position, Vector3 _velocity)
 	FMOD_VECTOR pos = { _position.x, _position.y, _position.z };
 	FMOD_VECTOR vel = { _velocity.x, _velocity.y, _velocity.z };
 	mChannel->set3DAttributes(&pos, &vel);
+}
+
+void AudioChannel::SetVolume(FLOAT _val)
+{
+	mChannel->setVolume(_val);
+	mVolume = _val;
 }

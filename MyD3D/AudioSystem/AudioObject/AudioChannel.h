@@ -26,10 +26,15 @@ public:
 	void SetSurround(bool _isSuround);
 	// 오디오의 위치를 지정해줍니다. (3D 전용)
 	void SetPosition(Vector3 _position, Vector3 _velocity = { 0,0,0 });
+	// 오디오 볼륨 설정
+	void SetVolume(FLOAT _val);
+public:
+	inline FLOAT GetVolume() { return mVolume; }
 private:
 	bool isPaused;
 	UINT mFrame;
 	FMOD::Channel* mChannel;
+	FLOAT mVolume;
 public:
 	inline FMOD::Channel* GetChannel() { return mChannel; }
 };

@@ -279,6 +279,9 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
 
 void _CALLBACK PlayerScript::OnTriggerStay(Collider* _origin, Collider* _destination)
 {
+    if (_destination->gameObject == gameObject)
+        return;
+
     OnTriggerStayCallback(_origin, _destination);
     return void _CALLBACK();
 }

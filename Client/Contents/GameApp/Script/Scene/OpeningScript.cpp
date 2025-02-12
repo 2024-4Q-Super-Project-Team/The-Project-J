@@ -11,13 +11,13 @@ void OpeningScript::Start()
 	index = 0;
 	
 	m_pAudio = gameObject->GetComponent<AudioSource>();
-	if (m_pAudio)
+	if (!m_pAudio)
 	{
 		m_pAudio = gameObject->AddComponent<AudioSource>();
 	}
 
 	// å fbx
-	book = FindObject(L"Book", L"book");
+	book = FindObjectWithName(L"Book_start");
 	
 	if (book)
 	{
@@ -37,7 +37,7 @@ void OpeningScript::Start()
 	// object load
 	// Page01
 	{
-		fadeBox = FindObjectWithName(L"fade_box_01");
+		fadeBox = FindObjectWithName(L"fade_box_start");
 		auto* fade = fadeBox->GetComponent<UISprite>();
 		fadeBox->transform->SetParent(gameObject->transform);
 		fadeBox->SetActive(false);
@@ -114,7 +114,10 @@ void OpeningScript::Start()
 		image_03->SetActive(false);
 		mWidgetList.emplace_back(i3);
 
-		m_pAudio->Play(OPENING_SFX_BOOK_OPEN);
+		if (gameObject->transform->GetParent()->gameObject->GetState() == EntityState::Active)
+		{
+			m_pAudio->Play(OPENING_SFX_BOOK_OPEN);
+		}
 	}
 }
 
@@ -132,11 +135,7 @@ void OpeningScript::Update()
 	switch (mPageType)
 	{
 	case 0:
-		mainWorld = ViewportManager::GetActiveViewport()->GetWorldManager()->FindWorld(L"Stage");
-		if (mainWorld)
-		{
-			ViewportManager::GetActiveViewport()->GetWorldManager()->SetActiveWorld(mainWorld);
-		}
+		gameObject->transform->GetParent()->SetActive(false);
 		break;
 	case 1:
 		Page01Update();
@@ -163,6 +162,7 @@ void OpeningScript::Page01Update()
 			if (timer >= 3.f)
 			{
 				startMoving = true;
+				m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
 			}
 		}
 		else
@@ -170,19 +170,18 @@ void OpeningScript::Page01Update()
 			mWidgetList[0]->ProcessFadeOut();
 			mWidgetList[1]->ProcessFadeOut();
 			mWidgetList[2]->ProcessFadeOut();
-		}
 
-		if (startMoving && mWidgetList[0]->GetFade() == eFadeState::IDLE)
-		{
-			mWidgetList[0]->gameObject->SetActive(false);
-			mWidgetList[1]->gameObject->SetActive(false);
-			mWidgetList[2]->gameObject->SetActive(false);
+			if (startMoving && mWidgetList[0]->GetFade() == eFadeState::IDLE)
+			{
 
-			m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
+				mWidgetList[0]->gameObject->SetActive(false);
+				mWidgetList[1]->gameObject->SetActive(false);
+				mWidgetList[2]->gameObject->SetActive(false);
 
-			mPageType = 2;
-			startMoving = false;
-			timer = 0.f;
+				mPageType = 2;
+				startMoving = false;
+				timer = 0.f;
+			}
 		}
 	}
 
@@ -216,6 +215,7 @@ void OpeningScript::Page02Update()
 			if (timer >= 3.f)
 			{
 				startMoving = true;
+				m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
 			}
 		}
 		else
@@ -224,20 +224,18 @@ void OpeningScript::Page02Update()
 			mWidgetList[4]->ProcessFadeOut();
 			mWidgetList[5]->ProcessFadeOut();
 			mWidgetList[6]->ProcessFadeOut();
-		}
 
-		if (startMoving && mWidgetList[6]->GetFade() == eFadeState::IDLE)
-		{
-			mWidgetList[3]->gameObject->SetActive(false);
-			mWidgetList[4]->gameObject->SetActive(false);
-			mWidgetList[5]->gameObject->SetActive(false);
-			mWidgetList[6]->gameObject->SetActive(false);
+			if (startMoving && mWidgetList[6]->GetFade() == eFadeState::IDLE)
+			{
+				mWidgetList[3]->gameObject->SetActive(false);
+				mWidgetList[4]->gameObject->SetActive(false);
+				mWidgetList[5]->gameObject->SetActive(false);
+				mWidgetList[6]->gameObject->SetActive(false);
 
-			m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
-
-			mPageType = 3;
-			startMoving = false;
-			timer = 0.f;
+				mPageType = 3;
+				startMoving = false;
+				timer = 0.f;
+			}
 		}
 	}
 

@@ -10,13 +10,13 @@ void EndingScript::Start()
 	index = 0;
 
 	m_pAudio = gameObject->GetComponent<AudioSource>();
-	if (m_pAudio)
+	if (!m_pAudio)
 	{
 		m_pAudio = gameObject->AddComponent<AudioSource>();
 	}
 
 	// 책 fbx
-	book = FindObjectWithName(L"Book");
+	book = FindObjectWithName(L"Book_end");
 
 	if (book)
 	{
@@ -37,7 +37,7 @@ void EndingScript::Start()
 	// object load
 	// Page01
 	{
-		fadeBox = FindObjectWithName(L"fade_box_01");
+		fadeBox = FindObjectWithName(L"fade_box_end");
 		auto* fade = fadeBox->GetComponent<UISprite>();
 		if (fade)
 		{
@@ -100,7 +100,6 @@ void EndingScript::Update()
 			if (bookAnim)
 			{
 				bookAnim->Resume();
-				m_pAudio->Play(ENDING_SFX_BOOK_CLOSE);
 				book->transform->MoveTo(Vector3(-260, 0, -1500), 2.f);
 
 				if (bookAnim->IsEnd())
@@ -143,6 +142,7 @@ void EndingScript::PageUpdate()
 			mWidgetList[2]->gameObject->SetActive(false);
 
 			mPageType = 0;
+			m_pAudio->Play(ENDING_SFX_BOOK_CLOSE);
 		}
 	}
 	else
@@ -199,7 +199,7 @@ void EndingScript::CreditPosUpdate()
 	if (startMoving)
 	{
 		// 특정 위치까지 올라가면 종료
-		if (credit->transform->position.y <= -2400.0f)
+		if (credit->transform->position.y <= -3300.0f)
 		{
 			credit->GetComponent<UISprite>()->ProcessFadeOut();
 

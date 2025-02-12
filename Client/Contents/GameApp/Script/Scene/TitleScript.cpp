@@ -14,7 +14,7 @@ void TitleScript::Start()
 	gameObject->AddComponent<Canvas>();
 
 	m_pAudio = gameObject->GetComponent<AudioSource>();
-	if (m_pAudio)
+	if (!m_pAudio)
 	{
 		m_pAudio = gameObject->AddComponent<AudioSource>();
 	}
@@ -139,14 +139,14 @@ void TitleScript::StartButtonUpdate()
 
 void TitleScript::KeyButtonUpdate()
 {
-	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
+	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP) && !bIsControl)
 	{
-		m_pAudio->Play(UI_SFX_SELECT);
+		m_pAudio->Play(UI_SFX_POPUP);
 		bIsControl = true;
 		bIsMove = true;
 	}
 
-	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::OFF_FIRE))
+	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::OFF_FIRE) && bIsControl)
 	{
 		m_pAudio->Play(UI_SFX_SELECT);
 		bIsControl = false;
@@ -155,12 +155,10 @@ void TitleScript::KeyButtonUpdate()
 
 	if (bIsControl)
 	{
-		m_pAudio->Play(UI_SFX_POPUP);
 		control->SetActive(true);
 	}
 	else
 	{
-		m_pAudio->Play(UI_SFX_POPUP);
 		control->SetActive(false);
 	}
 }

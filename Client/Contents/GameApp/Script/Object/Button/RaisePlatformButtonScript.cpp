@@ -10,7 +10,8 @@ void RaisePlatformButtonScript::Start()
 {
     AudioInit();
 
-    gameObject->AddComponent<Rigidbody>();
+    Rigidbody* rb = gameObject->AddComponent<Rigidbody>();
+    rb->SetIsRealStatic(false);
     std::wstring currentTag = gameObject->GetTag();
 
     if (currentTag.find(L"_1") != std::wstring::npos)
@@ -108,7 +109,7 @@ void RaisePlatformButtonScript::OnButtonPressed()
         Transform* platformTransform = wall->transform;
         Vector3 startPosition = platformTransform->position;
         Vector3 endPosition = startPosition;
-        endPosition.y += 40.0f;
+        endPosition.y += 50.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
     }
 }
@@ -120,7 +121,7 @@ void RaisePlatformButtonScript::OnButtonReleased()
         Transform* platformTransform = wall->transform;
         Vector3 startPosition = platformTransform->position;
         Vector3 endPosition = startPosition;
-        endPosition.y += -40.0f;
+        endPosition.y += -50.0f;
         platformTransform->MoveTo(endPosition, 2.0f, Dotween::EasingEffect::OutSine);
     }
 }

@@ -44,6 +44,7 @@ public:
 	void ResetGame();			// 게임 진행상황을 완전히 초기화한다. (세이브부터 X) (ex. 세이브 포인트, 몬스터 등등)
 	void UpdateMap();			// 현재 진행 중인 맵에 따라 비활성화 해주기 위한
 
+	static void SetPlaying();
 	static void UpdateGameOver();
 public:
 	static void SetPlayerInfo(PlayerScript* _player);

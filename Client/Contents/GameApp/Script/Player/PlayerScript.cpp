@@ -114,13 +114,7 @@ void PlayerScript::Update()
 {
     UpdatePlayerHP();
     UpdatePlayerAnim();
-
-    // y좌표 일정 이하면 주금
-    if (gameObject->transform->position.y < -100.0f)
-    {
-        SavePointManager::GetInstance().GoBackSavePoint(this);
-        return;
-    }
+    CheckDead();
 
     // FSMUpdate
     switch (mPlayerState)
@@ -606,6 +600,8 @@ void PlayerScript::UpdateDead()
     {
         mBurnObjectScript->SetBurn(false);
     }
+    if(mBodyAnimator->IsEnd())
+        SavePointManager::GetInstance().GoBackSavePoint(this);
 }
 
 bool PlayerScript::ProcessMove()
@@ -716,6 +712,20 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
                 effectAnim->Play();
         }
     }
+}
+
+void PlayerScript::CheckDead()
+{
+
+    // y좌표 일정 이하면 주금
+    if (gameObject->transform->position.y < -100.0f)
+    {
+        mPlayerState = ePlayerStateType::DEAD;
+    }
+
+    if (GameProgressManager::GetGameStatus() == eGameProgressStatus::GAME_OVER)
+        mPlayerState = ePlayerStateType::DEAD;
+
 }
 
 bool PlayerScript::IsBurning()

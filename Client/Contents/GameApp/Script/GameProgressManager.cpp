@@ -15,6 +15,8 @@ void GameProgressManager::Start()
 		mStagearray[STAGE_01] = FindObjectWithName(L"MAP1");
 		mStagearray[STAGE_02] = FindObjectWithName(L"MAP2");
 		mStagearray[STAGE_03] = FindObjectWithName(L"MAP3");
+
+		mGameStatus = eGameProgressStatus::PLAYING;
 	}
 }
 
@@ -23,6 +25,7 @@ void GameProgressManager::Update()
 	// 게임 진행상황을 갱신한다. (게임 오버, 클리어 등)
 
 	// UpdateMap();	// 맵을 활성화, 비활성화한다
+	UpdateGameOver();
 }
 
 void GameProgressManager::ResetGame()
@@ -47,6 +50,11 @@ void GameProgressManager::UpdateMap()
 			}
 		}
 	} 
+}
+
+void GameProgressManager::SetPlaying()
+{
+	mGameStatus = eGameProgressStatus::PLAYING;
 }
 
 void GameProgressManager::UpdateGameOver()

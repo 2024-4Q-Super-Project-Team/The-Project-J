@@ -115,10 +115,10 @@ void newBossAttackScript::Deserialize(json& j)
 	}
 	if (j.contains("razer scale"))
 	{
-		mRazerRange.val = j["razer scale"].get<FLOAT>();
+		mRazerScale.val = j["razer scale"].get<FLOAT>();
 	}
 	if (j.contains("razer time"))
 	{
-		mRazerRange.val = j["razer time"].get<FLOAT>();
+		mRazerTime.val = j["razer time"].get<FLOAT>();
 	}
 }

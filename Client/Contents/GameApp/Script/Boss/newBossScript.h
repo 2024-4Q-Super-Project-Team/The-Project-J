@@ -2,6 +2,7 @@
 
 class newBossRangeScript;
 class newBossAttackScript;
+class CameraController;
 
 enum class eBossStateType
 {
@@ -52,6 +53,8 @@ private:
 	Vector3 mBossDirection;
 	Vector3 mBossOriginPosition;
 	eBossStateType mBossState = eBossStateType::NONE;
+
+	CameraController* mCameraController = nullptr;
 
 	SerializeField(FLOAT, mDistanceFromPlayer, 500.0f);
 

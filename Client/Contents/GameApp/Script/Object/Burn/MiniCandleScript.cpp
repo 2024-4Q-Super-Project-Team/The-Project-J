@@ -15,7 +15,7 @@ void MiniCandleScript::Start()
 	sp->SetRadius(100);
 	sp->SetIsTrigger(true);
 	mBurnScript->SetBurn(false);
-	mBurnScript->SetActive(false);
+	mCandleObject->SetActive(false);
 }
 
 void MiniCandleScript::Update()

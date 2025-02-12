@@ -90,7 +90,7 @@ void MonsterScript::Start()
 		}
 		else
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,60,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,50,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 42,2,27 });
 		}
 		
@@ -102,15 +102,14 @@ void MonsterScript::Start()
 		if (mType.val == (int)eMonsterType::A)
 		{
 			m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
-			m_pBodyCollider->SetExtents(Vector3{ 28,15,28 });
+			m_pBodyCollider->SetExtents(Vector3{ 28,30,28 });
 		}
 		else
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,34.6,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,25,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 35,35,20 });
 		}
-	}
-	{	// BurnObjectScript Component
+
 		m_pBurnObjectScript = gameObject->AddComponent<BurnObjectScript>();
 		m_pBurnObjectScript->SetBurn(false);
 	}
@@ -381,7 +380,7 @@ void MonsterScript::UpdateGroggy()
 	{
 		m_pHeadCollider->SetPosition(Vector3{ 0,2,0 });
 		m_pBodyCollider->SetPosition(Vector3{ 0,0,40 });
-		m_pBodyCollider->SetExtents(Vector3{ 35,6,40 });
+		m_pBodyCollider->SetExtents(Vector3{ 35,6,20 });
 
 		mFSM = eMonsterStateType::DEAD;
 

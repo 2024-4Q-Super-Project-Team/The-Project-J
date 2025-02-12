@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "LowerWallButtonScript.h"
 
+#define PLAYER_SFX_WALL                 L"SFX_wall_down.mp3"
+
 LowerWallButtonScript::LowerWallButtonScript(Object* _owner)
     : ButtonScript(_owner), wall(nullptr)
 {

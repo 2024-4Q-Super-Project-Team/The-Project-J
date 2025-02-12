@@ -2,6 +2,8 @@
 #include "LowerPlatformButtonScript.h"
 #include "LowerPlatformCollisionScript.h"
 
+#define PLAYER_SFX_WOOD                 L"SFX_wood.mp3"
+
 LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
     : ButtonScript(_owner), platform(nullptr)
 {
@@ -9,6 +11,8 @@ LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
 
 void LowerPlatformButtonScript::Start()
 {
+    AudioInit();
+
     auto& children = gameObject->transform->GetChildren();
     for (auto& child : children)
     {
@@ -24,6 +28,16 @@ void LowerPlatformButtonScript::Start()
             mButtonCollisionScript = mButtonObject->AddComponent<LowerPlatformCollisionScript>();
         mButtonCollisionScript->SetOwnerScript(this);
     }
+
+    ResourceHandle SoundHandle;
+    SoundHandle.mResourceType = eResourceType::AudioResource;
+    SoundHandle.mMainKey = PLAYER_SFX_WOOD;
+    SoundHandle.mPath = L"resource/sound/" + std::wstring(PLAYER_SFX_WOOD);
+    if (ResourceManager::GetResource<AudioResource>(SoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(SoundHandle);
+    }
+    mAudioSource->AddAudio(PLAYER_SFX_WOOD, SoundHandle);
 }
 
 void LowerPlatformButtonScript::Update()
@@ -34,6 +48,18 @@ void LowerPlatformButtonScript::Update()
         tr->RotateTo(2.f, Quaternion::CreateFromYawPitchRoll(0, 0, -1.6f));
         mRotated = true;
     }  
+    if (mRotated && !isPlayed)
+    {
+        if (elapsed >= time)
+        {
+            mAudioSource->Play(PLAYER_SFX_WOOD);
+            isPlayed = true;
+        }
+        else
+        {
+            elapsed += Time::GetScaledDeltaTime();
+        }
+    }
 }
 
 void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)

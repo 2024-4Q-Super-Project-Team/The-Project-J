@@ -61,6 +61,7 @@ private:
 	static PlayerScript*			mPlayer[2];
 	static newBossScript*			mBossScript;
 	static Object*					mScenearray[STAGE_COUNT];	// 스테이지 오브젝트 배열 (비활성화 컨트롤을 하기 위함)
+	static Object*					mMainCamera;
 	static INT						mCurrentSceneNum;			// 현재 스테이지
 };
 

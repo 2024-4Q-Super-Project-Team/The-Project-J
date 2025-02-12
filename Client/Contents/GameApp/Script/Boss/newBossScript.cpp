@@ -336,6 +336,7 @@ void newBossScript::UpdateExit()
 		mBossObject->SetActive(false);
 		mHeadObject->SetActive(false);
 		mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
+		GameProgressManager::ChangeScene(eSceneType::ENDING);
 	}
 }
 

@@ -1,24 +1,32 @@
 #pragma once
 #include "ButtonScript.h"
 
+class LowerPlatformCollisionScript;
+
 class LowerPlatformButtonScript : public ButtonScript
 {
 public:
 	void Start() override;
+    void Update() override;
 public:
     explicit LowerPlatformButtonScript(Object* _owner);
     virtual ~LowerPlatformButtonScript() = default;
 public:
-    virtual void OnTriggerEnter(Collider* _origin, Collider* _destination) override;
     virtual void OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination) override;
-    virtual void OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination) override;
+    void _CALLBACK OnCollisionEnterCallback(Rigidbody* _origin, Rigidbody* _destination);
 
-    virtual void OnButtonPressed() override;
-	virtual void OnButtonReleased() override;
-private:
-protected:
-    virtual bool CanInteract(Object* _object) override; // 상호작용 할 수 있는지 판단 (1P, 2P, 물체 등)
+    void RotatePlatform();
+
 private:
     Object* platform;
-    std::wstring GetPlatformTag();
+    Object* mButtonObject;
+    Object* mLowerPlatformObject;
+
+    LowerPlatformCollisionScript* mButtonCollisionScript;
+
+    float mAnimTime = 3.f;
+    float mAnimElapsedTime = 0.f;
+
+    bool mRotated = false;
+    bool isCollided = false;
 };

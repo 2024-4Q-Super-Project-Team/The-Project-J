@@ -230,7 +230,11 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
         Display::Console::Log("Trigger4 in\n");
         mCameraController->TweenOffset(Vector3(100.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
         mCameraController->TweenMidpointOffset(Vector3(-50.0f, 0.0f, 0.0f), 2.0f, Dotween::EasingEffect::OutSine);
+    }
 
+    if (_destination->gameObject->GetTag() == L"CameraTrigger5")
+    {
+        mCameraController->LookAt(Vector3(0.0f, 0.03f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
     }
 
     if (_destination->gameObject->GetTag() == L"CameraTrigger6")

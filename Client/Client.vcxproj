@@ -194,6 +194,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClCompile Include="Contents\GameApp\Script\Object\HeavyRockSystem\HeavyRockSystem.cpp" />
     <ClCompile Include="Helper\InputSyncer.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformCollisionScript.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Monster\MonsterScript.cpp" />
     <ClCompile Include="Manager\SavePointManager.cpp" />
@@ -243,6 +244,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
     <ClInclude Include="Helper\InputSyncer.h" />
     <ClInclude Include="Contents\GameApp\Script\Monster\MonsterScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerWallButtonScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformCollisionScript.h" />
     <ClInclude Include="Manager\SavePointManager.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\newBossRangeScript.h" />

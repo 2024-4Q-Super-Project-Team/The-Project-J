@@ -105,9 +105,11 @@ void GameManager::UpdateGame()
 		{
 			SaveManager::Save();
 		}
+		mCurrRunType = mNextRunType;
 		switch (mNextRunType)
 		{
 		case eEngineRunType::GAME_MODE:
+			ResourceManager::Reload();
 			ViewportManager::Start();
 			break;
 		case eEngineRunType::EDITOR_MODE:

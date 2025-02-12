@@ -52,6 +52,9 @@ public:
 	virtual void OnTriggerStay(Collider* _origin, Collider* _destination)	override;
 	virtual void OnTriggerExit(Collider* _origin, Collider* _destination)	override;
 public:
+	void SetSFX(const std::wstring& _filename);
+	void InitSFX();
+
 	void SetTarget(Object* _target)		{ m_pTarget = _target; }
 	void SetIsScope(bool _isScope)		{ bIsScope = _isScope; }
 	void SetSpeed(float _speed)			{ mMoveSpeed.val = _speed; }

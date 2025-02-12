@@ -61,6 +61,7 @@
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\BGMSelecter.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\Object\Button\LowerPlatformCollisionScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -117,6 +118,7 @@
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.h" />
     <ClInclude Include="Contents\GameApp\Script\BGMSelecter.h" />
+    <ClInclude Include="Contents\GameApp\Script\Object\Button\LowerPlatformCollisionScript.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

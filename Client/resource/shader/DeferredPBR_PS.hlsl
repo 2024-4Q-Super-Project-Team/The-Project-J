@@ -33,14 +33,14 @@ float4 main(QUAD_VS_OUTPUT input) : SV_TARGET
     //float3 WorldPosition = ReconstructWorldPosition(input.uv, Depth, ivCameraView, ivCameraProjection);
     float3 V = normalize(CameraPosition.xyz - WorldPosition.xyz); // ViewDirection (World To Eye)
     float  NdotV = saturate(dot(Normal, V));
-    float atten = 1.0f; // 감쇠 값
-    float3 L = float3(0.f, 0.f, 0.f);
     
     // =====    조명 계산   =====
     float4 DirectLight  = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float4 AmbientLight = float4(0.0f, 0.0f, 0.0f, 0.0f);
     float3 F0 = lerp(Fdielectric, Albedo, Metalness);
     float3 VrefN = reflect(-V, Normal); // 반사 벡터
+    float atten = 1.0f; // 감쇠 값
+    float3 L = float3(0.f, 0.f, 0.f);
     
     // ===== 직접 조명 계산 =====
     [unroll]
@@ -109,6 +109,16 @@ float4 main(QUAD_VS_OUTPUT input) : SV_TARGET
     // 감마 인코드 작업을 해준다.
     FinalColor.rgb  = pow(FinalColor.rgb, 1.0 / GAMMA);
     FinalColor.a = Opacity;
+    
+    if ((int) onlyDiffuse == 1)
+    {
+        float4 fc;
+        fc.rgb = Albedo;
+        fc.a = Opacity;
+        
+        return fc;
+    }
+    
     return saturate(FinalColor);
 }
 

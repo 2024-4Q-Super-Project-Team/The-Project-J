@@ -129,6 +129,10 @@ private:
 	FLOAT walkSoundTick = 0.4f;
 	FLOAT walkSoundCounter = 0.0f;
 public:
+	Vector3 mOriginPos = Vector3::Zero;
+	Quaternion mOriginRot = Quaternion::Identity;
+	Vector3 mOriginSca = Vector3::One;
+public:
 	virtual json Serialize() override;
 	virtual void Deserialize(json& j) override;
 };

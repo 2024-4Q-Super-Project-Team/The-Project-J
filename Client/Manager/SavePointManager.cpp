@@ -19,12 +19,15 @@ void SavePointManager::AddSavePoint(SavePointScript* _savePoint)
 {
 	if (_savePoint)
 	{
-		_savePoint->SetIndex(mCurrentIndex++);
-		mSavePointArray.push_back(_savePoint);
+        auto itr = mSavePointArray.find(_savePoint);
+        if (FIND_FAILED(itr, mSavePointArray))
+        {
+            mSavePointArray.insert(_savePoint);
+        }
 	}
 }
 
-void SavePointManager::GoBackSavePoint(PlayerScript* deadPlayer)
+void SavePointManager::GoBackLastSavePoint()
 {
 	auto* Player1 = GameProgressManager::GetPlayerInfo(0);
 	auto* Player2 = GameProgressManager::GetPlayerInfo(1);
@@ -38,22 +41,82 @@ void SavePointManager::GoBackSavePoint(PlayerScript* deadPlayer)
             lastSavePoint = savePoint;
         }
     }
-
-    if (!lastSavePoint) return;
-
-    // 마지막 세이브 포인트의 위치 찾아서
-    Vector3 spawnPoint = lastSavePoint->GetSavePointPosition();
-    spawnPoint.y += 30.0f;
-
-    // 죽은 플레이어만 위치를 바꿔주고, 상태 Reset
-    if (Player1 && Player2 && (Player1 == deadPlayer || Player2 == deadPlayer))
+    if (lastSavePoint)
     {
-     
-        Player1->gameObject->transform->position = spawnPoint;
-        Player1->Reset();
-        Player2->gameObject->transform->position = spawnPoint + Vector3(0, 0, 15);
-        Player2->Reset();
+        // 마지막 세이브 포인트의 위치 찾아서
+        Vector3 spawnPoint = lastSavePoint->GetSavePointPosition();
+        Vector3 offsetPoint = Vector3(0, 30.0f, 15.0f);
+        spawnPoint += offsetPoint;
+        // 죽은 플레이어만 위치를 바꿔주고, 상태 Reset
+        if (Player1 && Player2)
+        {
+            Player1->gameObject->transform->position = spawnPoint;
+            Player2->gameObject->transform->position = spawnPoint;
+            Player1->gameObject->transform->UpdateMatrix();
+            Player2->gameObject->transform->UpdateMatrix();
+        }
+    }
+    // 아무 세이브 포인트도 없으면
+    else
+    {
+        GoBackOriginPoint();
+    }
+    Player1->Reset();
+    Player2->Reset();
+    GameProgressManager::SetPlaying();
+}
 
+void SavePointManager::GoBackSavePoint(SavePointScript* _savePoint)
+{
+    if (_savePoint)
+    {
+        // 마지막 세이브 포인트의 위치 찾아서
+        Vector3 spawnPoint = _savePoint->GetSavePointPosition();
+        Vector3 offsetPoint = Vector3(0, 30.0f, 15.0f);
+        spawnPoint += offsetPoint;
+
+        auto* Player1 = GameProgressManager::GetPlayerInfo(0);
+        auto* Player2 = GameProgressManager::GetPlayerInfo(1);
+        if (Player1 && Player2)
+        {
+            Player1->gameObject->transform->position = spawnPoint;
+            Player2->gameObject->transform->position = spawnPoint;
+            Player1->gameObject->transform->UpdateMatrix();
+            Player2->gameObject->transform->UpdateMatrix();
+        }
+        Player1->Reset();
+        Player2->Reset();
         GameProgressManager::SetPlaying();
+    }
+}
+
+void SavePointManager::GoBackOriginPoint()
+{
+    auto* Player1 = GameProgressManager::GetPlayerInfo(0);
+    auto* Player2 = GameProgressManager::GetPlayerInfo(1);
+
+    Player1->gameObject->transform->position = Player1->mOriginPos;
+    Player1->gameObject->transform->rotation = Player1->mOriginRot;
+    Player2->gameObject->transform->position = Player2->mOriginPos;
+    Player2->gameObject->transform->rotation = Player2->mOriginRot;
+    Player1->gameObject->transform->UpdateMatrix();
+    Player2->gameObject->transform->UpdateMatrix();
+
+    Player1->Reset();
+    Player2->Reset();
+    GameProgressManager::SetPlaying();
+}
+
+void SavePointManager::JumpingSavePoint(INT _index)
+{
+    SavePointScript* targetPoint = SavePointScript::GetSavePoint(_index);
+    if (targetPoint)
+    {
+        AddSavePoint(targetPoint);
+        GoBackSavePoint(targetPoint);
+    }
+    else
+    { 
+        GoBackOriginPoint();
     }
 }

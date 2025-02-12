@@ -14,6 +14,7 @@
 #include "Contents/GameApp/Script/Object/Button/BoxDownButtonScript.h"
 #include "Contents/GameApp/Script/Object/Button/RaisePlatformButtonScript.h"
 #include "Contents/GameApp/Script/Object/Button/RaiseGroundButtonScript.h"
+#include "Contents/GameApp/Script/Object/Button/LowerPlatformCollisionScript.h"
 
 #include "Contents/GameApp/Script/Object/Burn/BurnObjectScript.h"
 #include "Contents/GameApp/Script/Object/Box/BoxScript.h"
@@ -50,6 +51,8 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(LowerWallButtonScript);
 	REGISTER_COMPONENT(RaiseGroundButtonScript);
 	REGISTER_COMPONENT(RaisePlatformButtonScript);
+	REGISTER_COMPONENT(LowerPlatformCollisionScript);
+
 
 	REGISTER_COMPONENT(BoxDownButtonScript);
 	REGISTER_COMPONENT(BurnObjectScript);

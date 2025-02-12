@@ -9,7 +9,5 @@ public:
 	void Update();
 private:
 	AudioSource* mAudioSource;
-	AudioSource* mAudioSource;
-	AudioSource* mAudioSource;
 };
 

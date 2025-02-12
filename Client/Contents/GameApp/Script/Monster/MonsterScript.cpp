@@ -93,8 +93,8 @@ void MonsterScript::Start()
 		}
 		else
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,86,0 });
-			m_pHeadCollider->SetExtents(Vector3{ 35,2,20 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,6,0 });
+			m_pHeadCollider->SetExtents(Vector3{ 42,2,27 });
 		}
 		
 		m_pHeadCollider->SetIsTrigger(true);
@@ -109,7 +109,7 @@ void MonsterScript::Start()
 		}
 		else
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,45,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,34.6,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 35,35,20 });
 		}
 	}
@@ -397,7 +397,7 @@ void MonsterScript::UpdateGroggy()
 	}
 	else
 	{
-		//m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
+		m_pHeadCollider->SetPosition(Vector3{ 0,2,0 });
 		m_pBodyCollider->SetPosition(Vector3{ 0,0,40 });
 		m_pBodyCollider->SetExtents(Vector3{ 35,6,40 });
 

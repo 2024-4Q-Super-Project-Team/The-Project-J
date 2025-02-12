@@ -12,16 +12,19 @@ public:
 	void Page01Update();
 	void Page02Update();
 	void Page03Update();
-public:
 
-	Object* curObject = nullptr;
+private:
 	std::vector<UISprite*> mWidgetList;
+	Object* curObject = nullptr;
+	Object* book = nullptr;
+	Object* fadeBox = nullptr;
+
+	Animator* bookAnim = nullptr;
+	AudioSource* m_pAudio = nullptr;
+
+	World* mainWorld = nullptr;
 
 	float timer = 0.f;
 	bool startMoving = false;
-
-	Animator* bookAnim = nullptr;
-	Object* book = nullptr;
-	Object* fadeBox = nullptr;
 	UINT mPageType = 1;	// 현재 페이지 타입
 };

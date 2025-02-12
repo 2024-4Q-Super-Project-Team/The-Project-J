@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "TitleScript.h"
 
+#include "Contents/GameApp/Script/BGMSelecter.h"
+
 #define UI_SFX_BUTTON L"default"
 #define UI_SFX_SELECT L"select"
 #define UI_SFX_POPUP L"popup"
@@ -53,6 +55,7 @@ void TitleScript::Update()
 		{
 			if (mSelectPos > 0)
 			{
+				m_pAudio->Play(UI_SFX_BUTTON);
 				mSelectPos--;
 			}
 
@@ -65,6 +68,7 @@ void TitleScript::Update()
 		{
 			if (mSelectPos < 3)
 			{
+				m_pAudio->Play(UI_SFX_BUTTON);
 				mSelectPos++;
 			}
 
@@ -128,6 +132,7 @@ void TitleScript::StartButtonUpdate()
 {
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
 	{
+		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 월드 이동
 	}
 }
@@ -136,22 +141,26 @@ void TitleScript::KeyButtonUpdate()
 {
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
 	{
+		m_pAudio->Play(UI_SFX_SELECT);
 		bIsControl = true;
 		bIsMove = true;
 	}
 
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::OFF_FIRE))
 	{
+		m_pAudio->Play(UI_SFX_SELECT);
 		bIsControl = false;
 		bIsMove = false;
 	}
 
 	if (bIsControl)
 	{
+		m_pAudio->Play(UI_SFX_POPUP);
 		control->SetActive(true);
 	}
 	else
 	{
+		m_pAudio->Play(UI_SFX_POPUP);
 		control->SetActive(false);
 	}
 }
@@ -160,6 +169,7 @@ void TitleScript::CreditButtonUpdate()
 {
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
 	{
+		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 크레딧 월드로 이동
 	}
 }
@@ -168,6 +178,7 @@ void TitleScript::ExitButtonUpdate()
 {
 	if (InputSyncer::IsKeyDown(0, InputSyncer::eInputType::JUMP))
 	{
+		m_pAudio->Play(UI_SFX_SELECT);
 		// 누를 시 게임 종료
 	}
 }

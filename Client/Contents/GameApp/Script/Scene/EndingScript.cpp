@@ -1,11 +1,19 @@
 #include "pch.h"
 #include "EndingScript.h"
 
+#define ENDING_SFX_BOOK_CLOSE L"book_close"
+
 static int index = 0;
 
 void EndingScript::Start()
 {
 	index = 0;
+
+	m_pAudio = gameObject->GetComponent<AudioSource>();
+	if (m_pAudio)
+	{
+		m_pAudio = gameObject->AddComponent<AudioSource>();
+	}
 
 	// å fbx
 	book = FindObjectWithName(L"Book");
@@ -92,6 +100,7 @@ void EndingScript::Update()
 			if (bookAnim)
 			{
 				bookAnim->Resume();
+				m_pAudio->Play(ENDING_SFX_BOOK_CLOSE);
 				book->transform->MoveTo(Vector3(-260, 0, -1500), 2.f);
 
 				if (bookAnim->IsEnd())

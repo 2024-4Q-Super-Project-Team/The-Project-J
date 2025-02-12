@@ -1,26 +1,35 @@
 #include "pch.h"
 #include "OpeningScript.h"
 
+#define OPENING_SFX_BOOK_OPEN L"book_open"
+#define OPENING_SFX_BOOK_PAPER L"book_paper"
+
 static int index = 0;
 
 void OpeningScript::Start()
 {
 	index = 0;
 	
+	m_pAudio = gameObject->GetComponent<AudioSource>();
+	if (m_pAudio)
+	{
+		m_pAudio = gameObject->AddComponent<AudioSource>();
+	}
+
 	// å fbx
 	book = FindObject(L"Book", L"book");
-
+	
 	if (book)
 	{
 		book->transform->MoveTo(Vector3(140, 0, -1020), 2.f);
 		bookAnim = book->GetComponent<Animator>();
 	}
-
+	
 	if (bookAnim)
 	{
 		bookAnim->SetLoop(false);
 	}
-
+	
 	// Component Load
 	// canvas
 	gameObject->AddComponent<Canvas>();
@@ -32,19 +41,19 @@ void OpeningScript::Start()
 		auto* fade = fadeBox->GetComponent<UISprite>();
 		fadeBox->transform->SetParent(gameObject->transform);
 		fadeBox->SetActive(false);
-
+		
 		Object* text_01 = FindObject(L"text_01", L"Sprite");
 		auto* t1 = text_01->GetComponent<UISprite>();
 		text_01->transform->SetParent(gameObject->transform);
 		text_01->SetActive(false);
 		mWidgetList.emplace_back(t1);
-
+		
 		Object* text_02 = FindObject(L"text_02", L"Sprite");
 		auto* t2 = text_02->GetComponent<UISprite>();
 		text_02->transform->SetParent(gameObject->transform);
 		text_02->SetActive(false);
 		mWidgetList.emplace_back(t2);
-
+		
 		Object* image_01 = FindObject(L"image_01", L"Sprite");
 		auto* i1 = image_01->GetComponent<UISprite>();
 		image_01->transform->SetParent(gameObject->transform);
@@ -59,19 +68,19 @@ void OpeningScript::Start()
 		text_03->transform->SetParent(gameObject->transform);
 		text_03->SetActive(false);
 		mWidgetList.emplace_back(t3);
-
+		
 		Object* text_04 = FindObject(L"text_04", L"Sprite");
 		auto* t4 = text_04->GetComponent<UISprite>();
 		text_04->transform->SetParent(gameObject->transform);
 		text_04->SetActive(false);
 		mWidgetList.emplace_back(t4);
-
+		
 		Object* text_05 = FindObject(L"text_05", L"Sprite");
 		auto* t5 = text_05->GetComponent<UISprite>();
 		text_05->transform->SetParent(gameObject->transform);
 		text_05->SetActive(false);
 		mWidgetList.emplace_back(t5);
-
+		
 		Object* image_02 = FindObject(L"image_02", L"Sprite");
 		auto* i2 = image_02->GetComponent<UISprite>();
 		image_02->transform->SetParent(gameObject->transform);
@@ -86,29 +95,31 @@ void OpeningScript::Start()
 		text_06->transform->SetParent(gameObject->transform);
 		text_06->SetActive(false);
 		mWidgetList.emplace_back(t6);
-
+		
 		Object* text_07 = FindObject(L"text_07", L"Sprite");
 		auto* t7 = text_07->GetComponent<UISprite>();
 		text_07->transform->SetParent(gameObject->transform);
 		text_07->SetActive(false);
 		mWidgetList.emplace_back(t7);
-
+		
 		Object* text_08 = FindObject(L"text_08", L"Sprite");
 		auto* t8 = text_08->GetComponent<UISprite>();
 		text_08->transform->SetParent(gameObject->transform);
 		text_08->SetActive(false);
 		mWidgetList.emplace_back(t8);
-
+		
 		Object* image_03 = FindObject(L"image_03", L"Sprite");
 		auto* i3 = image_03->GetComponent<UISprite>();
 		image_03->transform->SetParent(gameObject->transform);
 		image_03->SetActive(false);
 		mWidgetList.emplace_back(i3);
+
+		m_pAudio->Play(OPENING_SFX_BOOK_OPEN);
 	}
 }
 
 void OpeningScript::Update()
-{
+{	
 	if (bookAnim)
 	{
 		if (bookAnim->GetDuration() >= 25.0f)
@@ -121,12 +132,16 @@ void OpeningScript::Update()
 	switch (mPageType)
 	{
 	case 0:
+		mainWorld = ViewportManager::GetActiveViewport()->GetWorldManager()->FindWorld(L"Stage");
+		if (mainWorld)
+		{
+			ViewportManager::GetActiveViewport()->GetWorldManager()->SetActiveWorld(mainWorld);
+		}
 		break;
 	case 1:
 		Page01Update();
 		break;
 	case 2:
-
 		Page02Update();
 		break;
 	case 3:
@@ -162,6 +177,8 @@ void OpeningScript::Page01Update()
 			mWidgetList[0]->gameObject->SetActive(false);
 			mWidgetList[1]->gameObject->SetActive(false);
 			mWidgetList[2]->gameObject->SetActive(false);
+
+			m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
 
 			mPageType = 2;
 			startMoving = false;
@@ -215,6 +232,8 @@ void OpeningScript::Page02Update()
 			mWidgetList[4]->gameObject->SetActive(false);
 			mWidgetList[5]->gameObject->SetActive(false);
 			mWidgetList[6]->gameObject->SetActive(false);
+
+			m_pAudio->Play(OPENING_SFX_BOOK_PAPER);
 
 			mPageType = 3;
 			startMoving = false;

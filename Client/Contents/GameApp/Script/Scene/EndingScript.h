@@ -21,6 +21,8 @@ public:
 	Object* fadeBox = nullptr;
 	UINT mPageType = 1;	// 현재 페이지 타입
 
+	AudioSource* m_pAudio = nullptr;
+
 	bool startMoving = false;  // 이동 시작 여부
 	float timer = 0;
 

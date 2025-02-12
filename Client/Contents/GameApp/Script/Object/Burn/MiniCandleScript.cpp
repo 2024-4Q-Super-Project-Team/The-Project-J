@@ -10,7 +10,12 @@ void MiniCandleScript::Start()
 	mFireObject = FindChildObject(mCandleObject, L"FireObject");
 
 	mBurnScript = mCandleObject->AddComponent<BurnObjectScript>();
+	mCandleObject->AddComponent<Rigidbody>();
+	SphereCollider* sp = mCandleObject->AddComponent<SphereCollider>();
+	sp->SetRadius(100);
+	sp->SetIsTrigger(true);
 	mBurnScript->SetBurn(false);
+	mBurnScript->SetActive(false);
 }
 
 void MiniCandleScript::Update()

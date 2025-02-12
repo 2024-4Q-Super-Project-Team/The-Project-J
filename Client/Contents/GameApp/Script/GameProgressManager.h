@@ -48,6 +48,7 @@ public:
 
 	static void SetPlaying();
 	static void UpdateGameOver();
+
 public:
 	static void SetPlayerInfo(PlayerScript* _player);
 	static PlayerScript* GetPlayerInfo(INT _handle);

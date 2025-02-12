@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+#include "Manager/SavePointManager.h"
 #include "CameraController.h"
 
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
@@ -31,6 +32,15 @@ void GameProgressManager::Update()
 
 	UpdateMap();	// 맵을 활성화, 비활성화한다
 	UpdateGameOver();
+
+	// 스킵 구간 점핑
+	SavePointManager& SaveManager = SavePointManager::GetInstance();
+	for (int i = 0; i < 10; i++)
+	{
+		INT keyCode = 49 + i;
+		if (Input::IsKeyDown(keyCode)) SaveManager.JumpingSavePoint(i);
+	}
+}
 
 	if (Input::IsKeyDown(VK_F1))
 	{

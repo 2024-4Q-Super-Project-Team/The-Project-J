@@ -19,7 +19,7 @@ DEFERRED_PS_OUT main(STD_VS_OUTPUT input)
     [unroll]
     for (int MapType = 0; MapType < MATERIAL_MAP_COUNT; MapType++)
     {
-        if (USE_MAP(MapType) >= TRUE)
+        if (USE_MAP(MapType) >= TRUE && HAS_MAP(MapType) >= TRUE)
         {
             MapColor[MapType] = MaterialMap[MapType].Sample(LinearWrapSampler, input.uv);
         }
@@ -30,7 +30,7 @@ DEFERRED_PS_OUT main(STD_VS_OUTPUT input)
     //////////////////////////////////////////////////
     output.albedo.rgb   = MapColor[DIFFUSE_MAP].rgb; // 감마 디코드해서 넘기기
     output.albedo.a     = MapColor[OPACITY_MAP].a;
-    if (USE_MAP(DIFFUSE_MAP) >= TRUE)
+    if (USE_MAP(DIFFUSE_MAP) >= TRUE && HAS_MAP(DIFFUSE_MAP) >= TRUE)
     {
         output.albedo.rgb = pow(output.albedo.rgb, GAMMA);
     }
@@ -39,7 +39,7 @@ DEFERRED_PS_OUT main(STD_VS_OUTPUT input)
     // Normal = rgb(Normal), a(Depth)
     //////////////////////////////////////////////////
     output.normal.rgb = input.normal;
-    if (USE_MAP(NORMAL_MAP) >= TRUE)
+    if (USE_MAP(NORMAL_MAP) >= TRUE && HAS_MAP(NORMAL_MAP) >= TRUE)
     {
         float3 normalTex = normalize(MapColor[NORMAL_MAP].rgb * 2.0f - 1.0f);
         float3x3 TBN = float3x3(input.tangent, input.bitangent, input.normal);
@@ -60,7 +60,7 @@ DEFERRED_PS_OUT main(STD_VS_OUTPUT input)
     // Emissive = rgb(Emissive), 
     //////////////////////////////////////////////////
     output.emissive.rgb = MapColor[EMISSIVE_MAP].rgb;
-    if (USE_MAP(EMISSIVE_MAP) >= TRUE)
+    if (USE_MAP(EMISSIVE_MAP) >= TRUE && HAS_MAP(EMISSIVE_MAP) >= TRUE)
     {
         output.emissive.rgb = pow(output.emissive.rgb, GAMMA);
     }

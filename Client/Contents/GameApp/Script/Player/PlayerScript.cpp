@@ -108,6 +108,10 @@ void PlayerScript::Start()
     InitFireLight();
     InitSFX();
     GameProgressManager::SetPlayerInfo(this);
+
+    mOriginPos = gameObject->transform->position;
+    mOriginRot = gameObject->transform->rotation;
+    mOriginSca = gameObject->transform->scale;
 }
 
 void PlayerScript::Update()
@@ -615,7 +619,7 @@ void PlayerScript::UpdateDead()
         mBurnObjectScript->SetBurn(false);
     }
     if(mBodyAnimator->IsEnd())
-        SavePointManager::GetInstance().GoBackSavePoint(this);
+        SavePointManager::GetInstance().GoBackLastSavePoint();
 }
 
 bool PlayerScript::ProcessMove()

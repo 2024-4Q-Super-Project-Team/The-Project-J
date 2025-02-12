@@ -13,6 +13,17 @@ void BoxScript::Start()
 
     mPxRayDirection = PxVec3(0, -1, 0);
 
+    // 사운드 관련
+    mAudioSource = gameObject->AddComponent<AudioSource>();
+    ResourceHandle ButtonSoundHandle;
+    ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+    ButtonSoundHandle.mMainKey = L"SFX_box";
+    ButtonSoundHandle.mPath = L"resource/sound/SFX_box.mp3";
+    if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+    }
+    mAudioSource->AddAudio(L"box", ButtonSoundHandle);
 }
 
 void BoxScript::Update()
@@ -30,7 +41,6 @@ void BoxScript::Update()
 
    if (mGravityOn.val)
        displacement.val.y = -mGravitySpeed;
-
 
    MoveBox(displacement.val * Time::GetScaledDeltaTime());
 }
@@ -60,6 +70,8 @@ void BoxScript::OnCollisionEnter(Rigidbody* box, Rigidbody* player)
 
     displacement.val = direction * mMoveSpeed;
 
+    if (mAudioSource->IsPlaying() == false)
+        mAudioSource->Play(L"box");
 }
 
 void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)
@@ -68,6 +80,9 @@ void BoxScript::OnCollisionExit(Rigidbody* box, Rigidbody* player)
 
     displacement.val.x = 0.f;
     displacement.val.z = 0.f;
+
+    if (mAudioSource->IsPlaying() == true)
+        mAudioSource->Reset();
 }
 
 void BoxScript::MoveBox(Vector3 displacement)

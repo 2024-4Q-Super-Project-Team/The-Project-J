@@ -53,13 +53,13 @@ void UIButton::DrawWidget(Vector2 _scale)
 	if (mButtonState == eButtonState::DEFAULT && m_pDefaultTexture)
 	{
 		UIManager::GetSpriteBatch()->
-			Draw(m_pDefaultTexture->Texture->mSRV, rect, nullptr, mColor);
+			Draw(m_pDefaultTexture->Texture->mSRV, rect, nullptr, mColor * alpha);
 	}
 
 	if (mButtonState == eButtonState::SELECTED && m_pSelectedTexture)
 	{
 		UIManager::GetSpriteBatch()->
-			Draw(m_pSelectedTexture->Texture->mSRV, rect, nullptr, mColor);
+			Draw(m_pSelectedTexture->Texture->mSRV, rect, nullptr, mColor * alpha);
 	}
 }
 
@@ -102,7 +102,7 @@ void UIButton::EditorRendering(EditorViewerType _viewerType)
 		{
 			SetState((eButtonState)currentState);
 		}
-		ImGui::ColorEdit4("color", &mColor.x);
+		ImGui::ColorEdit3("color", &mColor.x);
 		ImGui::DragFloat2("default position", &defaultPos.x, 0.5f,  -5000.f, 5000.f);
 		ImGui::DragFloat2("selected position", &selectedPos.x, 0.5f, -5000.f, 5000.f);
 
@@ -187,7 +187,7 @@ json UIButton::Serialize()
 	ret["selected texture handle"] = mSelectedTextureHandle.Serialize();
 
 	ret["ui type"] = mUIType;
-	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w };
+	ret["color"] = { mColor.x, mColor.y, mColor.z };
 	ret["button state"] = mButtonState;
 
 	ret["default position"] = { defaultPos.x, defaultPos.y };
@@ -225,12 +225,12 @@ void UIButton::Deserialize(json& j)
 
 	if (j.contains("color")) {
 		auto color = j["color"];
-		if (color.is_array() && color.size() == 4)
+		if (color.is_array() && color.size() == 3)
 		{
 			Color col = { color[0].get<float>(),
 							color[1].get<float>(),
 							color[2].get<float>(),
-							color[3].get<float>() };
+							1.f};
 
 			SetColor(col);
 		}

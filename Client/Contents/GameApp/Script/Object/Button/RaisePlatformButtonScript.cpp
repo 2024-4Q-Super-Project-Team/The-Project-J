@@ -8,6 +8,8 @@ RaisePlatformButtonScript::RaisePlatformButtonScript(Object* _owner)
 
 void RaisePlatformButtonScript::Start()
 {
+    AudioInit();
+
     gameObject->AddComponent<Rigidbody>();
     std::wstring currentTag = gameObject->GetTag();
 
@@ -53,6 +55,7 @@ void RaisePlatformButtonScript::OnTriggerExit(Collider* _origin, Collider* _dest
 void RaisePlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
     Display::Console::Log("Enter_RaiseWall");
+    PlayPressedSound();
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {

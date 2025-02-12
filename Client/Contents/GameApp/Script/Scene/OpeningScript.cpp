@@ -152,9 +152,9 @@ void OpeningScript::Page01Update()
 		}
 		else
 		{
-			mWidgetList[0]->ProcessFadeOut(&mWidgetList[0]->mColor);
-			mWidgetList[1]->ProcessFadeOut(&mWidgetList[1]->mColor);
-			mWidgetList[2]->ProcessFadeOut(&mWidgetList[2]->mColor);
+			mWidgetList[0]->ProcessFadeOut();
+			mWidgetList[1]->ProcessFadeOut();
+			mWidgetList[2]->ProcessFadeOut();
 		}
 
 		if (startMoving && mWidgetList[0]->GetFade() == eFadeState::IDLE)
@@ -176,7 +176,7 @@ void OpeningScript::Page01Update()
 
 	if (mWidgetList[index]->gameObject->GetState() == EntityState::Active)
 	{
-		mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+		mWidgetList[index]->ProcessFadeIn();
 
 		if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
 		{
@@ -203,10 +203,10 @@ void OpeningScript::Page02Update()
 		}
 		else
 		{
-			mWidgetList[3]->ProcessFadeOut(&mWidgetList[3]->mColor);
-			mWidgetList[4]->ProcessFadeOut(&mWidgetList[4]->mColor);
-			mWidgetList[5]->ProcessFadeOut(&mWidgetList[5]->mColor);
-			mWidgetList[6]->ProcessFadeOut(&mWidgetList[6]->mColor);
+			mWidgetList[3]->ProcessFadeOut();
+			mWidgetList[4]->ProcessFadeOut();
+			mWidgetList[5]->ProcessFadeOut();
+			mWidgetList[6]->ProcessFadeOut();
 		}
 
 		if (startMoving && mWidgetList[6]->GetFade() == eFadeState::IDLE)
@@ -229,7 +229,7 @@ void OpeningScript::Page02Update()
 
 	if (mWidgetList[index]->gameObject->GetState() == EntityState::Active)
 	{
-		mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+		mWidgetList[index]->ProcessFadeIn();
 
 		if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
 		{
@@ -264,7 +264,7 @@ void OpeningScript::Page03Update()
 			{
 				if (fade)
 				{
-					fade->ProcessFadeIn(&fade->mColor);
+					fade->ProcessFadeIn();
 				}
 
 				if (fade->GetFade() == eFadeState::IDLE)
@@ -283,7 +283,7 @@ void OpeningScript::Page03Update()
 
 		if (mWidgetList[index]->gameObject->GetState() == EntityState::Active && index < 11)
 		{
-			mWidgetList[index]->ProcessFadeIn(&mWidgetList[index]->mColor);
+			mWidgetList[index]->ProcessFadeIn();
 
 			if (mWidgetList[index]->GetFade() == eFadeState::IDLE)
 			{

@@ -5,6 +5,9 @@
 
 void JumpPadScript::Start()
 {
+	mAudioSource = gameObject->GetComponent<AudioSource>();
+	if (mAudioSource == nullptr)
+		mAudioSource = gameObject->AddComponent<AudioSource>();
 }
 
 void JumpPadScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
@@ -18,15 +21,13 @@ void JumpPadScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination
 
 	if (playerScript)
 	{
-		Display::Console::Log("jump!");
 		playerScript->Jump(mJumpScale.val);
+		mAudioSource->Play(L"");
 	}
 }
 
 void JumpPadScript::OnCollisionExit(Rigidbody* _origin, Rigidbody* _destination)
 {
-	Display::Console::Log("exit!");
-
 }
 
 json JumpPadScript::Serialize()

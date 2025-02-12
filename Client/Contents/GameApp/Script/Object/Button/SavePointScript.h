@@ -17,5 +17,5 @@ private:
     int mIndex;
     bool mIsSaved = false; // 세이브가 된적 있는지?
 
-
+    AudioSource* mAudioSource;
 };

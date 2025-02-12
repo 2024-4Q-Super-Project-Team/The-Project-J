@@ -37,7 +37,7 @@ void UIText::DrawWidget(Vector2 _scale)
 
 	Color color = Color(mColor.x, mColor.y, mColor.z, mColor.w);
 
-	m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, Vector2(objPos.x * _scale.x, objPos.y * _scale.y), color, 0.f, Vector2(0.0f, 0.0f), _scale.x);
+	m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, Vector2(objPos.x * _scale.x, objPos.y * _scale.y), color * alpha, 0.f, Vector2(0.0f, 0.0f), _scale.x);
 }
 
 void UIText::OutlinedTextRender(Vector2 _scale, Vector3 _objPos) 
@@ -50,7 +50,7 @@ void UIText::OutlinedTextRender(Vector2 _scale, Vector3 _objPos)
 	// 외곽선 그리기
 	for (auto& offset : offsets) {
 		Vector2 outlinePos = Vector2(_objPos.x + offset.x, _objPos.y + offset.y) * _scale;
-		m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, outlinePos, mOutlineColor, 0.f, Vector2(0.0f, 0.0f), _scale.x);
+		m_pSpriteFont->DrawString(UIManager::GetSpriteBatch(), mFormat, outlinePos, mOutlineColor * alpha, 0.f, Vector2(0.0f, 0.0f), _scale.x);
 	}
 }
 
@@ -179,7 +179,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 		ImGui::Text("Text INFO : ");
 		ImGui::DragFloat("line", &mLine, 0.5f, 1.0f, 100.f);
-		ImGui::ColorEdit4("color", &mColor.x);
+		ImGui::ColorEdit3("color", &mColor.x);
 
 		ImGui::NewLine();
 		ImGui::Checkbox("Use Outline", &bUseOutline);
@@ -190,7 +190,7 @@ void UIText::EditorRendering(EditorViewerType _viewerType)
 
 			ImGui::Text("Text Outline INFO : ");
 			ImGui::DragFloat("outline Offset", &mOutlineOffset, 0.5f, 0.f, 2.0f);
-			ImGui::ColorEdit4("outline Color", &mOutlineColor.x);
+			ImGui::ColorEdit3("outline Color", &mOutlineColor.x);
 		}
 		EDITOR_COLOR_POP(1);
 
@@ -225,13 +225,13 @@ json UIText::Serialize()
 	ret["font handle"] = mFontHandle.Serialize();
 
 	ret["ui type"] = mUIType;
-	ret["color"] = { mColor.x, mColor.y, mColor.z, mColor.w };
+	ret["color"] = { mColor.x, mColor.y, mColor.z};
 	ret["line"] = mLine;
 	ret["format"] = mFormat;
 
 	ret["use outline"] = bUseOutline;
 	ret["outline offset"] = mOutlineOffset;
-	ret["outline color"] = { mOutlineColor.x, mOutlineColor.y, mOutlineColor.z , mOutlineColor.w};
+	ret["outline color"] = { mOutlineColor.x, mOutlineColor.y, mOutlineColor.z};
 
 	return ret;
 }
@@ -253,12 +253,12 @@ void UIText::Deserialize(json& j)
 
 	if (j.contains("color")) {
 		auto color = j["color"];
-		if (color.is_array() && color.size() == 4)
+		if (color.is_array() && color.size() == 3)
 		{
 			Color col = {	color[0].get<float>(),
 							color[1].get<float>(),
 							color[2].get<float>(),
-							color[3].get<float>(), };
+							1.f };
 
 			SetColor(col);
 		}
@@ -286,12 +286,12 @@ void UIText::Deserialize(json& j)
 
 	if (j.contains("outline color")) {
 		auto outcolor = j["outline color"];
-		if (outcolor.is_array() && outcolor.size() == 4)
+		if (outcolor.is_array() && outcolor.size() == 3)
 		{
 			Color col = {	outcolor[0].get<float>(),
 							outcolor[1].get<float>(),
 							outcolor[2].get<float>(),
-							outcolor[3].get<float>(), };
+							1.f						};
 
 			SetTextOutlineColor(col);
 		}

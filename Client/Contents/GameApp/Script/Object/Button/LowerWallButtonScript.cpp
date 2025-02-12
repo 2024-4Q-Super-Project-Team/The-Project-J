@@ -8,6 +8,8 @@ LowerWallButtonScript::LowerWallButtonScript(Object* _owner)
 
 void LowerWallButtonScript::Start()
 {
+    AudioInit();
+
     gameObject->AddComponent<Rigidbody>();
     std::wstring currentTag = gameObject->GetTag();
 
@@ -44,6 +46,7 @@ void LowerWallButtonScript::Start()
 
 void LowerWallButtonScript::OnTriggerEnter(Collider* _origin, Collider* _destination)
 {
+    PlayPressedSound();
     Display::Console::Log("EnterTrigger_LowerWall");
 
 }

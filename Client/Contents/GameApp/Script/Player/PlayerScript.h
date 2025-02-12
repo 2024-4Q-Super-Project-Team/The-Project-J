@@ -68,6 +68,7 @@ private:
 	void ProcessJump();
 	void ProcessMoveFire(BurnObjectScript* _dst);
 	void ProcessOffFire(BurnObjectScript* _dst);
+	//void ProcessWalkSFX();
 
 	inline void SetState(ePlayerStateType _stateType) { mPlayerState = _stateType; }
 	void ResetController();
@@ -84,6 +85,7 @@ private:
 	// 내부에서 사용할 Player가 가진 컴포넌트 포인터
 	Animator*				mBodyAnimator = nullptr;
 	Animator*				mCandleAnimator = nullptr;
+	AudioSource*			mAudioSource = nullptr;
 	PlayerController*		mPlayerController = nullptr;
 	CameraController*		mCameraController = nullptr;
 	BurnObjectScript*		mBurnObjectScript = nullptr;

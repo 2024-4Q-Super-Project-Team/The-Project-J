@@ -52,21 +52,23 @@ public:
 public:
 	// 기본 정보 설정
 	void SetTexture(ResourceHandle _handle, Texture2DResource*& _texture);
-	void ProcessFadeIn(Color* _color);
-	void ProcessFadeOut(Color* _color);
-	void SetFade(eFadeState _fade) { mFadeState = _fade; }
+	void ProcessFadeIn();
+	void ProcessFadeOut();
+	void SetFadeState(eFadeState _fade) { mFadeState = _fade; }
+	void SetAlpha(float _alpha) { alpha = _alpha; }
+	float GetAlpha()	 { return alpha; }
 	eFadeState GetFade() { return mFadeState; }
 
 	// 그래픽 정보 설정
 	void	SetColor(Color _color)	{ mColor = _color; }
 	Color	GetColor()				{ return mColor; }
 	RECT rect{};
-	Color	mColor{ 1,1,1,0 };
-	float a = 127.f;
 
 protected:
 	std::wstring mID = L"";
 
+	float alpha = 0.f;
+	Color	mColor{ 1,1,1,1 };
 	eUIType	mUIType = eUIType::NON;
 	float mFadeTime = 3.f;
 	eFadeState mFadeState = eFadeState::IDLE;

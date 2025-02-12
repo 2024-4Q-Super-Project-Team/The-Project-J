@@ -4,8 +4,11 @@
 #include "newBossAttackScript.h"
 #include "Contents/GameApp/Script/GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+
 #define BOSS_ANIM_IDLE		L"001"		
 #define BOSS_ANIM_ATTACK_01 L"003"		
+
+#define BOSS_SFX_DEAD    L"dead"
 
 void newBossScript::Start()
 {
@@ -28,6 +31,7 @@ void newBossScript::Start()
 	if (mBossObject)
 	{
 		mBodyAnimator = mBossObject->GetComponent<Animator>();
+		mAudioSoruce = mBossObject->GetComponent<AudioSource>();
 	}
 	if (mRazerObject)
 	{
@@ -315,6 +319,7 @@ void newBossScript::SetExit()
 	{
 		SetPositionExit();
 		mBossState = eBossStateType::EXIT;
+		mAudioSoruce->Play(BOSS_SFX_DEAD);
 	}
 }
 

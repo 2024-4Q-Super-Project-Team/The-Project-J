@@ -39,7 +39,7 @@ public:
     void Pause();
     void Resume();
 public:
-    // 루프 설정을 합니다.(왠만해선 Resource에서 설정할 것)
+    // 루프 설정을 합니다.
     void SetLoop(bool _isLoop);
     // 3D 입체 음향을 사용합니다
     void SetSurround(bool _isSuround);
@@ -53,6 +53,7 @@ public:
 private:
     // 현재 재생 예정, 혹은 재생 중인 오디오a
     std::wstring    mActiveKey;
+    ResourceHandle  mActiveHandle;
     AudioResource*  mActiveAudio; 
     // 해당 오디오 리소스를 재생해주는 공간
     AudioChannel*   mAudioChannel;

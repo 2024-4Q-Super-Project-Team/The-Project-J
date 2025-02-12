@@ -17,10 +17,17 @@
 #define MONSTER_ANIM_HIT_B L"mb003"
 #define MONSTER_ANIM_GROGGY_B L"mb004"
 
+#define MONSTER_SFX_STEP L"step"
+#define MONSTER_SFX_DEAD L"dead"
+
 void MonsterScript::Start()
 {
 	gameObject->SetTag(L"Monster");
 	
+	m_pAudioSource = gameObject->GetComponent<AudioSource>();
+	if (m_pAudioSource == nullptr)
+		m_pAudioSource = gameObject->AddComponent<AudioSource>();
+
 	if (gameObject->GetName() == L"Monster_A")
 		mType.val = (int)eMonsterType::A;
 	else
@@ -30,8 +37,8 @@ void MonsterScript::Start()
 	{
 		// find Weakness
 		Transform* root = gameObject->transform->GetParent();
-		auto& children = root->GetChildren();
-		for (Transform* child : children)
+		auto& root_children = root->GetChildren();
+		for (Transform* child : root_children)
 		{
 			if (child->gameObject->GetName() == L"Scope")
 			{
@@ -40,20 +47,24 @@ void MonsterScript::Start()
 				m_pScope->transform->position = gameObject->transform->position;
 			}
 
-			if (child->gameObject->GetName() == L"Weakness")
+			auto& children = gameObject->transform->GetChildren();
+			for (Transform* child : children)
 			{
-				m_pWeakness = child->gameObject;
-				m_pWeakness->SetTag(L"Weakness");
-				m_pWeakness->transform->scale = Vector3(30, 30, 22);
-				m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
+				if (child->gameObject->GetName() == L"Weakness")
+				{
+					m_pWeakness = child->gameObject;
+					m_pWeakness->SetTag(L"Weakness");
+					m_pWeakness->transform->scale = Vector3(30, 30, 22);
+					m_pWeakness->transform->SetEulerAngles(Vector3(Degree::ToRadian(90.0f), 0.0f, 0.0f));
 
-				if (mType.val == (int)eMonsterType::A)
-				{
-					m_pWeakness->transform->position.y = 38;
-				}
-				else
-				{
-					m_pWeakness->transform->position.y = 5;
+					if (mType.val == (int)eMonsterType::A)
+					{
+						m_pWeakness->transform->position.y = 38;
+					}
+					else
+					{
+						m_pWeakness->transform->position.y = 5;
+					}
 				}
 			}
 		}
@@ -77,7 +88,7 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,40,0 });
 			m_pHeadCollider->SetExtents(Vector3{ 30,2,30 });
 		}
 		else
@@ -93,7 +104,7 @@ void MonsterScript::Start()
 
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pBodyCollider->SetPosition(Vector3{ 0,30,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,20,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 		else
@@ -227,6 +238,15 @@ void MonsterScript::UpdateRotate()
 
 void MonsterScript::UpdateWalk()
 {
+	static FLOAT walkSoundTick = 0.5f;
+	static FLOAT walkSoundCounter = 0.0f;
+	walkSoundCounter += Time::GetScaledDeltaTime();
+	if (walkSoundCounter >= walkSoundTick)
+	{
+		walkSoundCounter = 0.0f;
+		m_pAudioSource->Play(MONSTER_SFX_STEP);
+	}
+
 	if (mType.val == (int)eMonsterType::A)
 	{
 		// 타겟이 존재하는가?
@@ -297,6 +317,14 @@ void MonsterScript::UpdateFastWalk()
 	// 타겟이 존재하는가?
 	if (m_pTarget)
 	{
+		static FLOAT walkSoundTick = 0.3f;
+		static FLOAT walkSoundCounter = 0.0f;
+		walkSoundCounter += Time::GetScaledDeltaTime();
+		if (walkSoundCounter >= walkSoundTick)
+		{
+			walkSoundCounter = 0.0f;
+			m_pAudioSource->Play(MONSTER_SFX_STEP);
+		}
 		// 타겟 포즈
 		mTargetPos = {	m_pTarget->transform->position.x,
 						gameObject->transform->position.y, 
@@ -363,8 +391,8 @@ void MonsterScript::UpdateGroggy()
 {
 	if (mType.val == (int)eMonsterType::A)
 	{
-		m_pHeadCollider->SetPosition(Vector3{ 0,45,0 });
-		m_pBodyCollider->SetPosition(Vector3{ 0,23,0 });
+		m_pHeadCollider->SetPosition(Vector3{ 0,30,0 });
+		m_pBodyCollider->SetPosition(Vector3{ 0,3,0 });
 		m_pBodyCollider->SetExtents(Vector3{ 28,22,28 });
 	}
 	else
@@ -374,6 +402,8 @@ void MonsterScript::UpdateGroggy()
 		m_pBodyCollider->SetExtents(Vector3{ 35,6,40 });
 
 		mFSM = eMonsterStateType::DEAD;
+
+		m_pAudioSource->Play(MONSTER_SFX_DEAD);
 		return;
 	}
 
@@ -385,7 +415,7 @@ void MonsterScript::UpdateGroggy()
 		// N초 안에 불이 붙었다면
 		if (m_pBurnObjectScript)
 		{
-			if (m_pBurnObjectScript->IsBurning())
+  			if (m_pBurnObjectScript->IsBurning())
 			{
 				mFSM = eMonsterStateType::DEAD;
 				mGroggyCount = 0.f;
@@ -396,8 +426,8 @@ void MonsterScript::UpdateGroggy()
 	{
 		if (mType.val == (int)eMonsterType::A)
 		{
-			m_pHeadCollider->SetPosition(Vector3{ 0,55,0 });
-			m_pBodyCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pHeadCollider->SetPosition(Vector3{ 0,40,0 });
+			m_pBodyCollider->SetPosition(Vector3{ 0,20,0 });
 			m_pBodyCollider->SetExtents(Vector3{ 28,40,28 });
 		}
 

@@ -8,6 +8,8 @@ LowerPlatformButtonScript::LowerPlatformButtonScript(Object* _owner)
 
 void LowerPlatformButtonScript::Start()
 {
+    AudioInit();
+
     gameObject->AddComponent<Rigidbody>();
     std::wstring currentTag = gameObject->GetTag();
 
@@ -54,6 +56,7 @@ void LowerPlatformButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* 
         if (isUp.val)
         {
             OnButtonPressed(); // 발판 내리기
+            PlayPressedSound();
             isUp.val = false;
         }
     }

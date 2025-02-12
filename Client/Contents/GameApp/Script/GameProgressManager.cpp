@@ -1,22 +1,27 @@
 #include "pch.h"
 #include "GameProgressManager.h"
 #include "Contents/GameApp/Script/Player/PlayerScript.h"
+#include "CameraController.h"
 
 eGameProgressStatus	GameProgressManager::mGameStatus = eGameProgressStatus::PLAYING;
 PlayerScript* GameProgressManager::mPlayer[2] = { nullptr, nullptr };
 newBossScript* GameProgressManager::mBossScript = nullptr;
-Object* GameProgressManager::mStagearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
-INT	GameProgressManager::mCurrentStageNum = 0;
+Object* GameProgressManager::mScenearray[STAGE_COUNT] = { nullptr ,nullptr ,nullptr };
+Object* GameProgressManager::mMainCamera = nullptr;
+INT	GameProgressManager::mCurrentSceneNum = 0;
 
 void GameProgressManager::Start()
 {
 	{
 		// 스테이지 등을 초기화
-		mStagearray[STAGE_01] = FindObjectWithName(L"MAP1");
-		mStagearray[STAGE_02] = FindObjectWithName(L"MAP2");
-		mStagearray[STAGE_03] = FindObjectWithName(L"MAP3");
+		mScenearray[OPENING] = FindObjectWithName(L"OpeningWorld");
+		mScenearray[TITLE] = FindObjectWithName(L"TitleWorld");
+		mScenearray[GAME] = FindObjectWithName(L"MainWorld");
+		mScenearray[ENDING] = FindObjectWithName(L"EndingWorld");
+		mMainCamera = FindObjectWithName(L"Main_Camera");
 
 		mGameStatus = eGameProgressStatus::PLAYING;
+		ChangeScene(eSceneType::OPENING);
 	}
 }
 
@@ -24,7 +29,7 @@ void GameProgressManager::Update()
 {
 	// 게임 진행상황을 갱신한다. (게임 오버, 클리어 등)
 
-	// UpdateMap();	// 맵을 활성화, 비활성화한다
+	UpdateMap();	// 맵을 활성화, 비활성화한다
 	UpdateGameOver();
 }
 
@@ -38,15 +43,15 @@ void GameProgressManager::UpdateMap()
 {
 	for (int i = 0; i < STAGE_COUNT; ++i)
 	{
-		if (mStagearray[i])
+		if (mScenearray[i])
 		{
-			if (i == mCurrentStageNum)
+			if (i == mCurrentSceneNum)
 			{
-				mStagearray[i]->SetActive(true);
+				mScenearray[i]->SetActive(true);
 			}
 			else
 			{
-				mStagearray[i]->SetActive(false);
+				mScenearray[i]->SetActive(false);
 			}
 		}
 	} 
@@ -94,6 +99,20 @@ void GameProgressManager::SetBossInfo(newBossScript* _boss)
 newBossScript* GameProgressManager::GetBossInfo()
 {
 	return mBossScript;
+}
+
+void GameProgressManager::ChangeScene(eSceneType _sceneType)
+{
+	mCurrentSceneNum = _sceneType;
+
+	if (_sceneType == eSceneType::GAME)
+	{
+		mMainCamera->GetComponent<CameraController>()->SetActive(true);
+	}
+	else
+	{
+		mMainCamera->GetComponent<CameraController>()->SetActive(false);
+	}
 }
 
 eGameProgressStatus GameProgressManager::GetGameStatus()

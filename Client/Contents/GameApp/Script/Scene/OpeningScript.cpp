@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "OpeningScript.h"
+#include "../GameProgressManager.h"
 
 #define OPENING_SFX_BOOK_OPEN L"book_open"
 #define OPENING_SFX_BOOK_PAPER L"book_paper"
@@ -136,6 +137,7 @@ void OpeningScript::Update()
 	{
 	case 0:
 		gameObject->transform->GetParent()->SetActive(false);
+		GameProgressManager::ChangeScene(eSceneType::TITLE);
 		break;
 	case 1:
 		Page01Update();

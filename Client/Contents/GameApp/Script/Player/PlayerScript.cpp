@@ -25,6 +25,9 @@
 #define PLAYER_SFX_DEAD                 L"SFX_char_death.mp3"
 #define PLAYER_SFX_HIT                  L"SFX_damage.mp3"
 
+#define MOVE_FIRE_HIT_VALUE 0.7f
+#define MOVE_FIRE_VIBRATION_VALUE 0.3f
+
 void PlayerScript::Start()
 {
     // 초기화 코드
@@ -366,6 +369,7 @@ void PlayerScript::Hit(INT _damage)
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
             }
+            Input::SetPadVibration(MOVE_FIRE_HIT_VALUE, MOVE_FIRE_HIT_VALUE, 1.0f, true, mPlayerHandle.val);
         }
     }
 }
@@ -535,6 +539,7 @@ void PlayerScript::UpdateMoveFire()
     mPlayerController->SetMoveForceZ(0.0f);
     if (mBodyAnimator->GetActiveAnimationKey() == PLAYER_ANIM_MOVE_FIRE)
     {
+        Input::SetPadVibration(MOVE_FIRE_VIBRATION_VALUE, MOVE_FIRE_VIBRATION_VALUE, mPlayerHandle.val);
         if (mBurnProcessTarget)
         {
             // 중간에 키를 떼면 취소한다.
@@ -543,6 +548,7 @@ void PlayerScript::UpdateMoveFire()
                 SetState(ePlayerStateType::IDLE);
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
+                Input::SetPadVibration(0.0f, 0.0f, mPlayerHandle.val);
                 return;
             }
 
@@ -578,6 +584,7 @@ void PlayerScript::UpdateMoveFire()
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
                 SetState(ePlayerStateType::IDLE);
+                Input::SetPadVibration(0.0f, 0.0f, mPlayerHandle.val);
             }
         }
     }

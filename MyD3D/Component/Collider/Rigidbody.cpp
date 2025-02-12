@@ -68,13 +68,14 @@ void Rigidbody::Update()
 
 void Rigidbody::PostUpdate()
 {	
-	
+	if (mIsRealStatic && !mIsDynamic) return;
 	mRigidActor->setGlobalPose(gameObject->transform->GetPxWorldTransform());
 	//PreRender가 모두 끝난 후, 여기서 simulate 함
 }
 
 void Rigidbody::PreRender()
 {
+	if (mIsRealStatic && !mIsDynamic) return;
 	gameObject->transform->UpdateFromPxTransform(mRigidActor->getGlobalPose());
 
 	PxVec3 updatedPosition = mRigidActor->getGlobalPose().p;
@@ -250,6 +251,7 @@ json Rigidbody::Serialize()
 	ret["mass"] = mMass;
 	ret["freeze position"] = { mFreezePosition[0], mFreezePosition[1], mFreezePosition[2] };
 	ret["freeze rotation"] = { mFreezeRotation[0], mFreezeRotation[1], mFreezeRotation[2] };
+	ret["real static"] = mIsRealStatic;
 	return ret;
 }
 
@@ -273,6 +275,11 @@ void Rigidbody::Deserialize(json& j)
 		mFreezeRotation[0] = j["freeze rotation"][0];
 		mFreezeRotation[1] = j["freeze rotation"][1];
 		mFreezeRotation[2] = j["freeze rotation"][2];
+	}
+
+	if (j.contains("real static"))
+	{
+		mIsRealStatic = j["real static"].get<bool>();
 	}
 }
 
@@ -338,5 +345,8 @@ void Rigidbody::EditorRendering(EditorViewerType _type)
 	if (ImGui::Checkbox((uid + "FreezeRotationY").c_str(), (bool*)&mFreezeRotation[1]));
 	ImGui::SameLine(); ImGui::Text("z "); ImGui::SameLine();
 	if (ImGui::Checkbox((uid + "FreezeRotationnZ").c_str(), (bool*)&mFreezeRotation[2]));
+
+	ImGui::SameLine(); ImGui::Text("IsRealStatic"); ImGui::SameLine();
+	if (ImGui::Checkbox((uid + "IsRealStatic").c_str(), (bool*)&mIsRealStatic));
 
 }

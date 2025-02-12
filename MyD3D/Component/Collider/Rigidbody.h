@@ -37,6 +37,7 @@ public:
     void SetDisableGravity(bool b);
     void SetFreezePosition(bool bx, bool by, bool bz);
     void SetFreezeRotation(bool bx, bool by, bool bz);
+    void SetIsRealStatic(bool _b) { mIsRealStatic = _b; }
     void AddForce(Vector3 force, PxForceMode::Enum forceMode = PxForceMode::eFORCE);
 public:
     Object* GetOwner() { return gameObject; }
@@ -58,6 +59,8 @@ private:
 
     bool mFreezePosition[3];
     bool mFreezeRotation[3];
+
+    bool mIsRealStatic = true;
 public:
     virtual void EditorRendering(EditorViewerType _type) override;
 

@@ -82,6 +82,7 @@ void MonsterScript::Start()
 	}
 	{	// RigidBody Component
 		m_pRigidBody = gameObject->AddComponent<Rigidbody>();
+		m_pRigidBody->SetIsRealStatic(false);
 	}
 	{	// Head Collider Component
 		m_pHeadCollider = gameObject->AddComponent<BoxCollider>();

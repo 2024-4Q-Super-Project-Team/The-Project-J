@@ -29,11 +29,14 @@
 #include "Contents/GameApp/Script/Boss/newBossScript.h"
 #include "Contents/GameApp/Script/Boss/newBossAttackScript.h"
 #include "Contents/GameApp/Script/Player/BurnGageScript.h"
+#include "Contents/GameApp/Script/BGMSelecter.h"
 
 // Scene
 #include "Contents/GameApp/Script/Scene/OpeningScript.h"
 #include "Contents/GameApp/Script/Scene/TitleScript.h"
 #include "Contents/GameApp/Script/Scene/EndingScript.h"
+
+
 
 void ScriptRegister::Register()
 {
@@ -67,4 +70,5 @@ void ScriptRegister::Register()
 	REGISTER_COMPONENT(MiniCandleScript);
 	REGISTER_COMPONENT(BurningWickScript);
 	REGISTER_COMPONENT(HeavyRockSystem);
+	REGISTER_COMPONENT(BGMSelecter);
 }

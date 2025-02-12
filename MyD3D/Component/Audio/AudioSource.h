@@ -38,6 +38,8 @@ public:
     void Reset();
     void Pause();
     void Resume();
+    void FadeIn(FLOAT _time);
+    void FadeOut(FLOAT _time);
 public:
     // 루프 설정을 합니다.
     void SetLoop(bool _isLoop);
@@ -61,6 +63,12 @@ private:
     AudioChannel*   mAudioChannel;
     // 현재 등록된 오디오을 관리하는 테이블
     std::unordered_map<std::wstring, ResourceHandle> mAudioTable;
+
+    FLOAT mVolume = 1.0f;
+    bool isFadeIn = false;
+    bool isFadeOut = false;
+    FLOAT fadeTime = 1.0f;
+    FLOAT fadeElapsed = 0.0f;
 public:
 	virtual void EditorRendering(EditorViewerType _viewerType) override;
     /////////////////////////////////////////////

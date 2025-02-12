@@ -19,7 +19,6 @@ bool ComponentManager::Initialize()
 	REGISTER_COMPONENT(ConvexCollider);
 	REGISTER_COMPONENT(TriangleCollider);
 	REGISTER_COMPONENT(PlayerController);
-	REGISTER_COMPONENT(ParticleSystem);
 	REGISTER_COMPONENT(Canvas);
 	REGISTER_COMPONENT(UISprite);
 	REGISTER_COMPONENT(UIText);

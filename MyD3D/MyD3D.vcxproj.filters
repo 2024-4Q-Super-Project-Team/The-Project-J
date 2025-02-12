@@ -351,9 +351,6 @@
     <ClInclude Include="Component\UI\UIWidget\UIWidget.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Component\ParticleSystem\ParticleSystem.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="Component\UI\UIWidget\UIText.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
@@ -759,9 +756,6 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\UI\UIWidget\UIWidget.cpp">
-      <Filter>소스 파일</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\ParticleSystem\ParticleSystem.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="Component\UI\UIWidget\UIText.cpp">

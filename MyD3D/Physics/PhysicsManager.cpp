@@ -26,13 +26,6 @@ void PhysicsManager::Initialize()
 
     mMaterials["Default"] = mPhysics->createMaterial(7.0f, 7.0f, 0.f);
     mMaterials[u8"¾óÀ½"] = mPhysics->createMaterial(0.01f, 0.01f, 0.f);
-
-   PxCudaContextManagerDesc cudaContextManagerDesc;
-   mCudaContextManager = PxCreateCudaContextManager(*mFoundation, cudaContextManagerDesc);
-   mCudaContext = mCudaContextManager->getCudaContext();
-
-   if (!mCudaContextManager->contextIsValid())
-	   bool jottatno = true;
 }
 
 void PhysicsManager::Finalization()
@@ -42,7 +35,6 @@ void PhysicsManager::Finalization()
     mPhysics->release(); 
     mPvd->release();
     mFoundation->release();
-    mCudaContextManager->releaseContext();
     SAFE_DELETE(mEventCallback);
 }
 

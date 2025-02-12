@@ -105,6 +105,8 @@ void ResourceManager::LoadResources()
         audioFile.close();
     }
 
+    Alloc_All_Resource();
+
     for (json& j : audioJson)
     {
         if (j.contains("key"))
@@ -116,9 +118,6 @@ void ResourceManager::LoadResources()
             audio->Deserialize(j);
         }
     }
-
-    Alloc_All_Resource();
-
 }
 
 #define ALLOC_RESOURCE_FROM_ENUM_TYPE(type)\

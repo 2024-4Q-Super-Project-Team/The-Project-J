@@ -60,6 +60,7 @@
     <ClCompile Include="Contents\GameApp\Script\Player\BurnGageScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\BGMSelecter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
@@ -115,6 +116,7 @@
     <ClInclude Include="Contents\GameApp\Script\Object\WoodWick\WoodWithWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\MiniCandleScript.h" />
+    <ClInclude Include="Contents\GameApp\Script\BGMSelecter.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="resource\shader\Math.fxh" />

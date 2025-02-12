@@ -9,6 +9,8 @@ OnOffButtonScript::OnOffButtonScript(Object* _owner)
 
 void OnOffButtonScript::Start()
 {
+    AudioInit();
+
     gameObject->AddComponent<Rigidbody>();
 
     BoxCollider* boxCol = gameObject->AddComponent<BoxCollider>();
@@ -34,7 +36,7 @@ void OnOffButtonScript::Start()
 void OnOffButtonScript::OnCollisionEnter(Rigidbody* _origin, Rigidbody* _destination)
 {
     Display::Console::Log("OnOffCollision Enter\n");
-
+    PlayPressedSound();
     Object* interactingObject = _destination->GetOwner();
     if (CanInteract(interactingObject))
     {

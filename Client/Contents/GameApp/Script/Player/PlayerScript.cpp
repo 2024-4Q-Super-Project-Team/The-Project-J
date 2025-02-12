@@ -23,9 +23,8 @@
 #define PLAYER_SFX_WALKING_ICE_02       L"walking_ice_02"
 #define PLAYER_SFX_WALKING_ICE_03       L"walking_ice_03"
 #define PLAYER_SFX_MOVE_FIRE_START      L"move_fire_start"
-#define PLAYER_SFX_MOVE_FIRE_OFF        L"move_fire_off"
+#define PLAYER_SFX_MOVE_FIRE_END        L"move_fire_end"
 #define PLAYER_SFX_OFF_FIRE             L"off_fire"
-#define PLAYER_SFX_JUMP                 L"jumping"
 #define PLAYER_SFX_DEAD                 L"dead"
 #define PLAYER_SFX_HIT                  L"hit"
 
@@ -239,6 +238,46 @@ void _CALLBACK PlayerScript::OnTriggerEnter(Collider* _origin, Collider* _destin
 
     }
 
+    if (_destination->gameObject->GetTag() == L"CameraTrigger6")
+    {
+        //isInTrigger = true;
+
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+
+        if (player1->isDone6 == false && player2->isDone6 == false)
+        {
+            Camera* cam = mCameraController->gameObject->GetComponent<Camera>();
+            cam->ZoomToFov(1.0f, 1.4f, 2.0f, Dotween::EasingEffect::OutSine);
+            mCameraController->LookAt(Vector3(0.0f, 0.04f, -0.035f), 3.0f, Dotween::EasingEffect::OutSine);
+            isDone6 = true;
+        }
+
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger7")
+    {
+        PlayerScript* player1 = GameProgressManager::GetPlayerInfo(0);
+        PlayerScript* player2 = GameProgressManager::GetPlayerInfo(1);
+        
+        if (player1->isDone7 == false && player2->isDone7 == false)
+        {
+            mCameraController->LookAt(Vector3(0.0f, 0.02f, -0.035f), 4.0f, Dotween::EasingEffect::OutSine);
+            isDone7 = true;
+        }
+    }
+
+    if (_destination->gameObject->GetTag() == L"CameraTrigger8")
+    {
+        //Vector3 targetPosition = Vector3(-1406.0f, 3554.0f, 18502.0f); // 카메라 위치
+        //Vector3 lookAtPosition = Vector3(-1479.0f, 5000.0f, 20402.0f); // 바라볼 위치
+        //mCameraController->MoveAndLookAt(targetPosition, lookAtPosition, 8.0f, Dotween::EasingEffect::OutSine);
+
+        mCameraController->LookAt(Vector3(0.0f, 0.015f, -0.035f), 6.0f, Dotween::EasingEffect::OutSine);
+
+
+    }
+
     return void _CALLBACK();
 }
 
@@ -326,6 +365,7 @@ void PlayerScript::Hit(INT _damage)
             mBodyAnimator->SetCurrentAnimation(PLAYER_ANIM_HIT);
             SetState(ePlayerStateType::HIT);
             mPlayerCurHP -= _damage;
+            mAudioSource->Play(PLAYER_SFX_HIT);
 
             if (mPlayerState == ePlayerStateType::MOVE_FIRE)
             {
@@ -374,6 +414,7 @@ void PlayerScript::UpdatePlayerHP()
         if (mPlayerCurHP <= 0)
         {
             SetState(ePlayerStateType::DEAD);
+            mAudioSource->Play(PLAYER_SFX_DEAD);
         }
     }
 }
@@ -454,7 +495,18 @@ void PlayerScript::UpdateIdle()
 
 void PlayerScript::UpdateMove()
 {
+    static FLOAT walkSoundTick = 0.4f;
+    static FLOAT walkSoundCounter = 0.0f;
+
+    walkSoundCounter += Time::GetScaledDeltaTime();
+    if (walkSoundCounter >= walkSoundTick)
+    {
+        walkSoundCounter = 0.0f;
+        mAudioSource->Play(PLAYER_SFX_WALKING_NORMAL_01);
+    }
+
     ProcessJump();
+
     if (ProcessMove() == false)
     {
         SetState(ePlayerStateType::IDLE);
@@ -520,6 +572,7 @@ void PlayerScript::UpdateMoveFire()
                     mBurnObjectScript->IsBurning() == true)
                 {
                     mBurnProcessTarget->SetBurn(true);
+                    mAudioSource->Play(PLAYER_SFX_MOVE_FIRE_END);
                 }
                 mBurnProcessTarget = nullptr;
                 mMoveFireCount = 0.0f;
@@ -621,6 +674,7 @@ void PlayerScript::ProcessMoveFire(BurnObjectScript* _dst)
             SetState(ePlayerStateType::MOVE_FIRE);
             mBurnProcessTarget = _dst;
             mMoveFireCount = 0.0f;
+            mAudioSource->Play(PLAYER_SFX_MOVE_FIRE_START);
         }
     }
 }
@@ -636,7 +690,7 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             SetState(ePlayerStateType::OFF_FIRE);
             mBurnProcessTarget = _dst;
-
+            mAudioSource->Play(PLAYER_SFX_OFF_FIRE);
             //불 꺼질 때 이펙트 
             Object* dstFireObject = FindChildObject(_dst->gameObject->transform->GetParent()->gameObject, L"Player_Fireoff_Effect");
             SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();
@@ -651,6 +705,7 @@ void PlayerScript::ProcessOffFire(BurnObjectScript* _dst)
         {
             mBurnObjectScript->SetBurn(false);
             SetState(ePlayerStateType::OFF_FIRE);
+            mAudioSource->Play(PLAYER_SFX_OFF_FIRE);
             mBurnProcessTarget = nullptr;
 
             SpriteAnimScript* effectAnim = mFireOffEffectObject->GetComponent<SpriteAnimScript>();

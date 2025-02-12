@@ -18,7 +18,7 @@ AudioSource::~AudioSource()
 
 void AudioSource::Start()
 {
-	SetCurrentAudio(mActiveKey);
+	SetCurrentAudio(mActiveHandle);
 }
 
 void AudioSource::Tick()
@@ -63,15 +63,6 @@ void AudioSource::PostRender()
 
 void AudioSource::EditorUpdate()
 {
-	auto itr = Helper::FindMap(mActiveKey, mAudioTable);
-	if (itr)
-	{
-		mActiveAudio = ResourceManager::GetResource<AudioResource>(*itr);
-	}
-	else
-	{
-		mActiveAudio = nullptr;
-	}
 }
 
 void AudioSource::EditorGlobalUpdate()
@@ -79,7 +70,7 @@ void AudioSource::EditorGlobalUpdate()
 	for (auto& [key, handle] : mAudioTable)
 	{
 		gameObject->GetOwnerWorld()->
-			mNeedResourceHandleTable.insert(handle.GetParentkey());
+			mNeedResourceHandleTable.insert(handle.GetKey());
 	}
 }
 
@@ -105,6 +96,7 @@ void AudioSource::SetCurrentAudio(const ResourceHandle& _handle)
 	{
 		auto pResource = ResourceManager::GetResource<AudioResource>(_handle);
 		mActiveAudio = pResource;
+		mActiveHandle = _handle;
 	}
 }
 
@@ -199,6 +191,11 @@ void AudioSource::SetSurround(bool _isSuround)
 	mAudioChannel->SetSurround(_isSuround);
 }
 
+void AudioSource::SetVolume(FLOAT _val)
+{
+	mAudioChannel->SetVolume(_val);
+}
+
 void _CALLBACK AudioSource::OnEnable()
 {
 	Start();
@@ -222,6 +219,7 @@ json AudioSource::Serialize()
 	ret["id"] = GetId();
 	ret["name"] = "AudioSource";
 	ret["current audio key"] = Helper::ToString(mActiveKey);
+	ret["current audio handle"] = mActiveHandle.Serialize();
 
 	json tableJson = json::array(); // JSON 배열로 초기화
 
@@ -245,6 +243,9 @@ void AudioSource::Deserialize(json& j)
 
 	if(j.contains("current audio key"))
 		mActiveKey = Helper::ToWString(j["current audio key"].get<std::string>());
+	
+	if(j.contains("current audio handle"))
+		mActiveHandle.Deserialize(j["current audio handle"]);
 
 	if (j.contains("table"))
 	{
@@ -302,7 +303,7 @@ void AudioSource::EditorRendering(EditorViewerType _viewerType)
 			if (ImGui::BeginPopup(("AudioPopup" + Helper::ToString(key)).c_str()))
 			{
 				if (ImGui::MenuItem("Set Active Audio")) {
-					SetCurrentAudio(key);
+					SetCurrentAudio(itr->second);
 				}
 				if (ImGui::MenuItem("Delete Audio")) {
 					isDelete = true;

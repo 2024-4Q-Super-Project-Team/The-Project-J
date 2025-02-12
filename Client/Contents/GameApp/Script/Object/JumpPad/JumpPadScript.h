@@ -17,4 +17,6 @@ public:
 private:
     SerializeField(FLOAT, mJumpScale, 2.0f);
     float mJumpTimeRatio = 0.5f;
+
+    AudioSource* mAudioSource = nullptr;
 };

@@ -5,6 +5,7 @@
 void newBossAttackScript::Start()
 {
 	mAnimator = gameObject->GetComponent<Animator>();
+	mAudioSource = gameObject->GetComponent<AudioSource>();
 
 	mRigidBody = gameObject->GetComponent<Rigidbody>();
 	if (mRigidBody == nullptr) mRigidBody = gameObject->AddComponent<Rigidbody>();
@@ -68,7 +69,9 @@ void _CALLBACK newBossAttackScript::OnTriggerStay(Collider* _origin, Collider* _
 void newBossAttackScript::SetAttackStart(Vector3 _pos)
 {
 	isAttack = TRUE;
+	mAudioSource->Reset();
 	mAnimator->Play();
+	mAudioSource->Play();
 	mRazerElapsedTime = 0.0f;
 	gameObject->SetActive(true);
 	mSpawnPosition = _pos;
@@ -78,6 +81,7 @@ void newBossAttackScript::SetAttackStart(Vector3 _pos)
 void newBossAttackScript::SetAttackEnd()
 {
 	isAttack = FALSE;
+	mAudioSource->Reset();
 	gameObject->SetActive(false);
 }
 

@@ -21,5 +21,4 @@ protected:
 private:
     Object* platform;
     std::wstring GetPlatformTag();
-
 };

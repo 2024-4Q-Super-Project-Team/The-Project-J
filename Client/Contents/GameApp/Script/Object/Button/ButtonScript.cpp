@@ -1,9 +1,25 @@
 #include "pch.h"
 #include "ButtonScript.h"
 
+#define BUTTON_FSX_PRESSED L"pressed"
+
 ButtonScript::ButtonScript(Object* _owner)
     : MonoBehaviour(_owner, "ButtonScript")
 {
+}
+
+void ButtonScript::AudioInit()
+{
+    mAudioSource = gameObject->AddComponent<AudioSource>();
+    ResourceHandle ButtonSoundHandle;
+    ButtonSoundHandle.mResourceType = eResourceType::AudioResource;
+    ButtonSoundHandle.mMainKey = L"SFX_button";
+    ButtonSoundHandle.mPath = L"resource/sound/SFX_button.mp3";
+    if (ResourceManager::GetResource<AudioResource>(ButtonSoundHandle) == nullptr)
+    {
+        ResourceManager::LoadFileFromHandle(ButtonSoundHandle);
+    }
+    mAudioSource->AddAudio(BUTTON_FSX_PRESSED, ButtonSoundHandle);
 }
 
 void ButtonScript::Start()
@@ -60,6 +76,11 @@ void ButtonScript::Deserialize(json& j)
 bool ButtonScript::CanInteract(Object* _object)
 {
     return true;
+}
+
+void ButtonScript::PlayPressedSound()
+{
+    mAudioSource->Play(BUTTON_FSX_PRESSED);
 }
 
 void ButtonScript::MoveButton(float yOffset, float duration)

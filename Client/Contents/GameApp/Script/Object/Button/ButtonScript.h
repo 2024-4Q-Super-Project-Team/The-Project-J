@@ -7,6 +7,7 @@ public:
     virtual ~ButtonScript() = default;
 
 public:
+    void AudioInit();
     void Start() override;
     virtual void OnTriggerEnter(Collider* _origin, Collider* _destination) override;
 	virtual void OnTriggerExit(Collider* _origin, Collider* _destination) override;
@@ -23,8 +24,10 @@ public:
     virtual void Deserialize(json& j) override;
 protected:
     SerializeField(bool, isUp, true);
+    AudioSource* mAudioSource;
     //bool isPressed;
 protected:
     virtual bool CanInteract(Object* _object); // 상호작용 할 수 있는지 판단 (1P, 2P, 물체 등)
+    void PlayPressedSound();
 };
 

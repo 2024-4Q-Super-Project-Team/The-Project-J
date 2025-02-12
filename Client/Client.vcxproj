@@ -172,6 +172,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application\GameApp.cpp" />
+    <ClCompile Include="Contents\GameApp\Script\BGMSelecter.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Player\BurnGageScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.cpp" />
     <ClCompile Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.cpp" />
@@ -215,6 +216,7 @@ SimulationController_static_64.lib;%(AdditionalDependencies)</AdditionalDependen
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application\GameApp.h" />
+    <ClInclude Include="Contents\GameApp\Script\BGMSelecter.h" />
     <ClInclude Include="Contents\GameApp\Script\Object\Burn\BurningWickScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Player\BurnGageScript.h" />
     <ClInclude Include="Contents\GameApp\Script\Boss\Old\Boss_Attack01_Script.h" />

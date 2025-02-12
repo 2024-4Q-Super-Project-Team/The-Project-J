@@ -21,6 +21,7 @@ private:
 	Rigidbody* mRigidBody;
 	BoxCollider* mHitColiider;
 	Animator* mAnimator;
+	AudioSource* mAudioSource;
 
 	SerializeField(INT,   mRazerDamage, 30);		// 패턴의 광선 데미지
 	SerializeField(FLOAT, mRazerDist, 800.0f);		// 패턴의 광선 거리

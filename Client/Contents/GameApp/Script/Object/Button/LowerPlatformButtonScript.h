@@ -29,4 +29,9 @@ private:
 
     bool mRotated = false;
     bool isCollided = false;
+
+    // 사운드 타이밍
+    float time = 2.0f;
+    float elapsed = 0.0f;
+    bool isPlayed = false;
 };
